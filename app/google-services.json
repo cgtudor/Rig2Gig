@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "241691688280",
+    "firebase_url": "https://rig2gig.firebaseio.com",
+    "project_id": "rig2gig",
+    "storage_bucket": "rig2gig.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:241691688280:android:48c016a2888e37021af92d",
+        "android_client_info": {
+          "package_name": "com.gangoffive.rig2gig"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "241691688280-br5eumj622l8ncl0lbml193hku9gd40h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKTkerDvGe7WrXPdbL6-uI7RD_K9bIh5Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "241691688280-br5eumj622l8ncl0lbml193hku9gd40h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
