@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -21,6 +22,8 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         /*Nav-Bar*/
         Toolbar toolbar = findViewById(R.id.toolbar);

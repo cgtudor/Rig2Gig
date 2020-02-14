@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--Navigation Drawer Header-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -12,7 +13,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_ben_and_gym_skipper"/>
+        android:src="@mipmap/ic_launcher_round"/>
 
     <!--Heading in navigation drawer-->
     <TextView
