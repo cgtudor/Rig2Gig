@@ -1,110 +1,140 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CreatePerformerListing.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CreatePerformerListing#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CreatePerformerListing extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
-
-    public CreatePerformerListing() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CreatePerformerListing.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CreatePerformerListing newInstance(String param1, String param2) {
-        CreatePerformerListing fragment = new CreatePerformerListing();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private TextView name, location, genres, charge, distance, description;
+    private Button createListing;
+    private String bandRef;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        bandRef = "TvuDGJwqX13vJ6LWZYB2";
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("bands").document(bandRef);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Map <String, Object> band = document.getData();
+                        name.setText((String)band.get("name"));
+                        location.setText((String)band.get("location"));
+                        String genreString = band.get("genres").toString();
+                        genres.setText(genreString.substring(1,genreString.length()-1));
+                        charge.setText(String.valueOf(band.get("chargePerHour")));
+                        distance.setText(String.valueOf(band.get("travelDistance")));
+                        description.setText((String)band.get("description"));
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_performer_listing, container, false);
-    }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
+        View view = inflater.inflate(R.layout.fragment_create_performer_listing, container, false);
+        name = view.findViewById(R.id.name);
+        location = view.findViewById(R.id.location);
+        genres = view.findViewById(R.id.genres);
+        charge = view.findViewById(R.id.charge);
+        distance = view.findViewById(R.id.distance);
+        description = view.findViewById(R.id.description);
+        createListing = view.findViewById(R.id.createPerformerListing);
+        createListing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                //need to check if listing exists, perhaps by a start and end date
+                Map<String, Object> listing = new HashMap<>();
+                listing.put("bandRef",bandRef);
+                listing.put("name",name.getText().toString());
+                listing.put("location",location.getText().toString());
+                listing.put("genres",genres.getText().toString());
+                listing.put("chargePerHour",(charge.getText()).toString());
+                listing.put("distance",(distance.getText()).toString());
+                listing.put("description",description.getText().toString());
+                Boolean valid = true;
+                String invalidFields = "";
+                for (Map.Entry element : listing.entrySet())
+                {
+                    String key = (String)element.getKey();
+                    String val = (String)element.getValue();
+                    if(val == null || val.trim().isEmpty())
+                    {
+                        valid = false;
+                        invalidFields += (key + "\n");
+                    }
+                }
+                if (valid)
+                {
+                    db.collection("performer-listings")
+                            .add(listing)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                    //need to pass to view listing activity to be called "PerformanceListingDetailsActivity"
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyBandFragment()).commit();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error adding document", e);
+                                }
+                            });
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "Listing not created.  The following fields " +
+                            "are incomplete:\n" + invalidFields, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        return view;
     }
 }
