@@ -71,11 +71,13 @@ public class RegisterActivity extends AppCompatActivity {
                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            Toast.makeText(RegisterActivity.this, "Account has been created please log in", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "onSuccess: user Profile is created for "+ userId);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(RegisterActivity.this, "Error creating account", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "onFailure: " + e.toString());
                         }
                     });
