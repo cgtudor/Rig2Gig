@@ -30,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
 
-    EditText rFirstName, rLastName, rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword;
+    EditText rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword;
     Button rRegisterBtn;
 
     String userId;
@@ -43,8 +43,6 @@ public class RegisterActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        rFirstName = findViewById(R.id.registerFirstName);
-        rLastName = findViewById(R.id.registerLastName);
         rEmailAddress = findViewById(R.id.registerEmail);
         rConfirmEmail = findViewById(R.id.registerConfirmEmail);
         rPassword = findViewById(R.id.registerPassword);
@@ -55,7 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
     public void registerBtnOnClick(View view) {
         final String email = rEmailAddress.getText().toString().trim();
         String password = rPassword.getText().toString().trim();
-        final String fullName = rFirstName.getText().toString() + " " + rLastName.getText().toString();
 
         //Validation needed to check inputs
 
@@ -67,7 +64,6 @@ public class RegisterActivity extends AppCompatActivity {
                     DocumentReference documentReference = fStore.collection("users").document(userId);
                     Map<String, Object> user = new HashMap<>();
                     user.put("Email Address", email);
-                    user.put("Full Name", fullName);
                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -87,6 +83,10 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void registerLoginBtn(View view) {
+        startActivity(new Intent(getApplicationContext(),LoginActivity.class));
     }
 }
 
