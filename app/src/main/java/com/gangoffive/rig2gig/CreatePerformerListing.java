@@ -36,7 +36,6 @@ public class CreatePerformerListing extends Fragment {
     private Button createListing;
     private String bandRef;
     private FirebaseFirestore db;
-    
     private Map<String, Object> listing;
     private String invalidFields;
     Map <String, Object> band;
