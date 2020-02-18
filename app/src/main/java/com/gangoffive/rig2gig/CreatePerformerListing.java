@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +52,7 @@ public class CreatePerformerListing extends Fragment {
 
     private TextView name, location, genres, charge, distance, description;
     private ImageView image;
-    private Button createListing, changeImage;
+    private Button createListing, changeImage, takePhoto;
     private String bandRef;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
@@ -60,7 +61,8 @@ public class CreatePerformerListing extends Fragment {
     private Map<String, Object> listing;
     private String invalidFields;
     private Map <String, Object> band;
-    private static final int ACTION_PERFORMER_LISTING_PHOTO = 100;
+    private static final int REQUEST_GALLERY__PHOTO = 1;
+    private static final int REQUEST_PHOTO = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +90,6 @@ public class CreatePerformerListing extends Fragment {
                 }
             }
         });
-
     }
 
     @Nullable
@@ -117,7 +118,17 @@ public class CreatePerformerListing extends Fragment {
             {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
-                startActivityForResult(intent, ACTION_PERFORMER_LISTING_PHOTO);
+                startActivityForResult(intent, REQUEST_GALLERY__PHOTO);
+            }
+        });
+        takePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+                    startActivityForResult(intent, REQUEST_PHOTO);
+                }
             }
         });
         return view;
@@ -127,7 +138,7 @@ public class CreatePerformerListing extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ACTION_PERFORMER_LISTING_PHOTO && resultCode == Activity.RESULT_OK && data != null)
+        if (requestCode == REQUEST_GALLERY__PHOTO && resultCode == Activity.RESULT_OK && data != null)
         {
             try
             {
@@ -138,6 +149,11 @@ public class CreatePerformerListing extends Fragment {
             {
                 e.printStackTrace();
             }
+        }
+        else if (requestCode == REQUEST_PHOTO && resultCode == Activity.RESULT_OK && data != null)
+        {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            image.setImageBitmap(photo);
         }
     }
 
@@ -154,6 +170,7 @@ public class CreatePerformerListing extends Fragment {
         description = view.findViewById(R.id.description);
         createListing = view.findViewById(R.id.createPerformerListing);
         changeImage = view.findViewById(R.id.changeImage);
+        takePhoto = view.findViewById(R.id.takePhoto);
         image = view.findViewById(R.id.image);
     }
 
@@ -211,7 +228,7 @@ public class CreatePerformerListing extends Fragment {
                         Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                         StorageReference listingImage = storageRef.child("/images/performance-listings/" + documentReference.getId() + ".jpg");
 
-// Get the data from an ImageView as bytes
+                        // Get the data from an ImageView as bytes
                         image.setDrawingCacheEnabled(true);
                         image.buildDrawingCache();
                         Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
@@ -232,19 +249,6 @@ public class CreatePerformerListing extends Fragment {
                                 // ...
                             }
                         });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         //need to pass to view listing activity to be called "PerformanceListingDetailsActivity"
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyBandFragment()).commit();
