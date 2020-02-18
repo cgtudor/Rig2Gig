@@ -13,9 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,6 +25,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,9 +37,13 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class CreatePerformerListing extends Fragment {
 
     private TextView name, location, genres, charge, distance, description;
+    private ImageView image;
     private Button createListing;
     private String bandRef;
     private FirebaseFirestore db;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
+    private StorageReference bandImageRef;
     private Map<String, Object> listing;
     private String invalidFields;
     Map <String, Object> band;
@@ -45,6 +53,9 @@ public class CreatePerformerListing extends Fragment {
         super.onCreate(savedInstanceState);
         bandRef = "TvuDGJwqX13vJ6LWZYB2";
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance("gs://rig2gig.appspot.com");
+        storageRef = storage.getReference();
+        bandImageRef = storageRef.child("images/" + bandRef + "/profile.jpg");
         DocumentReference docRef = db.collection("bands").document(bandRef);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -102,6 +113,7 @@ public class CreatePerformerListing extends Fragment {
         distance = view.findViewById(R.id.distance);
         description = view.findViewById(R.id.description);
         createListing = view.findViewById(R.id.createPerformerListing);
+        image = view.findViewById(R.id.image);
     }
 
     public void populateFields()
@@ -113,6 +125,9 @@ public class CreatePerformerListing extends Fragment {
         charge.setText(String.valueOf(band.get("chargePerHour")));
         distance.setText(String.valueOf(band.get("travelDistance")));
         description.setText((String)band.get("description"));
+/*        GlideApp.with(this *//* context *//*)
+                .load(bandImageRef)
+                .into(image);*/
     }
 
     public Map<String, Object> bandDataMap()

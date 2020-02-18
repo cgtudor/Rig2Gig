@@ -38,14 +38,14 @@
             android:layout_width="207dp"
             android:layout_height="25dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="212dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:text="           "
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/BandNameLabel"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/image" />
 
         <TextView
             android:id="@+id/location"
@@ -201,6 +201,16 @@
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="162dp"
+            android:layout_height="131dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:srcCompat="@android:color/background_light" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
