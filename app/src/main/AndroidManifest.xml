@@ -18,5 +18,6 @@
         </activity>
         <activity android:parentActivityName=".MainActivity" android:name=".NavBarActivity"></activity>
     </application>
-
+    <uses-feature android:name="android.hardware.camera.any"
+        android:required="false" />
 </manifest>
