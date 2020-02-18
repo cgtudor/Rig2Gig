@@ -25,6 +25,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_performance_listing_details);
+
         final ImageView bandPhoto = findViewById(R.id.bandPhoto);
         final TextView bandName = findViewById(R.id.bandName);
         final TextView genre = findViewById(R.id.genre);
@@ -39,9 +40,14 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
         /*temp for testing*/
         pID = "w0Bnuzff4aGEV7AEhjHQ";
 
+        /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        /*Finding the listing by its ID in the "performer-listings" subfolder*/
         DocumentReference performanceListing = db.collection("performer-listings").document(pID);
+
+        /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
         performanceListing.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -49,7 +55,10 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+
+                        /*Find the band reference by looking for the band ID in the "bands" subfolder*/
                         DocumentReference band = db.collection("bands").document(document.get("bandRef").toString());
+
                         band.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -57,6 +66,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                     DocumentSnapshot document = task.getResult();
                                     if (document.exists()) {
                                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+
                                         bandName.setText(document.get("name").toString());
                                         rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
@@ -80,7 +90,11 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        /*Find reference for the photo associated with the listing inside the according subtree*/
         StorageReference bandPic = storage.getReference().child("/images/performance-listings/" + pID + ".jpg");
+
+        /*Using Glide to load the picture from the reference directly into the ImageView*/
         GlideApp.with(this /* context */)
                 .load(bandPic)
                 .into(bandPhoto);
