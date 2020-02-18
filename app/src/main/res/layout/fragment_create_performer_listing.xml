@@ -36,7 +36,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.89"
             app:layout_constraintStart_toEndOf="@+id/BandNameLabel"
+<<<<<<< HEAD
             app:layout_constraintTop_toBottomOf="@+id/changeImage" />
+=======
+            app:layout_constraintTop_toBottomOf="@+id/image" />
+>>>>>>> a92a7936600db7e92fbf22455394ae165e8abda7
 
         <TextView
             android:id="@+id/BandNameLabel"
@@ -213,6 +217,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="162dp"
+            android:layout_height="131dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:srcCompat="@android:color/background_light" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

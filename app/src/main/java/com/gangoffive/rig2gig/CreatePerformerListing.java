@@ -33,7 +33,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+<<<<<<< HEAD
 import com.google.firebase.storage.UploadTask;
+=======
+>>>>>>> a92a7936600db7e92fbf22455394ae165e8abda7
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -51,7 +54,11 @@ public class CreatePerformerListing extends Fragment {
 
     private TextView name, location, genres, charge, distance, description;
     private ImageView image;
+<<<<<<< HEAD
     private Button createListing, changeImage;
+=======
+    private Button createListing;
+>>>>>>> a92a7936600db7e92fbf22455394ae165e8abda7
     private String bandRef;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
@@ -67,9 +74,15 @@ public class CreatePerformerListing extends Fragment {
         super.onCreate(savedInstanceState);
         bandRef = "TvuDGJwqX13vJ6LWZYB2";
         db = FirebaseFirestore.getInstance();
+<<<<<<< HEAD
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         bandImageRef = storageRef.child("/images/bands/" + bandRef + "/profile.jpg");
+=======
+        storage = FirebaseStorage.getInstance("gs://rig2gig.appspot.com");
+        storageRef = storage.getReference();
+        bandImageRef = storageRef.child("images/" + bandRef + "/profile.jpg");
+>>>>>>> a92a7936600db7e92fbf22455394ae165e8abda7
         DocumentReference docRef = db.collection("bands").document(bandRef);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -152,7 +165,10 @@ public class CreatePerformerListing extends Fragment {
         distance = view.findViewById(R.id.distance);
         description = view.findViewById(R.id.description);
         createListing = view.findViewById(R.id.createPerformerListing);
+<<<<<<< HEAD
         changeImage = view.findViewById(R.id.changeImage);
+=======
+>>>>>>> a92a7936600db7e92fbf22455394ae165e8abda7
         image = view.findViewById(R.id.image);
     }
 
@@ -165,9 +181,15 @@ public class CreatePerformerListing extends Fragment {
         charge.setText(String.valueOf(band.get("chargePerHour")));
         distance.setText(String.valueOf(band.get("travelDistance")));
         description.setText((String)band.get("description"));
+<<<<<<< HEAD
         GlideApp.with(this)
                 .load(bandImageRef)
                 .into(image);
+=======
+/*        GlideApp.with(this *//* context *//*)
+                .load(bandImageRef)
+                .into(image);*/
+>>>>>>> a92a7936600db7e92fbf22455394ae165e8abda7
     }
 
     public Map<String, Object> bandDataMap()
