@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -25,17 +22,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-
 import static androidx.constraintlayout.widget.Constraints.TAG;
-
 
 public class CreatePerformerListingAvailability extends Fragment
 {
@@ -50,7 +41,10 @@ public class CreatePerformerListingAvailability extends Fragment
     private Bitmap image;
     private String invalidFields;
 
-
+    /**
+     * Initialise variables from bundled arguments and obtain image from temp files
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -64,20 +58,22 @@ public class CreatePerformerListingAvailability extends Fragment
         image = BitmapFactory.decodeFile(System.getProperty("java.io.tmpdir") + bandRef + ".tmp");
     }
 
-
-
+    /**
+     * Setup references, populate fields and set on click listener for create listing and back button
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return inflated view
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_performer_listing_availability, container, false);
         setInputReferences(view);
         populateFields();
-
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //need to check if listing exists, perhaps by a start and end date
                 bandDataMap();
                 Boolean valid = validateDataMap();
                 if (valid)
@@ -95,14 +91,16 @@ public class CreatePerformerListingAvailability extends Fragment
             public void onClick(View v)
             {
                 bandDataMap();
-                backToPreviousListingFragment(listing);
+                backToPreviousListingFragment();
             }
         });
         return view;
     }
 
-
-
+    /**
+     * set references to text views and buttons
+     * @param view
+     */
     public void setInputReferences(View view)
     {
         genres = view.findViewById(R.id.genres);
@@ -112,6 +110,9 @@ public class CreatePerformerListingAvailability extends Fragment
         back = view.findViewById(R.id.back);
     }
 
+    /**
+     * populate text views
+     */
     public void populateFields()
     {
         genres.setText(listing.get("genres").toString());
@@ -119,6 +120,9 @@ public class CreatePerformerListingAvailability extends Fragment
         distance.setText(String.valueOf(listing.get("distance")));
     }
 
+    /**
+     * populate listing map with new data
+     */
     public void bandDataMap()
     {
         listing.put("genres",genres.getText().toString());
@@ -126,6 +130,10 @@ public class CreatePerformerListingAvailability extends Fragment
         listing.put("distance",(distance.getText()).toString());
     }
 
+    /**
+     * validate data in listing map
+     * @return true if valid
+     */
     public boolean validateDataMap()
     {
         Boolean valid = true;
@@ -143,6 +151,10 @@ public class CreatePerformerListingAvailability extends Fragment
         return valid;
     }
 
+    /**
+     * convert bitmap to byte array for uploading to database
+     * @return byte array of image
+     */
     public byte[] BitMapToByteArray()
     {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -150,7 +162,10 @@ public class CreatePerformerListingAvailability extends Fragment
         return stream.toByteArray();
     }
 
-    public void backToPreviousListingFragment(HashMap<String, Object> listing)
+    /**
+     * perform transaction to previous fragment and pass relevant data in bundle
+     */
+    public void backToPreviousListingFragment()
     {
         CreatePerformerListingDescription fragment = new CreatePerformerListingDescription();
         Bundle bandInfo = new Bundle();
@@ -161,6 +176,9 @@ public class CreatePerformerListingAvailability extends Fragment
         fTransaction.commit();
     }
 
+    /**
+     * upload listing data and image to database
+     */
     public void postDataToDatabase()
     {
         Calendar calendar = Calendar.getInstance();
@@ -194,7 +212,7 @@ public class CreatePerformerListingAvailability extends Fragment
                         startActivity(intent);*/
 
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyBandFragment()).commit();
-                        
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

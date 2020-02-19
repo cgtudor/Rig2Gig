@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +20,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -29,8 +27,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -40,7 +36,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
-
 
 public class CreatePerformerListing extends Fragment {
 
@@ -58,6 +53,10 @@ public class CreatePerformerListing extends Fragment {
     private static final int REQUEST_GALLERY__PHOTO = 1;
     private static final int REQUEST_PHOTO = 2;
 
+    /**
+     * Get band data from database and populate fields (or from map passed in)
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +94,13 @@ public class CreatePerformerListing extends Fragment {
 
     }
 
+    /**
+     * set references, populate fields if returning from previous fragment and set on click listeners
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return inflated view
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -105,6 +111,7 @@ public class CreatePerformerListing extends Fragment {
             populateFields();
             getTempImage();
         }
+        //on click listener for selecting from gallery
         changeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -114,6 +121,7 @@ public class CreatePerformerListing extends Fragment {
                 startActivityForResult(intent, REQUEST_GALLERY__PHOTO);
             }
         });
+        //on click listener for taking a photo
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -124,6 +132,7 @@ public class CreatePerformerListing extends Fragment {
                 }
             }
         });
+        //on click listener for next button
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -132,8 +141,7 @@ public class CreatePerformerListing extends Fragment {
                 Boolean valid = validateDataMap();
                 if (valid)
                 {
-                    byte[] image = imageToByteArray();
-                    sendToNextListingFragment(listing,image);
+                    sendToNextListingFragment();
                 } else
                 {
                     Toast.makeText(getActivity(), "Listing not created.  The following fields " +
@@ -144,6 +152,12 @@ public class CreatePerformerListing extends Fragment {
         return view;
     }
 
+    /**
+     * handles activity results
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -167,9 +181,10 @@ public class CreatePerformerListing extends Fragment {
         }
     }
 
-
-
-
+    /**
+     * set references to text and image views and buttons
+     * @param view
+     */
     public void setInputReferences(View view)
     {
         name = view.findViewById(R.id.name);
@@ -180,12 +195,18 @@ public class CreatePerformerListing extends Fragment {
         image = view.findViewById(R.id.image);
     }
 
+    /**
+     * populate text views
+     */
     public void populateFields()
     {
         name.setText((String)band.get("name"));
         location.setText((String)band.get("location"));
     }
 
+    /**
+     * download band image from database
+     */
     public void downloadImage()
     {
         GlideApp.with(this)
@@ -193,12 +214,18 @@ public class CreatePerformerListing extends Fragment {
                 .into(image);
     }
 
+    /**
+     * set image view to local file if returning from a different listing fragment
+     */
     public void getTempImage()
     {
         Bitmap bandImage= BitmapFactory.decodeFile(System.getProperty("java.io.tmpdir") + bandRef + ".tmp");
         image.setImageBitmap(bandImage);
     }
 
+    /**
+     * populate listing map with combination of values from text views and map generated from database
+     */
     public void bandDataMap()
     {
         if (listing == null)
@@ -214,6 +241,10 @@ public class CreatePerformerListing extends Fragment {
         listing.put("distance",band.get("distance").toString());
     }
 
+    /**
+     * validate data in listing map
+     * @return true if valid
+     */
     public boolean validateDataMap()
     {
         Boolean valid = true;
@@ -231,16 +262,10 @@ public class CreatePerformerListing extends Fragment {
         return valid;
     }
 
-    public byte[] imageToByteArray()
-    {
-        image.setDrawingCacheEnabled(true);
-        image.buildDrawingCache();
-        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        return stream.toByteArray();
-    }
 
+    /**
+     * convert image to temporary bitmap file to be referenced later
+     */
     public void imageToBitmapFile() {
         image.setDrawingCacheEnabled(true);
         image.buildDrawingCache();
@@ -254,7 +279,10 @@ public class CreatePerformerListing extends Fragment {
         }
     }
 
-    public void sendToNextListingFragment(HashMap<String, Object> listing, byte[] image)
+    /**
+     * perform transaction to next fragment and pass relevant data in bundle
+     */
+    public void sendToNextListingFragment()
     {
         CreatePerformerListingDescription fragment = new CreatePerformerListingDescription();
         Bundle bandInfo = new Bundle();
