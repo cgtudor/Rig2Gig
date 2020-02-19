@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gangoffive.rig2gig">
 
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,8 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:parentActivityName=".MainActivity" android:name=".NavBarActivity"></activity>
+        <activity
+            android:name=".NavBarActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
-    <uses-feature android:name="android.hardware.camera.any"
-        android:required="false" />
+
 </manifest>

@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -188,8 +189,12 @@ public class CreatePerformerListingAvailability extends Fragment
                             }
                         });
 
-                        //need to pass to view listing activity to be called "PerformanceListingDetailsActivity"
+                        /*Intent intent = new Intent(getActivity(), PerformanceListingDetailsActivity.class);
+                        intent.putExtra("ref",bandRef);
+                        startActivity(intent);*/
+
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyBandFragment()).commit();
+                        
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
