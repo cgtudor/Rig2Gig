@@ -30,7 +30,7 @@
             android:layout_width="124dp"
             android:layout_height="37dp"
             android:layout_marginTop="8dp"
-            android:text="Choose image from phone"
+            android:text="Gallery"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.198"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,53 +61,6 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/GenreLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="20dp"
-            android:text="Genres Played: "
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/locationLabel" />
-
-        <TextView
-            android:id="@+id/chargeLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="16dp"
-            android:text="Charge Per Hour: "
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/GenreLabel" />
-
-        <EditText
-            android:id="@+id/charge"
-            android:layout_width="210dp"
-            android:layout_height="38dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            android:textSize="18sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/chargeLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.588"
-            app:layout_constraintStart_toEndOf="@+id/chargeLabel" />
-
-        <TextView
-            android:id="@+id/descriptionLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="16dp"
-            android:text="Band Description: "
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/distanceLabel" />
-
-        <TextView
             android:id="@+id/locationLabel"
             android:layout_width="101dp"
             android:layout_height="26dp"
@@ -118,81 +71,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/BandNameLabel" />
 
-        <TextView
-            android:id="@+id/distanceLabel"
-            android:layout_width="140dp"
-            android:layout_height="26dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="Travel distance: "
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/distance"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chargeLabel" />
-
-        <EditText
-            android:id="@+id/distance"
-            android:layout_width="211dp"
-            android:layout_height="39dp"
-            android:layout_marginEnd="4dp"
-            android:ems="10"
-            android:inputType="number"
-            app:layout_constraintBaseline_toBaselineOf="@+id/distanceLabel"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <EditText
-            android:id="@+id/description"
-            android:layout_width="364dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:inputType="textMultiLine"
-            android:maxLength="@integer/listing_description_length"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.319"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionLabel" />
-
         <Button
-            android:id="@+id/createPerformerListing"
+            android:id="@+id/next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Create Listing"
+            android:text="Next"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.467"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/description" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="80dp"
-            android:layout_height="491dp"
-            android:layout_marginTop="8dp"
-            android:text="Button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.477"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/createPerformerListing" />
-
-        <EditText
-            android:id="@+id/genres"
-            android:layout_width="209dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:textSize="18sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/GenreLabel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.771"
-            app:layout_constraintStart_toEndOf="@+id/GenreLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/location" />
 
         <TextView
             android:id="@+id/location"
@@ -222,7 +112,7 @@
             android:layout_width="105dp"
             android:layout_height="36dp"
             android:layout_marginStart="16dp"
-            android:text="Take Photo"
+            android:text="Camera"
             app:layout_constraintBaseline_toBaselineOf="@+id/changeImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/changeImage" />
