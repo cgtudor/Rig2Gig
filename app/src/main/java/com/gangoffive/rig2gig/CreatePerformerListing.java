@@ -42,6 +42,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -220,6 +222,10 @@ public class CreatePerformerListing extends Fragment {
 
     public void postDataToDatabase()
     {
+        Calendar calendar = Calendar.getInstance();
+        listing.put("date live",calendar);
+        calendar.add(Calendar.DATE, 30);
+        listing.put("date expires", calendar);
         db.collection("performer-listings")
                 .add(listing)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
