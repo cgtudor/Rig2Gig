@@ -7,41 +7,6 @@
     tools:context=".MainActivity">
 
     <!--Nav-Bar layout-->
-
-    <Button
-        android:id="@+id/mainRegisterBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="registerBtnOnClick"
-        android:text="Register"
-        app:layout_constraintBottom_toBottomOf="@+id/drawer_layout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainLoginBtn" />
-
-    <TextView
-        android:id="@+id/rig2gigTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rig2Gig"
-        android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:onClick="loginBtnOnClick"/>
-
-    <Button
-        android:id="@+id/mainLoginBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="loginBtnOnClick"
-        android:text="Login"
-        app:layout_constraintBottom_toTopOf="@+id/mainRegisterBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rig2gigTitle" />
-
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"

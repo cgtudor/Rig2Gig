@@ -30,8 +30,6 @@ public class LoginActivity extends AppCompatActivity {
     TextView registerBtn, forgotPasswordBtn;
     EditText emailAddress, password;
 
-    String getEmail;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                                 startActivity(new Intent(getApplicationContext(), CredentialActivity.class));
                             } else {
                                 // This is an existing user, show them a welcome back screen.
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
                             }
                         } else {
                             Toast.makeText(LoginActivity.this, "Email Or Password Is Incorrect! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();

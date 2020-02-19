@@ -100,6 +100,7 @@ public class CredentialActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(CredentialActivity.this, "Information Added", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

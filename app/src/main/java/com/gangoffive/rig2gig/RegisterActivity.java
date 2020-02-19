@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,10 +55,38 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void registerBtnOnClick(View view) {
         final String email = rEmailAddress.getText().toString().trim();
+        String confirmEmail = rConfirmEmail.getText().toString().trim();
         String password = rPassword.getText().toString().trim();
+        String confirmPassword = rConfirmPassword.getText().toString().trim();
 
-        //Validation needed to check inputs
-
+        if (TextUtils.isEmpty(email)){
+            rEmailAddress.setError("Email is required!");
+            return;
+        }
+        if (TextUtils.isEmpty(confirmEmail)){
+            rConfirmEmail.setError("Confirm email is required!");
+            return;
+        }
+        if(!confirmEmail.matches(email)){
+            rConfirmEmail.setError("Email doesn't match!");
+            return;
+        }
+        if (TextUtils.isEmpty(password)){
+            rPassword.setError("Password is required!");
+            return;
+        }
+        if (TextUtils.isEmpty(confirmPassword)){
+            rConfirmPassword.setError("Confirm password is required!");
+            return;
+        }
+        if (!confirmPassword.matches(password)){
+            rConfirmPassword.setError("Password doesn't match");
+            return;
+        }
+        if (password.length() < 6){
+            rPassword.setError("Password needs to be 6 characters or longer!");
+            return;
+        }
         fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -77,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.d(TAG, "onFailure: " + e.toString());
                         }
                     });
-                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                    startActivity(new Intent(getApplicationContext(),LaunchActivity.class));
                 }else {
                     Toast.makeText(RegisterActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }

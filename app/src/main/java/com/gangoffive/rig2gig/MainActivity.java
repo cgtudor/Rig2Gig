@@ -14,14 +14,4 @@ import android.view.View;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-
-    public void loginBtnOnClick(View view) {
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-    }
-
-    public void registerBtnOnClick(View view) {
-        startActivity(new Intent(MainActivity.this, RegisterActivity.class));
-    }
-
-
   }
