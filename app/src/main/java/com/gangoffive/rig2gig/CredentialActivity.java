@@ -41,6 +41,8 @@ public class CredentialActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
+
+
         cFirstName = findViewById(R.id.cFirstName);
         cLastName = findViewById(R.id.cLastName);
         cUsername = findViewById(R.id.cUsername);

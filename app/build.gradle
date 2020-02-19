@@ -42,6 +42,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation files('libs/connector-framework-1.4.4.0.jar')
+
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
