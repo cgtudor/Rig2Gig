@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import com.google.android.material.navigation.NavigationView;
 
 public class NavBarActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
@@ -22,8 +21,6 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         /*Nav-Bar*/
         Toolbar toolbar = findViewById(R.id.toolbar);
