@@ -37,9 +37,6 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
         /*Used to get the id of the listing from the previous activity*/
         String pID = getIntent().getStringExtra("EXTRA_PERFORMANCE_LISTING_ID");
 
-        /*temp for testing*/
-        pID = "w0Bnuzff4aGEV7AEhjHQ";
-
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -81,7 +78,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                         });
                         genre.setText(document.get("genres").toString());
                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
-                        price.setText("£" + document.get("chargePerHour").toString() + " per hour");
+                        price.setText("£" + document.get("charge").toString() + " per hour");
                     } else {
                         Log.d("FIRESTORE", "No such document");
                     }
@@ -91,12 +88,19 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
             }
         });
 
+        //Temp wait for pic to upload
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         /*Find reference for the photo associated with the listing inside the according subtree*/
         StorageReference bandPic = storage.getReference().child("/images/performance-listings/" + pID + ".jpg");
 
         /*Using Glide to load the picture from the reference directly into the ImageView*/
         GlideApp.with(this /* context */)
-                .load(bandPic)
+                 .load(bandPic)
                 .into(bandPhoto);
     }
 }

@@ -208,7 +208,7 @@ public class CreatePerformerListingAvailability extends Fragment
                         });
 
                         Intent intent = new Intent(getActivity(), PerformanceListingDetailsActivity.class);
-                        intent.putExtra("ref",bandRef);
+                        intent.putExtra("EXTRA_PERFORMANCE_LISTING_ID",documentReference.getId());
                         startActivity(intent);
 
                     }
