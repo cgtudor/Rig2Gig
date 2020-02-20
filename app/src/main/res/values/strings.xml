@@ -3,4 +3,9 @@
     <string name="navigation_draw_open">Open Navigation Drawer</string>
     <string name="navigation_draw_close">Close Navigation Drawer</string>
     <string name="about_us">About Us</string>
+    <string name="facebook_app_id">846267275818721</string>
+    <string name="fb_login_protocol_scheme">fb846267275818721</string>
+
+    <string name="twitter_key">g8JJv8rVOZhQ9oaaHmt3hanWw</string>
+    <string name="twitter_secret">Kos7b1EJFx5falrBNhL2twtG4sacuQMZlWJ1AjXZ6n6LLji2GI</string>
 </resources>
