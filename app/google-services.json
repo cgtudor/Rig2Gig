@@ -8,7 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:241691688280:android:eab81c154b1987161af92d",
         "mobilesdk_app_id": "1:241691688280:android:48c016a2888e37021af92d",
         "android_client_info": {
           "package_name": "com.gangoffive.rig2gig"
@@ -16,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "241691688280-oc0j8r7pf5nmhu3kv2u5es542be7a7n5.apps.googleusercontent.com",
+          "client_id": "241691688280-ldv9ou7vugmjjg855mqh5k11951ld0qb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.gangoffive.rig2gig",
-            "certificate_hash": "10f5d9f030bcecae9447339ad23d4696a04a4c6d"
+            "certificate_hash": "0448f45f6aaa0ceae16f0fd762c24996a886c0d9"
           }
         },
         {
