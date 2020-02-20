@@ -18,6 +18,5 @@ import com.twitter.sdk.android.core.TwitterConfig;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Twitter.initialize(this);
     }
   }
