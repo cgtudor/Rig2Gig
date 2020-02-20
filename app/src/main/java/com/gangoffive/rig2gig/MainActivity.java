@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
   public class MainActivity extends AppCompatActivity {
@@ -20,4 +23,4 @@ import android.os.Bundle;
         Intent intent = new Intent(this, NavBarActivity.class);
         startActivity(intent);
     }
-}
+  }
