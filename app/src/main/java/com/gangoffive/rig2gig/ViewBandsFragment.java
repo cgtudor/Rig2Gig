@@ -28,10 +28,10 @@ import java.util.List;
 
 public class ViewBandsFragment extends Fragment
 {
-    private String TAG = "Firebase";
+    private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference colRef = db.collection("performer-listings");
+    private FirebaseFirestore db;
+    private CollectionReference colRef;
     private List<DocumentSnapshot> documentSnapshots;
 
     private RecyclerView recyclerView;
@@ -45,6 +45,9 @@ public class ViewBandsFragment extends Fragment
     {
         View v = inflater.inflate(R.layout.fragment_view_bands, container, false);
 
+        db = FirebaseFirestore.getInstance();
+        colRef = db.collection("performer-listings");
+
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -52,25 +55,62 @@ public class ViewBandsFragment extends Fragment
         performerListings = new ArrayList<>();
 
         Query first = colRef
+                .orderBy("name")
                 .limit(10);
 
-        first.get()
+        /*first.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot querySnapshot) {
                         documentSnapshots= querySnapshot.getDocuments();
 
                         for(DocumentSnapshot documentSnapshot: documentSnapshots){
-                            PerformerListing performerListing = documentSnapshot.toObject(PerformerListing.class);
+                            PerformerListing performerListing = new PerformerListing(
+                                             documentSnapshot.getId(),
+                                    (String) documentSnapshot.get("name"),
+                                    (String) documentSnapshot.get("genres"),
+                                    (String) documentSnapshot.get("location")
+                            );
 
                             performerListings.add(performerListing);
                         }
                     }
+                });*/
+
+        first.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            documentSnapshots = task.getResult().getDocuments();
+                            if(!documentSnapshots.isEmpty())
+                            {
+                                for(DocumentSnapshot documentSnapshot : documentSnapshots){
+                                    PerformerListing performerListing = new PerformerListing(
+                                            documentSnapshot.getId(),
+                                            (String) documentSnapshot.get("name"),
+                                            (String) documentSnapshot.get("genres"),
+                                            (String) documentSnapshot.get("location")
+                                            //rating
+                                    );
+
+                                    performerListings.add(performerListing);
+                            }
+                                adapter = new MyAdapter(performerListings, getContext());
+
+                                recyclerView.setAdapter(adapter);
+
+                                Log.d(TAG, "get successful with data");
+                            } else {
+                                Log.d(TAG, "get successful without data");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
                 });
 
-        adapter = new MyAdapter(performerListings, getContext());
 
-        recyclerView.setAdapter(adapter);
 
         return v;
     }
