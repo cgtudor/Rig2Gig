@@ -56,6 +56,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
             textViewName = (TextView) itemView.findViewById(R.id.textViewName);
             textViewGenres = (TextView) itemView.findViewById(R.id.textViewGenres);
             textViewLoc = (TextView) itemView.findViewById(R.id.textViewLoc);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Intent intent = new Intent(context, CristiansFragementHere.class);
+                    //intent.putExtra("listingRef", getRefSomeHow)
+                    //startActivity(intent);
+                }
+            });
         }
     }
 }
