@@ -207,11 +207,9 @@ public class CreatePerformerListingAvailability extends Fragment
                             }
                         });
 
-                        /*Intent intent = new Intent(getActivity(), PerformanceListingDetailsActivity.class);
+                        Intent intent = new Intent(getActivity(), PerformanceListingDetailsActivity.class);
                         intent.putExtra("ref",bandRef);
-                        startActivity(intent);*/
-
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyBandFragment()).commit();
+                        startActivity(intent);
 
                     }
                 })
