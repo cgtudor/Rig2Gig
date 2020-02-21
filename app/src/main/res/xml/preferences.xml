@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/account_settings"
+        app:key="Account"
+        app:iconSpaceReserved="false">
+        <Preference
+            app:key="UserName"
+            android:title="Your user name"
+            app:summary="Bsouch96"
+            app:iconSpaceReserved="false"
+            android:selectable="false"/>
+
+        <EditTextPreference
+            app:key="FullName"
+            app:title="Your name"
+            android:summary="Your name"
+            app:iconSpaceReserved="false"
+            android:selectable="false"/>
+
+        <Preference
+            app:key="UserEmailAddress"
+            android:title="Your email address"
+            app:summary="bksouch96@gmail.com"
+            app:iconSpaceReserved="false"
+            android:selectable="false"/>
+
+        <Preference
+            app:key="ChangePassword"
+            app:title="Change Password"
+            android:summary="Change your password"
+            app:iconSpaceReserved="false"
+            app:fragment="com.gangoffive.rig2gig.ChangePasswordFragment"/>
+
+        <Preference
+            app:key="MusicianUpgrade"
+            app:title="Upgrade to Musician"
+            app:summary="Become a Musician"
+            app:iconSpaceReserved="false"
+            app:isPreferenceVisible="false"
+            android:selectable="true"
+            app:fragment="com.gangoffive.rig2gig.UpgradeToMusicianFragment"/>
+
+        <Preference
+            app:title="Delete Account"
+            app:summary="Delete or deactivate your account"
+            app:iconSpaceReserved="false"
+            app:fragment="com.gangoffive.rig2gig.DeleteAccountFragment"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/notifications_settings"
+        app:iconSpaceReserved="false">
+        <SwitchPreference
+            app:key="NotificationSwitch"
+            app:defaultValue="true"
+            app:summary="Turn notifications on or off"
+            app:title="Toggle Notifications"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/miscellaneous_settings"
+        app:iconSpaceReserved="false">
+        <Preference
+            app:title="Music Lessons"
+            app:summary="Re-watch our app tutorial"
+            app:iconSpaceReserved="false"/>
+
+        <Preference
+            app:title="FAQ"
+            app:summary="Frequently Asked Questions"
+            app:iconSpaceReserved="false"
+            app:fragment="com.gangoffive.rig2gig.FAQFragment"/>
+
+        <Preference
+            app:title="About"
+            app:summary="View version details"
+            app:iconSpaceReserved="false"
+            app:fragment="com.gangoffive.rig2gig.AboutFragment"/>
+
+        <Preference
+            app:title="Report"
+            app:summary="Report a bug/user and suggest new features"
+            app:iconSpaceReserved="false"
+            app:fragment="com.gangoffive.rig2gig.ReportFragment"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/privacy_settings"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            app:title="Unplug"
+            app:summary="Choose whether to appear in searches or not"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"/>
+
+        <SwitchPreference
+            app:title="Location"
+            app:summary="Choose whether we can use your location"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/legal_settings"
+        app:iconSpaceReserved="false">
+        <Preference
+            app:title="Licenses"
+            app:summary="View Licenses"
+            app:iconSpaceReserved="false"
+            app:fragment="com.gangoffive.rig2gig.LicencesFragment"/>
+
+        <Preference
+            app:title="Privacy Policy"
+            app:summary="View Our Privacy Policy"
+            app:iconSpaceReserved="false"
+            app:fragment="com.gangoffive.rig2gig.PrivacyPolicyFragment" />
+
+        <Preference
+            app:title="Terms of Service"
+            app:summary="View our Terms of Service"
+            app:iconSpaceReserved="false"
+            app:fragment="com.gangoffive.rig2gig.TermsOfServiceFragment" />
+    </PreferenceCategory>
+
+
+    <!--Do not delete following preferences. Used as a work around to
+    show the bottom section of the preferences above this comment.-->
+    <Preference
+        android:selectable="false"/>
+    <Preference
+        android:selectable="false"/>
+    <Preference
+        android:selectable="false"/>
+    <Preference
+        android:selectable="false"/>
+    <Preference
+        android:selectable="false"/>
+
+</PreferenceScreen>

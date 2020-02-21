@@ -11,6 +11,8 @@
         <item android:id="@+id/nav_my_band"
             android:icon="@drawable/ic_my_band"
             android:title="My Band"/>
+        <item android:id="@+id/nav_create_performer_listing"
+            android:title="Create band listing"/>
         <item android:id="@+id/nav_create_band"
             android:icon="@drawable/ic_create_band"
             android:title="Create Band"/>

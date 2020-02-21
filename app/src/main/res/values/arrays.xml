@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--String array for dynamic text size in pref_accessibility-->
+    <string-array name="pref_accessibility_font_size_titles">
+        <item name="small_font" type="string">Small</item>
+        <item name="medium_font" type="string">Medium</item>
+        <item name="large_font" type="string">Large</item>
+    </string-array>
+    <string-array name="pref_accessibility_font_size_values">
+        <item>12sp</item>
+        <item>16sp</item>
+        <item>20sp</item>
+    </string-array>
+
+    <!--string arrays for changes between wifi and data transfer in pref_data_sync-->
+    <string-array name="pref_data_transfer_titles">
+        <item name = "wifi_data_transfer" type="string">WiFi</item>
+        <item name = "data_data_transfer" type="string">Data</item>
+        <item name = "wifi_data_data_transfer" type="string">Wifi &amp; Data</item>
+    </string-array>
+    <string-array name="pref_data_transfer_values">
+        <item>Wifi</item>
+        <item>Data</item>
+        <item>Wifi and Data</item>
+    </string-array>
+
+</resources>
