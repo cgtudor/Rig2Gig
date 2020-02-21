@@ -32,7 +32,8 @@ public class CredentialActivity extends AppCompatActivity {
     RadioGroup genderGroup, userGroup;
     Button submit;
 
-    String gender, userType, userId;
+    String gender, userId;
+    public static String userType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

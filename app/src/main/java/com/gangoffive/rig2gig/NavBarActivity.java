@@ -42,6 +42,18 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
             navigationView.setCheckedItem(R.id.nav_my_profile);
         }
 
+        System.out.println(R.id.userType);
+        System.out.println(R.id.userType);
+        System.out.println(R.id.userType);
+        System.out.println(R.id.userType);
+        System.out.println(R.id.userType);
+        System.out.println(R.id.userType);
+        System.out.println(R.id.userType);
+        System.out.println(R.id.userType);
+        System.out.println(R.id.userType);
+        System.out.println(R.id.userType);
+        System.out.println(R.id.userType);
+
         //Strategy design pattern
         // interface / abstract class navigation?
         // concrete basic
