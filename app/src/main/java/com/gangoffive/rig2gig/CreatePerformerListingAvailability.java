@@ -181,10 +181,10 @@ public class CreatePerformerListingAvailability extends Fragment
      */
     public void postDataToDatabase()
     {
-        Calendar calendar = Calendar.getInstance();
-        listing.put("date live",calendar);
-        calendar.add(Calendar.DATE, 30);
-        listing.put("date expires", calendar);
+//        Calendar calendar = Calendar.getInstance();
+//        listing.put("date live",calendar);
+//        calendar.add(Calendar.DATE, 30);
+//        listing.put("date expires", calendar);
         db.collection("performer-listings")
                 .add(listing)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
