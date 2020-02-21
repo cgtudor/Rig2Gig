@@ -180,6 +180,17 @@ public class LoginActivity extends AppCompatActivity{
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = fAuth.getCurrentUser();
+                            /**
+                             * Checking if this is users first time logging in or existing user
+                             */
+                            FirebaseUserMetadata metadata = fAuth.getCurrentUser().getMetadata();
+                            if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
+                                // The user is new, show them a fancy intro screen!
+                                startActivity(new Intent(getApplicationContext(), CredentialActivity.class));
+                            } else {
+                                // This is an existing user, show them a welcome back screen.
+                                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
