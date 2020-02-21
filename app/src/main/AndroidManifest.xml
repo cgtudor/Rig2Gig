@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gangoffive.rig2gig">
 
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,13 +19,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        android:theme="@style/AppTheme"
+        android:windowSoftInputMode="adjustResize"/>
         </activity>
+        <activity android:name=".PerformanceListingDetailsActivity"></activity>
         <activity android:name=".CredentialActivity" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity">
-        </activity>
+        <activity android:name=".MainActivity"/>
         <activity
             android:name=".NavBarActivity"
             android:parentActivityName=".MainActivity" />
