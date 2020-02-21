@@ -46,7 +46,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.0.0'
     implementation 'androidx.navigation:navigation-ui:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-<<<<<<< HEAD
+
     implementation files('libs/connector-framework-1.4.4.0.jar')
 
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
@@ -58,11 +58,11 @@ dependencies {
     implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
 
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
-=======
+
 
     /*Dependency for Settings Fragment*/
     implementation 'androidx.preference:preference:1.1.0'
->>>>>>> develop
+
 }
 
 apply plugin: 'com.google.gms.google-services'

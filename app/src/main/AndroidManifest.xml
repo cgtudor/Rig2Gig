@@ -19,8 +19,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        android:theme="@style/AppTheme"
-        android:windowSoftInputMode="adjustResize"/>
+<!--        android:theme="@style/AppTheme"-->
+<!--        android:windowSoftInputMode="adjustResize"/>-->
         </activity>
         <activity android:name=".PerformanceListingDetailsActivity"></activity>
         <activity android:name=".CredentialActivity" />
