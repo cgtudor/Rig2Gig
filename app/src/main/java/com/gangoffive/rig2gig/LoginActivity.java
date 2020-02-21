@@ -162,7 +162,7 @@ public class LoginActivity extends AppCompatActivity{
                 Log.w(TAG, "Google sign in failed", e);
             }
         }
-        // mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
