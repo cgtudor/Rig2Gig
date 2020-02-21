@@ -10,6 +10,11 @@
         android:clickable="true"
         android:onClick="openListing">
 
+        <ImageView
+            android:id="@+id/imageViewPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
         <LinearLayout
             android:padding="@dimen/activity_horizontal_margin"
             android:layout_width="wrap_content"
@@ -31,6 +36,12 @@
             <TextView
                 android:id="@+id/textViewLoc"
                 android:text="Location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/textViewRating"
+                android:text="Rating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

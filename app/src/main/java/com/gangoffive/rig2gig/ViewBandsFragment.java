@@ -88,12 +88,13 @@ public class ViewBandsFragment extends Fragment
                             if(!documentSnapshots.isEmpty())
                             {
                                 for(DocumentSnapshot documentSnapshot : documentSnapshots){
+
                                     PerformerListing performerListing = new PerformerListing(
                                             documentSnapshot.getId(),
                                             (String) documentSnapshot.get("name"),
                                             (String) documentSnapshot.get("genres"),
-                                            (String) documentSnapshot.get("location")
-                                            //rating
+                                            (String) documentSnapshot.get("location"),
+                                            (String) documentSnapshot.get("bandRef")
                                     );
 
                                     performerListings.add(performerListing);

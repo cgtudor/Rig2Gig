@@ -6,12 +6,13 @@ public class PerformerListing {
     private String name;
     private String genres;
     private String location;
+    private String bandRef;
 
     public PerformerListing(){
 
     }
 
-    public PerformerListing(String listingRef, String name, String genres, String location) {
+    public PerformerListing(String listingRef, String name, String genres, String location, String bandRef) {
         this.listingRef = listingRef;
         this.name = name;
         this.genres = genres;
@@ -28,5 +29,13 @@ public class PerformerListing {
 
     public String getName() {
         return name;
+    }
+
+    public String getListingRef() {
+        return listingRef;
+    }
+
+    public String getBandRef() {
+        return bandRef;
     }
 }
