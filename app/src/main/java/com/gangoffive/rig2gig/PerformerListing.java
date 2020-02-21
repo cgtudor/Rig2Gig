@@ -17,6 +17,7 @@ public class PerformerListing {
         this.name = name;
         this.genres = genres;
         this.location = location;
+        this.bandRef = bandRef;
     }
 
     public String getGenres() {

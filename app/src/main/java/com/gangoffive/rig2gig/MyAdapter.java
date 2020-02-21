@@ -55,7 +55,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         holder.textViewGenres.setText(performerListing.getGenres());
         holder.textViewLoc.setText(performerListing.getLocation());
 
-        /*DocumentReference docRef = colRef.document(performerListing.getBandRef());
+        /*final StringBuilder rating = new StringBuilder("");
+
+        DocumentReference docRef = colRef.document(performerListing.getBandRef());
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -64,8 +66,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+                        rating.append(document.get("Rating").toString());
 
-                        holder.textViewRating.setText(document.get("Rating").toString());
 
                     } else {
                         Log.d("FIRESTORE", "No such document");
@@ -74,7 +76,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
                     Log.d("FIRESTORE", "get failed with ", task.getException());
                 }
             }
-        });*/
+        });
+        holder.textViewRating.setText(rating.toString());*/
 
     }
 
@@ -98,16 +101,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
             textViewName = (TextView) itemView.findViewById(R.id.textViewName);
             textViewGenres = (TextView) itemView.findViewById(R.id.textViewGenres);
             textViewLoc = (TextView) itemView.findViewById(R.id.textViewLoc);
-            //textViewRating = (TextView) itemView.findViewById((R.id.textViewRating);
+            //textViewRating = (TextView) itemView.findViewById(R.id.textViewRating);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            /*itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, PerformanceListingDetailsActivity.class);
                     //intent.putExtra("listingRef", getRefSomeHow)
                     //startActivity(intent);
                 }
-            });
+            });*/
         }
     }
 }

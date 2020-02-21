@@ -6,9 +6,10 @@
     <androidx.cardview.widget.CardView
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:onClick="openListing">
+        android:layout_height="wrap_content">
+        <!--android:clickable="false"
+        android:onClick="openListing"-->
+
 
         <ImageView
             android:id="@+id/imageViewPhoto"
