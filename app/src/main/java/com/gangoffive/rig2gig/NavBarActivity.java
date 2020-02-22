@@ -1,6 +1,7 @@
 package com.gangoffive.rig2gig;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -68,9 +69,22 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
             case R.id.nav_my_band:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyBandFragment()).commit();
                 break;
-            case R.id.nav_create_performer_listing:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreatePerformerListing()).commit();
+            case R.id.nav_create_performer_advertisement:
+                Intent performerAdIntent = new Intent(this, CreatePerformerAdvertisement.class);
+                startActivity(performerAdIntent);
                 break;
+/*            case R.id.nav_create_venue_advertisement:
+                Intent venueAdIntent = new Intent(this, CreateVenueAdvertisement.class);
+                startActivity(venueAdIntent);
+                break;
+            case R.id.nav_create_band_advertisement:
+                Intent bandAdIntent = new Intent(this, CreateBandAdvertisement.class);
+                startActivity(bandAdIntent);
+                break;
+            case R.id.nav_create_musician_advertisement:
+                Intent musicianAdIntent = new Intent(this, CreateMusicianAdvertisement.class);
+                startActivity(musicianAdIntent);
+                break;*/
             case R.id.nav_create_band:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateBandFragment()).commit();
                 break;
