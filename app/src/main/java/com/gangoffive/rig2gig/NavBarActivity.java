@@ -74,14 +74,14 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
                 startActivity(performerAdIntent);
                 break;
 /*            case R.id.nav_create_venue_advertisement:
-                Intent venueAdIntent = new Intent(this, CreateVenueAdvertisement.class);
-                startActivity(venueAdIntent);
-                break;
+            Intent venueAdIntent = new Intent(this, CreateVenueAdvertisement.class);
+            startActivity(venueAdIntent);
+            break;*/
             case R.id.nav_create_band_advertisement:
                 Intent bandAdIntent = new Intent(this, CreateBandAdvertisement.class);
                 startActivity(bandAdIntent);
                 break;
-            case R.id.nav_create_musician_advertisement:
+/*            case R.id.nav_create_musician_advertisement:
                 Intent musicianAdIntent = new Intent(this, CreateMusicianAdvertisement.class);
                 startActivity(musicianAdIntent);
                 break;*/

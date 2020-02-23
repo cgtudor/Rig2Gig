@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".CreatePerformerAdvertisement"
-    tools:showIn="@layout/activity_create_performer_advertisement">
+    tools:context=".CreateBandAdvertisement"
+    tools:showIn="@layout/activity_create_band_advertisement">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".CreatePerformerAdvertisement">
+        tools:context=".CreateBandAdvertisement">
 
         <TextView
             android:id="@+id/name"
@@ -37,26 +37,25 @@
             app:srcCompat="@android:color/background_light" />
 
         <EditText
-            android:id="@+id/distance"
+            android:id="@+id/position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:ems="10"
-            android:inputType="numberDecimal"
             android:textSize="18sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/distanceLabel"
+            app:layout_constraintBaseline_toBaselineOf="@+id/positionLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.562"
-            app:layout_constraintStart_toEndOf="@+id/distanceLabel" />
+            app:layout_constraintStart_toEndOf="@+id/positionLabel" />
 
 
         <TextView
-            android:id="@+id/distanceLabel"
+            android:id="@+id/positionLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:text="Travel distance: "
+            android:text="Band positions:"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageLayout" />
@@ -94,12 +93,12 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/distance">
+            app:layout_constraintTop_toBottomOf="@+id/description">
 
             <Button
                 android:id="@+id/cancel"
@@ -118,6 +117,30 @@
                 android:layout_weight="1.0"
                 android:text="Create" />
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="225dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/position" />
+
+        <TextView
+            android:id="@+id/descriptionLabel"
+            android:layout_width="129dp"
+            android:layout_height="31dp"
+            android:layout_marginStart="16dp"
+            android:text="Position Details:"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/description"
+            app:layout_constraintEnd_toStartOf="@+id/description"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
