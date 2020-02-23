@@ -20,6 +20,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="select_device">Select device</string>
+    <string name="image">Image</string>
+    <string name="details">Details</string>
     <string name="title_activity_test_transition">TestTransitionActivity</string>
     <string name="title_activity_create_performer_advertisement">CreatePerformerAdvertisement
     </string>
@@ -114,5 +116,8 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_create_band_advertisement">CreateBandAdvertisement</string>
+    <string name="title_activity_create_musician_advertisement">CreateMusicianAdvertisement</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 
 </resources>

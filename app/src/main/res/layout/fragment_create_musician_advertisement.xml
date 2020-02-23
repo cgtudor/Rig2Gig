@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.CreateMusicianAdvertisement.PlaceholderFragment">
+
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="362dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="16dp"
+        android:text="           "
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="367dp"
+        android:layout_height="223dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        app:srcCompat="@android:color/background_light" />
+
+    <LinearLayout
+        android:id="@+id/imageButtonLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image">
+
+        <Button
+            android:id="@+id/galleryImage"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_marginStart="80dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1.0"
+            android:text="Gallery" />
+
+        <Button
+            android:id="@+id/takePhoto"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="80dp"
+            android:layout_weight="1.0"
+            android:text="Camera"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

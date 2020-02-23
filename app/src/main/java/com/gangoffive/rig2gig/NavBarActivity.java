@@ -81,10 +81,10 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
                 Intent bandAdIntent = new Intent(this, CreateBandAdvertisement.class);
                 startActivity(bandAdIntent);
                 break;
-/*            case R.id.nav_create_musician_advertisement:
+            case R.id.nav_create_musician_advertisement:
                 Intent musicianAdIntent = new Intent(this, CreateMusicianAdvertisement.class);
                 startActivity(musicianAdIntent);
-                break;*/
+                break;
             case R.id.nav_create_band:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateBandFragment()).commit();
                 break;
