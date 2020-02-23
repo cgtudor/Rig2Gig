@@ -30,10 +30,7 @@
             android:title="About Us"/>
         <item android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
-            android:title="Settings"/>
-        <item android:id="@+id/nav_privacy_policy"
-            android:icon="@drawable/ic_privacy_policy"
-            android:title="Privacy Policy"/>
+            android:title="Settings" />
         <item android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"
             android:title="Logout"/>

@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ExpandableListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -16,10 +17,17 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
 {
     private DrawerLayout drawer;
 
+    /**
+     * This method is used to create the navigation bar.
+     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_main);
 
         /*Nav-Bar*/
@@ -28,31 +36,32 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        //Decide which navbar to display.
+        NavigationContext navigationContext = new NavigationContext();
+        navigationContext.navBarFinder(CredentialActivity.userType, navigationView);
+
+
+        //navigationView.getMenu().removeItem(R.id.nav_my_profile);
+
+
+
         navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_draw_open, R.string.navigation_draw_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+
+
         /*On startup, the my profile page will be shown. Upon rotation, savedInstanceState
         will not be null and therefore will not navigate the user away from what they
         are currently viewing.*/
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null)
+        {
             //Following line determines the first fragment shown to the user.
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyProfileFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_my_profile);
         }
-
-        System.out.println(R.id.userType);
-        System.out.println(R.id.userType);
-        System.out.println(R.id.userType);
-        System.out.println(R.id.userType);
-        System.out.println(R.id.userType);
-        System.out.println(R.id.userType);
-        System.out.println(R.id.userType);
-        System.out.println(R.id.userType);
-        System.out.println(R.id.userType);
-        System.out.println(R.id.userType);
-        System.out.println(R.id.userType);
 
         //Strategy design pattern
         // interface / abstract class navigation?
@@ -101,9 +110,9 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
                 break;
-            case R.id.nav_privacy_policy:
+            /*case R.id.nav_privacy_policy:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PrivacyPolicyFragment()).commit();
-                break;
+                break;*/
             default:
                 break;
         }
