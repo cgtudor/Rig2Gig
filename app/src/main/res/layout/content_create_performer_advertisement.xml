@@ -14,41 +14,17 @@
         android:layout_height="match_parent"
         tools:context=".CreatePerformerListing">
 
-
-        <Button
-            android:id="@+id/changeImage"
-            android:layout_width="124dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="8dp"
-            android:onClick="getGalleryImage"
-            android:text="Gallery"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.198"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image" />
-
-        <TextView
-            android:id="@+id/BandNameLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:text="Band Name: "
-            android:textSize="18sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/name"
-            app:layout_constraintStart_toStartOf="parent" />
-
         <TextView
             android:id="@+id/name"
-            android:layout_width="207dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="362dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="16dp"
             android:text="           "
-            android:textSize="18sp"
+            android:textAlignment="center"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/BandNameLabel"
-            tools:layout_editor_absoluteY="16dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/image"
@@ -57,19 +33,8 @@
             android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/BandNameLabel"
+            app:layout_constraintTop_toBottomOf="@+id/name"
             app:srcCompat="@android:color/background_light" />
-
-        <Button
-            android:id="@+id/takePhoto"
-            android:layout_width="105dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="16dp"
-            android:onClick="getCameraImage"
-            android:text="Camera"
-            app:layout_constraintBaseline_toBaselineOf="@+id/changeImage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/changeImage" />
 
         <EditText
             android:id="@+id/distance"
@@ -94,7 +59,37 @@
             android:text="Travel distance: "
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/takePhoto" />
+            app:layout_constraintTop_toBottomOf="@+id/imageLayout" />
+
+        <LinearLayout
+            android:id="@+id/imageLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image">
+
+            <Button
+                android:id="@+id/galleryImage"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="80dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1.0"
+                android:text="Gallery" />
+
+            <Button
+                android:id="@+id/takePhoto"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="80dp"
+                android:layout_weight="1.0"
+                android:text="Camera"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -112,7 +107,6 @@
                 android:layout_height="fill_parent"
                 android:layout_marginStart="50dp"
                 android:layout_weight="1.0"
-                android:onClick="cancelAdvertisement"
                 android:text="Cancel" />
 
             <Button
@@ -120,8 +114,8 @@
                 android:layout_width="0.0dip"
                 android:layout_height="fill_parent"
                 android:layout_marginEnd="50dp"
+
                 android:layout_weight="1.0"
-                android:onClick="createAdvertisement"
                 android:text="Create" />
         </LinearLayout>
 
