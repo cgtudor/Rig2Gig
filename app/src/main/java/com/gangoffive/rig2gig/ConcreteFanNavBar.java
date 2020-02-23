@@ -14,6 +14,5 @@ public class ConcreteFanNavBar implements NavigationStrategyInterface
     {
         navigationView.getMenu().removeItem(R.id.nav_my_band);
         navigationView.getMenu().removeItem(R.id.nav_create_band);
-        navigationView.getMenu().removeItem(R.id.nav_create_performer_listing);
     }
 }
