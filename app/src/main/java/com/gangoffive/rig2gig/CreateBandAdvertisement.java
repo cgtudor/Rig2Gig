@@ -5,15 +5,18 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 
+import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.gangoffive.rig2gig.ui.CreateBandAdvertisement.SectionsPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,25 +34,22 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
     private Map<String, Object> band;
     private ListingManager listingManager;
 
-    /**
-     * setup view and listing manager, initiating getting performer info from database
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_create_band_advertisement);
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(sectionsPagerAdapter);
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
 
         bandRef = "TvuDGJwqX13vJ6LWZYB2";
         type = "Band";
 
-        setContentView(R.layout.activity_create_band_advertisement);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         listingManager = new ListingManager(bandRef, type);
         listingManager.getUserInfo(this);
     }
-
 
     /**
      * handles activity results

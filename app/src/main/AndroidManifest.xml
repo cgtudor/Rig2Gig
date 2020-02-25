@@ -14,12 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".CreateMusicianAdvertisement"
-            android:label="@string/title_activity_create_musician_advertisement"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
             android:name=".CreateBandAdvertisement"
             android:label="@string/title_activity_create_band_advertisement"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".CreateMusicianAdvertisement"
+            android:label="@string/title_activity_create_musician_advertisement"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CreatePerformerAdvertisement"
