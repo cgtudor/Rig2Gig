@@ -78,7 +78,7 @@ public class ListingManager
         {
             docRef = db.collection("venues").document(userRef);
             bandImageRef = storageRef.child("/images/venues/" + userRef + ".jpg");
-            collectionPath = "performer-listings";
+            collectionPath = "venue-listings";
             imagePath = collectionPath;
         }
     }

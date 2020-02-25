@@ -2,23 +2,15 @@ package com.gangoffive.rig2gig;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
-
-import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.gangoffive.rig2gig.ui.CreateMusicianAdvertisement.SectionsPagerAdapter;
-
+import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,13 +26,18 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     private HashMap<String, Object> listing;
     private Map<String, Object> band;
     private ListingManager listingManager;
+    private int[] tabTitles;
+    private int[] fragments = {R.layout.fragment_create_musician_advertisement_image,
+                               R.layout.fragment_create_musician_advertisement_details};
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_musician_advertisement);
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        tabTitles = new int[]{R.string.image, R.string.details};
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
+                (this, getSupportFragmentManager(), tabTitles, fragments);
+                ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);

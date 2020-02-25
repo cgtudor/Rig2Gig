@@ -2,44 +2,36 @@ package com.gangoffive.rig2gig;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
-
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
+import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class CreateBandAdvertisement extends AppCompatActivity implements CreateAdvertisement {
+public class CreateVenueAdvertisement extends AppCompatActivity implements CreateAdvertisement {
 
 
-    private TextView name, position, description;
+    private TextView name, description;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
-    private String bandRef, type;
+    private String venueRef, type;
     private HashMap<String, Object> listing;
     private Map<String, Object> band;
     private ListingManager listingManager;
     private int[] tabTitles;
-    private int[] fragments = {R.layout.fragment_create_band_advertisement_image,
-                               R.layout.fragment_create_band_advertisement_details};
+    private int[] fragments = {R.layout.fragment_create_venue_advertisement_image,
+            R.layout.fragment_create_venue_advertisement_details};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_band_advertisement);
+        setContentView(R.layout.activity_create_venue_advertisement);
         tabTitles = new int[]{R.string.image, R.string.details};
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
                 (this, getSupportFragmentManager(), tabTitles, fragments);
@@ -48,12 +40,14 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        bandRef = "TvuDGJwqX13vJ6LWZYB2";
-        type = "Band";
+        venueRef = "cavWo1C735Rft0NHvhcL";
+        type = "Venue";
 
-        listingManager = new ListingManager(bandRef, type);
+
+        listingManager = new ListingManager(venueRef, type);
         listingManager.getUserInfo(this);
     }
+
 
     /**
      * handles activity results
@@ -74,7 +68,6 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
     public void setViewReferences() {
         name = findViewById(R.id.name);
         image = findViewById(R.id.image);
-        position = findViewById(R.id.position);
         description = findViewById(R.id.description);
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +116,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         if (validateDataMap()) {
             listingManager.postDataToDatabase(listing, image, this);
         } else {
-            Toast.makeText(CreateBandAdvertisement.this,
+            Toast.makeText(CreateVenueAdvertisement.this,
                     "Listing not created.  Ensure all fields are complete " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
@@ -137,16 +130,16 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Intent intent = new Intent(CreateBandAdvertisement.this, MainActivity.class);
+            Intent intent = new Intent(CreateVenueAdvertisement.this, MainActivity.class);
             intent.putExtra("EXTRA_BAND_LISTING_ID", listingManager.getListingRef());
             startActivity(intent);
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(CreateBandAdvertisement.this,
+            Toast.makeText(CreateVenueAdvertisement.this,
                     "Listing creation failed.  Check your connection " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(CreateBandAdvertisement.this,
+            Toast.makeText(CreateVenueAdvertisement.this,
                     "Listing creation failed.  Check your connection " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
@@ -158,7 +151,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
      */
     @Override
     public void cancelAdvertisement() {
-        Intent backToMain = new Intent(CreateBandAdvertisement.this,
+        Intent backToMain = new Intent(CreateVenueAdvertisement.this,
                 MainActivity.class);
         startActivity(backToMain);
     }
@@ -169,11 +162,8 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
     public void listingDataMap() {
         if (listing == null) {
             listing = new HashMap<>();
-            listing.put("band-ref", bandRef);
+            listing.put("band-ref", venueRef);
         }
-        List positions = new ArrayList();
-        positions.add(position.getText().toString());
-        listing.put("position", positions);
         listing.put("description", description.getText().toString());
     }
 

@@ -25,6 +25,9 @@
             android:name=".CreatePerformerAdvertisement"
             android:label="@string/title_activity_create_performer_advertisement"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CreateVenueAdvertisement"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".LaunchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

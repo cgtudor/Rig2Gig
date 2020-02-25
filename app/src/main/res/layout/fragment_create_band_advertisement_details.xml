@@ -5,56 +5,63 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.CreateBandAdvertisement.PlaceholderFragment">
+    tools:context=".ui.TabbedView.PlaceholderFragment">
+
 
     <EditText
         android:id="@+id/position"
-        android:layout_width="wrap_content"
+        android:layout_width="338dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:maxLength="500"
         android:layout_marginEnd="16dp"
         android:ems="10"
+        android:hint="Enter the band positions to be filled"
         android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/positionLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.562"
-        app:layout_constraintStart_toEndOf="@+id/positionLabel"  />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/positionLabel" />
 
     <TextView
         android:id="@+id/positionLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:text="Band positions:"
-        android:textSize="18sp"
+        android:text="Band positions"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/descriptionLabel"
+        android:layout_width="176dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="24dp"
+        android:text="Position details"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/position" />
+
     <EditText
         android:id="@+id/description"
-        android:layout_width="225dp"
+        android:layout_width="336dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:maxLength="500"
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:gravity="start|top"
+        android:hint="Describe your band to the musician and explain what you are looking for"
         android:inputType="textMultiLine"
         android:singleLine="false"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/position" />
-
-    <TextView
-        android:id="@+id/descriptionLabel"
-        android:layout_width="129dp"
-        android:layout_height="31dp"
-        android:layout_marginStart="16dp"
-        android:text="Position Details:"
-        android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/description"
-        app:layout_constraintEnd_toStartOf="@+id/description"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionLabel" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
