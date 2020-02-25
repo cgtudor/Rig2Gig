@@ -31,7 +31,8 @@
         <activity
             android:name=".NavBarActivity"
             android:parentActivityName=".MainActivity" />
-
+        <activity android:name=".ConcreteFanNavBar"
+            android:parentActivityName=".NavBarActivity"/>
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 

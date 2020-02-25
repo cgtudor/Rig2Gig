@@ -1,23 +1,22 @@
 package com.gangoffive.rig2gig;
 
-import com.google.android.material.navigation.NavigationView;
-
 import java.util.HashMap;
+
 
 public class NavigationContext
 {
-    private HashMap<String, NavigationStrategyInterface> navBarAlgorithmMap;
+    private HashMap<String, Class> navBarAlgorithmMap;
 
-    NavigationContext()
+    public NavigationContext()
     {
         navBarAlgorithmMap = new HashMap<>();
-        navBarAlgorithmMap.put("Band", new ConcreteFanNavBar());
-        navBarAlgorithmMap.put("Musician", new MusicianNavigation());
-        navBarAlgorithmMap.put("Venue", new VenueNavigation());
+        navBarAlgorithmMap.put("Band", ConcreteFanNavBar.class);
+        //navBarAlgorithmMap.put("Musician", new ConcreteMusicianNavBar());
+        //navBarAlgorithmMap.put("Venue", new ConcreteVenueNavBar());
     }
 
-    public void navBarFinder(String userType, NavigationView navigationView)
+    public Class navBarFinder(String userType)
     {
-        navBarAlgorithmMap.get(userType).createNavBar(navigationView);
+        return navBarAlgorithmMap.get(userType);
     }
 }
