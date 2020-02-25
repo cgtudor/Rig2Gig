@@ -40,7 +40,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import org.identityconnectors.common.security.GuardedString;
 
 public class LoginActivity extends AppCompatActivity{
-        private static final String TAG = "TAG";
+    private static final String TAG = "TAG";
     private static final int RC_SIGN_IN = 234;
 
     FirebaseAuth fAuth;
