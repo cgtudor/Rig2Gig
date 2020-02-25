@@ -11,8 +11,8 @@ public class NavigationContext
     {
         navBarAlgorithmMap = new HashMap<>();
         navBarAlgorithmMap.put("Band", ConcreteFanNavBar.class);
-        //navBarAlgorithmMap.put("Musician", new ConcreteMusicianNavBar());
-        //navBarAlgorithmMap.put("Venue", new ConcreteVenueNavBar());
+        navBarAlgorithmMap.put("Musician", ConcreteMusicianNavBar.class);
+        navBarAlgorithmMap.put("Venue", ConcreteVenueNavBar.class);
     }
 
     public Class navBarFinder(String userType)

@@ -14,10 +14,7 @@ import com.google.android.material.navigation.NavigationView;
 
 public class ConcreteFanNavBar extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
-    protected Toolbar toolbar;
-    protected DrawerLayout drawer;
-    protected NavigationView navigationView;
-    protected ActionBarDrawerToggle toggle;
+    private DrawerLayout drawer;
 
     public ConcreteFanNavBar()
     {
@@ -30,12 +27,12 @@ public class ConcreteFanNavBar extends AppCompatActivity implements NavigationVi
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_concrete_fan_nav_bar);
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_concrete_fan);
-        navigationView = findViewById(R.id.nav_concrete_fan_view);
+        NavigationView navigationView = findViewById(R.id.nav_concrete_fan_view);
         navigationView.setNavigationItemSelectedListener(this);
-        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_draw_open, R.string.navigation_draw_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_draw_open, R.string.navigation_draw_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -45,9 +42,6 @@ public class ConcreteFanNavBar extends AppCompatActivity implements NavigationVi
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyProfileFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_my_profile);
         }
-
-        /*navigationView.getMenu().removeItem(R.id.nav_my_band);
-        navigationView.getMenu().removeItem(R.id.nav_create_band);*/
     }
 
     @Override
@@ -60,5 +54,18 @@ public class ConcreteFanNavBar extends AppCompatActivity implements NavigationVi
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if(drawer.isDrawerOpen(GravityCompat.START))
+        {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else
+        {
+            super.onBackPressed();
+        }
     }
 }

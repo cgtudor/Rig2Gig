@@ -81,7 +81,7 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
     /**
      * If the back button is pressed, simply close the navigation drawer instead of navigating away from the activity.
      */
-    @Override
+    /*@Override
     public void onBackPressed()
     {
         if(drawer.isDrawerOpen(GravityCompat.START))
@@ -92,5 +92,5 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
         {
             super.onBackPressed();
         }
-    }
+    }*/
 }
