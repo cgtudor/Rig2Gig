@@ -26,8 +26,6 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
     {
         super.onCreate(savedInstanceState);
 
-
-
         setContentView(R.layout.activity_main);
 
         /*Nav-Bar*/
@@ -41,17 +39,10 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
         NavigationContext navigationContext = new NavigationContext();
         navigationContext.navBarFinder(CredentialActivity.userType, navigationView);
 
-
-        //navigationView.getMenu().removeItem(R.id.nav_my_profile);
-
-
-
         navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_draw_open, R.string.navigation_draw_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-
 
         /*On startup, the my profile page will be shown. Upon rotation, savedInstanceState
         will not be null and therefore will not navigate the user away from what they
@@ -80,43 +71,10 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
     {
-        //Factory design pattern
-        switch(menuItem.getItemId())
-        {
-            case R.id.nav_my_profile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyProfileFragment()).commit();
-                break;
-            case R.id.nav_my_band:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyBandFragment()).commit();
-                break;
-            case R.id.nav_create_performer_listing:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreatePerformerListing()).commit();
-                break;
-            case R.id.nav_create_band:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateBandFragment()).commit();
-                break;
-            case R.id.nav_view_bands:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewBandsFragment()).commit();
-                break;
-            case R.id.nav_view_venues:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewVenuesFragment()).commit();
-                break;
-            case R.id.nav_notifications:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NotificationsFragment()).commit();
-                break;
-            case R.id.nav_about_us:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AboutUsFragment()).commit();
-                break;
-            case R.id.nav_settings:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
-                break;
-            /*case R.id.nav_privacy_policy:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PrivacyPolicyFragment()).commit();
-                break;*/
-            default:
-                break;
-        }
+        NavBarFactory navBarFactory = new NavBarFactory();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, navBarFactory.selectFragment(menuItem)).commit() ;
 
+        //Add following lines to concrete classes of Fan, Musician and Venue.
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
