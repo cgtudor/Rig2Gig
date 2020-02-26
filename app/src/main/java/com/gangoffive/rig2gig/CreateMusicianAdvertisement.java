@@ -37,9 +37,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
                                R.layout.fragment_create_musician_advertisement_details};
     private GridView gridView;
     static final String[] positions = new String[] {
-            "Rhythm Guitar","Lead Guitar","Bass Guitar","Drums","Vocals","Keyboard","Trumpet","Cello",
-            "Saxaphone","Trombone","Tuba","Washboard","Triangle","Accordion","Harp","Flute",
-            "Clarinet","Cor","Bassoon","Bell","Gong","Bongo","Castanets","Chimes"};
+            "Rhythm Guitar","Lead Guitar","Bass Guitar","Drums","Vocals","Keyboard"};
     private List bandPositions;
     private ArrayAdapter<String> adapter;
     private Drawable chosenPic;
