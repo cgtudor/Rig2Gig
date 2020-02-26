@@ -19,7 +19,7 @@
         android:inputType="textMultiLine"
         android:singleLine="false"
         android:textSize="18sp"
-        android:hint="Enter information to display to performers e.g. dates, times, genres etc"
+        android:hint="Enter information to display to performers e.g. preferred dates, times, genres etc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionLabel" />

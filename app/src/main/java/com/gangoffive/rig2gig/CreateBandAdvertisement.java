@@ -5,8 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.viewpager.widget.ViewPager;
@@ -39,7 +37,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
     private ListingManager listingManager;
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_create_band_advertisement_image,
-            R.layout.fragment_create_band_advertisement_position,
+            R.layout.fragment_create_advertisement_position,
             R.layout.fragment_create_band_advertisement_details};
     private GridView gridView;
     static final String[] positions = new String[] {
@@ -166,9 +164,6 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
                     {
                         bandPositions.remove(((CheckedTextView) v).getText());
                     }
-
-                    Toast.makeText(getApplicationContext(),
-                            ((TextView) v).getText(), Toast.LENGTH_SHORT).show();
                 }
             });
         }

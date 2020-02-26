@@ -10,8 +10,8 @@
 
     <TextView
         android:id="@+id/descriptionLabel"
-        android:layout_width="129dp"
-        android:layout_height="31dp"
+        android:layout_width="203dp"
+        android:layout_height="32dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:text="Position details"
@@ -33,7 +33,7 @@
         android:inputType="textMultiLine"
         android:singleLine="false"
         android:textSize="18sp"
-        android:hint="Describe your band to the musician and explain what you are looking for"
+        android:hint="Describe your band to musicians and explain what you are looking for"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionLabel" />

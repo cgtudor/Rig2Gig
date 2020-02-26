@@ -33,7 +33,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     private ListingManager listingManager;
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_create_musician_advertisement_image,
-                               R.layout.fragment_create_band_advertisement_position,
+                               R.layout.fragment_create_advertisement_position,
                                R.layout.fragment_create_musician_advertisement_details};
     private GridView gridView;
     static final String[] positions = new String[] {
@@ -162,9 +162,6 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
                     {
                         bandPositions.remove(((CheckedTextView) v).getText());
                     }
-
-                    Toast.makeText(getApplicationContext(),
-                            ((TextView) v).getText(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
