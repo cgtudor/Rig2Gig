@@ -143,6 +143,9 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         }
     }
 
+    /**
+     * Setup grid view for storing performer types
+     */
     public void setupGridView()
     {
         if (gridView != null && gridView.getAdapter() == null)
@@ -180,6 +183,9 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         }
     }
 
+    /**
+     * Save values of tabs that may be destroyed
+     */
     @Override
     public void saveTabs()
     {
@@ -194,6 +200,9 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         reinitialiseTabs();
     }
 
+    /**
+     * Reinitialise values of tabs that may have been destroyed
+     */
     @Override
     public void reinitialiseTabs() {
         setViewReferences();
@@ -242,7 +251,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
             Intent intent = new Intent(CreateMusicianAdvertisement.this, MainActivity.class);
-            intent.putExtra("EXTRA_BAND_LISTING_ID", listingManager.getListingRef());
+            intent.putExtra("EXTRA_MUSICIAN_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             sectionsPagerAdapter = null;
             viewPager = null;

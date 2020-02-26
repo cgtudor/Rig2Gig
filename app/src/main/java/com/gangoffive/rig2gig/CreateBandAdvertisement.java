@@ -3,13 +3,10 @@ package com.gangoffive.rig2gig;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
-
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,7 +16,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -145,6 +141,9 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         }
     }
 
+    /**
+     * Setup grid view for storing performer types
+     */
     public void setupGridView()
     {
         if (gridView != null && gridView.getAdapter() == null)
@@ -182,6 +181,9 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         }
     }
 
+    /**
+     * Save values of tabs that may be destroyed
+     */
     @Override
     public void saveTabs()
     {
@@ -196,6 +198,9 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         reinitialiseTabs();
     }
 
+    /**
+     * Reinitialise values of tabs that may have been destroyed
+     */
     @Override
     public void reinitialiseTabs() {
         setViewReferences();

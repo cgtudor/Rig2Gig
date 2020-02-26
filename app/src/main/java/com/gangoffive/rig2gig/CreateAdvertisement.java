@@ -1,6 +1,5 @@
 package com.gangoffive.rig2gig;
 
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import java.util.Map;
 
@@ -58,6 +57,9 @@ public interface CreateAdvertisement
      */
     public void handleDatabaseResponse (Enum creationResult);
 
+    /**
+     * process actions best executed upon successfully downloading image from database
+     */
     public void onSuccessfulImageDownload();
 
 

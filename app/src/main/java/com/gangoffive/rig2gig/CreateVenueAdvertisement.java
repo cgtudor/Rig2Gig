@@ -133,6 +133,9 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
         }
     }
 
+    /**
+     * Save values of tabs that may be destroyed
+     */
     @Override
     public void saveTabs()
     {
@@ -147,6 +150,9 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
         reinitialiseTabs();
     }
 
+    /**
+     * Reinitialise values of tabs that may have been destroyed
+     */
     @Override
     public void reinitialiseTabs() {
         setViewReferences();
@@ -195,7 +201,7 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
             Intent intent = new Intent(CreateVenueAdvertisement.this, MainActivity.class);
-            intent.putExtra("EXTRA_BAND_LISTING_ID", listingManager.getListingRef());
+            intent.putExtra("EXTRA_VENUE_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
             finish();

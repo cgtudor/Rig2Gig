@@ -30,28 +30,44 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         fragments = fragmentArray;
     }
 
+    /**
+     * Instantiate a fragment
+     * @param position
+     * @return
+     */
     @Override
     public Fragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
         Fragment fragment = PlaceholderFragment.newInstance(position, fragments);
         return fragment;
     }
 
+    /**
+     * get tab title for given position
+     * @param position of tab
+     * @return sequence representing title
+     */
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
         return mContext.getResources().getString(TAB_TITLES[position]);
     }
 
+    /**
+     * return number of tabs, also used to save data of tabs that may be lost and set the soft
+     * input mode of new tabs
+     * @return number of tabs
+     */
     @Override
     public int getCount() {
-        // Show 2 total pages.
         ((TabbedViewReferenceInitialiser) mContext).saveTabs();
         ((Activity)mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         return TAB_TITLES.length;
     }
 
+    /**
+     * get context that will hold the tabs
+     * @return context
+     */
     public static Context getmContext()
     {
         return mContext;

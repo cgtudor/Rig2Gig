@@ -8,8 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.gangoffive.rig2gig.TabbedViewReferenceInitialiser;
-
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -20,6 +18,12 @@ public class PlaceholderFragment extends Fragment {
 
     private PageViewModel pageViewModel;
 
+    /**
+     * create new PlaceholderFragment for use in tabbed view
+     * @param index index of tab
+     * @param fragmentArray array of fragments to populate the tabs
+     * @return newly created fragment
+     */
     public static PlaceholderFragment newInstance(int index, int [] fragmentArray) {
         PlaceholderFragment fragment = new PlaceholderFragment();
         Bundle bundle = new Bundle();
@@ -29,6 +33,10 @@ public class PlaceholderFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Overridden onCreate method
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +48,13 @@ public class PlaceholderFragment extends Fragment {
         pageViewModel.setIndex(index);
     }
 
+    /**
+     * Overridden onCreateView method to inflate each fragment as required
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
