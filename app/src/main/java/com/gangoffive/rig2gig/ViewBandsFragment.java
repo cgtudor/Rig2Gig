@@ -1,10 +1,12 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,9 +39,9 @@ public class ViewBandsFragment extends Fragment
     private List<DocumentSnapshot> documentSnapshots;
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private MyAdapter adapter;
 
-    private List<PerformerListing> performerListings;
+    private ArrayList<PerformerListing> performerListings;
 
     @Nullable
     @Override
@@ -50,34 +52,11 @@ public class ViewBandsFragment extends Fragment
         db = FirebaseFirestore.getInstance();
         colRef = db.collection("performer-listings");
 
-        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         performerListings = new ArrayList<>();
 
         Query first = colRef
                 .orderBy("name")
                 .limit(10);
-
-        /*first.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot querySnapshot) {
-                        documentSnapshots= querySnapshot.getDocuments();
-
-                        for(DocumentSnapshot documentSnapshot: documentSnapshots){
-                            PerformerListing performerListing = new PerformerListing(
-                                             documentSnapshot.getId(),
-                                    (String) documentSnapshot.get("name"),
-                                    (String) documentSnapshot.get("genres"),
-                                    (String) documentSnapshot.get("location")
-                            );
-
-                            performerListings.add(performerListing);
-                        }
-                    }
-                });*/
 
         first.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -98,9 +77,23 @@ public class ViewBandsFragment extends Fragment
                                     );
 
                                     performerListings.add(performerListing);
-                            }
+                                }
                                 adapter = new MyAdapter(performerListings, getContext());
 
+                                adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(int position) {
+                                        Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
+                                        String listingRef = performerListings.get(position).getListingRef();
+                                        openListingIntent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingRef);
+                                        v.getContext().startActivity(openListingIntent);
+                                    }
+                                });
+
+                                recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+                                recyclerView.setHasFixedSize(true);
+                                LinearLayoutManager llManager = new LinearLayoutManager(getContext());
+                                recyclerView.setLayoutManager(llManager);
                                 recyclerView.setAdapter(adapter);
 
                                 Log.d(TAG, "get successful with data");
@@ -112,8 +105,6 @@ public class ViewBandsFragment extends Fragment
                         }
                     }
                 });
-
-
 
         return v;
     }
