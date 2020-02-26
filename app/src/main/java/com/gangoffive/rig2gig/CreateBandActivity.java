@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
@@ -99,6 +101,17 @@ public class CreateBandActivity extends Activity {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(CreateBandActivity.this, "Band has been created", Toast.LENGTH_SHORT).show();
+
+                DocumentReference userInfo = fStore.collection("users").document(userID);
+                Map<String, Object> user = new HashMap<>();
+                user.put("band-ref", bandUUID);
+                userInfo.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        System.out.println("=============================== Band ref added");
+                        startActivity(new Intent(getApplicationContext(), MyBandActivity.class));
+                    }
+                });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

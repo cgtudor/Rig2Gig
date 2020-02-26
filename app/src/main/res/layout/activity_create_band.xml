@@ -37,6 +37,7 @@
         android:ems="10"
         android:hint="Band Name"
         android:inputType="textPersonName"
+        android:text="Example Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createBandTxt" />
@@ -49,6 +50,7 @@
         android:ems="10"
         android:hint="Band Location"
         android:inputType="textPersonName"
+        android:text="Middlesbrough"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/BandName" />
@@ -61,6 +63,7 @@
         android:ems="10"
         android:hint="Distance To Travel"
         android:inputType="textPersonName"
+        android:text="10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bandLocation" />
@@ -74,6 +77,7 @@
         android:gravity="start|top"
         android:hint="Genres"
         android:inputType="textMultiLine"
+        android:text="Rock, Pop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bandDistance" />
@@ -86,6 +90,7 @@
         android:ems="10"
         android:hint="Contact Email"
         android:inputType="textEmailAddress"
+        android:text="Contact@Email.com"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bandGenres" />
@@ -98,6 +103,7 @@
         android:ems="10"
         android:hint="Contact Phone Number"
         android:inputType="phone"
+        android:text="11111111111"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bandEmail" />
