@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig.ui.TabbedView;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.WindowManager;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -45,6 +48,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         // Show 2 total pages.
         ((TabbedViewReferenceInitialiser) mContext).saveTabs();
+        ((Activity)mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         return TAB_TITLES.length;
     }
 
