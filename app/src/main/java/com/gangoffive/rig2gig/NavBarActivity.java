@@ -3,18 +3,10 @@ package com.gangoffive.rig2gig;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import com.google.android.material.navigation.NavigationView;
 
-public class NavBarActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
+public class NavBarActivity extends AppCompatActivity
 {
-    private DrawerLayout drawer;
-
     /**
      * This method is used to create the navigation bar.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
@@ -60,37 +52,4 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
         // concrete venue
         // concrete another????
     }
-
-    /**
-     * This method is used to determine which option has been selected in the navigation drawer.
-     * @param menuItem The menuItem variable passed in will contain the users clicked option in the navigation drawer.
-     * @return Returns a new view of the selected navigation drawer option.
-     */
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
-    {
-        NavBarFactory navBarFactory = new NavBarFactory();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, navBarFactory.selectFragment(menuItem)).commit() ;
-
-        //Add following lines to concrete classes of Fan, Musician and Venue.
-        drawer.closeDrawer(GravityCompat.START);
-
-        return true;
-    }
-
-    /**
-     * If the back button is pressed, simply close the navigation drawer instead of navigating away from the activity.
-     */
-    /*@Override
-    public void onBackPressed()
-    {
-        if(drawer.isDrawerOpen(GravityCompat.START))
-        {
-            drawer.closeDrawer(GravityCompat.START);
-        }
-        else
-        {
-            super.onBackPressed();
-        }
-    }*/
 }

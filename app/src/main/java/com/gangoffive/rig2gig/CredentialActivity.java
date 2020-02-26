@@ -33,7 +33,7 @@ public class CredentialActivity extends AppCompatActivity {
     Button submit;
 
     String gender, userId;
-    public static String userType;
+    public static String userType = "Musician";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

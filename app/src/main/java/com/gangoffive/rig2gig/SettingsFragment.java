@@ -38,6 +38,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
             Preference preference = getPreferenceManager().findPreference("MusicianUpgrade");
             preference.setVisible(true);
         }
+
+        Preference button = getPreferenceManager().findPreference("ChangePassword");
+        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference)
+            {
+                executeDialog();
+                return true;
+            }
+        });
     }
 
     /**
@@ -79,5 +89,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 }
             }
         });
+    }
+
+    private void executeDialog()
+    {
+        ChangePasswordDialog changePasswordDialog = new ChangePasswordDialog();
+        //changePasswordDialog.setTargetFragment(SettingsFragment.this, 1);
+        changePasswordDialog.show(getFragmentManager(), "Dialog");
     }
 }

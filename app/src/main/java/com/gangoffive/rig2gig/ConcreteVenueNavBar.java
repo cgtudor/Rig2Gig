@@ -44,6 +44,11 @@ public class ConcreteVenueNavBar extends AppCompatActivity implements Navigation
         }
     }
 
+    /**
+     * This method is used to determine which option has been selected in the navigation drawer.
+     * @param menuItem The menuItem variable passed in will contain the users clicked option in the navigation drawer.
+     * @return Returns a new view of the selected navigation drawer option.
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
     {
@@ -55,6 +60,9 @@ public class ConcreteVenueNavBar extends AppCompatActivity implements Navigation
         return true;
     }
 
+    /**
+     * If the back button is pressed, simply close the navigation drawer instead of navigating away from the activity.
+     */
     @Override
     public void onBackPressed()
     {

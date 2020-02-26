@@ -44,18 +44,25 @@ public class ConcreteFanNavBar extends AppCompatActivity implements NavigationVi
         }
     }
 
+    /**
+     * This method is used to determine which option has been selected in the navigation drawer.
+     * @param menuItem The menuItem variable passed in will contain the users clicked option in the navigation drawer.
+     * @return Returns a new view of the selected navigation drawer option.
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
     {
         NavBarFactory navBarFactory = new NavBarFactory();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, navBarFactory.selectFragment(menuItem)).commit() ;
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, navBarFactory.selectFragment(menuItem)).commit();
 
-        //Add following lines to concrete classes of Fan, Musician and Venue.
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
     }
 
+    /**
+     * If the back button is pressed, simply close the navigation drawer instead of navigating away from the activity.
+     */
     @Override
     public void onBackPressed()
     {
