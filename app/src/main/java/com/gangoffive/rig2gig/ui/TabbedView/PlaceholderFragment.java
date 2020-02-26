@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.gangoffive.rig2gig.TabbedViewReferenceInitialiser;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -31,7 +33,7 @@ public class PlaceholderFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pageViewModel = ViewModelProviders.of(this).get(PageViewModel.class);
-        int index = 1;
+        int index = 0;
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
@@ -43,7 +45,7 @@ public class PlaceholderFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = null;
-        int page = getArguments().getInt(ARG_SECTION_NUMBER) - 1;
+        int page = getArguments().getInt(ARG_SECTION_NUMBER);
         root = inflater.inflate(fragments[page], container, false);
         return root;
     }

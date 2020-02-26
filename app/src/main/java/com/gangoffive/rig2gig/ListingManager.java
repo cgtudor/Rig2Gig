@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
@@ -109,9 +110,6 @@ public class ListingManager
                     if (document.exists()) {
                         userInfo = document.getData();
                         activity.onSuccessFromDatabase(userInfo);
-                        GlideApp.with((Activity)activity)
-                                .load(bandImageRef)
-                                .into(activity.getImageView());
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
 
                     } else {
@@ -126,13 +124,21 @@ public class ListingManager
         });
     }
 
+    public void getImage(CreateAdvertisement activity)
+    {
+        GlideApp.with((Activity)activity)
+                .load(bandImageRef)
+                .into(activity.getImageView());
+        activity.onSuccessfulImageDownload();
+    }
+
     /**
      * Post data and image to database
      * @param listing advertisement details to be uploaded
      * @param image ImageView containing image to be uploaded
      * @param activity interface of activity calling this method
      */
-    public void postDataToDatabase(HashMap<String, Object> listing, ImageView image, CreateAdvertisement activity)
+    public void postDataToDatabase(HashMap<String, Object> listing, Drawable image, CreateAdvertisement activity)
     {
         listing.put("expiry-date", new Timestamp(getExpiryDate()));
         db.collection(collectionPath)
@@ -189,9 +195,9 @@ public class ListingManager
      * convert image of ImageView to byte array for uploading to database
      * @return byte array of image
      */
-    public byte[] imageToByteArray(ImageView image)
+    public byte[] imageToByteArray(Drawable image)
     {
-        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+        Bitmap bitmap = ((BitmapDrawable) image).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return stream.toByteArray();

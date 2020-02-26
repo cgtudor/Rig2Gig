@@ -1,6 +1,7 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -111,7 +112,7 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
      * populate text views
      */
     @Override
-    public void populateFields() {
+    public void populateInitialFields() {
         name.setText(band.get("name").toString());
         distance.setText(band.get("distance").toString());
     }
@@ -123,7 +124,7 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
     public void createAdvertisement() {
         listingDataMap();
         if (validateDataMap()) {
-            listingManager.postDataToDatabase(listing, image, this);
+            listingManager.postDataToDatabase(listing, image.getDrawable(), this);
         } else {
             Toast.makeText(CreatePerformerAdvertisement.this,
                     "Listing not created.  Ensure all fields are complete " +
@@ -153,6 +154,23 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
                             "and try again",
                     Toast.LENGTH_LONG).show();
         }
+    }
+
+    /**
+     * Populate view if database request was successful
+     * @param data band data
+     */
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data) {
+        band = data;
+        setViewReferences();
+        listingManager.getImage(this);
+    }
+
+    @Override
+    public void onSuccessfulImageDownload() {
+
+        populateInitialFields();
     }
 
     /**
@@ -198,17 +216,6 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
      */
     public ImageView getImageView() {
         return image;
-    }
-
-    /**
-     * Populate view if database request was successful
-     * @param data band data
-     */
-    @Override
-    public void onSuccessFromDatabase(Map<String, Object> data) {
-        band = data;
-        setViewReferences();
-        populateFields();
     }
 }
 

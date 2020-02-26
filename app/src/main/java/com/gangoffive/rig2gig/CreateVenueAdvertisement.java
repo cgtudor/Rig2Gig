@@ -1,6 +1,7 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
@@ -14,7 +15,7 @@ import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateVenueAdvertisement extends AppCompatActivity implements CreateAdvertisement {
+public class CreateVenueAdvertisement extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
 
     private TextView name, description;
@@ -22,11 +23,12 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     private ImageView image;
     private String venueRef, type;
     private HashMap<String, Object> listing;
-    private Map<String, Object> band;
+    private Map<String, Object> venue;
     private ListingManager listingManager;
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_create_venue_advertisement_image,
             R.layout.fragment_create_venue_advertisement_details};
+    private Drawable chosenPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +50,24 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
         listingManager.getUserInfo(this);
     }
 
-
     /**
-     * handles activity results
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * Populate view if database request was successful
+     * @param data band data
      */
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
+    public void onSuccessFromDatabase(Map<String, Object> data) {
+        setViewReferences();
+        venue = data;
+        listingManager.getImage(this);
+    }
+
+    /**
+     * Populate view if database request was successful
+     */
+    @Override
+    public void onSuccessfulImageDownload() {
+        populateInitialFields();
+        saveTabs();
     }
 
     /**
@@ -68,6 +77,10 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     public void setViewReferences() {
         name = findViewById(R.id.name);
         image = findViewById(R.id.image);
+        if (image != null)
+        {
+            image.setImageDrawable(null);
+        }
         description = findViewById(R.id.description);
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
@@ -84,28 +97,79 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
             }
         });
         galleryImage = findViewById(R.id.galleryImage);
-        galleryImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageRequestHandler.getGalleryImage(v);
-            }
-        });
+        if (galleryImage != null)
+        {
+            galleryImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ImageRequestHandler.getGalleryImage(v);
+                }
+            });
+        }
         takePhoto = findViewById(R.id.takePhoto);
-        takePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageRequestHandler.getCameraImage(v);
-            }
-        });
+        if (takePhoto != null)
+        {
+            takePhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ImageRequestHandler.getCameraImage(v);
+                }
+            });
+        }
     }
 
     /**
      * populate text views
      */
     @Override
-    public void populateFields() {
-        name.setText(band.get("name").toString());
+    public void populateInitialFields() {
+        if(name != null && venue !=null && name.getText() != venue.get("name") && name.getText() == "")
+        {
+            name.setText(venue.get("name").toString());
+        }
+        if (chosenPic != null && image != null)
+        {
+            image.setImageDrawable(chosenPic);
+        }
     }
+
+    @Override
+    public void saveTabs()
+    {
+        if (image != null && image.getDrawable() != null)
+        {
+            chosenPic = (image.getDrawable());
+        }
+        if (description != null && description.getText() == null)
+        {
+            listing.put("description",description.getText().toString());
+        }
+        reinitialiseTabs();
+    }
+
+    @Override
+    public void reinitialiseTabs() {
+        setViewReferences();
+        populateInitialFields();
+        if (description != null && description.getText() == null)
+        {
+            description.setText(listing.get("description").toString());
+        }
+    }
+
+    /**
+     * handles activity results
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
+        chosenPic = image.getDrawable();
+    }
+
 
     /**
      * create advertisement, posting to database
@@ -114,7 +178,7 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     public void createAdvertisement() {
         listingDataMap();
         if (validateDataMap()) {
-            listingManager.postDataToDatabase(listing, image, this);
+            listingManager.postDataToDatabase(listing, chosenPic, this);
         } else {
             Toast.makeText(CreateVenueAdvertisement.this,
                     "Listing not created.  Ensure all fields are complete " +
@@ -132,7 +196,9 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
             Intent intent = new Intent(CreateVenueAdvertisement.this, MainActivity.class);
             intent.putExtra("EXTRA_BAND_LISTING_ID", listingManager.getListingRef());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
+            finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
             Toast.makeText(CreateVenueAdvertisement.this,
                     "Listing creation failed.  Check your connection " +
@@ -164,7 +230,10 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
             listing = new HashMap<>();
             listing.put("band-ref", venueRef);
         }
-        listing.put("description", description.getText().toString());
+        if(description != null)
+        {
+            listing.put("description", description.getText().toString());
+        }
     }
 
     /**
@@ -188,16 +257,5 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
      */
     public ImageView getImageView() {
         return image;
-    }
-
-    /**
-     * Populate view if database request was successful
-     * @param data band data
-     */
-    @Override
-    public void onSuccessFromDatabase(Map<String, Object> data) {
-        band = data;
-        setViewReferences();
-        populateFields();
     }
 }

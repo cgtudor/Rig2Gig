@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ public interface CreateAdvertisement
     /**
      * Populate the fields of a view with data
      */
-    public void populateFields();
+    public void populateInitialFields();
 
     /**
      * attempt to post advertisement to database
@@ -56,4 +57,8 @@ public interface CreateAdvertisement
      * @param creationResult defines the result (eg SUCCESS, IMAGE_FAILURE, etc)
      */
     public void handleDatabaseResponse (Enum creationResult);
+
+    public void onSuccessfulImageDownload();
+
+
 }

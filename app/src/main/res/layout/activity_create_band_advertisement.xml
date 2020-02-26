@@ -38,7 +38,7 @@
         android:layout_height="508dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintTop_toBottomOf="@id/app_bar"
-        app:layout_constraintBottom_toTopOf="@id/button_holder"
+
         />
 
     <LinearLayout
