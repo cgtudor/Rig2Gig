@@ -33,9 +33,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         final TextView location = findViewById(R.id.location);
 
         /*Used to get the id of the listing from the previous activity*/
-/*        String vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");*/
-
-        String vID = "8Qy8Sz8Ab5Q6FVebgxXL";
+        String vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();

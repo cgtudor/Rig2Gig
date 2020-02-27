@@ -255,7 +255,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Intent intent = new Intent(CreateBandAdvertisement.this, MainActivity.class);
+            Intent intent = new Intent(CreateBandAdvertisement.this, BandListingDetailsActivity.class);
             intent.putExtra("EXTRA_BAND_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             sectionsPagerAdapter = null;

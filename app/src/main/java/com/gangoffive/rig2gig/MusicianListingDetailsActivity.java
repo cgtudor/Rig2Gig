@@ -34,9 +34,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
         final TextView distance = findViewById(R.id.distance);
 
         /*Used to get the id of the listing from the previous activity*/
-        /*        String mID = getIntent().getStringExtra("EXTRA_MUSICIAN_LISTING_ID");*/
-
-        String mID = "prhndlsjmPkx87rUUKas";
+        String mID = getIntent().getStringExtra("EXTRA_MUSICIAN_LISTING_ID");
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();

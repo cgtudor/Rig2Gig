@@ -200,7 +200,7 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Intent intent = new Intent(CreateVenueAdvertisement.this, MainActivity.class);
+            Intent intent = new Intent(CreateVenueAdvertisement.this, VenueListingDetailsActivity.class);
             intent.putExtra("EXTRA_VENUE_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
@@ -234,7 +234,7 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     public void listingDataMap() {
         if (listing == null) {
             listing = new HashMap<>();
-            listing.put("band-ref", venueRef);
+            listing.put("venue-ref", venueRef);
         }
         if(description != null)
         {

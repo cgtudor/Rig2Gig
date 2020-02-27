@@ -142,6 +142,7 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
             Intent intent = new Intent(CreatePerformerAdvertisement.this, PerformanceListingDetailsActivity.class);
             intent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingManager.getListingRef());
             startActivity(intent);
+            finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
             Toast.makeText(CreatePerformerAdvertisement.this,
                     "Listing creation failed.  Check your connection " +

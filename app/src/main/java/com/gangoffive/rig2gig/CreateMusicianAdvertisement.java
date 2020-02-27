@@ -256,7 +256,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Intent intent = new Intent(CreateMusicianAdvertisement.this, MainActivity.class);
+            Intent intent = new Intent(CreateMusicianAdvertisement.this, MusicianListingDetailsActivity.class);
             intent.putExtra("EXTRA_MUSICIAN_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             sectionsPagerAdapter = null;
@@ -292,7 +292,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     public void listingDataMap() {
         if (listing == null) {
             listing = new HashMap<>();
-            listing.put("band-ref", musicianRef);
+            listing.put("musician-ref", musicianRef);
         }
 
         listing.put("position", bandPositions);

@@ -35,9 +35,7 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         final TextView location = findViewById(R.id.location);
 
         /*Used to get the id of the listing from the previous activity*/
-        /*        String bID = getIntent().getStringExtra("EXTRA_BAND_LISTING_ID");*/
-
-        String bID = "9tLqZo2UCWaq7uyC3crP";
+        String bID = getIntent().getStringExtra("EXTRA_BAND_LISTING_ID");
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -79,7 +77,7 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                             }
                         });
                         description.setText(document.get("description").toString());
-                        position.setText("Looking for: " + document.get("position").toString());
+                        position.setText("Looking for: " + document.get("position").toString().substring(1, document.get("position").toString().length()-1));
                     } else {
                         Log.d("FIRESTORE", "No such document");
                     }
