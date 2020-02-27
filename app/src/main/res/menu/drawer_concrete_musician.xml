@@ -8,9 +8,9 @@
             android:icon="@drawable/ic_my_profile"
             android:title="My Profile"
             android:visible="true"/>
-        <item android:id="@+id/nav_my_band"
+        <!--<item android:id="@+id/nav_my_band"
             android:icon="@drawable/ic_my_band"
-            android:title="My Band"/>
+            android:title="My Band"/>-->
         <item android:id="@+id/nav_create_band_advertisement"
             android:title="Create band ad"
             android:icon="@drawable/ic_create_band_ad"/>
@@ -34,18 +34,18 @@
         <item android:id="@+id/nav_view_venues"
             android:icon="@drawable/ic_view_venues"
             android:title="View Venues"/>
-        <item android:id="@+id/nav_notifications"
+        <!--<item android:id="@+id/nav_notifications"
             android:icon="@drawable/ic_notifications"
-            android:title="Notifications"/>
-        <item android:id="@+id/nav_about_us"
+            android:title="Notifications"/>-->
+        <!--<item android:id="@+id/nav_about_us"
             android:icon="@drawable/ic_about_us"
-            android:title="About Us"/>
+            android:title="About Us"/>-->
         <item android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
             android:title="Settings" />
-        <item android:id="@+id/nav_logout"
+        <!--<item android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"
-            android:title="Logout"/>
+            android:title="Logout"/>-->
     </group>
 
 
