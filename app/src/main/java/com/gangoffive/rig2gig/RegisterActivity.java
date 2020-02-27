@@ -56,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
     public void registerBtnOnClick(View view) {
         final String email = rEmailAddress.getText().toString().trim();
         String confirmEmail = rConfirmEmail.getText().toString().trim();
-        String password = rPassword.getText().toString().trim();
+        final String password = rPassword.getText().toString().trim();
         String confirmPassword = rConfirmPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)){
@@ -98,8 +98,16 @@ public class RegisterActivity extends AppCompatActivity {
                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(RegisterActivity.this, "Account has been created please log in", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Account has been created!", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "onSuccess: user Profile is created for "+ userId);
+                            fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()){
+                                        startActivity(new Intent(getApplicationContext(),CredentialActivity.class));
+                                    }
+                                }
+                            });
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -108,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.d(TAG, "onFailure: " + e.toString());
                         }
                     });
-                    startActivity(new Intent(getApplicationContext(),LaunchActivity.class));
+
                 }else {
                     Toast.makeText(RegisterActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,18 +18,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CredentialActivity extends AppCompatActivity {
 
+    private static final String TAG = "======================";
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
 
     EditText cFirstName, cLastName, cUsername, cPhoneNumber;
-    RadioButton genderMale, genderFemale, genderOther;
+    RadioButton genderMale, fan;
     RadioGroup genderGroup, userGroup;
     Button submit;
 
@@ -41,8 +42,6 @@ public class CredentialActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-
-
         cFirstName = findViewById(R.id.cFirstName);
         cLastName = findViewById(R.id.cLastName);
         cUsername = findViewById(R.id.cUsername);
@@ -51,6 +50,10 @@ public class CredentialActivity extends AppCompatActivity {
         userGroup = findViewById(R.id.userRadioGroup);
         submit = findViewById(R.id.submitBtn);
 
+        genderMale = findViewById(R.id.radioBtnMale);
+        fan = findViewById(R.id.radioBtnMusician);
+
+        genderMale.setChecked(true);
         genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -68,6 +71,7 @@ public class CredentialActivity extends AppCompatActivity {
             }
         });
 
+        fan.setChecked(true);
         userGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -75,8 +79,8 @@ public class CredentialActivity extends AppCompatActivity {
                     case R.id.radioBtnMusician:
                         userType = "Musician";
                         break;
-                    case R.id.radioBtnBand:
-                        userType = "Band";
+                    case R.id.radioBtnFan:
+                        userType = "Fan";
                         break;
                     case R.id.radioBtnVenue:
                         userType = "Venue";
@@ -108,8 +112,9 @@ public class CredentialActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(CredentialActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                String uuid = fAuth.getUid();
+                System.out.println("=========================" + uuid);
             }
         });
-        //Link to next page
     }
 }

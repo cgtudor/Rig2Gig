@@ -27,6 +27,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
@@ -36,14 +38,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.identityconnectors.common.security.GuardedString;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity{
         private static final String TAG = "TAG";
     private static final int RC_SIGN_IN = 234;
 
     FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
     SignInButton signInButton;
 
     GoogleSignInClient mGoogleSignInClient;
@@ -54,12 +63,16 @@ public class LoginActivity extends AppCompatActivity{
     TextView registerBtn, forgotPasswordBtn;
     EditText emailAddress, password;
 
+    String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+
+        userId = fAuth.getUid();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -123,17 +136,8 @@ public class LoginActivity extends AppCompatActivity{
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "User Logged In", Toast.LENGTH_LONG).show();
-                            /**
-                             * Checking if this is users first time logging in or existing user
-                             */
-                            FirebaseUserMetadata metadata = fAuth.getCurrentUser().getMetadata();
-                            if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
-                                // The user is new, show them a fancy intro screen!
-                                startActivity(new Intent(getApplicationContext(), CredentialActivity.class));
-                            } else {
                                 // This is an existing user, show them a welcome back screen.
                                 startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
-                            }
                         } else {
                             Toast.makeText(LoginActivity.this, "Email Or Password Is Incorrect! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -166,11 +170,7 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        System.out.println("-------------------------GoogleAuth");
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        // [START_EXCLUDE silent]
-        // [END_EXCLUDE]
-
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         fAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -180,17 +180,37 @@ public class LoginActivity extends AppCompatActivity{
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = fAuth.getCurrentUser();
-                            /**
-                             * Checking if this is users first time logging in or existing user
-                             */
-                            FirebaseUserMetadata metadata = fAuth.getCurrentUser().getMetadata();
-                            if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
-                                // The user is new, show them a fancy intro screen!
-                                startActivity(new Intent(getApplicationContext(), CredentialActivity.class));
-                            } else {
-                                // This is an existing user, show them a welcome back screen.
-                                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
-                            }
+                            final String userEmail = user.getEmail();
+
+                            DocumentReference docIdRef = fStore.collection("users").document(userId);
+                            docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            Log.d(TAG, "Document exists!");
+                                            startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                                        } else {
+                                            Log.d(TAG, "Document does not exist!");
+                                            System.out.println("================================== Doc dont exist");
+                                            DocumentReference documentReference = fStore.collection("users").document(userId);
+                                            System.out.println("================================== " + userId);
+                                            Map<String, Object> test = new HashMap<>();
+                                            test.put("Email Address", userEmail);
+                                            System.out.println("================================== " + userEmail);
+                                            documentReference.set(test).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(LoginActivity.this, "Account has been created!", Toast.LENGTH_SHORT).show();
+                                                    Log.d(TAG, "onSuccess: user Profile is created for "+ userId);
+                                                    startActivity(new Intent(getApplicationContext(),CredentialActivity.class));
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            });
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -211,22 +231,41 @@ public class LoginActivity extends AppCompatActivity{
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = fAuth.getCurrentUser();
-                            /**
-                             * Checking if this is users first time logging in or existing user
-                             */
-                            FirebaseUserMetadata metadata = fAuth.getCurrentUser().getMetadata();
-                            if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
-                                // The user is new, show them a fancy intro screen!
-                                startActivity(new Intent(getApplicationContext(), CredentialActivity.class));
-                            } else {
-                                // This is an existing user, show them a welcome back screen.
-                                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
-                            }
+                            final String userEmail = user.getEmail();
+                            System.out.println("================================= " + userEmail);
+
+                            DocumentReference docIdRef = fStore.collection("users").document(userId);
+                            docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            Log.d(TAG, "Document exists!");
+                                            startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                                        } else {
+                                            Log.d(TAG, "Document does not exist!");
+                                            System.out.println("================================== Doc dont exist");
+                                            DocumentReference documentReference = fStore.collection("users").document(userId);
+                                            System.out.println("================================== " + userId);
+                                            Map<String, Object> test = new HashMap<>();
+                                            test.put("Email Address", userEmail);
+                                            System.out.println("================================== " + userEmail);
+                                            documentReference.set(test).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(LoginActivity.this, "Account has been created!", Toast.LENGTH_SHORT).show();
+                                                    Log.d(TAG, "onSuccess: user Profile is created for "+ userId);
+                                                    startActivity(new Intent(getApplicationContext(),CredentialActivity.class));
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            });
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -235,7 +274,6 @@ public class LoginActivity extends AppCompatActivity{
     private void googleSignIn(){
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
-        System.out.println("-------------------------------Here");
     }
 
     public void loginRegisterBtn(View view) {
