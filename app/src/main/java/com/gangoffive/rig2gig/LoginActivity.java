@@ -211,8 +211,8 @@ public class LoginActivity extends AppCompatActivity{
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = fAuth.getCurrentUser();
                             final String userEmail = user.getEmail();
-
-                            DocumentReference docIdRef = fStore.collection("users").document(userId);
+                            final String getUserId = fAuth.getUid();
+                            DocumentReference docIdRef = fStore.collection("users").document(getUserId);
                             docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -224,11 +224,11 @@ public class LoginActivity extends AppCompatActivity{
                                         } else {
                                             Log.d(TAG, "Document does not exist!");
                                             System.out.println("================================== Doc dont exist");
-                                            DocumentReference documentReference = fStore.collection("users").document(userId);
+                                            DocumentReference documentReference = fStore.collection("users").document(getUserId);
                                             System.out.println("================================== " + userId);
+                                            System.out.println("================================== " + userEmail);
                                             Map<String, Object> test = new HashMap<>();
                                             test.put("Email Address", userEmail);
-                                            System.out.println("================================== " + userEmail);
                                             documentReference.set(test).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
@@ -285,9 +285,9 @@ public class LoginActivity extends AppCompatActivity{
                                             System.out.println("================================== Doc dont exist");
                                             DocumentReference documentReference = fStore.collection("users").document(userId);
                                             System.out.println("================================== " + userId);
+                                            System.out.println("================================== " + userEmail);
                                             Map<String, Object> test = new HashMap<>();
                                             test.put("Email Address", userEmail);
-                                            System.out.println("================================== " + userEmail);
                                             documentReference.set(test).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
