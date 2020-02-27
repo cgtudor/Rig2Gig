@@ -108,7 +108,7 @@ public class BandAdapter extends RecyclerView.Adapter<BandAdapter.ViewHolder>{
                         holder.textViewGenres.setText(document.get("genres").toString());
                         holder.textViewLoc.setText(document.get("location").toString());
                         holder.textViewRating.setText(document.get("rating").toString());
-                        StorageReference bandPic = storage.getReference().child("/images/venue-listings/" + bandListing.getListingRef() + ".jpg");
+                        StorageReference bandPic = storage.getReference().child("/images/band-listings/" + bandListing.getListingRef() + ".jpg");
                         GlideApp.with(holder.imageViewPhoto.getContext()).load(bandPic).into(holder.imageViewPhoto);
 
                     } else {

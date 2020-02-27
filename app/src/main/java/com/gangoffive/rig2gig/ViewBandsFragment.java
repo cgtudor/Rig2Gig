@@ -75,7 +75,7 @@ public class ViewBandsFragment extends Fragment
                                 adapter.setOnItemClickListener(new BandAdapter.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(int position) {
-                                        Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
+                                        Intent openListingIntent = new Intent(v.getContext(), BandListingDetailsActivity.class);
                                         String listingRef = bandListings.get(position).getListingRef();
                                         openListingIntent.putExtra("EXTRA_BAND_LISTING_ID", listingRef);
                                         v.getContext().startActivity(openListingIntent);

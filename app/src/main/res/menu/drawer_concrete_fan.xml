@@ -8,9 +8,9 @@
             android:icon="@drawable/ic_my_profile"
             android:title="My Profile"
             android:visible="true"/>
-        <item android:id="@+id/nav_view_venues"
+        <item android:id="@+id/nav_view_musicians"
             android:icon="@drawable/ic_view_venues"
-            android:title="View Venues"/>
+            android:title="View Musicians"/>
         <!--<item android:id="@+id/nav_notifications"
             android:icon="@drawable/ic_notifications"
             android:title="Notifications"/>-->

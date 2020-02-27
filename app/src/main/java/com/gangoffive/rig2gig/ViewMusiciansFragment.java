@@ -66,7 +66,7 @@ public class ViewMusiciansFragment extends Fragment
                                     MusicianListing musicianListing = new MusicianListing(
                                             documentSnapshot.getId(),
                                             documentSnapshot.get("musician-ref").toString(),
-                                            documentSnapshot.get("type").toString());
+                                            documentSnapshot.get("position").toString());
 
                                     musicianListings.add(musicianListing);
                                 }
