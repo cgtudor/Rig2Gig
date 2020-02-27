@@ -11,7 +11,7 @@ public class LaunchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_launch_acitivy);
+        setContentView(R.layout.activity_launch_activity);
     }
 
     public void loginBtnOnClick(View view) {

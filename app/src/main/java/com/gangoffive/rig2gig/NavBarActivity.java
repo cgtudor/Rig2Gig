@@ -89,7 +89,7 @@ public class NavBarActivity extends AppCompatActivity implements NavigationView.
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateBandFragment()).commit();
                 break;
             case R.id.nav_view_bands:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewBandsFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewPerformersFragment()).commit();
                 break;
             case R.id.nav_view_venues:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewVenuesFragment()).commit();

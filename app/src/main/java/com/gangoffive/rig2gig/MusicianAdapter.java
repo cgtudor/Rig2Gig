@@ -1,7 +1,6 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,15 +20,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
+public class MusicianAdapter extends RecyclerView.Adapter<MusicianAdapter.ViewHolder>{
 
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private DocumentReference docRef;
 
-    private ArrayList<PerformerListing> performerListings;
+    private ArrayList<MusicianListing> musicianListings;
     private Context context;
 
     private OnItemClickListener listener;
@@ -45,7 +40,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         this.listener = listener;
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         public String listingRef;
         public ImageView imageViewPhoto;
         public TextView textViewName;
@@ -53,7 +48,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         public TextView textViewLoc;
         public TextView textViewRating;
 
-        public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
+        public ViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
 
             imageViewPhoto = (ImageView) itemView.findViewById(R.id.imageViewPhoto);
@@ -76,39 +71,31 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         }
     }
 
-    public MyAdapter(ArrayList<PerformerListing> performerListings, Context context) {
+    public MusicianAdapter(ArrayList<MusicianListing> musicianListings, Context context) {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
 
-        this.performerListings = performerListings;
+        this.musicianListings = musicianListings;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-       View v = LayoutInflater.from(parent.getContext())
-               .inflate(R.layout.performer_listing, parent, false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.musician_listing, parent, false);
 
-        return new MyViewHolder(v, listener);
+        return new ViewHolder(v, listener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        PerformerListing performerListing = performerListings.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        MusicianListing musicianListing = musicianListings.get(position);
 
-        holder.listingRef = performerListing.getListingRef();
+        holder.listingRef = musicianListing.getListingRef();
 
-
-
-
-
-        if(performerListing.getType().equals("Band")) {
-            docRef= db.collection("bands").document(performerListing.getPerformerRef());
-        } else {
-            docRef= db.collection("musicians").document(performerListing.getPerformerRef());
-        }
+        docRef= db.collection("musicians").document(musicianListing.getMusicianRef());
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -121,7 +108,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
                         holder.textViewGenres.setText(document.get("genres").toString());
                         holder.textViewLoc.setText(document.get("location").toString());
                         holder.textViewRating.setText(document.get("rating").toString());
-                        StorageReference bandPic = storage.getReference().child("/images/performance-listings/" + performerListing.getListingRef() + ".jpg");
+                        StorageReference bandPic = storage.getReference().child("/images/musician-listings/" + musicianListing.getListingRef() + ".jpg");
                         GlideApp.with(holder.imageViewPhoto.getContext()).load(bandPic).into(holder.imageViewPhoto);
 
                     } else {
@@ -137,6 +124,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     @Override
     public int getItemCount() {
 
-        return performerListings.size();
+        return musicianListings.size();
     }
 }

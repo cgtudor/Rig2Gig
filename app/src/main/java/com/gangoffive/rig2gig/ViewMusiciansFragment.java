@@ -24,7 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewBandsFragment extends Fragment
+public class ViewMusiciansFragment extends Fragment
 {
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
@@ -33,20 +33,20 @@ public class ViewBandsFragment extends Fragment
     private List<DocumentSnapshot> documentSnapshots;
 
     private RecyclerView recyclerView;
-    private BandAdapter adapter;
+    private MusicianAdapter adapter;
 
-    private ArrayList<BandListing> bandListings;
+    private ArrayList<MusicianListing> musicianListings;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        final View v = inflater.inflate(R.layout.fragment_view_bands, container, false);
+        final View v = inflater.inflate(R.layout.fragment_view_performers, container, false);
 
         db = FirebaseFirestore.getInstance();
-        colRef = db.collection("band-listings");
+        colRef = db.collection("musician-listings");
 
-        bandListings = new ArrayList<>();
+        musicianListings = new ArrayList<>();
 
         Query first = colRef
                 .limit(10);
@@ -63,21 +63,22 @@ public class ViewBandsFragment extends Fragment
 
                                 for(DocumentSnapshot documentSnapshot : documentSnapshots){
 
-                                    BandListing bandListing = new BandListing(
+                                    MusicianListing musicianListing = new MusicianListing(
                                             documentSnapshot.getId(),
-                                            documentSnapshot.get("band-ref").toString());
+                                            documentSnapshot.get("musician-ref").toString(),
+                                            documentSnapshot.get("type").toString());
 
-                                    bandListings.add(bandListing);
+                                    musicianListings.add(musicianListing);
                                 }
 
-                                adapter = new BandAdapter(bandListings, getContext());
+                                adapter = new MusicianAdapter(musicianListings, getContext());
 
-                                adapter.setOnItemClickListener(new BandAdapter.OnItemClickListener() {
+                                adapter.setOnItemClickListener(new MusicianAdapter.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(int position) {
-                                        Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
-                                        String listingRef = bandListings.get(position).getListingRef();
-                                        openListingIntent.putExtra("EXTRA_BAND_LISTING_ID", listingRef);
+                                        Intent openListingIntent = new Intent(v.getContext(), MusicianListingDetailsActivity.class);
+                                        String listingRef = musicianListings.get(position).getListingRef();
+                                        openListingIntent.putExtra("EXTRA_MUSICIAN_LISTING_ID", listingRef);
                                         v.getContext().startActivity(openListingIntent);
                                     }
                                 });
