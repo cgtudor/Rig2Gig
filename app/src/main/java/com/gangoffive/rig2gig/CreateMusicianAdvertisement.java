@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,7 +23,7 @@ import java.util.Map;
 public class CreateMusicianAdvertisement extends AppCompatActivity  implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
 
-    private TextView name, position, description;
+    private TextView name, position, description, currentPositions;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
     private String musicianRef, type;
@@ -33,17 +32,19 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     private ListingManager listingManager;
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_create_musician_advertisement_image,
-                               R.layout.fragment_create_advertisement_position,
-                               R.layout.fragment_create_musician_advertisement_details};
+            R.layout.fragment_create_advertisement_position,
+            R.layout.fragment_create_musician_advertisement_details};
     private GridView gridView;
     static final String[] positions = new String[] {
-            "Rhythm Guitar","Lead Guitar","Bass Guitar","Drums","Vocals","Keyboard"};
+            "Rhythm Guitar","Lead Guitar","Bass Guitar","Drums","Lead Vocals","Backing Vocals",
+            "Keyboard","Trumpet","Saxophone","Oboe","Trombone","Cor","Clarinet","Gong","Triangle",
+            "Harp","Piano","Accordian","Xylophone","Violin","Harmonica"};
     private List bandPositions;
     private ArrayAdapter<String> adapter;
     private Drawable chosenPic;
     SectionsPagerAdapter sectionsPagerAdapter;
     ViewPager viewPager;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +59,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         tabs.setupWithViewPager(viewPager);
         bandPositions = new ArrayList();
         adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_checked, positions);
+                android.R.layout.simple_list_item_1, positions);
 
         musicianRef = "eg2wI0UaYsnuSfIccKbR";
         type = "Musician";
@@ -97,6 +98,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     public void setViewReferences() {
         name = findViewById(R.id.name);
         image = findViewById(R.id.image);
+        currentPositions = findViewById(R.id.currentPositions);
         if (image != null)
         {
             image.setImageDrawable(null);
@@ -154,14 +156,18 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
-                    ((CheckedTextView)v).toggle();
-                    if(((CheckedTextView) v).isChecked() && !bandPositions.contains(((CheckedTextView) v).getText()))
+
+                    if(!bandPositions.contains(((TextView) v).getText()))
                     {
-                        bandPositions.add(((CheckedTextView) v).getText());
+                        bandPositions.add(((TextView) v).getText());
+                        String pos = bandPositions.toString();
+                        currentPositions.setText("Current positions: " + pos.substring(1,pos.length()-1));
                     }
-                    else if (!((CheckedTextView) v).isChecked() && bandPositions.contains(((CheckedTextView) v).getText()))
+                    else if (bandPositions.contains(((TextView) v).getText()))
                     {
-                        bandPositions.remove(((CheckedTextView) v).getText());
+                        bandPositions.remove(((TextView) v).getText());
+                        String pos = bandPositions.toString();
+                        currentPositions.setText("Current positions: " + pos.substring(1,pos.length()-1));
                     }
                 }
             });

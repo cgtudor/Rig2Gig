@@ -24,7 +24,7 @@ import java.util.Map;
 public class CreateBandAdvertisement extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
 
-    private TextView name, position, description;
+    private TextView name, position, description, currentPositions;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
     private String bandRef, type;
@@ -37,7 +37,9 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
             R.layout.fragment_create_band_advertisement_details};
     private GridView gridView;
     static final String[] positions = new String[] {
-            "Rhythm Guitar","Lead Guitar","Bass Guitar","Drums","Vocals","Keyboard"};
+            "Rhythm Guitar","Lead Guitar","Bass Guitar","Drums","Lead Vocals","Backing Vocals",
+            "Keyboard","Trumpet","Saxophone","Oboe","Trombone","Cor","Clarinet","Gong","Triangle",
+            "Harp","Piano","Accordian","Xylophone","Violin","Harmonica"};
     private List bandPositions;
     private ArrayAdapter<String> adapter;
     private Drawable chosenPic;
@@ -58,7 +60,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         tabs.setupWithViewPager(viewPager);
         bandPositions = new ArrayList();
         adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_checked, positions);
+                android.R.layout.simple_list_item_1, positions);
 
         bandRef = "TvuDGJwqX13vJ6LWZYB2";
         type = "Band";
@@ -95,6 +97,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
     public void setViewReferences() {
         name = findViewById(R.id.name);
         image = findViewById(R.id.image);
+        currentPositions = findViewById(R.id.currentPositions);
         if (image != null)
         {
             image.setImageDrawable(null);
@@ -152,14 +155,18 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
-                    ((CheckedTextView)v).toggle();
-                    if(((CheckedTextView) v).isChecked() && !bandPositions.contains(((CheckedTextView) v).getText()))
+
+                    if(!bandPositions.contains(((TextView) v).getText()))
                     {
-                        bandPositions.add(((CheckedTextView) v).getText());
+                        bandPositions.add(((TextView) v).getText());
+                        String pos = bandPositions.toString();
+                        currentPositions.setText("Current positions: " + pos.substring(1,pos.length()-1));
                     }
-                    else if (!((CheckedTextView) v).isChecked() && bandPositions.contains(((CheckedTextView) v).getText()))
+                    else if (bandPositions.contains(((TextView) v).getText()))
                     {
-                        bandPositions.remove(((CheckedTextView) v).getText());
+                        bandPositions.remove(((TextView) v).getText());
+                        String pos = bandPositions.toString();
+                        currentPositions.setText("Current positions: " + pos.substring(1,pos.length()-1));
                     }
                 }
             });
