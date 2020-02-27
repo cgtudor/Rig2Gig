@@ -47,7 +47,7 @@ public class ViewBandsFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        View v = inflater.inflate(R.layout.fragment_view_bands, container, false);
+        final View v = inflater.inflate(R.layout.fragment_view_bands, container, false);
 
         db = FirebaseFirestore.getInstance();
         colRef = db.collection("performer-listings");
@@ -94,29 +94,6 @@ public class ViewBandsFragment extends Fragment
                                 recyclerView.setAdapter(adapter);
                                 LinearLayoutManager llManager = new LinearLayoutManager(getContext());
                                 recyclerView.setLayoutManager(llManager);
-
-                            } else {
-                                Log.d(TAG, "get successful without data");
-                            }
-                        } else {
-                            Log.d(TAG, "get failed with ", task.getException());
-                        }
-                    }
-                });
-
-        Query second = db.collection("musicians")
-                .orderBy("name")
-                .limit(10);
-
-        second.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()) {
-                            documentSnapshots = task.getResult().getDocuments();
-                            if(documentSnapshots.isEmpty() == false)
-                            {
-                                Log.d(TAG, "get successful with data");
 
                             } else {
                                 Log.d(TAG, "get successful without data");

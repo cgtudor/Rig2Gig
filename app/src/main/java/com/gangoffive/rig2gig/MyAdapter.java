@@ -112,7 +112,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
 
 
-        if(performerListing.getType() == "Band") {
+        if(performerListing.getType().equals("Band")) {
             docRef= db.collection("bands").document(performerListing.getPerformerRef());
         } else {
             docRef= db.collection("musicians").document(performerListing.getPerformerRef());
