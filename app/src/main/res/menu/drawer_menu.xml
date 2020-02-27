@@ -11,6 +11,14 @@
         <item android:id="@+id/nav_my_band"
             android:icon="@drawable/ic_my_band"
             android:title="My Band"/>
+        <item android:id="@+id/nav_create_performer_advertisement"
+            android:title="Create performer ad"/>
+        <item android:id="@+id/nav_create_venue_advertisement"
+            android:title="Create venue ad"/>
+        <item android:id="@+id/nav_create_band_advertisement"
+            android:title="Create band ad"/>
+        <item android:id="@+id/nav_create_musician_advertisement"
+            android:title="Create musician ad"/>
         <item android:id="@+id/nav_create_band"
             android:icon="@drawable/ic_create_band"
             android:title="Create Band"/>
