@@ -20,7 +20,12 @@ public class NavBarFactory
 
         fragmentMap.put("My Profile", new MyProfileFragment());
         fragmentMap.put("My Band", new MyBandFragment());
-        fragmentMap.put("Create band listing", new CreatePerformerListing());
+
+        fragmentMap.put("Create band ad", new PlaceholderBandAdvertisement());
+        fragmentMap.put("Create venue ad", new PlaceholderVenueAdvertisement());
+        fragmentMap.put("Create performer ad", new PlaceholderPerformerAdvertisement());
+        fragmentMap.put("Create musician ad", new PlaceholderMusicianAdvertisement());
+
         fragmentMap.put("Create Band", new CreateBandFragment());
         fragmentMap.put("View Bands", new ViewBandsFragment());
         fragmentMap.put("View Venues", new ViewVenuesFragment());

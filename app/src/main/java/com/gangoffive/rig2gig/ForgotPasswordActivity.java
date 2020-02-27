@@ -14,12 +14,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * LoginActivity loads when the activity is called.
+ */
 public class ForgotPasswordActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
 
     EditText emailAddress;
     Button resetPasswordBtn;
 
+    /**
+     * When the onCreate is called previous states from the activity can be restored.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +38,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         resetPasswordBtn = findViewById(R.id.resetPasswordBtn);
     }
 
+    /**
+     * This method gets the email inputted by the user and then sends them a reset password link.
+     * @param view
+     */
     public void resetPasswordOnClick(View view) {
         String email = emailAddress.getText().toString().trim();
 

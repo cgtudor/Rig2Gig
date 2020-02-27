@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".CreatePerformerAdvertisement">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="?actionBarSize"
+            android:padding="@dimen/appbar_padding"
+            android:text="Advertise yourself to venues"
+            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+            android:textColor="#FFFFFF" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="362dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="24dp"
+        android:text="           "
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="367dp"
+            android:layout_height="223dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:srcCompat="@android:color/background_light" />
+
+
+        <EditText
+            android:id="@+id/distance"
+            android:layout_width="144dp"
+            android:layout_height="43dp"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:textAlignment="textEnd"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/distanceLabel"
+            app:layout_constraintEnd_toStartOf="@+id/distanceLabel2"
+            app:layout_constraintStart_toEndOf="@+id/distanceLabel" />
+
+        <TextView
+            android:id="@+id/distanceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="Travel distance: "
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageLayout" />
+
+        <TextView
+            android:id="@+id/distanceLabel2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="miles"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/distance"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/distance" />
+
+        <LinearLayout
+            android:id="@+id/imageLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image">
+
+            <Button
+                android:id="@+id/galleryImage"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="80dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1.0"
+                android:text="Gallery" />
+
+            <Button
+                android:id="@+id/takePhoto"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="80dp"
+                android:layout_weight="1.0"
+                android:text="Camera"/>
+        </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/button_holder"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#008577"
+        android:backgroundTint="#008577"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_marginStart="50dp"
+            android:layout_weight="1.0"
+            android:backgroundTint="#008577"
+            android:text="Cancel"
+            android:textColor="#FFFFFF"
+            style="?android:attr/borderlessButtonStyle"/>
+
+        <Button
+            android:id="@+id/createListing"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="50dp"
+            android:layout_weight="1.0"
+            android:backgroundTint="#008577"
+            android:text="Create"
+            android:textColor="#FFFFFF"
+            style="?android:attr/borderlessButtonStyle"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

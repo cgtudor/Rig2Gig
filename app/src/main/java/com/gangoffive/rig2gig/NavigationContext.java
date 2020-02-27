@@ -13,7 +13,7 @@ public class NavigationContext
     public NavigationContext()
     {
         navBarAlgorithmMap = new HashMap<>();
-        navBarAlgorithmMap.put("Band", ConcreteFanNavBar.class);
+        navBarAlgorithmMap.put("Fan", ConcreteFanNavBar.class);
         navBarAlgorithmMap.put("Musician", ConcreteMusicianNavBar.class);
         navBarAlgorithmMap.put("Venue", ConcreteVenueNavBar.class);
     }
