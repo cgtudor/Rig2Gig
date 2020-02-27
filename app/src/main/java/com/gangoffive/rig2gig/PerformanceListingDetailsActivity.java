@@ -3,14 +3,11 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -30,9 +27,8 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
         final TextView bandName = findViewById(R.id.bandName);
         final TextView genre = findViewById(R.id.genre);
         final TextView rating = findViewById(R.id.rating);
-        final TextView price = findViewById(R.id.price);
         final TextView location = findViewById(R.id.location);
-        final TextView distance = findViewById(R.id.distance);
+        final TextView distance = findViewById(R.id.position);
 
         /*Used to get the id of the listing from the previous activity*/
         String pID = getIntent().getStringExtra("EXTRA_PERFORMANCE_LISTING_ID");
@@ -67,6 +63,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                         bandName.setText(document.get("name").toString());
                                         rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
+                                        genre.setText(document.get("genres").toString());
 
                                     } else {
                                         Log.d("FIRESTORE", "No such document");
@@ -76,9 +73,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                        genre.setText(document.get("genres").toString());
                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
-                        price.setText("£" + document.get("charge").toString() + " per hour");
                     } else {
                         Log.d("FIRESTORE", "No such document");
                     }
