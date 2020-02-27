@@ -31,7 +31,7 @@
             app:title="Change Password"
             android:summary="Change your password"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.ChangePasswordFragment"/>
+            app:fragment="com.gangoffive.rig2gig.ChangePasswordDialog"/>
 
         <Preference
             app:key="MusicianUpgrade"

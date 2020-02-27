@@ -121,4 +121,9 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
 
+    <string name="change_password_dialog_message">Change Password</string>
+    <string name="change_password_dialog_title">Confirm to send a change password email.</string>
+    <string name="change_password_confirm">Confirm</string>
+    <string name="change_password_cancel">Cancel</string>
+
 </resources>
