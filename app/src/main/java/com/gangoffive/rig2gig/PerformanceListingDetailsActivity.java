@@ -54,7 +54,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                         /*Find the band reference by looking for the band ID in the "bands" subfolder*/
-                        DocumentReference band = db.collection("bands").document(document.get("bandRef").toString());
+                        DocumentReference band = db.collection("bands").document(document.get("band-Ref").toString());
 
                         band.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
