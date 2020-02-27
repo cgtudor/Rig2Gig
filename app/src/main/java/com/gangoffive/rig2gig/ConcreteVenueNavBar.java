@@ -21,6 +21,10 @@ public class ConcreteVenueNavBar extends AppCompatActivity implements Navigation
 
     }
 
+    /**
+     * This method is used to create the navigation bar.
+     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

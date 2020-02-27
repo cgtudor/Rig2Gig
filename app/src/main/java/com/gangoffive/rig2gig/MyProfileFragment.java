@@ -11,6 +11,13 @@ import androidx.fragment.app.Fragment;
 
 public class MyProfileFragment extends Fragment
 {
+    /**
+     * Upon creation of the MyProfileFragment, create the fragment_my_profile layout.
+     * @param inflater The inflater is used to read the passed xml file.
+     * @param container The views base class.
+     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     * @return Returns a View of the fragment_about layout.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)

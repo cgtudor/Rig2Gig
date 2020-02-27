@@ -25,6 +25,11 @@ public class ChangePasswordDialog extends DialogFragment
     private final String USERID = fAuth.getUid();
     private final DocumentReference USERDOCUMENT = FSTORE.collection("users").document(USERID);
 
+    /**
+     * This method details the alert dialog.
+     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     * @return returns the created dialog.
+     */
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState)
     {
@@ -55,6 +60,10 @@ public class ChangePasswordDialog extends DialogFragment
         return dialog;
     }
 
+    /**
+     * This method is used to grab the logged in user's email form the database and send a reset password email to them.
+     * @param dialog This parameter represents the context.
+     */
     private void sendEmail(DialogInterface dialog)
     {
         USERDOCUMENT.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()

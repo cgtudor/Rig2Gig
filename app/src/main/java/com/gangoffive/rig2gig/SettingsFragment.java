@@ -91,10 +91,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
         });
     }
 
+    /**
+     * This method is used to instantiate and execute the alert dialog created in the ChangePasswordDialog class.
+     */
     private void executeDialog()
     {
         ChangePasswordDialog changePasswordDialog = new ChangePasswordDialog();
-        //changePasswordDialog.setTargetFragment(SettingsFragment.this, 1);
         changePasswordDialog.show(getFragmentManager(), "Dialog");
     }
 }
