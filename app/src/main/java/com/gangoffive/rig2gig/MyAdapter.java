@@ -47,7 +47,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         public String listingRef;
-
         public ImageView imageViewPhoto;
         public TextView textViewName;
         public TextView textViewGenres;
@@ -75,10 +74,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
                 }
             });
         }
-
-        public void setPhoto(ImageView bandPhoto) {
-            imageViewPhoto = bandPhoto;
-        }
     }
 
     public MyAdapter(ArrayList<PerformerListing> performerListings, Context context) {
@@ -105,10 +100,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
         holder.listingRef = performerListing.getListingRef();
 
-        /*StorageReference bandPic = storage.getReference().child("/images/performance-listings/" + performerListing.getListingRef() + ".jpg");
-        ImageView bandPhoto = null;
-        GlideApp.with(context).load(bandPic).into(bandPhoto);
-        holder.setPhoto(bandPhoto);*/
+
 
 
 
@@ -129,6 +121,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
                         holder.textViewGenres.setText(document.get("genres").toString());
                         holder.textViewLoc.setText(document.get("location").toString());
                         holder.textViewRating.setText(document.get("rating").toString());
+                        StorageReference bandPic = storage.getReference().child("/images/performance-listings/" + performerListing.getListingRef() + ".jpg");
+                        GlideApp.with(holder.imageViewPhoto.getContext()).load(bandPic).into(holder.imageViewPhoto);
 
                     } else {
                         Log.d("FIRESTORE", "No such document");
