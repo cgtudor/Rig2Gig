@@ -27,24 +27,28 @@ import org.w3c.dom.Text;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * RegisterActivity loads when the activity is called.
+ */
 public class RegisterActivity extends AppCompatActivity {
     public static final String TAG = "TAG";
 
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
+    FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
     EditText rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword;
     Button rRegisterBtn;
 
     String userId;
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
 
         rEmailAddress = findViewById(R.id.registerEmail);
         rConfirmEmail = findViewById(R.id.registerConfirmEmail);
@@ -87,6 +91,10 @@ public class RegisterActivity extends AppCompatActivity {
             rPassword.setError("Password needs to be 6 characters or longer!");
             return;
         }
+
+        /**
+         * Creating an account with Firebase from the information that the user has inputted.
+         */
         fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -124,6 +132,10 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * onClick the registerLoginBtn will launch the LoginActivity.
+     * @param view
+     */
     public void registerLoginBtn(View view) {
         startActivity(new Intent(getApplicationContext(),LoginActivity.class));
     }
