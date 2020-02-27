@@ -55,8 +55,7 @@ public class ViewBandsFragment extends Fragment
         performerListings = new ArrayList<>();
 
         Query first = colRef
-                .orderBy("name")
-                .limit(10);
+            .limit(10);
 
         first.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -66,18 +65,18 @@ public class ViewBandsFragment extends Fragment
                             documentSnapshots = task.getResult().getDocuments();
                             if(!documentSnapshots.isEmpty())
                             {
+                                Log.d(TAG, "get successful with data");
+
                                 for(DocumentSnapshot documentSnapshot : documentSnapshots){
 
                                     PerformerListing performerListing = new PerformerListing(
                                             documentSnapshot.getId(),
-                                            (String) documentSnapshot.get("name"),
-                                            (String) documentSnapshot.get("genres"),
-                                            (String) documentSnapshot.get("location"),
-                                            (String) documentSnapshot.get("bandRef")
-                                    );
+                                            documentSnapshot.get("performer-ref").toString(),
+                                            documentSnapshot.get("type").toString());
 
                                     performerListings.add(performerListing);
                                 }
+
                                 adapter = new MyAdapter(performerListings, getContext());
 
                                 adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
@@ -92,11 +91,33 @@ public class ViewBandsFragment extends Fragment
 
                                 recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
                                 recyclerView.setHasFixedSize(true);
+                                recyclerView.setAdapter(adapter);
                                 LinearLayoutManager llManager = new LinearLayoutManager(getContext());
                                 recyclerView.setLayoutManager(llManager);
-                                recyclerView.setAdapter(adapter);
 
+                            } else {
+                                Log.d(TAG, "get successful without data");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+
+        Query second = db.collection("musicians")
+                .orderBy("name")
+                .limit(10);
+
+        second.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            documentSnapshots = task.getResult().getDocuments();
+                            if(documentSnapshots.isEmpty() == false)
+                            {
                                 Log.d(TAG, "get successful with data");
+
                             } else {
                                 Log.d(TAG, "get successful without data");
                             }

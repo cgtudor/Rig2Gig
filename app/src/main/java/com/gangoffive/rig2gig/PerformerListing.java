@@ -3,22 +3,40 @@ package com.gangoffive.rig2gig;
 public class PerformerListing {
 
     private String listingRef;
+    private String performerRef;
+    private String type;
     private String name;
     private String genres;
     private String location;
-    private String bandRef;
+    private String rating;
 
     public PerformerListing(){
 
     }
 
-    public PerformerListing(String listingRef, String name, String genres, String location, String bandRef) {
+    public PerformerListing(String listingRef, String performerRef, String type, String name, String genres, String location, String rating) {
         this.listingRef = listingRef;
+        this.performerRef = performerRef;
+        this.type = type;
         this.name = name;
         this.genres = genres;
         this.location = location;
-        this.bandRef = bandRef;
+        this.rating = rating;
     }
+
+    public PerformerListing(String listingRef, String bandRef, String type) {
+        this.listingRef = listingRef;
+        this.performerRef = bandRef;
+        this.type = type;
+    }
+
+    public String getListingRef() {
+        return listingRef;
+    }
+
+    public String getPerformerRef() { return performerRef; }
+
+    public String getType() { return type; }
 
     public String getGenres() {
         return genres;
@@ -32,11 +50,11 @@ public class PerformerListing {
         return name;
     }
 
-    public String getListingRef() {
-        return listingRef;
+    public String getRating() {
+        return rating;
     }
 
-    public String getBandRef() {
-        return bandRef;
+    public void setName(String name) {
+        this.name = name;
     }
 }

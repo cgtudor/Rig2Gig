@@ -12,20 +12,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
-    /*private FirebaseFirestore db;
-    private CollectionReference colRef;*/
+    private FirebaseFirestore db;
+    private FirebaseStorage storage;
+    private DocumentReference docRef;
 
     private ArrayList<PerformerListing> performerListings;
     private Context context;
@@ -43,20 +48,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         public String listingRef;
 
-        //public ImageView imageViewPhoto;
+        public ImageView imageViewPhoto;
         public TextView textViewName;
         public TextView textViewGenres;
         public TextView textViewLoc;
-        /*public TextView textViewRating;*/
+        public TextView textViewRating;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
 
-            //imageViewPhoto = (ImageView) itemView.findViewById((R.id.imageViewPhoto);
+            imageViewPhoto = (ImageView) itemView.findViewById(R.id.imageViewPhoto);
             textViewName = (TextView) itemView.findViewById(R.id.textViewName);
             textViewGenres = (TextView) itemView.findViewById(R.id.textViewGenres);
             textViewLoc = (TextView) itemView.findViewById(R.id.textViewLoc);
-            /*textViewRating = (TextView) itemView.findViewById(R.id.textViewRating);*/
+            textViewRating = (TextView) itemView.findViewById(R.id.textViewRating);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,11 +75,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
                 }
             });
         }
+
+        public void setPhoto(ImageView bandPhoto) {
+            imageViewPhoto = bandPhoto;
+        }
     }
 
     public MyAdapter(ArrayList<PerformerListing> performerListings, Context context) {
-        /*db = FirebaseFirestore.getInstance();
-        colRef = db.collection("bands");*/
+        db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+
 
         this.performerListings = performerListings;
         this.context = context;
@@ -95,14 +105,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
         holder.listingRef = performerListing.getListingRef();
 
-        //GlideApp.with(this).load(bandPic).into(imageViewPhoto);
-        holder.textViewName.setText(performerListing.getName());
-        holder.textViewGenres.setText(performerListing.getGenres());
-        holder.textViewLoc.setText(performerListing.getLocation());
+        /*StorageReference bandPic = storage.getReference().child("/images/performance-listings/" + performerListing.getListingRef() + ".jpg");
+        ImageView bandPhoto = null;
+        GlideApp.with(context).load(bandPic).into(bandPhoto);
+        holder.setPhoto(bandPhoto);*/
 
-        /*final StringBuilder rating = new StringBuilder("");
 
-        DocumentReference docRef = colRef.document(performerListing.getBandRef());
+
+        if(performerListing.getType() == "Band") {
+            docRef= db.collection("bands").document(performerListing.getPerformerRef());
+        } else {
+            docRef= db.collection("musicians").document(performerListing.getPerformerRef());
+        }
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -111,7 +125,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
-                        rating.append(document.get("Rating").toString());
+                        holder.textViewName.setText(document.get("name").toString());
+                        holder.textViewGenres.setText(document.get("genres").toString());
+                        holder.textViewLoc.setText(document.get("location").toString());
+                        holder.textViewRating.setText(document.get("rating").toString());
+
                     } else {
                         Log.d("FIRESTORE", "No such document");
                     }
@@ -120,8 +138,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
                 }
             }
         });
-
-        holder.textViewRating.setText(rating.toString());*/
     }
 
     @Override
@@ -129,6 +145,4 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
         return performerListings.size();
     }
-
-
 }
