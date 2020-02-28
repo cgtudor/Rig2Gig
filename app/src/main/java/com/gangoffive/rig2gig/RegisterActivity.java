@@ -186,10 +186,11 @@ public class RegisterActivity extends AppCompatActivity {
         if(!validPass.get())
         {
             rPassword.setError("Minimum password requirements:\n" +
-                    "8 characters\n" +
+                    "Eight characters\n" +
                     "One digit\n" +
                     "One upper-case letter\n" +
-                    "One lower-case letter");
+                    "One lower-case letter\n" +
+                    "No whitespace");
             return;
         }
         if(!matchingPass.get())
