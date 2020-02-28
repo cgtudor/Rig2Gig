@@ -75,9 +75,5 @@ public class ConcreteFanNavBar extends AppCompatActivity implements NavigationVi
         {
             drawer.closeDrawer(GravityCompat.START);
         }
-        else
-        {
-            super.onBackPressed();
-        }
     }
 }

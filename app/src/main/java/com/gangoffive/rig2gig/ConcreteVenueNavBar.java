@@ -74,9 +74,5 @@ public class ConcreteVenueNavBar extends AppCompatActivity implements Navigation
         {
             drawer.closeDrawer(GravityCompat.START);
         }
-        else
-        {
-            super.onBackPressed();
-        }
     }
 }

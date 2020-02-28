@@ -74,9 +74,5 @@ public class ConcreteMusicianNavBar extends AppCompatActivity implements Navigat
         {
             drawer.closeDrawer(GravityCompat.START);
         }
-        else
-        {
-            super.onBackPressed();
-        }
     }
 }
