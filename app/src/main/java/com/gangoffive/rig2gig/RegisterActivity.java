@@ -104,19 +104,17 @@ public class RegisterActivity extends AppCompatActivity {
                 char[] passChars = chars;
                 if(chars.length == 0)
                 {
-                    rPassword.setError("Password is required");
                     validPass.set(false);
                     return;
                 }
                 else if(chars.length < 8)
                 {
-                    rPassword.setError("Password needs to be 8 characters or longer!");
                     validPass.set(false);
                     return;
                 }
                 else
                 {
-                    boolean number = false, capital = false, space = false;
+                    boolean number = false, capital = false, lowerCase = false, space = false;
                     for(char c : chars)
                     {
                         if(Character.isDigit(c))
@@ -127,6 +125,10 @@ public class RegisterActivity extends AppCompatActivity {
                         {
                             capital = true;
                         }
+                        if(Character.isLetter(c) && Character.isLowerCase(c))
+                        {
+                            lowerCase = true;
+                        }
                         if(c == ' ')
                         {
                             space = true;
@@ -134,19 +136,21 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     if(!number)
                     {
-                        rPassword.setError("Password needs at least a digit!");
                         validPass.set(false);
                         return;
                     }
                     if(!capital)
                     {
-                        rPassword.setError("Password needs at least one upper-case letter!");
+                        validPass.set(false);
+                        return;
+                    }
+                    if(!lowerCase)
+                    {
                         validPass.set(false);
                         return;
                     }
                     if(space)
                     {
-                        rPassword.setError("No whitespaces allowed in the password!");
                         validPass.set(false);
                         return;
                     }
@@ -159,13 +163,11 @@ public class RegisterActivity extends AppCompatActivity {
                     public void access(char[] chars) {
                         if(chars.length == 0)
                         {
-                            rConfirmPassword.setError("Password confirmation must not be empty!");
                             matchingPass.set(false);
                             return;
                         }
                         else if(chars.length != passChars.length)
                         {
-                            rConfirmPassword.setError("Passwords must be matching!");
                             matchingPass.set(false);
                             return;
                         }
@@ -173,7 +175,6 @@ public class RegisterActivity extends AppCompatActivity {
                         {
                             if(chars[i] != passChars[i])
                             {
-                                rConfirmPassword.setError("Passwords must be matching!");
                                 matchingPass.set(false);
                                 return;
                             }
@@ -184,10 +185,16 @@ public class RegisterActivity extends AppCompatActivity {
         });
         if(!validPass.get())
         {
+            rPassword.setError("Minimum password requirements:\n" +
+                    "8 characters\n" +
+                    "One digit\n" +
+                    "One upper-case letter\n" +
+                    "One lower-case letter");
             return;
         }
         if(!matchingPass.get())
         {
+            rConfirmPassword.setError("Passwords must be matching!");
             return;
         }
 
