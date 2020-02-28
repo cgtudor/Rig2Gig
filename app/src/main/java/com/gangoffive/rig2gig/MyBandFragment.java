@@ -27,9 +27,10 @@ public class MyBandFragment extends Fragment
 {
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-    //String UUID = fAuth.getUid();
-    //String UUID = "yOliCxQ4j8gdzTbLDenfZRO9QH32";
-    String UUID = "11111";
+    String UUID = fAuth.getUid();
+
+    //String UUID = "TvuDGJwqX13vJ6LWZYB2";
+    //String UUID = "11111";
     String bandRef;
 
     TextView bandLocationTxt, bandDistanceTxt, bandGenresTxt, bandEmailTxt, bandPhoneNoTxt,
@@ -59,6 +60,7 @@ public class MyBandFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
+        System.out.println("=================== " + UUID);
         View view = inflater.inflate(R.layout.fragment_my_band, container, false);
 
         bandLocationTxt = view.findViewById(R.id.bandLocation);
@@ -77,8 +79,8 @@ public class MyBandFragment extends Fragment
                     if (document.exists()){
                         System.out.println("============================= 2");
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
-                        bandRef = document.get("band-ref").toString();
-                        DocumentReference bandInfo = fStore.collection("band").document(bandRef);
+                        bandRef = document.get("band-ref").toString().trim();
+                        DocumentReference bandInfo = fStore.collection("bands").document(bandRef);
                         bandInfo.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -89,12 +91,13 @@ public class MyBandFragment extends Fragment
                                         System.out.println("============================= 4");
                                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
                                         System.out.println("============================= " + UUID);
-                                        bandName.setText(snap.get("Band Name").toString());
-                                        bandLocation.setText(snap.get("Band Location").toString());
-                                        distance.setText(snap.get("Distance").toString());
-                                        genres.setText(snap.get("Genres").toString());
-                                        email.setText(snap.get("Band Email Address").toString());
-                                        phoneNo.setText(snap.get("Band Phone Number").toString());
+                                        bandName.setText(snap.get("name").toString());
+                                        bandLocation.setText(snap.get("location").toString());
+                                        distance.setText(snap.get("distance").toString());
+                                        genres.setText(snap.get("genres").toString());
+                                        email.setText(snap.get("email").toString());
+                                        phoneNo.setText(snap.get("phone-number").toString());
+
                                     }else{
                                         System.out.println("========================== User not part of a band!");
                                     }
@@ -124,6 +127,20 @@ public class MyBandFragment extends Fragment
             public void onClick(View v)
             {
                 Intent intent = new Intent(getActivity(), CreateBandActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        createBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+
+
+                Intent intent = new Intent(getActivity(), CreatePerformerAdvertisement.class);
+                intent.putExtra("EXTRA_BAND_ID", bandRef);
                 startActivity(intent);
             }
         });

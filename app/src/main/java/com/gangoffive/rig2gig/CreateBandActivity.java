@@ -90,12 +90,12 @@ public class CreateBandActivity extends Activity {
 
         DocumentReference documentReference = fStore.collection("band").document(bandUUID);
         Map<String, Object> band = new HashMap<>();
-        band.put("Band Name", bandName);
-        band.put("Band Location", bandLocation);
-        band.put("Distance", bandDistance);
-        band.put("Genres", bandGenres);
-        band.put("Band Email Address", bandEmail);
-        band.put("Band Phone Number", bandPhoneNumber);
+        band.put("name", bandName);
+        band.put("location", bandLocation);
+        band.put("distance", bandDistance);
+        band.put("genres", bandGenres);
+        band.put("email", bandEmail);
+        band.put("phone-number", bandPhoneNumber);
         band.put("UserID", userID);
         documentReference.set(band).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

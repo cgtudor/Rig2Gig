@@ -13,11 +13,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".MyBandActivity"></activity>
         <activity android:name=".CreateBandActivity">
 
         </activity>
+        <activity android:name=".BandListingDetailsActivity" />
+        <activity android:name=".MusicianListingDetailsActivity" />
+        <activity android:name=".VenueListingDetailsActivity" />
+        <activity
+            android:name=".CreateBandAdvertisement"
+            android:windowSoftInputMode="adjustPan|adjustResize"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".CreateMusicianAdvertisement"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CreatePerformerAdvertisement"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CreateVenueAdvertisement"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".LaunchActivity">
+
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
 
             <!-- android:theme="@style/AppTheme" -->
             <!-- android:windowSoftInputMode="adjustResize"/> -->
@@ -36,6 +60,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
 
         </activity>
 

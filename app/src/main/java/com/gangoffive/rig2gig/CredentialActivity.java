@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,22 +19,30 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * CredentialActivity loads when the activity is called.
+ */
 public class CredentialActivity extends AppCompatActivity {
 
+    private static final String TAG = "======================";
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
 
     EditText cFirstName, cLastName, cUsername, cPhoneNumber;
-    RadioButton genderMale, genderFemale, genderOther;
+    RadioButton genderMale, fan, genderFemale, genderOther, accFan, accMusician, accVenue;
     RadioGroup genderGroup, userGroup;
     Button submit;
 
     String gender, userType, userId;
+
+    /**
+     * When the onCreate is called previous states from the activity can be restored.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +51,6 @@ public class CredentialActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-
-
         cFirstName = findViewById(R.id.cFirstName);
         cLastName = findViewById(R.id.cLastName);
         cUsername = findViewById(R.id.cUsername);
@@ -50,6 +58,15 @@ public class CredentialActivity extends AppCompatActivity {
         genderGroup = findViewById(R.id.genderRadioGroup);
         userGroup = findViewById(R.id.userRadioGroup);
         submit = findViewById(R.id.submitBtn);
+
+        genderMale = findViewById(R.id.radioBtnMale);
+        genderFemale = findViewById(R.id.radioBtnFemale);
+        genderOther = findViewById(R.id.radioBtnFemale);
+
+        accFan = findViewById(R.id.radioBtnFan);
+        accMusician = findViewById(R.id.radioBtnMusician);
+        accVenue = findViewById(R.id.radioBtnVenue);
+        fan = findViewById(R.id.radioBtnMusician);
 
         genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -75,8 +92,8 @@ public class CredentialActivity extends AppCompatActivity {
                     case R.id.radioBtnMusician:
                         userType = "Musician";
                         break;
-                    case R.id.radioBtnBand:
-                        userType = "Band";
+                    case R.id.radioBtnFan:
+                        userType = "Fan";
                         break;
                     case R.id.radioBtnVenue:
                         userType = "Venue";
@@ -86,30 +103,55 @@ public class CredentialActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method submits user details inputted to their document within the database.
+     * @param view
+     */
     public void submitBtnOnClick(View view) {
-        String fullName = cFirstName.getText().toString() + " " + cLastName.getText().toString();
-        String username = cUsername.getText().toString();
-        String phoneNumber = cPhoneNumber.getText().toString();
-        userId = fAuth.getUid();
-        DocumentReference documentReference = fStore.collection("users").document(userId);
-        Map<String, Object> user = new HashMap<>();
-        user.put("Full Name", fullName);
-        user.put("Username", username);
-        user.put("Phone Number", phoneNumber);
-        user.put("Gender", gender);
-        user.put("User Type", userType);
-        documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(CredentialActivity.this, "Information Added", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+        if (gender == null || userType == null){
+            Toast.makeText(CredentialActivity.this, "Please Make Sure Gender & User Type Is Selected", Toast.LENGTH_SHORT).show();
+        }else{
+            String firstName = cFirstName.getText().toString();
+            String lastName = cLastName.getText().toString();
+            String fullName = cFirstName.getText().toString() + " " + cLastName.getText().toString();
+            String username = cUsername.getText().toString();
+            String phoneNumber = cPhoneNumber.getText().toString();
+
+            if (TextUtils.isEmpty(firstName)){
+                cFirstName.setError("Please enter a first name");
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(CredentialActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(lastName)){
+                cLastName.setError("Please enter a last name");
             }
-        });
-        //Link to next page
+            if (TextUtils.isEmpty(username)){
+                cUsername.setError("Please enter a username name");
+            }
+            if (TextUtils.isEmpty(phoneNumber)){
+                cPhoneNumber.setError("Please enter a phone number");
+            }
+            
+            userId = fAuth.getUid();
+            DocumentReference documentReference = fStore.collection("users").document(userId);
+            Map<String, Object> user = new HashMap<>();
+            user.put("Full Name", fullName);
+            user.put("Username", username);
+            user.put("Phone Number", phoneNumber);
+            user.put("Gender", gender);
+            user.put("User Type", userType);
+            documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(CredentialActivity.this, "Information Added", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(CredentialActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                    String uuid = fAuth.getUid();
+                    System.out.println("=========================" + uuid);
+                }
+            });
+        }
     }
 }

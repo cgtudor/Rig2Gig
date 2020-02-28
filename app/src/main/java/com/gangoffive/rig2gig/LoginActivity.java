@@ -27,6 +27,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
@@ -36,14 +38,26 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.identityconnectors.common.security.GuardedString;
 
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * LoginActivity loads when the activity is called.
+ */
 public class LoginActivity extends AppCompatActivity{
     private static final String TAG = "TAG";
     private static final int RC_SIGN_IN = 234;
 
-    FirebaseAuth fAuth;
+    FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    String userId = fAuth.getUid();
+
     SignInButton signInButton;
 
     GoogleSignInClient mGoogleSignInClient;
@@ -54,12 +68,16 @@ public class LoginActivity extends AppCompatActivity{
     TextView registerBtn, forgotPasswordBtn;
     EditText emailAddress, password;
 
+
+
+    /**
+     * When the onCreate is called previous states from the activity can be restored.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        fAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -74,6 +92,9 @@ public class LoginActivity extends AppCompatActivity{
         forgotPasswordBtn = findViewById(R.id.forgotPasswordBtn);
         signInButton = findViewById(R.id.sign_in_button);
 
+        /**
+         * onClick for Google Sign In button.
+         */
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,6 +106,9 @@ public class LoginActivity extends AppCompatActivity{
             }
         });
 
+        /**
+         * Initialisation of Facebook login button.
+         */
         mCallbackManager = CallbackManager.Factory.create();
         loginButton = findViewById(R.id.fb_loginBtn);
         loginButton.setReadPermissions("email", "public_profile");
@@ -105,6 +129,11 @@ public class LoginActivity extends AppCompatActivity{
         });
     }
 
+    /**
+     * Login in with email and password. This method gets the inputted email address and password
+     * by the user.
+     * @param view
+     */
     public void LoginBtnOnClick(View view) {
         final String getEmail = emailAddress.getText().toString().trim();
 
@@ -114,6 +143,7 @@ public class LoginActivity extends AppCompatActivity{
         /*Copying all the characters in the password textbox to the char array*/
         password.getText().getChars(0, password.getText().length(), passChars, 0);
         GuardedString encryptedPassword = new GuardedString(passChars);
+
         /*Method used to access the encrypted password and get the clear chars*/
         encryptedPassword.access(new GuardedString.Accessor() {
             @Override
@@ -123,17 +153,8 @@ public class LoginActivity extends AppCompatActivity{
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "User Logged In", Toast.LENGTH_LONG).show();
-                            /**
-                             * Checking if this is users first time logging in or existing user
-                             */
-                            FirebaseUserMetadata metadata = fAuth.getCurrentUser().getMetadata();
-                            if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
-                                // The user is new, show them a fancy intro screen!
-                                startActivity(new Intent(getApplicationContext(), CredentialActivity.class));
-                            } else {
                                 // This is an existing user, show them a welcome back screen.
                                 startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
-                            }
                         } else {
                             Toast.makeText(LoginActivity.this, "Email Or Password Is Incorrect! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -146,7 +167,13 @@ public class LoginActivity extends AppCompatActivity{
         encryptedPassword.dispose();
     }
 
-
+    /**
+     * If the user is signing in with Google then the authentication method with google will be called
+     * with the users account information. The same will happen if the user is signing in with Facebook.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -158,19 +185,22 @@ public class LoginActivity extends AppCompatActivity{
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
+                // Google Sign In failed
                 Log.w(TAG, "Google sign in failed", e);
             }
         }
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * This method gets the information passed by Google, if the user hasn't log in before with Google
+     * then their email will be added to the database under a document of their userId. Then the user will
+     * get redirected to the CredentialActivity. If the user has already logged in with Facebook they will be redirected
+     * to the NavBarActivity.
+     * @param acct
+     */
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        System.out.println("-------------------------GoogleAuth");
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        // [START_EXCLUDE silent]
-        // [END_EXCLUDE]
-
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         fAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -180,17 +210,37 @@ public class LoginActivity extends AppCompatActivity{
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = fAuth.getCurrentUser();
-                            /**
-                             * Checking if this is users first time logging in or existing user
-                             */
-                            FirebaseUserMetadata metadata = fAuth.getCurrentUser().getMetadata();
-                            if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
-                                // The user is new, show them a fancy intro screen!
-                                startActivity(new Intent(getApplicationContext(), CredentialActivity.class));
-                            } else {
-                                // This is an existing user, show them a welcome back screen.
-                                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
-                            }
+                            final String userEmail = user.getEmail();
+                            final String getUserId = fAuth.getUid();
+                            DocumentReference docIdRef = fStore.collection("users").document(getUserId);
+                            docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            Log.d(TAG, "Document exists!");
+                                            startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                                        } else {
+                                            Log.d(TAG, "Document does not exist!");
+                                            System.out.println("================================== Doc dont exist");
+                                            DocumentReference documentReference = fStore.collection("users").document(getUserId);
+                                            System.out.println("================================== " + userId);
+                                            System.out.println("================================== " + userEmail);
+                                            Map<String, Object> test = new HashMap<>();
+                                            test.put("Email Address", userEmail);
+                                            documentReference.set(test).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(LoginActivity.this, "Account has been created!", Toast.LENGTH_SHORT).show();
+                                                    Log.d(TAG, "onSuccess: user Profile is created for "+ userId);
+                                                    startActivity(new Intent(getApplicationContext(),CredentialActivity.class));
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            });
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -199,6 +249,13 @@ public class LoginActivity extends AppCompatActivity{
                 });
     }
 
+    /**
+     * This method gets the information passed by Facebook, if the user hasn't log in before with Facebook
+     * then their email will be added to the database under a document of their userId. Then the user will
+     * get redirected to the CredentialActivity. If the user has already logged in with Facebook they will be redirected
+     * to the NavBarActivity.
+     * @param token
+     */
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
@@ -209,39 +266,68 @@ public class LoginActivity extends AppCompatActivity{
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
+                            Log.d(TAG, "signInWithFacebook:success");
                             FirebaseUser user = fAuth.getCurrentUser();
-                            /**
-                             * Checking if this is users first time logging in or existing user
-                             */
-                            FirebaseUserMetadata metadata = fAuth.getCurrentUser().getMetadata();
-                            if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
-                                // The user is new, show them a fancy intro screen!
-                                startActivity(new Intent(getApplicationContext(), CredentialActivity.class));
-                            } else {
-                                // This is an existing user, show them a welcome back screen.
-                                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
-                            }
+                            final String userEmail = user.getEmail();
+                            System.out.println("================================= " + userEmail);
+
+                            DocumentReference docIdRef = fStore.collection("users").document(userId);
+                            docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            Log.d(TAG, "Document exists!");
+                                            startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                                        } else {
+                                            Log.d(TAG, "Document does not exist!");
+                                            System.out.println("================================== Doc dont exist");
+                                            DocumentReference documentReference = fStore.collection("users").document(userId);
+                                            System.out.println("================================== " + userId);
+                                            System.out.println("================================== " + userEmail);
+                                            Map<String, Object> test = new HashMap<>();
+                                            test.put("Email Address", userEmail);
+                                            documentReference.set(test).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(LoginActivity.this, "Account has been created!", Toast.LENGTH_SHORT).show();
+                                                    Log.d(TAG, "onSuccess: user Profile is created for "+ userId);
+                                                    startActivity(new Intent(getApplicationContext(),CredentialActivity.class));
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            });
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 
+    /**
+     * Starts the intent for Google Sign In.
+     */
     private void googleSignIn(){
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
-        System.out.println("-------------------------------Here");
     }
 
+    /**
+     * onClick the loginRegisterBtn will launch the Register Activity
+     * @param view
+     */
     public void loginRegisterBtn(View view) {
         startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
     }
 
+    /**
+     * onClick the forgotPasswordBtn will launch the ForgotPasswordActivity
+     * @param view
+     */
     public void forgotPasswordBtn(View view) {
         startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
     }
