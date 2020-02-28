@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -45,6 +46,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
             public boolean onPreferenceClick(Preference preference)
             {
                 executeDialog();
+                return true;
+            }
+        });
+        Preference logout = getPreferenceManager().findPreference("Logout");
+        logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                fbLogout();
                 return true;
             }
         });
@@ -98,5 +107,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
     {
         ChangePasswordDialog changePasswordDialog = new ChangePasswordDialog();
         changePasswordDialog.show(getFragmentManager(), "Dialog");
+    }
+
+    private void fbLogout()
+    {
+        FirebaseAuth fAuth = FirebaseAuth.getInstance();
+        fAuth.signOut();
+        startActivity(new Intent(getContext(), LoginActivity.class));
     }
 }
