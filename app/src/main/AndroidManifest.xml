@@ -15,11 +15,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MyBandActivity"></activity>
         <activity android:name=".CreateBandActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".LaunchActivity">
 
@@ -34,7 +30,14 @@
         <activity android:name=".MainActivity" />
         <activity
             android:name=".NavBarActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

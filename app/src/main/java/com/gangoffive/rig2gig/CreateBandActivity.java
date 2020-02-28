@@ -109,7 +109,7 @@ public class CreateBandActivity extends Activity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         System.out.println("=============================== Band ref added");
-                        startActivity(new Intent(getApplicationContext(), MyBandActivity.class));
+                        startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
                     }
                 });
             }

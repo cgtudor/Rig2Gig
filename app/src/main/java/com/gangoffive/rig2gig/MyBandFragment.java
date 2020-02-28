@@ -1,20 +1,133 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.w3c.dom.Text;
+
 public class MyBandFragment extends Fragment
 {
+    FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    //String UUID = fAuth.getUid();
+    //String UUID = "yOliCxQ4j8gdzTbLDenfZRO9QH32";
+    String UUID = "11111";
+    String bandRef;
+
+    TextView bandLocationTxt, bandDistanceTxt, bandGenresTxt, bandEmailTxt, bandPhoneNoTxt,
+            bandName, bandLocation, distance, genres, email, phoneNo;
+    Button createBtn, createBandBtn;
+
+    public void setInputReferences(View view){
+        bandLocationTxt = view.findViewById(R.id.bandLocation);
+        bandDistanceTxt = view.findViewById(R.id.distance);
+        bandGenresTxt = view.findViewById(R.id.Genres);
+        bandEmailTxt = view.findViewById(R.id.Email);
+        bandPhoneNoTxt = view.findViewById(R.id.phoneNo);
+
+        bandName = view.findViewById(R.id.myBandName);
+        bandLocation = view.findViewById(R.id.myBandLocation);
+        distance = view.findViewById(R.id.myDistance);
+        genres = view.findViewById(R.id.myBandGenres);
+        email = view.findViewById(R.id.myBandEmail);
+        phoneNo = view.findViewById(R.id.myPhoneNo);
+
+        createBtn = view.findViewById(R.id.createBandAdBtn);
+        createBandBtn = view.findViewById(R.id.createBandBtn);
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_my_band, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_band, container, false);
+
+        bandLocationTxt = view.findViewById(R.id.bandLocation);
+
+        setInputReferences(view);
+
+        createBandBtn.setVisibility(view.INVISIBLE);
+
+        DocumentReference user = fStore.collection("users").document(UUID);
+        user.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    System.out.println("============================= 1");
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()){
+                        System.out.println("============================= 2");
+                        Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+                        bandRef = document.get("band-ref").toString();
+                        DocumentReference bandInfo = fStore.collection("band").document(bandRef);
+                        bandInfo.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()){
+                                    System.out.println("============================= 3");
+                                    DocumentSnapshot snap = task.getResult();
+                                    if (snap.exists()){
+                                        System.out.println("============================= 4");
+                                        Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+                                        System.out.println("============================= " + UUID);
+                                        bandName.setText(snap.get("Band Name").toString());
+                                        bandLocation.setText(snap.get("Band Location").toString());
+                                        distance.setText(snap.get("Distance").toString());
+                                        genres.setText(snap.get("Genres").toString());
+                                        email.setText(snap.get("Band Email Address").toString());
+                                        phoneNo.setText(snap.get("Band Phone Number").toString());
+                                    }else{
+                                        System.out.println("========================== User not part of a band!");
+                                    }
+                                }
+                            }
+                        });
+                    } else{
+                        System.out.println("========================== UUID: " + UUID + " not part of a band!");
+                        bandName.setText("User Not In A Band!");
+                        bandLocationTxt.setVisibility(view.INVISIBLE);
+                        bandDistanceTxt.setVisibility(view.INVISIBLE);
+                        bandGenresTxt.setVisibility(view.INVISIBLE);
+                        bandEmailTxt.setVisibility(view.INVISIBLE);
+                        bandPhoneNoTxt.setVisibility(view.INVISIBLE);
+                        createBtn.setVisibility(view.INVISIBLE);
+                        createBandBtn.setVisibility(view.VISIBLE);
+
+
+                    }
+                }
+            }
+        });
+
+        createBandBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(getActivity(), CreateBandActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        return view;
     }
 }
