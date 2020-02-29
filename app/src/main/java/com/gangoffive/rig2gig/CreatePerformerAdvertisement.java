@@ -36,7 +36,8 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.toString().trim().length() == 0 && createListing != null) {
+            if ((s.toString().trim().length() == 0 || s.toString().equals("0"))
+                    && createListing != null) {
                 createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
                 createListing.setTextColor(Color.parseColor("#4D4D4E"));
             }
@@ -248,7 +249,14 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
                 return false;
             }
         }
-        return true;
+        if (listing.get("distance").toString().equals("0"))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     /**
