@@ -15,7 +15,7 @@ import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateVenueAdvertisement extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
+public class VenueAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
 
     private TextView name, description;
@@ -201,10 +201,14 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     @Override
     public void createAdvertisement() {
         listingDataMap();
+        if (chosenPic == null)
+        {
+            chosenPic = image.getDrawable();
+        }
         if (validateDataMap()) {
             listingManager.postDataToDatabase(listing, chosenPic, this);
         } else {
-            Toast.makeText(CreateVenueAdvertisement.this,
+            Toast.makeText(VenueAdvertisementEditor.this,
                     "Listing not created.  Ensure all fields are complete " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
@@ -218,18 +222,18 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Intent intent = new Intent(CreateVenueAdvertisement.this, VenueListingDetailsActivity.class);
+            Intent intent = new Intent(VenueAdvertisementEditor.this, VenueListingDetailsActivity.class);
             intent.putExtra("EXTRA_VENUE_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(CreateVenueAdvertisement.this,
+            Toast.makeText(VenueAdvertisementEditor.this,
                     "Listing creation failed.  Check your connection " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(CreateVenueAdvertisement.this,
+            Toast.makeText(VenueAdvertisementEditor.this,
                     "Listing creation failed.  Check your connection " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
@@ -241,7 +245,7 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
      */
     @Override
     public void cancelAdvertisement() {
-        Intent backToMain = new Intent(CreateVenueAdvertisement.this,
+        Intent backToMain = new Intent(VenueAdvertisementEditor.this,
                 MainActivity.class);
         startActivity(backToMain);
     }

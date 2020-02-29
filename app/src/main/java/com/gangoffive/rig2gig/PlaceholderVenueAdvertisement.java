@@ -22,7 +22,7 @@ public class PlaceholderVenueAdvertisement extends Fragment
         //Intent intent = new Intent(CreateBandAdvertisement.this, BandListingDetailsActivity.class);
 
 
-        //startActivity(new Intent(getActivity(), CreateVenueAdvertisement.class));
+        //startActivity(new Intent(getActivity(), VenueAdvertisementEditor.class));
 
     }*/
 
@@ -34,7 +34,7 @@ public class PlaceholderVenueAdvertisement extends Fragment
         createVenueAd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CreateVenueAdvertisement.class);
+                Intent intent = new Intent(getActivity(), VenueAdvertisementEditor.class);
                 intent.putExtra("EXTRA_VENUE_ID", "cavWo1C735Rft0NHvhcL");
                 intent.putExtra("EXTRA_LISTING_ID","");
                 startActivity(intent);
@@ -44,7 +44,7 @@ public class PlaceholderVenueAdvertisement extends Fragment
         editVenueAd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CreateVenueAdvertisement.class);
+                Intent intent = new Intent(getActivity(), VenueAdvertisementEditor.class);
                 intent.putExtra("EXTRA_VENUE_ID", "cavWo1C735Rft0NHvhcL");
                 intent.putExtra("EXTRA_LISTING_ID","mp66GCVIIfci4mwYB6Xl");
                 startActivity(intent);
