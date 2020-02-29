@@ -38,7 +38,7 @@ public abstract class NavBarCompatActivity extends AppCompatActivity  implements
     }
 
     /**
-     * This method
+     * This method is used to handle the back button.
      */
     @Override
     public void onBackPressed()
@@ -59,13 +59,13 @@ public abstract class NavBarCompatActivity extends AppCompatActivity  implements
         }
     }
 
-    //Create variable to become true once the user has been warned about pressing back.
-    //In the onBackPressed() method, set the variable to true. Upon pressing back again, the app will minimise.
-    //In the onResume() method, set the variable back to false.
-    //In the onNavigationItemSelected() method, set the variable back to false as the user has navigated away between back button presses.
+    /**
+     * This method is used to handle resuming an activity.
+     */
     @Override
     public void onResume()
     {
+        minimise = false;
         super.onResume();
     }
 }
