@@ -13,4 +13,11 @@ public interface TabbedViewReferenceInitialiser {
      * reinitialise views in tabs which may have been destroyed
      */
     public void reinitialiseTabs();
+
+    public boolean editingText();
+
+
+    public boolean savedOnFocus();
+
+    public void setSavedOnFocus(boolean saved);
 }

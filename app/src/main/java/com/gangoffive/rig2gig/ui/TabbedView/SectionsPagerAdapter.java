@@ -59,10 +59,19 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        if (TAB_TITLES.length > 2)
+        if (TAB_TITLES.length > 2
+                && !((TabbedViewReferenceInitialiser) mContext).editingText())
         {
             ((TabbedViewReferenceInitialiser) mContext).saveTabs();
             ((Activity)mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        }
+        else if(TAB_TITLES.length > 2
+                && ((TabbedViewReferenceInitialiser) mContext).editingText()
+                && !((TabbedViewReferenceInitialiser) mContext).savedOnFocus())
+        {
+            ((TabbedViewReferenceInitialiser) mContext).saveTabs();
+            ((Activity)mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+            ((TabbedViewReferenceInitialiser) mContext).setSavedOnFocus(true);
         }
         return TAB_TITLES.length;
     }

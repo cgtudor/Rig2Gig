@@ -3,38 +3,58 @@ package com.gangoffive.rig2gig;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class VenueAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
+public class VenueDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
 
-    private TextView name, description;
+    private TextView name, description, location, venueType, email, phone;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
     private String venueRef, type;
-    private HashMap<String, Object> listing;
-    private Map<String, Object> venue, previousListing;
+    private Map<String, Object> venue;
     private ListingManager listingManager;
     private int[] tabTitles;
-    private int[] fragments = {R.layout.fragment_create_venue_advertisement_image,
-            R.layout.fragment_create_venue_advertisement_details};
+    private int[] fragments = {R.layout.fragment_image_changer,
+                               R.layout.fragment_venue_details_changer,
+                               R.layout.fragment_description_changer};
     private Drawable chosenPic;
+    private boolean editingText;
+    private boolean savedOnFocus;
+    private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus)
+            {
+                editingText = true;
+                savedOnFocus = false;
+            }
+            else
+            {
+                editingText = false;
+                savedOnFocus = false;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_editor_layout);
-        tabTitles = new int[]{R.string.image, R.string.details};
+        tabTitles = new int[]{R.string.image, R.string.details, R.string.description};
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
                 (this, getSupportFragmentManager(), tabTitles, fragments);
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -43,8 +63,10 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         tabs.setupWithViewPager(viewPager);
 
         venueRef = getIntent().getStringExtra("EXTRA_VENUE_ID");
-        String listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
+        String listingRef = "profileEdit";
         type = "Venue";
+        editingText = false;
+        savedOnFocus = false;
 
 
         listingManager = new ListingManager(venueRef, type, listingRef);
@@ -56,7 +78,8 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      * @param data band data
      */
     @Override
-    public void onSuccessFromDatabase(Map<String, Object> data) {
+    public void onSuccessFromDatabase(Map<String, Object> data)
+    {
         setViewReferences();
         venue = data;
         listingManager.getImage(this);
@@ -69,10 +92,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData)
     {
-        setViewReferences();
-        venue = data;
-        previousListing = listingData;
-        listingManager.getImage(this);
+        //not required as not editing a listing
     }
 
     /**
@@ -89,13 +109,41 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public void setViewReferences() {
-        name = findViewById(R.id.name);
         image = findViewById(R.id.image);
         if (image != null)
         {
             image.setImageDrawable(null);
         }
+        name = findViewById(R.id.name);
+        if (name != null)
+        {
+            name.setOnFocusChangeListener(editTextFocusListener);
+        }
+        location = findViewById(R.id.location);
+        if (location != null)
+        {
+            location.setOnFocusChangeListener(editTextFocusListener);
+        }
+        venueType = findViewById(R.id.type);
+        if (venueType != null)
+        {
+            venueType.setOnFocusChangeListener(editTextFocusListener);
+        }
+        email = findViewById(R.id.email);
+        if (email != null)
+        {
+            email.setOnFocusChangeListener(editTextFocusListener);
+        }
+        phone = findViewById(R.id.phone);
+        if (phone != null)
+        {
+            phone.setOnFocusChangeListener(editTextFocusListener);
+        }
         description = findViewById(R.id.description);
+        if (description != null)
+        {
+            description.setOnFocusChangeListener(editTextFocusListener);
+        }
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,17 +185,33 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public void populateInitialFields() {
-        if(name != null && venue !=null && name.getText() != venue.get("name") && name.getText() == "")
-        {
-            name.setText(venue.get("name").toString());
-        }
         if (chosenPic != null && image != null)
         {
             image.setImageDrawable(chosenPic);
         }
-        if(description != null && previousListing !=null)
+        if(name != null && venue !=null)
         {
-            description.setText(previousListing.get("description").toString());
+            name.setText(venue.get("name").toString());
+        }
+        if(location != null && venue !=null)
+        {
+            location.setText(venue.get("location").toString());
+        }
+        if(venueType != null && venue !=null)
+        {
+            venueType.setText(venue.get("venue-type").toString());
+        }
+        if(email != null && venue !=null)
+        {
+            email.setText(venue.get("email").toString());
+        }
+        if(phone != null && venue !=null)
+        {
+            phone.setText(venue.get("phone-number").toString());
+        }
+        if(description != null && venue !=null)
+        {
+            description.setText(venue.get("description").toString());
         }
     }
 
@@ -161,10 +225,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         {
             chosenPic = (image.getDrawable());
         }
-        if (description != null && description.getText() == null)
-        {
-            listing.put("description",description.getText().toString());
-        }
+        listingDataMap();
         reinitialiseTabs();
     }
 
@@ -177,23 +238,8 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         populateInitialFields();
         if (description != null && description.getText() == null)
         {
-            description.setText(listing.get("description").toString());
+            description.setText(venue.get("description").toString());
         }
-    }
-
-    @Override
-    public boolean editingText() {
-        return false;
-    }
-
-    @Override
-    public boolean savedOnFocus() {
-        return false;
-    }
-
-    @Override
-    public void setSavedOnFocus(boolean saved) {
-
     }
 
     /**
@@ -215,15 +261,15 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public void createAdvertisement() {
-        listingDataMap();
+        saveTabs();
         if (chosenPic == null)
         {
             chosenPic = image.getDrawable();
         }
         if (validateDataMap()) {
-            listingManager.postDataToDatabase(listing, chosenPic, this);
+            listingManager.postDataToDatabase((HashMap)venue, chosenPic, this);
         } else {
-            Toast.makeText(VenueAdvertisementEditor.this,
+            Toast.makeText(VenueDetailsEditor.this,
                     "Listing not created.  Ensure all fields are complete " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
@@ -237,18 +283,21 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Intent intent = new Intent(VenueAdvertisementEditor.this, VenueListingDetailsActivity.class);
+            Intent intent = new Intent(VenueDetailsEditor.this, MainActivity.class);
+            Toast.makeText(VenueDetailsEditor.this,
+                    "Details successfully updated",
+                    Toast.LENGTH_LONG).show();
             intent.putExtra("EXTRA_VENUE_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(VenueAdvertisementEditor.this,
+            Toast.makeText(VenueDetailsEditor.this,
                     "Listing creation failed.  Check your connection " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(VenueAdvertisementEditor.this,
+            Toast.makeText(VenueDetailsEditor.this,
                     "Listing creation failed.  Check your connection " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
@@ -260,22 +309,35 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public void cancelAdvertisement() {
-        Intent backToMain = new Intent(VenueAdvertisementEditor.this,
-                MainActivity.class);
+        Intent backToMain = new Intent(VenueDetailsEditor.this, MainActivity.class);
         startActivity(backToMain);
     }
 
-    /**
-     * populate listing map with combination of values from text views and map generated from database
-     */
+    @Override
     public void listingDataMap() {
-        if (listing == null) {
-            listing = new HashMap<>();
-            listing.put("venue-ref", venueRef);
-        }
-        if(description != null)
+        if (description != null && description.getText() != null && !description.getText().equals("") && venue != null)
         {
-            listing.put("description", description.getText().toString());
+            venue.put("description",description.getText().toString());
+        }
+        if(name != null && name.getText() != null && venue != null)
+        {
+            venue.put("name",name.getText().toString());
+        }
+        if(location != null && location.getText() != null && venue != null)
+        {
+            venue.put("location",location.getText().toString());
+        }
+        if(venueType != null && venueType.getText() != null && venue != null)
+        {
+            venue.put("venue-type",venueType.getText().toString());
+        }
+        if(email != null && email.getText() != null && venue != null)
+        {
+            venue.put("email",email.getText().toString());
+        }
+        if(phone != null && phone.getText() != null && venue != null)
+        {
+            venue.put("phone-number",phone.getText().toString());
         }
     }
 
@@ -285,7 +347,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public boolean validateDataMap() {
-        for (Map.Entry element : listing.entrySet()) {
+        for (Map.Entry element : venue.entrySet()) {
             String val = element.getValue().toString();
             if (val == null || val.trim().isEmpty()) {
                 return false;
@@ -300,5 +362,21 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     public ImageView getImageView() {
         return image;
+    }
+
+    @Override
+    public boolean editingText()
+    {
+        return editingText;
+    }
+
+    @Override
+    public boolean savedOnFocus() {
+        return savedOnFocus;
+    }
+
+    @Override
+    public void setSavedOnFocus(boolean saved) {
+        savedOnFocus = saved;
     }
 }

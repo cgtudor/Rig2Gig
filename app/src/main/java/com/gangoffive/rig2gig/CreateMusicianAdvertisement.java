@@ -224,6 +224,21 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         }
     }
 
+    @Override
+    public boolean editingText() {
+        return false;
+    }
+
+    @Override
+    public boolean savedOnFocus() {
+        return false;
+    }
+
+    @Override
+    public void setSavedOnFocus(boolean saved) {
+
+    }
+
     /**
      * handles activity results
      * @param requestCode

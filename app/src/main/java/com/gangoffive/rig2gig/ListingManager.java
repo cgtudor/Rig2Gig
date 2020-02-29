@@ -42,10 +42,10 @@ public class ListingManager
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private DocumentReference docRef, listRef;
-    private StorageReference storageRef;
-    private StorageReference imageRef;
+    private StorageReference storageRef, imageRef, listingImage;
     private Map<String, Object> userInfo,listingInfo;
     private String collectionPath, imagePath, listingRef, listingPath;;
+
 
 
     /**
@@ -90,17 +90,32 @@ public class ListingManager
         else if (type.equals("Venue"))
         {
             docRef = db.collection("venues").document(userRef);
-            collectionPath = "venue-listings";
-            imagePath = collectionPath;
-            if (!listingRef.equals(""))
+            if (listingRef.equals("profileEdit"))
             {
-                imageRef = storageRef.child("/images/"+ imagePath +"/" + listingRef + ".jpg");
-                listRef = db.collection(collectionPath).document(listingRef);
+                collectionPath = "venues";
+                imagePath = collectionPath;
+                imageRef = storageRef.child("/images/venues/" + userRef + ".jpg");
+                listRef = db.collection(collectionPath).document(userRef);
+                listingImage = storageRef.child("/images/" + imagePath +
+                        "/" + userRef + ".jpg");
             }
             else
             {
-                imageRef = storageRef.child("/images/venues/" + userRef + ".jpg");
+                collectionPath = "venue-listings";
+                imagePath = collectionPath;
+                if (listingRef.equals(""))
+                {
+                    imageRef = storageRef.child("/images/venues/" + userRef + ".jpg");
+                }
+                else
+                {
+                    imageRef = storageRef.child("/images/"+ imagePath +"/" + listingRef + ".jpg");
+                    listRef = db.collection(collectionPath).document(listingRef);
+                    listingImage = storageRef.child("/images/" + imagePath +
+                            "/" + listingRef + ".jpg");
+                }
             }
+
         }
     }
 
@@ -129,7 +144,7 @@ public class ListingManager
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         userInfo = document.getData();
-                        if (listingRef.equals(""))
+                        if (listingRef.equals("") || listingRef.equals("profileEdit"))
                         {
                             activity.onSuccessFromDatabase(userInfo);
                         }
@@ -220,6 +235,8 @@ public class ListingManager
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         listingRef = documentReference.getId();
+                        listingImage = storageRef.child("/images/" + imagePath +
+                                "/" + listingRef + ".jpg");
                         Log.d(TAG, "DocumentSnapshot written with ID: " + listingRef);
                         uploadImage(image, activity);
                     }
@@ -268,8 +285,6 @@ public class ListingManager
 
     public void uploadImage(Drawable image, CreateAdvertisement activity)
     {
-        StorageReference listingImage = storageRef.child("/images/" + imagePath +
-                "/" + listingRef + ".jpg");
         UploadTask uploadTask = listingImage.putBytes(imageToByteArray(image));
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             /**

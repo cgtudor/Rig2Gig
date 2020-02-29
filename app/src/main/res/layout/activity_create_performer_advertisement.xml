@@ -142,14 +142,14 @@
 
         <Button
             android:id="@+id/createListing"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0.0dip"
             android:layout_height="fill_parent"
             android:layout_marginEnd="50dp"
             android:layout_weight="1.0"
             android:backgroundTint="#008577"
-            android:text="Create"
-            android:textColor="#FFFFFF"
-            style="?android:attr/borderlessButtonStyle"/>
+            android:text="Confirm"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

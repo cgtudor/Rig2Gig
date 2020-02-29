@@ -35,7 +35,7 @@ public class PlaceholderVenueAdvertisement extends Fragment
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), VenueAdvertisementEditor.class);
-                intent.putExtra("EXTRA_VENUE_ID", "cavWo1C735Rft0NHvhcL");
+                intent.putExtra("EXTRA_VENUE_ID", "80kaTvOTmggcOWjMqW8r");
                 intent.putExtra("EXTRA_LISTING_ID","");
                 startActivity(intent);
             }
@@ -45,8 +45,8 @@ public class PlaceholderVenueAdvertisement extends Fragment
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), VenueAdvertisementEditor.class);
-                intent.putExtra("EXTRA_VENUE_ID", "cavWo1C735Rft0NHvhcL");
-                intent.putExtra("EXTRA_LISTING_ID","mp66GCVIIfci4mwYB6Xl");
+                intent.putExtra("EXTRA_VENUE_ID", "80kaTvOTmggcOWjMqW8r");
+                intent.putExtra("EXTRA_LISTING_ID","t1izIZlw870JdYRMhAWI");
                 startActivity(intent);
             }
         });
@@ -54,7 +54,9 @@ public class PlaceholderVenueAdvertisement extends Fragment
         editVenueDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getActivity(), VenueDetailsEditor.class);
+                intent.putExtra("EXTRA_VENUE_ID", "80kaTvOTmggcOWjMqW8r");
+                startActivity(intent);
             }
         });
         return v;
