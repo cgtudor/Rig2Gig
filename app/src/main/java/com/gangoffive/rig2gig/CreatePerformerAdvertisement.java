@@ -1,9 +1,13 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,6 +28,34 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
     private HashMap<String, Object> listing;
     private Map<String, Object> band;
     private ListingManager listingManager;
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (s.toString().trim().length() == 0 && createListing != null) {
+                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+            }
+            else if (before == 0 && count == 1 && createListing != null
+                    && name.getText().toString().trim().length() > 0
+                    && distance.getText().toString().trim().length() > 0
+                    && (Integer.parseInt(distance.getText().toString()) > 0))
+            {
+                createListing.setBackgroundColor(Color.parseColor("#008577"));
+                createListing.setTextColor(Color.parseColor("#FFFFFF"));
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
 
     /**
      * setup view and listing manager, initiating getting performer info from database
@@ -77,6 +109,7 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
         name = findViewById(R.id.name);
         image = findViewById(R.id.image);
         distance = findViewById(R.id.distance);
+        distance.addTextChangedListener(textWatcher);
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override

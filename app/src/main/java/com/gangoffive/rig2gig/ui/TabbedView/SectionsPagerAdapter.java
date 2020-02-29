@@ -60,10 +60,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         if (TAB_TITLES.length > 2
-                && !((TabbedViewReferenceInitialiser) mContext).editingText())
+                && !((TabbedViewReferenceInitialiser) mContext).editingText()
+                && !((TabbedViewReferenceInitialiser) mContext).isBreakingOut())
         {
             ((TabbedViewReferenceInitialiser) mContext).saveTabs();
             ((Activity)mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+            ((TabbedViewReferenceInitialiser) mContext).breakOut();
         }
         else if(TAB_TITLES.length > 2
                 && ((TabbedViewReferenceInitialiser) mContext).editingText()
@@ -72,6 +74,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             ((TabbedViewReferenceInitialiser) mContext).saveTabs();
             ((Activity)mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
             ((TabbedViewReferenceInitialiser) mContext).setSavedOnFocus(true);
+        }
+        else if (((TabbedViewReferenceInitialiser) mContext).isBreakingOut())
+        {
+            ((TabbedViewReferenceInitialiser) mContext).setBreakingOut(false);
         }
         return TAB_TITLES.length;
     }

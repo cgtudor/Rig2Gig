@@ -1,11 +1,15 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,6 +48,53 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     private Drawable chosenPic;
     SectionsPagerAdapter sectionsPagerAdapter;
     ViewPager viewPager;
+    private boolean editingText;
+    private boolean savedOnFocus;
+    private int saveLoopCount;
+    private boolean breakout;
+    private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus)
+            {
+                editingText = true;
+                savedOnFocus = false;
+            }
+            else
+            {
+                editingText = false;
+                savedOnFocus = false;
+            }
+        }
+    };
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (createListing != null
+                    &&  (bandPositions.size() == 0
+                    || description.getText().toString().trim().length() == 0)) {
+                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+            }
+            else if (createListing != null
+                    && description.getText().toString().trim().length() > 0
+                    && bandPositions.size() > 0)
+            {
+                createListing.setBackgroundColor(Color.parseColor("#008577"));
+                createListing.setTextColor(Color.parseColor("#FFFFFF"));
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +111,10 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         bandPositions = new ArrayList();
         adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, positions);
+        editingText = false;
+        savedOnFocus = false;
+        saveLoopCount = 0;
+        breakout = false;
 
         musicianRef = "eg2wI0UaYsnuSfIccKbR";
         type = "Musician";
@@ -77,6 +132,8 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         setViewReferences();
+        createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+        createListing.setTextColor(Color.parseColor("#4D4D4E"));
         musician = data;
         listingManager.getImage(this);
     }
@@ -104,12 +161,20 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         name = findViewById(R.id.name);
         image = findViewById(R.id.image);
         currentPositions = findViewById(R.id.currentPositions);
+        if (currentPositions != null)
+        {
+            currentPositions.addTextChangedListener(textWatcher);
+        }
         if (image != null)
         {
             image.setImageDrawable(null);
         }
         position = findViewById(R.id.position);
         description = findViewById(R.id.description);
+        if (description != null)
+        {
+            description.addTextChangedListener(textWatcher);
+        }
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,18 +290,39 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     }
 
     @Override
-    public boolean editingText() {
-        return false;
+    public boolean editingText()
+    {
+        return editingText;
     }
 
     @Override
     public boolean savedOnFocus() {
-        return false;
+        return savedOnFocus;
     }
 
     @Override
     public void setSavedOnFocus(boolean saved) {
+        savedOnFocus = saved;
+    }
 
+    @Override
+    public void breakOut() {
+        saveLoopCount++;
+        if (saveLoopCount > 20)
+        {
+            breakout = true;
+            saveLoopCount = 0;
+        }
+    }
+
+    @Override
+    public boolean isBreakingOut() {
+        return breakout;
+    }
+
+    @Override
+    public void setBreakingOut(boolean isBreakingOut) {
+        breakout = false;
     }
 
     /**

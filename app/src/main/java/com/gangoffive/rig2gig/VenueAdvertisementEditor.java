@@ -1,11 +1,15 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,6 +34,32 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             R.layout.fragment_create_venue_advertisement_details};
     private Drawable chosenPic;
 
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (s.toString().trim().length() == 0 && createListing != null) {
+                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+            }
+            else if (before == 0 && count == 1 && createListing != null
+                    && description.getText().toString().trim().length() > 0)
+            {
+                createListing.setBackgroundColor(Color.parseColor("#008577"));
+                createListing.setTextColor(Color.parseColor("#FFFFFF"));
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +71,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+
 
         venueRef = getIntent().getStringExtra("EXTRA_VENUE_ID");
         String listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
@@ -58,6 +89,10 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         setViewReferences();
+        if (description.getText().toString().trim().length() == 0 && createListing != null) {
+            createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+            createListing.setTextColor(Color.parseColor("#4D4D4E"));
+        }
         venue = data;
         listingManager.getImage(this);
     }
@@ -96,6 +131,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             image.setImageDrawable(null);
         }
         description = findViewById(R.id.description);
+        description.addTextChangedListener(textWatcher);
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,6 +229,21 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
 
     @Override
     public void setSavedOnFocus(boolean saved) {
+
+    }
+
+    @Override
+    public void breakOut() {
+
+    }
+
+    @Override
+    public boolean isBreakingOut() {
+        return false;
+    }
+
+    @Override
+    public void setBreakingOut(boolean isBreakingOut) {
 
     }
 

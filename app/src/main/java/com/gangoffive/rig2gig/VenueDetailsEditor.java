@@ -1,20 +1,20 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
-
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +34,9 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     private Drawable chosenPic;
     private boolean editingText;
     private boolean savedOnFocus;
+    private int saveLoopCount;
+    private boolean breakout;
+
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
@@ -47,6 +50,37 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                 editingText = false;
                 savedOnFocus = false;
             }
+        }
+    };
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (s.toString().trim().length() == 0 && createListing != null) {
+                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+            }
+            else if (before == 0 && count == 1 && createListing != null
+                    && name.getText().toString().trim().length() > 0
+                    && location.getText().toString().trim().length() > 0
+                    && venueType.getText().toString().trim().length() > 0
+                    && email.getText().toString().trim().length() > 0
+                    && phone.getText().toString().trim().length() > 0
+                    && description.getText().toString().trim().length() > 0)
+            {
+                createListing.setBackgroundColor(Color.parseColor("#008577"));
+                createListing.setTextColor(Color.parseColor("#FFFFFF"));
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
         }
     };
 
@@ -67,6 +101,8 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         type = "Venue";
         editingText = false;
         savedOnFocus = false;
+        saveLoopCount = 0;
+        breakout = false;
 
 
         listingManager = new ListingManager(venueRef, type, listingRef);
@@ -118,31 +154,38 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         if (name != null)
         {
             name.setOnFocusChangeListener(editTextFocusListener);
+            name.addTextChangedListener(textWatcher);
+
         }
         location = findViewById(R.id.location);
         if (location != null)
         {
             location.setOnFocusChangeListener(editTextFocusListener);
+            location.addTextChangedListener(textWatcher);
         }
         venueType = findViewById(R.id.type);
         if (venueType != null)
         {
             venueType.setOnFocusChangeListener(editTextFocusListener);
+            venueType.addTextChangedListener(textWatcher);
         }
         email = findViewById(R.id.email);
         if (email != null)
         {
             email.setOnFocusChangeListener(editTextFocusListener);
+            email.addTextChangedListener(textWatcher);
         }
         phone = findViewById(R.id.phone);
         if (phone != null)
         {
             phone.setOnFocusChangeListener(editTextFocusListener);
+            phone.addTextChangedListener(textWatcher);
         }
         description = findViewById(R.id.description);
         if (description != null)
         {
             description.setOnFocusChangeListener(editTextFocusListener);
+            description.addTextChangedListener(textWatcher);
         }
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
@@ -378,5 +421,25 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     @Override
     public void setSavedOnFocus(boolean saved) {
         savedOnFocus = saved;
+    }
+
+    @Override
+    public void breakOut() {
+        saveLoopCount++;
+        if (saveLoopCount > 20)
+        {
+            breakout = true;
+            saveLoopCount = 0;
+        }
+    }
+
+    @Override
+    public boolean isBreakingOut() {
+        return breakout;
+    }
+
+    @Override
+    public void setBreakingOut(boolean isBreakingOut) {
+        breakout = false;
     }
 }
