@@ -59,8 +59,11 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        ((TabbedViewReferenceInitialiser) mContext).saveTabs();
-        ((Activity)mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        if (TAB_TITLES.length > 2)
+        {
+            ((TabbedViewReferenceInitialiser) mContext).saveTabs();
+            ((Activity)mContext).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        }
         return TAB_TITLES.length;
     }
 

@@ -40,7 +40,7 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        listingManager = new ListingManager(performerRef, getListingType());
+        listingManager = new ListingManager(performerRef, getListingType(), "");
         listingManager.getUserInfo(this);
     }
 
@@ -165,6 +165,11 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
         band = data;
         setViewReferences();
         listingManager.getImage(this);
+    }
+
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
+
     }
 
     /**

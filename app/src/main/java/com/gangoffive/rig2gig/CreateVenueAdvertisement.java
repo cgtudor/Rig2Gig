@@ -23,7 +23,7 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     private ImageView image;
     private String venueRef, type;
     private HashMap<String, Object> listing;
-    private Map<String, Object> venue;
+    private Map<String, Object> venue, previousListing;
     private ListingManager listingManager;
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_create_venue_advertisement_image,
@@ -42,11 +42,12 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        venueRef = "cavWo1C735Rft0NHvhcL";
+        venueRef = getIntent().getStringExtra("EXTRA_VENUE_ID");
+        String listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
         type = "Venue";
 
 
-        listingManager = new ListingManager(venueRef, type);
+        listingManager = new ListingManager(venueRef, type, listingRef);
         listingManager.getUserInfo(this);
     }
 
@@ -58,6 +59,19 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     public void onSuccessFromDatabase(Map<String, Object> data) {
         setViewReferences();
         venue = data;
+        listingManager.getImage(this);
+    }
+
+    /**
+     * Populate view if database request was successful
+     * @param data band data
+     */
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData)
+    {
+        setViewReferences();
+        venue = data;
+        previousListing = listingData;
         listingManager.getImage(this);
     }
 
@@ -130,6 +144,10 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
         if (chosenPic != null && image != null)
         {
             image.setImageDrawable(chosenPic);
+        }
+        if(description != null && previousListing !=null)
+        {
+            description.setText(previousListing.get("description").toString());
         }
     }
 

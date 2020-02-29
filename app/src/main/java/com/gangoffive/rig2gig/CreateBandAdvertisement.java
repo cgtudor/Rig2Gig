@@ -65,7 +65,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         bandRef = "TvuDGJwqX13vJ6LWZYB2";
         type = "Band";
 
-        listingManager = new ListingManager(bandRef, type);
+        listingManager = new ListingManager(bandRef, type, "");
         listingManager.getUserInfo(this);
     }
 
@@ -78,6 +78,11 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         setViewReferences();
         band = data;
         listingManager.getImage(this);
+    }
+
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
+
     }
 
     /**

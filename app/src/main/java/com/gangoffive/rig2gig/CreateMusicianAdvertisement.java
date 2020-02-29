@@ -65,7 +65,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         type = "Musician";
 
 
-        listingManager = new ListingManager(musicianRef, type);
+        listingManager = new ListingManager(musicianRef, type, "");
         listingManager.getUserInfo(this);
     }
 
@@ -79,6 +79,11 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         setViewReferences();
         musician = data;
         listingManager.getImage(this);
+    }
+
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
+
     }
 
     /**
