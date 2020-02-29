@@ -10,7 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
-public abstract class NavBarCompatActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener
+public abstract class NavBarCompatActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     protected DrawerLayout drawer;
     protected boolean minimise = false;

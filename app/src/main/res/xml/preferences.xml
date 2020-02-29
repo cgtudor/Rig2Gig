@@ -97,7 +97,7 @@
         <SwitchPreference
             app:title="Location"
             app:summary="Choose whether we can use your location"
-            app:defaultValue="true"
+            app:defaultValue="false"
             app:iconSpaceReserved="false"/>-->
 
    <!-- </PreferenceCategory>-->
