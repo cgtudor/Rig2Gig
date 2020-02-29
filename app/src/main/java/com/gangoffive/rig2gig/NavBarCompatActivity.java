@@ -1,6 +1,7 @@
 package com.gangoffive.rig2gig;
 
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import com.google.android.material.navigation.NavigationView;
 public abstract class NavBarCompatActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener
 {
     protected DrawerLayout drawer;
+    protected boolean minimise = false;
 
     public NavBarCompatActivity()
     {
@@ -26,6 +28,7 @@ public abstract class NavBarCompatActivity extends AppCompatActivity  implements
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
     {
+        minimise = false;
         NavBarFactory navBarFactory = new NavBarFactory();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, navBarFactory.selectFragment(menuItem)).commit() ;
 
@@ -35,7 +38,7 @@ public abstract class NavBarCompatActivity extends AppCompatActivity  implements
     }
 
     /**
-     * If the back button is pressed, simply close the navigation drawer instead of navigating away from the activity.
+     * This method
      */
     @Override
     public void onBackPressed()
@@ -44,8 +47,14 @@ public abstract class NavBarCompatActivity extends AppCompatActivity  implements
         {
             drawer.closeDrawer(GravityCompat.START);
         }
-        else
+        else if(!drawer.isDrawerOpen(GravityCompat.START) && !minimise)
         {
+            Toast.makeText(getApplicationContext(), "Press back again to exit.", Toast.LENGTH_SHORT).show();
+            minimise = true;
+        }
+        else if(!drawer.isDrawerOpen(GravityCompat.START) && minimise)
+        {
+            minimise = false;
             this.moveTaskToBack(true);
         }
     }
