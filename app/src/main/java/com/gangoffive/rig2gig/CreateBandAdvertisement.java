@@ -130,9 +130,6 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         saveLoopCount = 0;
         breakout = false;
 
-
-
-
         bandRef = "TvuDGJwqX13vJ6LWZYB2";
         type = "Band";
 
@@ -163,7 +160,6 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
      */
     @Override
     public void onSuccessfulImageDownload() {
-        //setupGridView();
         initialiseSearchBar();
         populateInitialFields();
         saveTabs();

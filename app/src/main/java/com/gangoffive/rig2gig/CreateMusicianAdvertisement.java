@@ -14,17 +14,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CreateMusicianAdvertisement extends AppCompatActivity  implements CreateAdvertisement, TabbedViewReferenceInitialiser {
+public class CreateMusicianAdvertisement extends AppCompatActivity  implements CreateAdvertisement, TabbedViewReferenceInitialiser, SearchView.OnQueryTextListener {
 
 
     private TextView name, position, description, currentPositions;
@@ -36,15 +40,17 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     private ListingManager listingManager;
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_create_musician_advertisement_image,
-            R.layout.fragment_create_advertisement_position,
+            R.layout.fragment_positions_search_bar,
             R.layout.fragment_create_musician_advertisement_details};
     private GridView gridView;
-    static final String[] positions = new String[] {
+    private String[] positionsArray = new String[] {
             "Rhythm Guitar","Lead Guitar","Bass Guitar","Drums","Lead Vocals","Backing Vocals",
             "Keyboard","Trumpet","Saxophone","Oboe","Trombone","Cor","Clarinet","Gong","Triangle",
             "Harp","Piano","Accordian","Xylophone","Violin","Harmonica"};
+    private int [] icons = {R.drawable.ic_close_red_24dp};
+    private ArrayList<String> positions = new ArrayList<>(Arrays.asList(positionsArray));
     private List bandPositions;
-    private ArrayAdapter<String> adapter;
+    private ArrayAdapter<Button> chosenPositionsAdapter;
     private Drawable chosenPic;
     SectionsPagerAdapter sectionsPagerAdapter;
     ViewPager viewPager;
@@ -52,6 +58,11 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     private boolean savedOnFocus;
     private int saveLoopCount;
     private boolean breakout;
+    // for search bar
+    private SearchView searchBar;
+    private ListView listResults;
+    private ArrayAdapter<String> resultsAdapter;
+    private CharSequence query = null;
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
@@ -99,7 +110,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_band_advertisement);
+        setContentView(R.layout.activity_create_musician_advertisement);
         tabTitles = new int[]{R.string.image, R.string.position, R.string.details};
 
         sectionsPagerAdapter = new SectionsPagerAdapter
@@ -109,8 +120,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         bandPositions = new ArrayList();
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, positions);
+
         editingText = false;
         savedOnFocus = false;
         saveLoopCount = 0;
@@ -119,11 +129,9 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         musicianRef = "eg2wI0UaYsnuSfIccKbR";
         type = "Musician";
 
-
         listingManager = new ListingManager(musicianRef, type, "");
         listingManager.getUserInfo(this);
     }
-
 
     /**
      * Populate view if database request was successful
@@ -148,7 +156,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
      */
     @Override
     public void onSuccessfulImageDownload() {
-        setupGridView();
+        initialiseSearchBar();
         populateInitialFields();
         saveTabs();
     }
@@ -213,35 +221,79 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         {
             gridView = findViewById(R.id.gridView);
         }
+        if (listResults == null)
+        {
+            listResults = (ListView) findViewById(R.id.list_results);
+        }
     }
 
-    /**
-     * Setup grid view for storing performer types
-     */
-    public void setupGridView()
+    public void initialiseSearchBar()
     {
-        if (gridView != null && gridView.getAdapter() == null)
+        if(listResults != null)
         {
-            gridView.setAdapter(adapter);
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            listResults.setTextFilterEnabled(true);
+            listResults.setAdapter(resultsAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1,
+                    positions));
+            listResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
-
-                    if(!bandPositions.contains(((TextView) v).getText()))
+                    bandPositions.add(((TextView) v).getText().toString());
+                    positions.remove(((TextView) v).getText().toString());
+/*                    if (searchBar != null)
                     {
-                        bandPositions.add(((TextView) v).getText());
-                        String pos = bandPositions.toString();
-                        currentPositions.setText("Current positions: " + pos.substring(1,pos.length()-1));
-                    }
-                    else if (bandPositions.contains(((TextView) v).getText()))
-                    {
-                        bandPositions.remove(((TextView) v).getText());
-                        String pos = bandPositions.toString();
-                        currentPositions.setText("Current positions: " + pos.substring(1,pos.length()-1));
-                    }
+                        query = searchBar.getQuery();
+                    }*/
+                    initialiseSearchBar();
+                    setupGridView();
                 }
             });
         }
+        if (searchBar == null)
+        {
+            searchBar = findViewById(R.id.search_bar);
+            searchBar.setIconifiedByDefault(false);
+            searchBar.setOnQueryTextListener(this);
+            searchBar.setSubmitButtonEnabled(false);
+            searchBar.setQueryHint("Enter band position");
+        }
+        if (searchBar != null)
+        {
+            query = searchBar.getQuery();
+        }
+        if (query != null)
+        {
+            listResults.setFilterText(query.toString());
+            listResults.dispatchDisplayHint(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String typedText)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String typedText) {
+        Filter filter = resultsAdapter.getFilter();
+        filter.filter(typedText);
+        return true;
+    }
+
+    public void setupGridView()
+    {
+        DeleteInstrumentAdapter customAdapter = new DeleteInstrumentAdapter(bandPositions, this);
+        gridView.setAdapter(customAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                positions.add(bandPositions.get(position).toString());
+                bandPositions.remove(position);
+                initialiseSearchBar();
+                setupGridView();
+            }
+        });
     }
 
     /**
@@ -434,4 +486,6 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     public ImageView getImageView() {
         return image;
     }
+
+
 }
