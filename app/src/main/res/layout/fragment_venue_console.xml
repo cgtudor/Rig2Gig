@@ -21,7 +21,8 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 app:cardElevation="6dp"
-                app:cardCornerRadius="12dp">
+                app:cardCornerRadius="12dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -54,7 +55,8 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             app:cardElevation="6dp"
-            app:cardCornerRadius="12dp">
+            app:cardCornerRadius="12dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -79,6 +81,39 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/card_view_create_advert"
+            android:layout_width="match_parent"
+            android:layout_height="173dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            app:cardElevation="6dp"
+            app:cardCornerRadius="12dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:src="@drawable/ic_create_advert"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="Create Advert"
+                    android:textColor="#6f6f6f"
+                    android:layout_marginTop="12dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/card_view_edit_advert"
             android:layout_width="match_parent"
             android:layout_height="173dp"
@@ -86,7 +121,8 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             app:cardElevation="6dp"
-            app:cardCornerRadius="12dp">
+            app:cardCornerRadius="12dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -118,7 +154,8 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             app:cardElevation="6dp"
-            app:cardCornerRadius="12dp">
+            app:cardCornerRadius="12dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -150,7 +187,8 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             app:cardElevation="6dp"
-            app:cardCornerRadius="12dp">
+            app:cardCornerRadius="12dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
