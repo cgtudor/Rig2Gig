@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -131,6 +132,24 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View v)
     {
-        
+        Intent intent;
+
+        switch(v.getTag().toString())
+        {
+            case "View Performers":
+                break;
+            case "Edit Venue":
+                break;
+            case "Create Advert":
+                break;
+            case "Edit Advert":
+                break;
+            case "View Advert":
+                break;
+            case "Delete Advert":
+                break;
+            default:
+                break;
+        }
     }
 }
