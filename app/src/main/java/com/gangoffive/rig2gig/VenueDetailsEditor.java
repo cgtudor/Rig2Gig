@@ -316,6 +316,8 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
+            Toast.makeText(this,"Details updated successfully",
+                    Toast.LENGTH_LONG).show();
             Intent intent = new Intent(VenueDetailsEditor.this, MainActivity.class);
             Toast.makeText(VenueDetailsEditor.this,
                     "Details successfully updated",

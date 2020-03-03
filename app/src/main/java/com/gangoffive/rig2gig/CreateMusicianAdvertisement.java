@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,11 +45,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
             R.layout.fragment_positions_search_bar,
             R.layout.fragment_create_musician_advertisement_details};
     private GridView gridView;
-    private String[] positionsArray = new String[] {
-            "Rhythm Guitar","Lead Guitar","Bass Guitar","Drums","Lead Vocals","Backing Vocals",
-            "Keyboard","Trumpet","Saxophone","Oboe","Trombone","Cor","Clarinet","Gong","Triangle",
-            "Harp","Piano","Accordian","Xylophone","Violin","Harmonica"};
-    private ArrayList<String> positions = new ArrayList<>(Arrays.asList(positionsArray));
+    private ArrayList<String> positions = new ArrayList<>(Arrays.asList(Positions.getPositions()));
     private List bandPositions = new ArrayList();
     private Drawable chosenPic;
     SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
@@ -89,6 +86,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_musician_advertisement);
+        Collections.sort(positions);
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
@@ -206,7 +204,9 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
                     bandPositions.add(((TextView) v).getText().toString());
+                    Collections.sort(bandPositions);
                     positions.remove(((TextView) v).getText().toString());
+                    Collections.sort(positions);
                     searchHint.setVisibility(View.INVISIBLE);
                     initialiseSearchBar();
                     setupGridView();
@@ -253,7 +253,9 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 positions.add(bandPositions.get(position).toString());
+                Collections.sort(positions);
                 bandPositions.remove(position);
+                Collections.sort(bandPositions);
                 if (bandPositions.size() == 0)
                 {
                     searchHint.setVisibility(View.VISIBLE);
@@ -369,7 +371,10 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Intent intent = new Intent(CreateMusicianAdvertisement.this, MusicianListingDetailsActivity.class);
+            Toast.makeText(this,"Advertisement created successfully",
+                    Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(CreateMusicianAdvertisement.this,
+                    MusicianListingDetailsActivity.class);
             intent.putExtra("EXTRA_MUSICIAN_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             sectionsPagerAdapter = null;

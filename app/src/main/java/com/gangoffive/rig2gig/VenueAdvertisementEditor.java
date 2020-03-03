@@ -26,7 +26,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     private TextView name, description;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
-    private String venueRef, type;
+    private String venueRef, type, listingRef;
     private HashMap<String, Object> listing;
     private Map<String, Object> venue, previousListing;
     private ListingManager listingManager;
@@ -75,7 +75,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
 
 
         venueRef = getIntent().getStringExtra("EXTRA_VENUE_ID");
-        String listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
+        listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
         type = "Venue";
 
 
@@ -229,6 +229,16 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
+            if (listingRef.equals(""))
+            {
+                Toast.makeText(this,"Advertisement created successfully",
+                        Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                Toast.makeText(this,"Advertisement edited successfully",
+                        Toast.LENGTH_LONG).show();
+            }
             Intent intent = new Intent(VenueAdvertisementEditor.this, VenueListingDetailsActivity.class);
             intent.putExtra("EXTRA_VENUE_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);

@@ -173,7 +173,9 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Intent intent = new Intent(CreatePerformerAdvertisement.this, PerformanceListingDetailsActivity.class);
+            Toast.makeText(this,"Advertisement created successfully",
+                    Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, PerformanceListingDetailsActivity.class);
             intent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingManager.getListingRef());
             startActivity(intent);
             finish();

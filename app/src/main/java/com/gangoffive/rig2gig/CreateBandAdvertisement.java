@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,16 +45,11 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
     private ListingManager listingManager;
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_create_band_advertisement_image,
-            //R.layout.fragment_create_advertisement_position,
             R.layout.fragment_positions_search_bar,
             R.layout.fragment_create_band_advertisement_details};
     private GridView gridView;
-    private String[] positionsArray = new String[] {
-            "Rhythm Guitar","Lead Guitar","Bass Guitar","Drums","Lead Vocals","Backing Vocals",
-            "Keyboard","Trumpet","Saxophone","Oboe","Trombone","Cor","Clarinet","Gong","Triangle",
-            "Harp","Piano","Accordian","Xylophone","Violin","Harmonica"};
     private int [] icons = {R.drawable.ic_close_red_24dp};
-    private ArrayList<String> positions = new ArrayList<>(Arrays.asList(positionsArray));
+    private ArrayList<String> positions = new ArrayList<>(Arrays.asList(Positions.getPositions()));
     private List bandPositions;
     private ArrayAdapter<Button> chosenPositionsAdapter;
     private Drawable chosenPic;
@@ -97,7 +93,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_band_advertisement);
         tabTitles = new int[]{R.string.image, R.string.position, R.string.details};
-
+        Collections.sort(positions);
         sectionsPagerAdapter = new SectionsPagerAdapter
                 (this, getSupportFragmentManager(), tabTitles, fragments);
         viewPager = findViewById(R.id.view_pager);
@@ -240,7 +236,9 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
                     bandPositions.add(((TextView) v).getText().toString());
+                    Collections.sort(bandPositions);
                     positions.remove(((TextView) v).getText().toString());
+                    Collections.sort(positions);
                     searchHint.setVisibility(View.INVISIBLE);
                     initialiseSearchBar();
                     setupGridView();
@@ -287,7 +285,9 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 positions.add(bandPositions.get(position).toString());
+                Collections.sort(positions);
                 bandPositions.remove(position);
+                Collections.sort(bandPositions);
                 if (bandPositions.size() == 0)
                 {
                     searchHint.setVisibility(View.VISIBLE);
@@ -351,7 +351,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
             listingManager.postDataToDatabase(listing, chosenPic, this);
         } else {
             Toast.makeText(CreateBandAdvertisement.this,
-                    "Listing not created.  Ensure all fields are complete " +
+                    "Advertisement not created.  Ensure all fields are complete " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
         }
@@ -364,6 +364,8 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
+            Toast.makeText(this,"Advertisement created successfully",
+                    Toast.LENGTH_LONG).show();
             Intent intent = new Intent(CreateBandAdvertisement.this, BandListingDetailsActivity.class);
             intent.putExtra("EXTRA_BAND_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
