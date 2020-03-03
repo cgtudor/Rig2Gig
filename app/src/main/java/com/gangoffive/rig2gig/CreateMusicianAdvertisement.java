@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,14 +32,14 @@ import java.util.Map;
 public class CreateMusicianAdvertisement extends AppCompatActivity  implements CreateAdvertisement, TabbedViewReferenceInitialiser, SearchView.OnQueryTextListener {
 
 
-    private TextView name, position, description, currentPositions;
+    private TextView name, position, description, searchHint;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
     private String musicianRef, type;
     private HashMap<String, Object> listing;
     private Map<String, Object> musician;
     private ListingManager listingManager;
-    private int[] tabTitles;
+    private int[] tabTitles = {R.string.image, R.string.position, R.string.details};
     private int[] fragments = {R.layout.fragment_create_musician_advertisement_image,
             R.layout.fragment_positions_search_bar,
             R.layout.fragment_create_musician_advertisement_details};
@@ -47,37 +48,26 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
             "Rhythm Guitar","Lead Guitar","Bass Guitar","Drums","Lead Vocals","Backing Vocals",
             "Keyboard","Trumpet","Saxophone","Oboe","Trombone","Cor","Clarinet","Gong","Triangle",
             "Harp","Piano","Accordian","Xylophone","Violin","Harmonica"};
-    private int [] icons = {R.drawable.ic_close_red_24dp};
     private ArrayList<String> positions = new ArrayList<>(Arrays.asList(positionsArray));
-    private List bandPositions;
-    private ArrayAdapter<Button> chosenPositionsAdapter;
+    private List bandPositions = new ArrayList();
     private Drawable chosenPic;
-    SectionsPagerAdapter sectionsPagerAdapter;
+    SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
+            (this, getSupportFragmentManager(), tabTitles, fragments);
     ViewPager viewPager;
-    private boolean editingText;
-    private boolean savedOnFocus;
-    private int saveLoopCount;
-    private boolean breakout;
     // for search bar
     private SearchView searchBar;
     private ListView listResults;
     private ArrayAdapter<String> resultsAdapter;
     private CharSequence query = null;
+    private TabStatePreserver tabPreserver = new TabStatePreserver(this);
+
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus)
-            {
-                editingText = true;
-                savedOnFocus = false;
-            }
-            else
-            {
-                editingText = false;
-                savedOnFocus = false;
-            }
+            tabPreserver.onFocusChange(hasFocus);
         }
     };
+
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -86,19 +76,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (createListing != null
-                    &&  (bandPositions.size() == 0
-                    || description.getText().toString().trim().length() == 0)) {
-                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-                createListing.setTextColor(Color.parseColor("#4D4D4E"));
-            }
-            else if (createListing != null
-                    && description.getText().toString().trim().length() > 0
-                    && bandPositions.size() > 0)
-            {
-                createListing.setBackgroundColor(Color.parseColor("#008577"));
-                createListing.setTextColor(Color.parseColor("#FFFFFF"));
-            }
+            validateButton();
         }
 
         @Override
@@ -111,20 +89,10 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_musician_advertisement);
-        tabTitles = new int[]{R.string.image, R.string.position, R.string.details};
-
-        sectionsPagerAdapter = new SectionsPagerAdapter
-                (this, getSupportFragmentManager(), tabTitles, fragments);
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-        bandPositions = new ArrayList();
-
-        editingText = false;
-        savedOnFocus = false;
-        saveLoopCount = 0;
-        breakout = false;
 
         musicianRef = "eg2wI0UaYsnuSfIccKbR";
         type = "Musician";
@@ -166,13 +134,9 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
      */
     @Override
     public void setViewReferences() {
+        searchHint = findViewById(R.id.searchHint);
         name = findViewById(R.id.name);
         image = findViewById(R.id.image);
-        currentPositions = findViewById(R.id.currentPositions);
-        if (currentPositions != null)
-        {
-            currentPositions.addTextChangedListener(textWatcher);
-        }
         if (image != null)
         {
             image.setImageDrawable(null);
@@ -182,6 +146,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);
+            description.setOnFocusChangeListener(editTextFocusListener);
         }
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
@@ -204,6 +169,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
                 @Override
                 public void onClick(View v) {
                     ImageRequestHandler.getGalleryImage(v);
+                    searchBar.clearFocus();
                 }
             });
         }
@@ -214,6 +180,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
                 @Override
                 public void onClick(View v) {
                     ImageRequestHandler.getCameraImage(v);
+                    searchBar.clearFocus();
                 }
             });
         }
@@ -240,10 +207,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
                                         int position, long id) {
                     bandPositions.add(((TextView) v).getText().toString());
                     positions.remove(((TextView) v).getText().toString());
-/*                    if (searchBar != null)
-                    {
-                        query = searchBar.getQuery();
-                    }*/
+                    searchHint.setVisibility(View.INVISIBLE);
                     initialiseSearchBar();
                     setupGridView();
                 }
@@ -290,10 +254,32 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
                                     int position, long id) {
                 positions.add(bandPositions.get(position).toString());
                 bandPositions.remove(position);
+                if (bandPositions.size() == 0)
+                {
+                    searchHint.setVisibility(View.VISIBLE);
+                }
                 initialiseSearchBar();
                 setupGridView();
             }
         });
+        validateButton();
+    }
+
+    public void validateButton()
+    {
+        if (createListing != null
+                &&  (bandPositions.size() == 0
+                || description.getText().toString().trim().length() == 0)) {
+            createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+            createListing.setTextColor(Color.parseColor("#4D4D4E"));
+        }
+        else if (createListing != null
+                && description.getText().toString().trim().length() > 0
+                && bandPositions.size() > 0)
+        {
+            createListing.setBackgroundColor(Color.parseColor("#008577"));
+            createListing.setTextColor(Color.parseColor("#FFFFFF"));
+        }
     }
 
     /**
@@ -342,39 +328,8 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     }
 
     @Override
-    public boolean editingText()
-    {
-        return editingText;
-    }
-
-    @Override
-    public boolean savedOnFocus() {
-        return savedOnFocus;
-    }
-
-    @Override
-    public void setSavedOnFocus(boolean saved) {
-        savedOnFocus = saved;
-    }
-
-    @Override
-    public void breakOut() {
-        saveLoopCount++;
-        if (saveLoopCount > 20)
-        {
-            breakout = true;
-            saveLoopCount = 0;
-        }
-    }
-
-    @Override
-    public boolean isBreakingOut() {
-        return breakout;
-    }
-
-    @Override
-    public void setBreakingOut(boolean isBreakingOut) {
-        breakout = false;
+    public void beginTabPreservation() {
+        tabPreserver.preserveTabState();
     }
 
     /**
@@ -486,6 +441,5 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
     public ImageView getImageView() {
         return image;
     }
-
 
 }

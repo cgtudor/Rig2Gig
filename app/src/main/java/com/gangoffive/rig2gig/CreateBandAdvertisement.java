@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,7 +35,7 @@ import java.util.Map;
 public class CreateBandAdvertisement extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser, SearchView.OnQueryTextListener {
 
 
-    private TextView name, position, description, currentPositions;
+    private TextView name, position, description, searchHint;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
     private String bandRef, type;
@@ -57,31 +59,22 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
     private Drawable chosenPic;
     SectionsPagerAdapter sectionsPagerAdapter;
     ViewPager viewPager;
-    private boolean editingText;
-    private boolean savedOnFocus;
-    private int saveLoopCount;
-    private boolean breakout;
+
     // for search bar
     private SearchView searchBar;
     private ListView listResults;
     private ArrayAdapter<String> resultsAdapter;
     private CharSequence query = null;
 
+    private TabStatePreserver tabPreserver = new TabStatePreserver(this);
+
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus)
-            {
-                editingText = true;
-                savedOnFocus = false;
-            }
-            else
-            {
-                editingText = false;
-                savedOnFocus = false;
-            }
+            tabPreserver.onFocusChange(hasFocus);
         }
     };
+
     private TextWatcher textWatcher = new TextWatcher() {
 
         @Override
@@ -91,19 +84,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (createListing != null
-                    &&  (bandPositions.size() == 0
-                    || description.getText().toString().trim().length() == 0)) {
-                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-                createListing.setTextColor(Color.parseColor("#4D4D4E"));
-            }
-            else if (createListing != null
-                    && description.getText().toString().trim().length() > 0
-                    && bandPositions.size() > 0)
-            {
-                createListing.setBackgroundColor(Color.parseColor("#008577"));
-                createListing.setTextColor(Color.parseColor("#FFFFFF"));
-            }
+            validateButton();
         }
 
         @Override
@@ -125,16 +106,30 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         tabs.setupWithViewPager(viewPager);
         bandPositions = new ArrayList();
 
-        editingText = false;
-        savedOnFocus = false;
-        saveLoopCount = 0;
-        breakout = false;
+
 
         bandRef = "TvuDGJwqX13vJ6LWZYB2";
         type = "Band";
 
         listingManager = new ListingManager(bandRef, type, "");
         listingManager.getUserInfo(this);
+    }
+
+    public void validateButton()
+    {
+        if (createListing != null
+                &&  (bandPositions.size() == 0
+                || description.getText().toString().trim().length() == 0)) {
+            createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+            createListing.setTextColor(Color.parseColor("#4D4D4E"));
+        }
+        else if (createListing != null
+                && description.getText().toString().trim().length() > 0
+                && bandPositions.size() > 0)
+        {
+            createListing.setBackgroundColor(Color.parseColor("#008577"));
+            createListing.setTextColor(Color.parseColor("#FFFFFF"));
+        }
     }
 
     /**
@@ -170,13 +165,10 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
      */
     @Override
     public void setViewReferences() {
+        searchHint = findViewById(R.id.searchHint);
         name = findViewById(R.id.name);
         image = findViewById(R.id.image);
-        currentPositions = findViewById(R.id.currentPositions);
-        if (currentPositions != null)
-        {
-            currentPositions.addTextChangedListener(textWatcher);
-        }
+
         if (image != null)
         {
             image.setImageDrawable(null);
@@ -186,6 +178,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);
+            description.setOnFocusChangeListener(editTextFocusListener);
         }
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
@@ -207,7 +200,9 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
             galleryImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     ImageRequestHandler.getGalleryImage(v);
+                    searchBar.clearFocus();
                 }
             });
         }
@@ -217,7 +212,9 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
             takePhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     ImageRequestHandler.getCameraImage(v);
+                    searchBar.clearFocus();
                 }
             });
         }
@@ -244,10 +241,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
                                         int position, long id) {
                     bandPositions.add(((TextView) v).getText().toString());
                     positions.remove(((TextView) v).getText().toString());
-/*                    if (searchBar != null)
-                    {
-                        query = searchBar.getQuery();
-                    }*/
+                    searchHint.setVisibility(View.INVISIBLE);
                     initialiseSearchBar();
                     setupGridView();
                 }
@@ -294,10 +288,15 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
                                     int position, long id) {
                 positions.add(bandPositions.get(position).toString());
                 bandPositions.remove(position);
+                if (bandPositions.size() == 0)
+                {
+                    searchHint.setVisibility(View.VISIBLE);
+                }
                 initialiseSearchBar();
                 setupGridView();
             }
         });
+        validateButton();
     }
 
     /**
@@ -316,23 +315,6 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
     }
 
     /**
-     * Save values of tabs that may be destroyed
-     */
-    @Override
-    public void saveTabs()
-    {
-        if (image != null && image.getDrawable() != null)
-        {
-            chosenPic = (image.getDrawable());
-        }
-        if (description != null && description.getText() == null)
-        {
-            listing.put("description",description.getText().toString());
-        }
-        reinitialiseTabs();
-    }
-
-    /**
      * Reinitialise values of tabs that may have been destroyed
      */
     @Override
@@ -343,42 +325,6 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         {
             description.setText(listing.get("description").toString());
         }
-    }
-
-    @Override
-    public boolean editingText()
-    {
-        return editingText;
-    }
-
-    @Override
-    public boolean savedOnFocus() {
-        return savedOnFocus;
-    }
-
-    @Override
-    public void setSavedOnFocus(boolean saved) {
-        savedOnFocus = saved;
-    }
-
-    @Override
-    public void breakOut() {
-        saveLoopCount++;
-        if (saveLoopCount > 20)
-        {
-            breakout = true;
-            saveLoopCount = 0;
-        }
-    }
-
-    @Override
-    public boolean isBreakingOut() {
-        return breakout;
-    }
-
-    @Override
-    public void setBreakingOut(boolean isBreakingOut) {
-        breakout = false;
     }
 
     /**
@@ -491,5 +437,25 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
         return image;
     }
 
+    @Override
+    public void beginTabPreservation() {
+        tabPreserver.preserveTabState();
+    }
 
+    /**
+     * Save values of tabs that may be destroyed
+     */
+    @Override
+    public void saveTabs()
+    {
+        if (image != null && image.getDrawable() != null)
+        {
+            chosenPic = (image.getDrawable());
+        }
+        if (description != null && description.getText() == null)
+        {
+            listing.put("description",description.getText().toString());
+        }
+        reinitialiseTabs();
+    }
 }

@@ -14,16 +14,6 @@ public interface TabbedViewReferenceInitialiser {
      */
     public void reinitialiseTabs();
 
-    public boolean editingText();
 
-
-    public boolean savedOnFocus();
-
-    public void setSavedOnFocus(boolean saved);
-
-    public void breakOut();
-
-    public boolean isBreakingOut();
-
-    public void setBreakingOut(boolean isBreakingOut);
+    public void beginTabPreservation();
 }

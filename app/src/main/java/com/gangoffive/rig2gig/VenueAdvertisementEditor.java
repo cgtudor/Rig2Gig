@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,7 +20,7 @@ import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VenueAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
+public class VenueAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement {
 
 
     private TextView name, description;
@@ -116,7 +117,6 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     public void onSuccessfulImageDownload() {
         populateInitialFields();
-        saveTabs();
     }
 
     /**
@@ -187,65 +187,6 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         }
     }
 
-    /**
-     * Save values of tabs that may be destroyed
-     */
-    @Override
-    public void saveTabs()
-    {
-        if (image != null && image.getDrawable() != null)
-        {
-            chosenPic = (image.getDrawable());
-        }
-        if (description != null && description.getText() == null)
-        {
-            listing.put("description",description.getText().toString());
-        }
-        reinitialiseTabs();
-    }
-
-    /**
-     * Reinitialise values of tabs that may have been destroyed
-     */
-    @Override
-    public void reinitialiseTabs() {
-        setViewReferences();
-        populateInitialFields();
-        if (description != null && description.getText() == null)
-        {
-            description.setText(listing.get("description").toString());
-        }
-    }
-
-    @Override
-    public boolean editingText() {
-        return false;
-    }
-
-    @Override
-    public boolean savedOnFocus() {
-        return false;
-    }
-
-    @Override
-    public void setSavedOnFocus(boolean saved) {
-
-    }
-
-    @Override
-    public void breakOut() {
-
-    }
-
-    @Override
-    public boolean isBreakingOut() {
-        return false;
-    }
-
-    @Override
-    public void setBreakingOut(boolean isBreakingOut) {
-
-    }
 
     /**
      * handles activity results
@@ -352,4 +293,5 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     public ImageView getImageView() {
         return image;
     }
+
 }

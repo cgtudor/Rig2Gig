@@ -52,4 +52,16 @@
             app:layout_constraintTop_toTopOf="@id/search_bar"/>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/searchHint"
+        android:layout_width="340dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="32dp"
+        android:text="Select desired band positions below"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

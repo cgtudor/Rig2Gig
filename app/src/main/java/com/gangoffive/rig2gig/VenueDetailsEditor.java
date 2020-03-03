@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,24 +33,12 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                                R.layout.fragment_venue_details_changer,
                                R.layout.fragment_description_changer};
     private Drawable chosenPic;
-    private boolean editingText;
-    private boolean savedOnFocus;
-    private int saveLoopCount;
-    private boolean breakout;
+    private TabStatePreserver tabPreserver = new TabStatePreserver(this);
 
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus)
-            {
-                editingText = true;
-                savedOnFocus = false;
-            }
-            else
-            {
-                editingText = false;
-                savedOnFocus = false;
-            }
+            tabPreserver.onFocusChange(hasFocus);
         }
     };
 
@@ -99,10 +88,6 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         venueRef = getIntent().getStringExtra("EXTRA_VENUE_ID");
         String listingRef = "profileEdit";
         type = "Venue";
-        editingText = false;
-        savedOnFocus = false;
-        saveLoopCount = 0;
-        breakout = false;
 
 
         listingManager = new ListingManager(venueRef, type, listingRef);
@@ -285,6 +270,11 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         }
     }
 
+    @Override
+    public void beginTabPreservation() {
+        tabPreserver.preserveTabState();
+    }
+
     /**
      * handles activity results
      * @param requestCode
@@ -407,39 +397,4 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         return image;
     }
 
-    @Override
-    public boolean editingText()
-    {
-        return editingText;
-    }
-
-    @Override
-    public boolean savedOnFocus() {
-        return savedOnFocus;
-    }
-
-    @Override
-    public void setSavedOnFocus(boolean saved) {
-        savedOnFocus = saved;
-    }
-
-    @Override
-    public void breakOut() {
-        saveLoopCount++;
-        if (saveLoopCount > 20)
-        {
-            breakout = true;
-            saveLoopCount = 0;
-        }
-    }
-
-    @Override
-    public boolean isBreakingOut() {
-        return breakout;
-    }
-
-    @Override
-    public void setBreakingOut(boolean isBreakingOut) {
-        breakout = false;
-    }
 }
