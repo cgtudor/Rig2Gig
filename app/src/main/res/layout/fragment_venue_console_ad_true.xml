@@ -31,7 +31,7 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:src="@mipmap/ic_performers_png_round"
+                        android:src="@drawable/ic_view_venues"
                         android:layout_width="80dp"
                         android:layout_height="80dp"/>
 
@@ -64,6 +64,7 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:src="@drawable/ic_settings"
                     android:layout_width="80dp"
                     android:layout_height="80dp"/>
 
@@ -95,6 +96,7 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:src="@drawable/ic_settings"
                     android:layout_width="80dp"
                     android:layout_height="80dp"/>
 
@@ -126,6 +128,7 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:src="@drawable/ic_view_bands"
                     android:layout_width="80dp"
                     android:layout_height="80dp"/>
 
@@ -157,6 +160,7 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:src="@drawable/ic_delete_advert"
                     android:layout_width="80dp"
                     android:layout_height="80dp"/>
 
