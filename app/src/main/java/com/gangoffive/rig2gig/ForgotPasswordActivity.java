@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +45,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
      */
     public void resetPasswordOnClick(View view) {
         String email = emailAddress.getText().toString().trim();
+
+        if(TextUtils.isEmpty(email)){
+            emailAddress.setError("Please enter an email address");
+            return;
+        }
 
         fAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

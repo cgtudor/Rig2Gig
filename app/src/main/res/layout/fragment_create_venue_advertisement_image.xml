@@ -17,7 +17,19 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="#000000"/>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="280dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:background="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <ImageView
         android:id="@+id/image"
@@ -47,7 +59,8 @@
             android:layout_marginStart="80dp"
             android:layout_marginEnd="20dp"
             android:layout_weight="1.0"
-            android:text="Gallery" />
+            android:text="Gallery"
+            android:background="@drawable/transparent_button_dark_outline"/>
 
         <Button
             android:id="@+id/takePhoto"
@@ -56,7 +69,8 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="80dp"
             android:layout_weight="1.0"
-            android:text="Camera"/>
+            android:text="Camera"
+            android:background="@drawable/transparent_button_dark_outline"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
