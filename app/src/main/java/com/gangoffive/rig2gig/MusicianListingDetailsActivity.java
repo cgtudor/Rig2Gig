@@ -3,14 +3,11 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -29,8 +26,8 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
         final ImageView musicianPhoto = findViewById(R.id.musicianPhoto);
         final TextView musicianName = findViewById(R.id.musicianName);
         final TextView position = findViewById(R.id.position);
-        final TextView description = findViewById(R.id.description);
-        final TextView location = findViewById(R.id.location);
+        final TextView description = findViewById(R.id.genres);
+        final TextView location = findViewById(R.id.position);
         final TextView distance = findViewById(R.id.distance);
 
         /*Used to get the id of the listing from the previous activity*/

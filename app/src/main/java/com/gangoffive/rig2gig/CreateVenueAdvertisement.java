@@ -81,7 +81,7 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
         {
             image.setImageDrawable(null);
         }
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.genres);
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -103,7 +102,7 @@ public class CreateBandAdvertisement extends AppCompatActivity implements Create
             image.setImageDrawable(null);
         }
         position = findViewById(R.id.position);
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.genres);
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override

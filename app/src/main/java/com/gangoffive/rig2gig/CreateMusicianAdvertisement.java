@@ -104,7 +104,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
             image.setImageDrawable(null);
         }
         position = findViewById(R.id.position);
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.genres);
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override

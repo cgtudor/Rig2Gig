@@ -39,6 +39,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_bar" />
 
+    <View
+        android:id="@+id/view"
+        android:layout_width="364dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:background="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
+
         <ImageView
             android:id="@+id/image"
             android:layout_width="367dp"
@@ -60,7 +71,8 @@
             android:textSize="18sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/distanceLabel"
             app:layout_constraintEnd_toStartOf="@+id/distanceLabel2"
-            app:layout_constraintStart_toEndOf="@+id/distanceLabel" />
+            app:layout_constraintStart_toEndOf="@+id/distanceLabel"
+            android:textColor="#000000"/>
 
         <TextView
             android:id="@+id/distanceLabel"
@@ -71,7 +83,8 @@
             android:text="Travel distance: "
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/imageLayout"
+            android:textColor="#000000"/>
 
         <TextView
             android:id="@+id/distanceLabel2"
@@ -82,7 +95,8 @@
             android:textSize="18sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/distance"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/distance" />
+            app:layout_constraintStart_toEndOf="@+id/distance"
+            android:textColor="#000000"/>
 
         <LinearLayout
             android:id="@+id/imageLayout"
@@ -102,7 +116,8 @@
                 android:layout_marginStart="80dp"
                 android:layout_marginEnd="20dp"
                 android:layout_weight="1.0"
-                android:text="Gallery" />
+                android:text="Gallery"
+                android:background="@drawable/transparent_button_dark_outline"/>
 
             <Button
                 android:id="@+id/takePhoto"
@@ -111,7 +126,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="80dp"
                 android:layout_weight="1.0"
-                android:text="Camera"/>
+                android:text="Camera"
+                android:background="@drawable/transparent_button_dark_outline"/>
         </LinearLayout>
 
 
@@ -138,7 +154,7 @@
             android:backgroundTint="#008577"
             android:text="Cancel"
             android:textColor="#FFFFFF"
-            style="?android:attr/borderlessButtonStyle"/>
+            style="?android:attr/borderlessButtonStyle" />
 
         <Button
             android:id="@+id/createListing"
@@ -149,7 +165,7 @@
             android:backgroundTint="#008577"
             android:text="Create"
             android:textColor="#FFFFFF"
-            style="?android:attr/borderlessButtonStyle"/>
+            style="?android:attr/borderlessButtonStyle" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
