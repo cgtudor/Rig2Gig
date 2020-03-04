@@ -3,15 +3,20 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -20,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,13 +38,16 @@ public class CredentialActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
 
+
     EditText cFirstName, cLastName, cUsername, cPhoneNumber;
     RadioButton genderMale, fan, genderFemale, genderOther, accFan, accMusician, accVenue;
     RadioGroup genderGroup, userGroup;
-    Button submit;
+    Button submit, dateOfBirth;
 
-    String gender, userId;
+    String gender, userId, dob;
     public static String userType;
+
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     /**
      * When the onCreate is called previous states from the activity can be restored.
@@ -68,6 +77,8 @@ public class CredentialActivity extends AppCompatActivity {
         accMusician = findViewById(R.id.radioBtnMusician);
         accVenue = findViewById(R.id.radioBtnVenue);
         fan = findViewById(R.id.radioBtnMusician);
+
+        dateOfBirth = findViewById(R.id.dob);
 
         genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -109,8 +120,8 @@ public class CredentialActivity extends AppCompatActivity {
      * @param view
      */
     public void submitBtnOnClick(View view) {
-        if (gender == null || userType == null){
-            Toast.makeText(CredentialActivity.this, "Please Make Sure Gender & User Type Is Selected", Toast.LENGTH_SHORT).show();
+        if (gender == null || userType == null || dob == null){
+            Toast.makeText(CredentialActivity.this, "Please Make Sure All Fields Are Filled In", Toast.LENGTH_SHORT).show();
         }else{
             String firstName = cFirstName.getText().toString();
             String lastName = cLastName.getText().toString();
@@ -154,5 +165,55 @@ public class CredentialActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void dobPicker(View view) {
+        dateOfBirth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        CredentialActivity.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        mDateSetListener,
+                        year,month,day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
+
+                String date = month + "/" + day + "/" + year;
+                dob = date;
+                dateOfBirth.setText(date);
+
+                userId = fAuth.getUid();
+                DocumentReference documentReference = fStore.collection("users").document(userId);
+                Map<String, Object> user = new HashMap<>();
+                user.put("dob", date);
+                documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(CredentialActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                        String uuid = fAuth.getUid();
+                        System.out.println("=========================" + uuid);
+                    }
+                });
+            }
+        };
     }
 }
