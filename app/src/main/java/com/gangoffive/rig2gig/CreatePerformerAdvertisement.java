@@ -234,7 +234,7 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
         if (listing == null) {
             listing = new HashMap<>();
             listing.put("performer-ref", performerRef);
-            listing.put("type", performerType);
+            listing.put("performer-type", performerType);
         }
         listing.put("distance", distance.getText().toString());
     }
