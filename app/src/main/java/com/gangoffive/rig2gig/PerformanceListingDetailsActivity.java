@@ -49,8 +49,10 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
+                        String performerType = document.get("performer-type").toString().equals("Band") ? "bands" : "musicians";
+
                         /*Find the band reference by looking for the band ID in the "bands" subfolder*/
-                        DocumentReference band = db.collection("bands").document(document.get("performer-ref").toString());
+                        DocumentReference band = db.collection(performerType).document(document.get("performer-ref").toString());
 
                         band.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override

@@ -1,12 +1,17 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,25 +20,51 @@ import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateVenueAdvertisement extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
+public class VenueAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement {
 
 
     private TextView name, description;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
-    private String venueRef, type;
+    private String venueRef, type, listingRef;
     private HashMap<String, Object> listing;
-    private Map<String, Object> venue;
+    private Map<String, Object> venue, previousListing;
     private ListingManager listingManager;
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_create_venue_advertisement_image,
             R.layout.fragment_create_venue_advertisement_details};
     private Drawable chosenPic;
 
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (s.toString().trim().length() == 0 && createListing != null) {
+                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+            }
+            else if (before == 0 && count == 1 && createListing != null
+                    && description.getText().toString().trim().length() > 0)
+            {
+                createListing.setBackgroundColor(Color.parseColor("#008577"));
+                createListing.setTextColor(Color.parseColor("#FFFFFF"));
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_venue_advertisement);
+        setContentView(R.layout.activity_tabbed_editor_layout);
         tabTitles = new int[]{R.string.image, R.string.details};
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
                 (this, getSupportFragmentManager(), tabTitles, fragments);
@@ -42,11 +73,13 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        venueRef = "cavWo1C735Rft0NHvhcL";
+
+        venueRef = getIntent().getStringExtra("EXTRA_VENUE_ID");
+        listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
         type = "Venue";
 
 
-        listingManager = new ListingManager(venueRef, type);
+        listingManager = new ListingManager(venueRef, type, listingRef);
         listingManager.getUserInfo(this);
     }
 
@@ -57,7 +90,24 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         setViewReferences();
+        if (description.getText().toString().trim().length() == 0 && createListing != null) {
+            createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+            createListing.setTextColor(Color.parseColor("#4D4D4E"));
+        }
         venue = data;
+        listingManager.getImage(this);
+    }
+
+    /**
+     * Populate view if database request was successful
+     * @param data band data
+     */
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData)
+    {
+        setViewReferences();
+        venue = data;
+        previousListing = listingData;
         listingManager.getImage(this);
     }
 
@@ -67,7 +117,6 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     @Override
     public void onSuccessfulImageDownload() {
         populateInitialFields();
-        saveTabs();
     }
 
     /**
@@ -82,6 +131,7 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
             image.setImageDrawable(null);
         }
         description = findViewById(R.id.description);
+        description.addTextChangedListener(textWatcher);
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,37 +181,12 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
         {
             image.setImageDrawable(chosenPic);
         }
+        if(description != null && previousListing !=null)
+        {
+            description.setText(previousListing.get("description").toString());
+        }
     }
 
-    /**
-     * Save values of tabs that may be destroyed
-     */
-    @Override
-    public void saveTabs()
-    {
-        if (image != null && image.getDrawable() != null)
-        {
-            chosenPic = (image.getDrawable());
-        }
-        if (description != null && description.getText() == null)
-        {
-            listing.put("description",description.getText().toString());
-        }
-        reinitialiseTabs();
-    }
-
-    /**
-     * Reinitialise values of tabs that may have been destroyed
-     */
-    @Override
-    public void reinitialiseTabs() {
-        setViewReferences();
-        populateInitialFields();
-        if (description != null && description.getText() == null)
-        {
-            description.setText(listing.get("description").toString());
-        }
-    }
 
     /**
      * handles activity results
@@ -183,10 +208,14 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     @Override
     public void createAdvertisement() {
         listingDataMap();
+        if (chosenPic == null)
+        {
+            chosenPic = image.getDrawable();
+        }
         if (validateDataMap()) {
             listingManager.postDataToDatabase(listing, chosenPic, this);
         } else {
-            Toast.makeText(CreateVenueAdvertisement.this,
+            Toast.makeText(VenueAdvertisementEditor.this,
                     "Listing not created.  Ensure all fields are complete " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
@@ -200,18 +229,28 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Intent intent = new Intent(CreateVenueAdvertisement.this, VenueListingDetailsActivity.class);
+            if (listingRef.equals(""))
+            {
+                Toast.makeText(this,"Advertisement created successfully",
+                        Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                Toast.makeText(this,"Advertisement edited successfully",
+                        Toast.LENGTH_LONG).show();
+            }
+            Intent intent = new Intent(VenueAdvertisementEditor.this, VenueListingDetailsActivity.class);
             intent.putExtra("EXTRA_VENUE_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(CreateVenueAdvertisement.this,
+            Toast.makeText(VenueAdvertisementEditor.this,
                     "Listing creation failed.  Check your connection " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(CreateVenueAdvertisement.this,
+            Toast.makeText(VenueAdvertisementEditor.this,
                     "Listing creation failed.  Check your connection " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
@@ -223,7 +262,7 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
      */
     @Override
     public void cancelAdvertisement() {
-        Intent backToMain = new Intent(CreateVenueAdvertisement.this,
+        Intent backToMain = new Intent(VenueAdvertisementEditor.this,
                 MainActivity.class);
         startActivity(backToMain);
     }
@@ -264,4 +303,5 @@ public class CreateVenueAdvertisement extends AppCompatActivity implements Creat
     public ImageView getImageView() {
         return image;
     }
+
 }

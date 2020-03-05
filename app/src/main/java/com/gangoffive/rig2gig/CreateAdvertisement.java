@@ -40,10 +40,16 @@ public interface CreateAdvertisement
     public boolean validateDataMap();
 
     /**
-     * actions to process if the listing was successfully posted to the database
+     * actions to process if the user data was retrieved from database
      * @param data
      */
     public void onSuccessFromDatabase(Map <String, Object> data);
+
+    /**
+     * actions to process if the user data and user listing was retrieved from database
+     * @param data
+     */
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData);
 
     /**
      * get imageView if another class requires it (such as Listing Manager)
