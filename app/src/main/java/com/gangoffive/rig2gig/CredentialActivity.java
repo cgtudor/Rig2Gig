@@ -16,7 +16,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -61,9 +60,9 @@ public class CredentialActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        cFirstName = findViewById(R.id.cFirstName);
-        cLastName = findViewById(R.id.cLastName);
-        cUsername = findViewById(R.id.cUsername);
+        cFirstName = findViewById(R.id.name);
+        cLastName = findViewById(R.id.location);
+        cUsername = findViewById(R.id.description);
         cPhoneNumber = findViewById(R.id.cPhoneNumber);
         genderGroup = findViewById(R.id.genderRadioGroup);
         userGroup = findViewById(R.id.userRadioGroup);
@@ -155,7 +154,12 @@ public class CredentialActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Toast.makeText(CredentialActivity.this, "Information Added", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                    if (userType == "Venue"){
+                        startActivity(new Intent(getApplicationContext(), VenueActivity.class));
+                    }
+                    else{
+                        startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                    }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -216,5 +220,14 @@ public class CredentialActivity extends AppCompatActivity {
                 });
             }
         };
+    }
+
+    /**
+     * This method is used to handle the back button.
+     */
+    @Override
+    public void onBackPressed()
+    {
+        Toast.makeText(CredentialActivity.this, "Please fill in your credentials", Toast.LENGTH_LONG).show();
     }
 }

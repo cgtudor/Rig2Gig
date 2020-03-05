@@ -212,7 +212,7 @@ public class RegisterActivity extends AppCompatActivity {
                             userId = fAuth.getUid();
                             DocumentReference documentReference = fStore.collection("users").document(userId);
                             Map<String, Object> user = new HashMap<>();
-                            user.put("Email Address", email);
+                            user.put("email", email);
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -259,6 +259,15 @@ public class RegisterActivity extends AppCompatActivity {
      */
     public void registerLoginBtn(View view) {
         startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+    }
+
+    /**
+     * This method is used to handle the back button.
+     */
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
     }
 }
 
