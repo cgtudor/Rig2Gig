@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="170dp"
-        android:text="My Profile Fragment"
+        android:text="Hello World"
         android:textSize="30sp" />
 
 </RelativeLayout>

@@ -24,7 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewVenuesFragment extends Fragment
+public class ViewMusiciansFragment extends Fragment
 {
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
@@ -33,27 +33,20 @@ public class ViewVenuesFragment extends Fragment
     private List<DocumentSnapshot> documentSnapshots;
 
     private RecyclerView recyclerView;
-    private VenueAdapter adapter;
+    private MusicianAdapter adapter;
 
-    private ArrayList<VenueListing> venueListings;
+    private ArrayList<MusicianListing> musicianListings;
 
-    /**
-     * Upon creation of the ViewVenuesFragment, create the fragment_view_venues layout.
-     * @param inflater The inflater is used to read the passed xml file.
-     * @param container The views base class.
-     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
-     * @return Returns a View of the fragment_upgrade_to_musicians layout.
-     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        final View v = inflater.inflate(R.layout.fragment_view_venues, container, false);
+        final View v = inflater.inflate(R.layout.fragment_view_performers, container, false);
 
         db = FirebaseFirestore.getInstance();
-        colRef = db.collection("venue-listings");
+        colRef = db.collection("musician-listings");
 
-        venueListings = new ArrayList<>();
+        musicianListings = new ArrayList<>();
 
         Query first = colRef
                 .limit(10);
@@ -70,21 +63,22 @@ public class ViewVenuesFragment extends Fragment
 
                                 for(DocumentSnapshot documentSnapshot : documentSnapshots){
 
-                                    VenueListing venueListing = new VenueListing(
+                                    MusicianListing musicianListing = new MusicianListing(
                                             documentSnapshot.getId(),
-                                            documentSnapshot.get("venue-ref").toString());
+                                            documentSnapshot.get("musician-ref").toString(),
+                                            documentSnapshot.get("position").toString());
 
-                                    venueListings.add(venueListing);
+                                    musicianListings.add(musicianListing);
                                 }
 
-                                adapter = new VenueAdapter(venueListings, getContext());
+                                adapter = new MusicianAdapter(musicianListings, getContext());
 
-                                adapter.setOnItemClickListener(new VenueAdapter.OnItemClickListener() {
+                                adapter.setOnItemClickListener(new MusicianAdapter.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(int position) {
-                                        Intent openListingIntent = new Intent(v.getContext(), VenueListingDetailsActivity.class);
-                                        String listingRef = venueListings.get(position).getListingRef();
-                                        openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
+                                        Intent openListingIntent = new Intent(v.getContext(), MusicianListingDetailsActivity.class);
+                                        String listingRef = musicianListings.get(position).getListingRef();
+                                        openListingIntent.putExtra("EXTRA_MUSICIAN_LISTING_ID", listingRef);
                                         v.getContext().startActivity(openListingIntent);
                                     }
                                 });
@@ -105,5 +99,11 @@ public class ViewVenuesFragment extends Fragment
                 });
 
         return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 }

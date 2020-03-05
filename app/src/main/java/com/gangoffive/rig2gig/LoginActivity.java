@@ -150,12 +150,38 @@ public class LoginActivity extends AppCompatActivity{
             public void access(char[] clearChars) {
                 fAuth.signInWithEmailAndPassword(getEmail, new String(clearChars)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                    public void onComplete(@NonNull Task<AuthResult> task)
+                    {
+                        if (task.isSuccessful())
+                        {
                             Toast.makeText(LoginActivity.this, "User Logged In", Toast.LENGTH_LONG).show();
                                 // This is an existing user, show them a welcome back screen.
-                                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
-                        } else {
+                            final String getUserId = fAuth.getUid();
+                            DocumentReference docIdRef = fStore.collection("users").document(getUserId);
+                            docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                            {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                {
+                                    if (task.isSuccessful())
+                                    {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists())
+                                        {
+                                            Log.d(TAG, "Document exists!");
+                                            CredentialActivity.userType = document.get("User Type").toString();
+                                            startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                                        }
+                                        else
+                                        {
+                                            Log.d(TAG, "Document doesn't exists!");
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        else
+                        {
                             Toast.makeText(LoginActivity.this, "Email Or Password Is Incorrect! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -220,6 +246,7 @@ public class LoginActivity extends AppCompatActivity{
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
                                             Log.d(TAG, "Document exists!");
+                                            CredentialActivity.userType = document.get("User Type").toString();
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
                                         } else {
                                             Log.d(TAG, "Document does not exist!");
@@ -279,6 +306,7 @@ public class LoginActivity extends AppCompatActivity{
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
                                             Log.d(TAG, "Document exists!");
+                                            CredentialActivity.userType = document.get("User Type").toString();
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
                                         } else {
                                             Log.d(TAG, "Document does not exist!");

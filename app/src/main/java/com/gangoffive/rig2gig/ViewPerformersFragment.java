@@ -24,7 +24,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewVenuesFragment extends Fragment
+
+
+public class ViewPerformersFragment extends Fragment
 {
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
@@ -33,30 +35,23 @@ public class ViewVenuesFragment extends Fragment
     private List<DocumentSnapshot> documentSnapshots;
 
     private RecyclerView recyclerView;
-    private VenueAdapter adapter;
+    private PerformerAdapter adapter;
 
-    private ArrayList<VenueListing> venueListings;
+    private ArrayList<PerformerListing> performerListings;
 
-    /**
-     * Upon creation of the ViewVenuesFragment, create the fragment_view_venues layout.
-     * @param inflater The inflater is used to read the passed xml file.
-     * @param container The views base class.
-     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
-     * @return Returns a View of the fragment_upgrade_to_musicians layout.
-     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        final View v = inflater.inflate(R.layout.fragment_view_venues, container, false);
+        final View v = inflater.inflate(R.layout.fragment_view_performers, container, false);
 
         db = FirebaseFirestore.getInstance();
-        colRef = db.collection("venue-listings");
+        colRef = db.collection("performer-listings");
 
-        venueListings = new ArrayList<>();
+        performerListings = new ArrayList<>();
 
         Query first = colRef
-                .limit(10);
+            .limit(10);
 
         first.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -70,21 +65,22 @@ public class ViewVenuesFragment extends Fragment
 
                                 for(DocumentSnapshot documentSnapshot : documentSnapshots){
 
-                                    VenueListing venueListing = new VenueListing(
+                                    PerformerListing performerListing = new PerformerListing(
                                             documentSnapshot.getId(),
-                                            documentSnapshot.get("venue-ref").toString());
+                                            documentSnapshot.get("performer-ref").toString(),
+                                            documentSnapshot.get("type").toString());
 
-                                    venueListings.add(venueListing);
+                                    performerListings.add(performerListing);
                                 }
 
-                                adapter = new VenueAdapter(venueListings, getContext());
+                                adapter = new PerformerAdapter(performerListings, getContext());
 
-                                adapter.setOnItemClickListener(new VenueAdapter.OnItemClickListener() {
+                                adapter.setOnItemClickListener(new PerformerAdapter.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(int position) {
-                                        Intent openListingIntent = new Intent(v.getContext(), VenueListingDetailsActivity.class);
-                                        String listingRef = venueListings.get(position).getListingRef();
-                                        openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
+                                        Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
+                                        String listingRef = performerListings.get(position).getListingRef();
+                                        openListingIntent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingRef);
                                         v.getContext().startActivity(openListingIntent);
                                     }
                                 });
@@ -105,5 +101,11 @@ public class ViewVenuesFragment extends Fragment
                 });
 
         return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 }

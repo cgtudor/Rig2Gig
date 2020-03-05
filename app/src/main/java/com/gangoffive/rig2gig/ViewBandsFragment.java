@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,11 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -25,8 +23,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 public class ViewBandsFragment extends Fragment
 {
@@ -37,47 +33,23 @@ public class ViewBandsFragment extends Fragment
     private List<DocumentSnapshot> documentSnapshots;
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private BandAdapter adapter;
 
-    private List<PerformerListing> performerListings;
+    private ArrayList<BandListing> bandListings;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        View v = inflater.inflate(R.layout.fragment_view_bands, container, false);
+        final View v = inflater.inflate(R.layout.fragment_view_bands, container, false);
 
         db = FirebaseFirestore.getInstance();
-        colRef = db.collection("performer-listings");
+        colRef = db.collection("band-listings");
 
-        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        performerListings = new ArrayList<>();
+        bandListings = new ArrayList<>();
 
         Query first = colRef
-                .orderBy("name")
                 .limit(10);
-
-        /*first.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot querySnapshot) {
-                        documentSnapshots= querySnapshot.getDocuments();
-
-                        for(DocumentSnapshot documentSnapshot: documentSnapshots){
-                            PerformerListing performerListing = new PerformerListing(
-                                             documentSnapshot.getId(),
-                                    (String) documentSnapshot.get("name"),
-                                    (String) documentSnapshot.get("genres"),
-                                    (String) documentSnapshot.get("location")
-                            );
-
-                            performerListings.add(performerListing);
-                        }
-                    }
-                });*/
 
         first.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -87,23 +59,35 @@ public class ViewBandsFragment extends Fragment
                             documentSnapshots = task.getResult().getDocuments();
                             if(!documentSnapshots.isEmpty())
                             {
+                                Log.d(TAG, "get successful with data");
+
                                 for(DocumentSnapshot documentSnapshot : documentSnapshots){
 
-                                    PerformerListing performerListing = new PerformerListing(
+                                    BandListing bandListing = new BandListing(
                                             documentSnapshot.getId(),
-                                            (String) documentSnapshot.get("name"),
-                                            (String) documentSnapshot.get("genres"),
-                                            (String) documentSnapshot.get("location"),
-                                            (String) documentSnapshot.get("bandRef")
-                                    );
+                                            documentSnapshot.get("band-ref").toString());
 
-                                    performerListings.add(performerListing);
-                            }
-                                adapter = new MyAdapter(performerListings, getContext());
+                                    bandListings.add(bandListing);
+                                }
 
+                                adapter = new BandAdapter(bandListings, getContext());
+
+                                adapter.setOnItemClickListener(new BandAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(int position) {
+                                        Intent openListingIntent = new Intent(v.getContext(), BandListingDetailsActivity.class);
+                                        String listingRef = bandListings.get(position).getListingRef();
+                                        openListingIntent.putExtra("EXTRA_BAND_LISTING_ID", listingRef);
+                                        v.getContext().startActivity(openListingIntent);
+                                    }
+                                });
+
+                                recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+                                recyclerView.setHasFixedSize(true);
                                 recyclerView.setAdapter(adapter);
+                                LinearLayoutManager llManager = new LinearLayoutManager(getContext());
+                                recyclerView.setLayoutManager(llManager);
 
-                                Log.d(TAG, "get successful with data");
                             } else {
                                 Log.d(TAG, "get successful without data");
                             }
@@ -112,8 +96,6 @@ public class ViewBandsFragment extends Fragment
                         }
                     }
                 });
-
-
 
         return v;
     }

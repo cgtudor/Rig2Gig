@@ -67,7 +67,14 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
+        <activity android:name=".ConcreteFanNavBar"
+            android:parentActivityName=".NavBarActivity"/>
+        <activity android:name=".ConcreteMusicianNavBar"
+            android:parentActivityName=".NavBarActivity"/>
+        <activity android:name=".ConcreteVenueNavBar"
+            android:parentActivityName=".NavBarActivity"/>
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"

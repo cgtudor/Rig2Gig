@@ -31,23 +31,13 @@
                 android:layout_toEndOf="@+id/imageViewPhoto"/>
 
             <TextView
-                android:id="@+id/textViewGenres"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Genre"
-                android:textSize="15sp"
-                android:layout_marginStart="8dp"
-                android:layout_below="@+id/textViewName"
-                android:layout_toEndOf="@+id/imageViewPhoto"/>
-
-            <TextView
                 android:id="@+id/textViewLoc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Location"
                 android:textSize="15sp"
                 android:layout_marginStart="8dp"
-                android:layout_below="@+id/textViewGenres"
+                android:layout_below="@+id/textViewName"
                 android:layout_toEndOf="@+id/imageViewPhoto"/>
 
             <TextView
@@ -65,3 +55,4 @@
     </androidx.cardview.widget.CardView>
 
 </LinearLayout>
+

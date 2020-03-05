@@ -9,6 +9,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,9 +18,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class SettingsFragment extends PreferenceFragmentCompat
 {
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private final String USERID = "9HvYct2RS3n2wg8ig6hQ";
+    private FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private final String USERID = fAuth.getUid();
     private final DocumentReference USERDOCUMENT = FSTORE.collection("users").document(USERID);
-    private String accountType;
 
     /**
      * Upon loading the SettingsFragment, this method is called to setup the page with the required preferences from the specified file.
@@ -31,6 +32,22 @@ public class SettingsFragment extends PreferenceFragmentCompat
     {
         setupPreferences();
         setPreferencesFromResource(R.xml.preferences, rootKey);
+
+        if(CredentialActivity.userType.equals("Band"))
+        {
+            Preference preference = getPreferenceManager().findPreference("MusicianUpgrade");
+            preference.setVisible(true);
+        }
+
+        Preference button = getPreferenceManager().findPreference("ChangePassword");
+        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference)
+            {
+                executeDialog();
+                return true;
+            }
+        });
     }
 
     /**
@@ -50,23 +67,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     if (document.exists())
                     {
                         Log.d("FIRESTORE", "DocumentSnapshot data" + document.getData());
-                        accountType = document.get("AccountType").toString();
                         Preference preference;
 
-                        if(accountType.equals("Fan"))
-                        {
-                            preference = getPreferenceManager().findPreference("MusicianUpgrade");
-                            preference.setVisible(true);
-                        }
-
                         preference = getPreferenceManager().findPreference("UserName");
-                        preference.setSummary(document.get("UserName").toString());
+                        preference.setSummary(document.get("Username").toString());
 
                         preference = getPreferenceManager().findPreference("FullName");
-                        preference.setSummary(document.get("FullName").toString());
+                        preference.setSummary(document.get("Full Name").toString());
 
                         preference = getPreferenceManager().findPreference("UserEmailAddress");
-                        preference.setSummary(document.get("EmailAddress").toString());
+                        preference.setSummary(document.get("Email Address").toString());
                     }
                     else
                     {
@@ -79,5 +89,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 }
             }
         });
+    }
+
+    /**
+     * This method is used to instantiate and execute the alert dialog created in the ChangePasswordDialog class.
+     */
+    private void executeDialog()
+    {
+        ChangePasswordDialog changePasswordDialog = new ChangePasswordDialog();
+        changePasswordDialog.show(getFragmentManager(), "Dialog");
     }
 }

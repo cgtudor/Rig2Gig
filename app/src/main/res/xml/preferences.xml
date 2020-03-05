@@ -31,9 +31,9 @@
             app:title="Change Password"
             android:summary="Change your password"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.ChangePasswordFragment"/>
-
-        <Preference
+            app:fragment="com.gangoffive.rig2gig.ChangePasswordDialog"/>
+    </PreferenceCategory>
+        <!--<Preference
             app:key="MusicianUpgrade"
             app:title="Upgrade to Musician"
             app:summary="Become a Musician"
@@ -47,7 +47,7 @@
             app:summary="Delete or deactivate your account"
             app:iconSpaceReserved="false"
             app:fragment="com.gangoffive.rig2gig.DeleteAccountFragment"/>
-    </PreferenceCategory>
+
 
     <PreferenceCategory android:title="@string/notifications_settings"
         app:iconSpaceReserved="false">
@@ -98,23 +98,23 @@
             app:title="Location"
             app:summary="Choose whether we can use your location"
             app:defaultValue="true"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false"/>-->
 
-    </PreferenceCategory>
+   <!-- </PreferenceCategory>-->
 
     <PreferenceCategory android:title="@string/legal_settings"
         app:iconSpaceReserved="false">
-        <Preference
+        <!--<Preference
             app:title="Licenses"
             app:summary="View Licenses"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.LicencesFragment"/>
+            app:fragment="com.gangoffive.rig2gig.LicencesFragment"/>-->
 
-        <Preference
+        <!--<Preference
             app:title="Privacy Policy"
             app:summary="View Our Privacy Policy"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.PrivacyPolicyFragment" />
+            app:fragment="com.gangoffive.rig2gig.PrivacyPolicyFragment" />-->
 
         <Preference
             app:title="Terms of Service"

@@ -37,7 +37,8 @@ public class CredentialActivity extends AppCompatActivity {
     RadioGroup genderGroup, userGroup;
     Button submit;
 
-    String gender, userType, userId;
+    String gender, userId;
+    public static String userType;
 
     /**
      * When the onCreate is called previous states from the activity can be restored.
