@@ -3,14 +3,11 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -26,11 +23,11 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_listing_details);
 
-        final ImageView venuePhoto = findViewById(R.id.venuePhoto);
-        final TextView venueName = findViewById(R.id.venueName);
-        final TextView description = findViewById(R.id.description);
+        final ImageView venuePhoto = findViewById(R.id.bandPhoto);
+        final TextView venueName = findViewById(R.id.bandName);
+        final TextView description = findViewById(R.id.genres);
         final TextView rating = findViewById(R.id.rating);
-        final TextView location = findViewById(R.id.location);
+        final TextView location = findViewById(R.id.position);
 
         /*Used to get the id of the listing from the previous activity*/
         String vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");

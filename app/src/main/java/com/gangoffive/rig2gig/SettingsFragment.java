@@ -70,13 +70,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
                         Preference preference;
 
                         preference = getPreferenceManager().findPreference("UserName");
-                        preference.setSummary(document.get("Username").toString());
+                        preference.setSummary(document.get("username").toString());
 
                         preference = getPreferenceManager().findPreference("FullName");
-                        preference.setSummary(document.get("Full Name").toString());
+                        preference.setSummary(document.get("given-name").toString() + " " + document.get("family-name").toString());
 
                         preference = getPreferenceManager().findPreference("UserEmailAddress");
-                        preference.setSummary(document.get("Email Address").toString());
+                        preference.setSummary(document.get("email-address").toString());
                     }
                     else
                     {

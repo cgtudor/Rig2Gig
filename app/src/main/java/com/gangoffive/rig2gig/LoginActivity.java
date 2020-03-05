@@ -2,7 +2,6 @@ package com.gangoffive.rig2gig;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,16 +26,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -58,7 +54,7 @@ public class LoginActivity extends AppCompatActivity{
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userId = fAuth.getUid();
 
-    SignInButton signInButton;
+    Button signInButton;
 
     GoogleSignInClient mGoogleSignInClient;
     LoginButton loginButton;
@@ -68,8 +64,6 @@ public class LoginActivity extends AppCompatActivity{
     TextView registerBtn, forgotPasswordBtn;
     EditText emailAddress, password;
 
-
-
     /**
      * When the onCreate is called previous states from the activity can be restored.
      * @param savedInstanceState
@@ -78,6 +72,34 @@ public class LoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //Uncomment this for login testing
+        if (fAuth.getCurrentUser() != null)
+        {
+            final String getUserId = fAuth.getUid();
+            DocumentReference docIdRef = fStore.collection("users").document(getUserId);
+            docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                {
+                    if (task.isSuccessful())
+                    {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists())
+                        {
+                            Log.d(TAG, "Document exists!");
+                            CredentialActivity.userType = document.get("user-type").toString();
+                            startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                        }
+                        else
+                        {
+                            Log.d(TAG, "Document doesn't exists!");
+                        }
+                    }
+                }
+            });
+        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -109,8 +131,10 @@ public class LoginActivity extends AppCompatActivity{
         /**
          * Initialisation of Facebook login button.
          */
+
         mCallbackManager = CallbackManager.Factory.create();
         loginButton = findViewById(R.id.fb_loginBtn);
+        loginButton.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         loginButton.setReadPermissions("email", "public_profile");
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -169,7 +193,7 @@ public class LoginActivity extends AppCompatActivity{
                                         if (document.exists())
                                         {
                                             Log.d(TAG, "Document exists!");
-                                            CredentialActivity.userType = document.get("User Type").toString();
+                                            CredentialActivity.userType = document.get("user-type").toString();
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
                                         }
                                         else

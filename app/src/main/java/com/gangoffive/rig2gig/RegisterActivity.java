@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,8 +20,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,11 +47,11 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        rEmailAddress = findViewById(R.id.registerEmail);
+        rEmailAddress = findViewById(R.id.emailReset);
         rConfirmEmail = findViewById(R.id.registerConfirmEmail);
         rPassword = findViewById(R.id.registerPassword);
         rConfirmPassword = findViewById(R.id.registerConfirmPassword);
-        rRegisterBtn = findViewById(R.id.registerBtn);
+        rRegisterBtn = findViewById(R.id.resetPasswordBtn);
     }
 
     public void registerBtnOnClick(View view) {
@@ -102,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
                     userId = fAuth.getUid();
                     DocumentReference documentReference = fStore.collection("users").document(userId);
                     Map<String, Object> user = new HashMap<>();
-                    user.put("Email Address", email);
+                    user.put("email-address", email);
                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
