@@ -68,7 +68,7 @@ public class ViewPerformersFragment extends Fragment
                                     PerformerListing performerListing = new PerformerListing(
                                             documentSnapshot.getId(),
                                             documentSnapshot.get("performer-ref").toString(),
-                                            documentSnapshot.get("type").toString());
+                                            documentSnapshot.get("performer-type").toString());
 
                                     performerListings.add(performerListing);
                                 }
