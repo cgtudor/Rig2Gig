@@ -46,11 +46,11 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
     private String advertReference;
 
     /**
-     *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * Upon creation of the VenueConsoleFragment, create the fragment_venue_console layout.
+     * @param inflater The inflater is used to read the passed xml file.
+     * @param container The views base class.
+     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     * @return Returns a View of the fragment_venue_console layout.
      */
     @Nullable
     @Override
@@ -72,14 +72,14 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
         card_view_view_advert.setOnClickListener(this);
         card_view_delete_advert.setOnClickListener(this);
 
-        //getVenueReferences();
         databaseQuery();
 
         return view;
     }
 
     /**
-     *
+     * This method queries the database collecting all venues and venue adverts. These lists are then processed
+     * to set up variables for possible button clicks where extras need to be sent with intents.
      */
     private void databaseQuery()
     {
@@ -174,8 +174,8 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
     }
 
     /**
-     *
-     * @param v
+     * This method determines the activity/fragment that will be created based upon the button clicked using the card view's tag.
+     * @param v This is the detected button that has been clicked. Used to create the appropriate activity/fragment.
      */
     @Override
     public void onClick(View v)
@@ -188,14 +188,14 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
                 break;
             case "Edit Venue":
                 //Chris 2.0 needs to implement.
-                //startActivity(new Intent(getActivity(), *** INSERT CHRIS 2.0 ACTIVITY.CLASS HERE ***).putExtra("EXTRA_VENUE_ID", venueRef));
+                //startActivity(new Intent(getActivity(), VenueDetailsEditor.class).putExtra("EXTRA_VENUE_ID", venueRef));
                 break;
             case "Create Advert":
-                startActivity(new Intent(getActivity(), CreateVenueAdvertisement.class).putExtra("EXTRA_VENUE__ID", venueRef).putExtra("EXTRA_LISTING_ID", ""));
+                //startActivity(new Intent(getActivity(), VenueAdvertisementEditor.class).putExtra("EXTRA_VENUE__ID", venueRef).putExtra("EXTRA_LISTING_ID", ""));
                 break;
             case "Edit Advert":
                 //Chris 2.0 needs to implement.
-                //startActivity(new Intent(getActivity(), *** INSERT CHRIS 2.0 ACTIVITY.CLASS HERE ***).putExtra("EXTRA_VENUE__ID", venueRef).putExtra("EXTRA_LISTING_ID", advertReference));
+                //startActivity(new Intent(getActivity(), VenueAdvertisementEditor.class).putExtra("EXTRA_VENUE__ID", venueRef).putExtra("EXTRA_LISTING_ID", advertReference));
                 break;
             case "View Advert":
                 startActivity(new Intent(getActivity(), VenueListingDetailsActivity.class).putExtra("EXTRA_VENUE_LISTING_ID", advertReference));
@@ -209,7 +209,7 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
     }
 
     /**
-     *
+     * This method is used to find the logged in venue's advert and delete it from the database.
      */
     private void deleteAdvert()
     {
@@ -250,7 +250,8 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
     }
 
     /**
-     *
+     * This method is used to reload the fragment layout once the advert has been deleted.
+     * This is so the appropriate layout is given to the user based upon whether they have an advert or not.
      */
     private void restartFragment()
     {
