@@ -190,7 +190,7 @@ public class RegisterActivity extends AppCompatActivity {
                     "One digit\n" +
                     "One upper-case letter\n" +
                     "One lower-case letter\n" +
-                    "No whitespace");
+                    "No spaces");
             return;
         }
         if(!matchingPass.get())
