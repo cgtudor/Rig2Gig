@@ -99,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
                     userId = fAuth.getUid();
                     DocumentReference documentReference = fStore.collection("users").document(userId);
                     Map<String, Object> user = new HashMap<>();
-                    user.put("Email Address", email);
+                    user.put("email-address", email);
                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {

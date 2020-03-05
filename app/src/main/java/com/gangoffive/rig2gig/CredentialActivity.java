@@ -145,11 +145,12 @@ public class CredentialActivity extends AppCompatActivity {
             userId = fAuth.getUid();
             DocumentReference documentReference = fStore.collection("users").document(userId);
             Map<String, Object> user = new HashMap<>();
-            user.put("Full Name", fullName);
-            user.put("Username", username);
-            user.put("Phone Number", phoneNumber);
-            user.put("Gender", gender);
-            user.put("User Type", userType);
+            user.put("given-name", firstName);
+            user.put("family-name", lastName);
+            user.put("username", username);
+            user.put("phone", phoneNumber);
+            user.put("gender", gender);
+            user.put("user-type", userType);
             documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
