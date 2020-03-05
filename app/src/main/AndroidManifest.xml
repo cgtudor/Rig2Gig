@@ -32,7 +32,10 @@
             android:name=".CreatePerformerAdvertisement"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CreateVenueAdvertisement"
+            android:name=".VenueAdvertisementEditor"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VenueDetailsEditor"
             android:theme="@style/AppTheme.NoActionBar" />
 
 

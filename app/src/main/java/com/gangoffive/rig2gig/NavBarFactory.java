@@ -36,6 +36,8 @@ public class NavBarFactory
         fragmentMap.put("Notifications", new NotificationsFragment());
         fragmentMap.put("About Us", new AboutUsFragment());
         fragmentMap.put("Settings", new SettingsFragment());
+
+        fragmentMap.put("Venue Console", new VenueConsoleFragment());
     }
 
     /**

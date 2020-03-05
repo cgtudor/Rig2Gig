@@ -3,10 +3,20 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import android.content.Context;
+import android.media.Image;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -92,8 +102,11 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         StorageReference venuePic = storage.getReference().child("/images/venue-listings/" + vID + ".jpg");
 
         /*Using Glide to load the picture from the reference directly into the ImageView*/
-        GlideApp.with(this /* context */)
+
+        GlideApp.with(this)
                 .load(venuePic)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(venuePhoto);
     }
 }

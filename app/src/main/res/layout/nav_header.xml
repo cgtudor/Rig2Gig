@@ -17,15 +17,17 @@
 
     <!--Heading in navigation drawer-->
     <TextView
+        android:id="@+id/nav_bar_header_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="Ben Souch"
+        android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
     <!--Sub heading in navigation drawer-->
     <TextView
+        android:id="@+id/nav_bar_header_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="bksouch96@gmail.com"/>
+        android:text=""/>
 </LinearLayout>
