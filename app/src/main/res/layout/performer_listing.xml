@@ -34,7 +34,7 @@
                 android:id="@+id/textViewGenres"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Genre"
+                android:text="Genres"
                 android:textSize="15sp"
                 android:layout_marginStart="8dp"
                 android:layout_below="@+id/textViewName"
@@ -54,11 +54,22 @@
                 android:id="@+id/textViewRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewName"
-                android:layout_alignParentEnd="true"
+                android:layout_above="@+id/textViewRatingText"
+                android:layout_alignStart="@+id/textViewRatingText"
                 android:layout_marginEnd="1dp"
+                android:layout_marginBottom="5dp"
                 android:text="5.0"
                 android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/textViewRatingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/textViewGenres"
+                android:layout_marginEnd="1dp"
+                android:text="out of 5"
+                android:textSize="15sp" />
 
         </RelativeLayout>
 

@@ -183,19 +183,16 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
         switch(v.getTag().toString())
         {
             case "View Performers":
-                //Fragment ViewPerformersFragment
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewPerformersFragment()).commit();
                 break;
             case "Edit Venue":
-                //Chris 2.0 needs to implement.
-                //startActivity(new Intent(getActivity(), VenueDetailsEditor.class).putExtra("EXTRA_VENUE_ID", venueRef));
+                startActivity(new Intent(getActivity(), VenueDetailsEditor.class).putExtra("EXTRA_VENUE_ID", venueRef));
                 break;
             case "Create Advert":
-                //startActivity(new Intent(getActivity(), VenueAdvertisementEditor.class).putExtra("EXTRA_VENUE__ID", venueRef).putExtra("EXTRA_LISTING_ID", ""));
+                startActivity(new Intent(getActivity(), VenueAdvertisementEditor.class).putExtra("EXTRA_VENUE_ID", venueRef).putExtra("EXTRA_LISTING_ID", ""));
                 break;
             case "Edit Advert":
-                //Chris 2.0 needs to implement.
-                //startActivity(new Intent(getActivity(), VenueAdvertisementEditor.class).putExtra("EXTRA_VENUE__ID", venueRef).putExtra("EXTRA_LISTING_ID", advertReference));
+                startActivity(new Intent(getActivity(), VenueAdvertisementEditor.class).putExtra("EXTRA_VENUE_ID", venueRef).putExtra("EXTRA_LISTING_ID", advertReference));
                 break;
             case "View Advert":
                 startActivity(new Intent(getActivity(), VenueListingDetailsActivity.class).putExtra("EXTRA_VENUE_LISTING_ID", advertReference));

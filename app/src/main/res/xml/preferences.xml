@@ -57,11 +57,16 @@
             app:summary="Turn notifications on or off"
             app:title="Toggle Notifications"
             app:iconSpaceReserved="false"/>
-    </PreferenceCategory>
+    </PreferenceCategory>-->
 
     <PreferenceCategory android:title="@string/miscellaneous_settings"
         app:iconSpaceReserved="false">
         <Preference
+            app:title="Logout"
+            app:summary="Log out of your account"
+            app:key="Logout"
+            app:iconSpaceReserved="false"/>
+        <!--<Preference
             app:title="Music Lessons"
             app:summary="Re-watch our app tutorial"
             app:iconSpaceReserved="false"/>
@@ -82,7 +87,7 @@
             app:title="Report"
             app:summary="Report a bug/user and suggest new features"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.ReportFragment"/>
+            app:fragment="com.gangoffive.rig2gig.ReportFragment"/>-->
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/privacy_settings"
@@ -97,10 +102,10 @@
         <SwitchPreference
             app:title="Location"
             app:summary="Choose whether we can use your location"
-            app:defaultValue="false"
-            app:iconSpaceReserved="false"/>-->
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"/>
 
-   <!-- </PreferenceCategory>-->
+    </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/legal_settings"
         app:iconSpaceReserved="false">
