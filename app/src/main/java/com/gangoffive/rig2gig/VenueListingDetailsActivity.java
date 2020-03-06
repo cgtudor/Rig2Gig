@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,14 +16,23 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+
 public class VenueListingDetailsActivity extends AppCompatActivity {
+
+    private Button favourite;
+    private final StringBuilder expiry = new StringBuilder("");
+    private final StringBuilder venueRef = new StringBuilder("");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +48,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         final TextView description = findViewById(R.id.description);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.position);
+        favourite = findViewById(R.id.favourite);
 
         /*Used to get the id of the listing from the previous activity*/
         String vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");
@@ -82,6 +94,9 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                 }
                             }
                         });
+                        Timestamp expiryDate = (Timestamp) document.get("expiry-date");
+                        expiry.append(expiryDate.toDate().toString());
+                        venueRef.append(document.get("venue-ref").toString());
                         description.setText(document.get("description").toString());
                     } else {
                         Log.d("FIRESTORE", "No such document");
@@ -89,6 +104,35 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                 } else {
                     Log.d("FIRESTORE", "get failed with ", task.getException());
                 }
+            }
+        });
+
+        favourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HashMap<String, String> listing = new HashMap<>();
+                listing.put("description", description.getText().toString());
+                listing.put("expiry-date", expiry.toString());
+                listing.put("venue-ref", venueRef.toString());
+
+                CollectionReference favVenues = db.collection("favourite-ads")
+                        .document(FirebaseAuth.getInstance().getUid())
+                        .collection("venue-listings");
+                favVenues.document(vID)
+                        .set(listing)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful())
+                                {
+                                    Log.d("FIRESTORE", "Favourite successfull");
+                                }
+                                else
+                                {
+                                    Log.d("FIRESTORE", "Task failed with ", task.getException());
+                                }
+                            }
+                        });
             }
         });
 
