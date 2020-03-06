@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,6 +27,9 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_listing_details);
+
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final ImageView venuePhoto = findViewById(R.id.bandPhoto);
         final TextView venueName = findViewById(R.id.bandName);
@@ -67,6 +71,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                         rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
 
+                                        getSupportActionBar().setTitle(venueName.getText().toString());
+
                                     } else {
                                         Log.d("FIRESTORE", "No such document");
                                     }
@@ -104,9 +110,47 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                 .into(venuePhoto);
     }
 
-    /*@Override
-    public void onBackPressed()
-    {
-        startActivity(new Intent(this, NavBarActivity.class));
-    }*/
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(FirebaseAuth.getInstance().getUid()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            DocumentSnapshot document = task.getResult();
+                            if(document.exists())
+                            {
+                                String accType = document.get("user-type").toString();
+                                if(accType.equals("Venue"))
+                                {
+                                    Intent intent = new Intent(VenueListingDetailsActivity.this, NavBarActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                                else
+                                {
+                                    VenueListingDetailsActivity.this.onBackPressed();
+                                    finish();
+                                }
+                            }
+                            else
+                            {
+                                Log.d("FIRESTORE", "No such document");
+                            }
+                        }
+                        else
+                        {
+                            Log.d("FIRESTORE", "get failed with ", task.getException());
+                        }
+                    }
+                });
+    }
 }

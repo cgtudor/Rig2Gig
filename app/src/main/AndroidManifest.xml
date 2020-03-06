@@ -18,7 +18,8 @@
         <activity android:name=".CreateBandActivity"></activity>
         <activity android:name=".BandListingDetailsActivity" />
         <activity android:name=".MusicianListingDetailsActivity" />
-        <activity android:name=".VenueListingDetailsActivity" />
+        <activity android:name=".VenueListingDetailsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".CreateBandAdvertisement"
             android:theme="@style/AppTheme.NoActionBar"

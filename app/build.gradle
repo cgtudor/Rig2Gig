@@ -48,6 +48,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     /*Dependency for Console Page*/
     implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.android.support:appcompat-v7:+'
 
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.facebook.android:facebook-login:[5,6)'
