@@ -11,6 +11,9 @@
         <!--<item android:id="@+id/nav_my_band"
             android:icon="@drawable/ic_my_band"
             android:title="My Band"/>-->
+        <item android:id="@+id/nav_console"
+            android:icon="@drawable/ic_console"
+            android:title="@string/musician_console"/>
         <item android:id="@+id/nav_create_band_advertisement"
             android:title="Create band ad"
             android:icon="@drawable/ic_create_band_ad"/>
