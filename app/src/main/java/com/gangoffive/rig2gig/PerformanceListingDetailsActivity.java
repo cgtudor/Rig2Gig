@@ -73,6 +73,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                         location.setText(document.get("location").toString());
                                         genre.setText(document.get("genres").toString());
 
+                                        getSupportActionBar().setTitle(bandName.getText().toString());
                                     } else {
                                         Log.d("FIRESTORE", "No such document");
                                     }

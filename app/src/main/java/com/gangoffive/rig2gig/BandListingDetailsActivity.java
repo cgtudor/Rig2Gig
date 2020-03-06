@@ -71,6 +71,8 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                                         rating.setText("Rating: " + Integer.parseInt(document.get("rating").toString()) + "/5");
                                         location.setText(document.get("location").toString());
 
+                                        getSupportActionBar().setTitle(bandName.getText().toString());
+
                                     } else {
                                         Log.d("FIRESTORE", "No such document");
                                     }

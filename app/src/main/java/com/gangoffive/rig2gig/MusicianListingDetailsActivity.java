@@ -69,6 +69,8 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
                                         location.setText(document.get("location").toString());
 
+                                        getSupportActionBar().setTitle(musicianName.getText().toString());
+
                                     } else {
                                         Log.d("FIRESTORE", "No such document");
                                     }
