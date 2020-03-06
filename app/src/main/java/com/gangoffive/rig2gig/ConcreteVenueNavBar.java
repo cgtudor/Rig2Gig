@@ -35,8 +35,8 @@ public class ConcreteVenueNavBar extends NavBarCompatActivity implements Navigat
         if (savedInstanceState == null)
         {
             //Following line determines the first fragment shown to the user.
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyProfileFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_my_profile);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new VenueConsoleFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_console);
         }
     }
 }

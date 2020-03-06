@@ -131,7 +131,12 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             image.setImageDrawable(null);
         }
         description = findViewById(R.id.description);
-        description.addTextChangedListener(textWatcher);
+        if (description != null)
+        {
+
+            description.addTextChangedListener(textWatcher);
+        }
+
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override

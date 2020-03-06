@@ -4,19 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import android.content.Context;
-import android.media.Image;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.signature.ObjectKey;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,7 +29,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
 
         final ImageView venuePhoto = findViewById(R.id.bandPhoto);
         final TextView venueName = findViewById(R.id.bandName);
-        final TextView description = findViewById(R.id.genres);
+        final TextView description = findViewById(R.id.description);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.position);
 
@@ -109,4 +103,10 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                 .skipMemoryCache(true)
                 .into(venuePhoto);
     }
+
+    /*@Override
+    public void onBackPressed()
+    {
+        startActivity(new Intent(this, NavBarActivity.class));
+    }*/
 }

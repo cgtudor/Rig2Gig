@@ -36,7 +36,7 @@ public class ConcreteFanNavBar extends NavBarCompatActivity
         if (savedInstanceState == null)
         {
             //Following line determines the first fragment shown to the user.
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MyProfileFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new VenueConsoleFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_my_profile);
         }
     }

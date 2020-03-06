@@ -26,9 +26,9 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         final ImageView bandPhoto = findViewById(R.id.bandPhoto);
         final TextView bandName = findViewById(R.id.bandName);
         final TextView rating = findViewById(R.id.rating);
-        final TextView genres = findViewById(R.id.genres);
+        final TextView genres = findViewById(R.id.description);
         final TextView position = findViewById(R.id.position);
-        final TextView description = findViewById(R.id.genres);
+        final TextView description = findViewById(R.id.description);
         final TextView location = findViewById(R.id.position);
 
         /*Used to get the id of the listing from the previous activity*/
