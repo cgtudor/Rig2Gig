@@ -126,6 +126,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                 if(task.isSuccessful())
                                 {
                                     Log.d("FIRESTORE", "Favourite successfull");
+                                    favourite.setAlpha(.5f);
+                                    favourite.setClickable(false);
                                 }
                                 else
                                 {
@@ -135,6 +137,25 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                         });
             }
         });
+
+        CollectionReference favVenues = db.collection("favourite-ads")
+                .document(FirebaseAuth.getInstance().getUid())
+                .collection("venue-listings");
+        favVenues.document(vID).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            DocumentSnapshot document = task.getResult();
+                            if(document.exists())
+                            {
+                                favourite.setAlpha(.5f);
+                                favourite.setClickable(false);
+                            }
+                        }
+                    }
+                });
 
         //Temp wait for pic to upload
         try {
