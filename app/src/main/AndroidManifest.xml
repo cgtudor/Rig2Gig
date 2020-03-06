@@ -16,8 +16,10 @@
         <activity android:name=".VenueActivity"></activity>
         <activity android:name=".MyBandActivity" />
         <activity android:name=".CreateBandActivity"></activity>
-        <activity android:name=".BandListingDetailsActivity" />
-        <activity android:name=".MusicianListingDetailsActivity" />
+        <activity android:name=".BandListingDetailsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".MusicianListingDetailsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".VenueListingDetailsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
@@ -41,7 +43,8 @@
         <!-- </intent-filter> -->
         <!-- android:theme="@style/AppTheme" -->
         <!-- android:windowSoftInputMode="adjustResize"/> -->
-        <activity android:name=".PerformanceListingDetailsActivity" />
+        <activity android:name=".PerformanceListingDetailsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".CredentialActivity" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".RegisterActivity" />

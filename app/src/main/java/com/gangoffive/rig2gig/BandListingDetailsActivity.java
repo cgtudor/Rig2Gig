@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,6 +32,10 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         final TextView position = findViewById(R.id.position);
         final TextView description = findViewById(R.id.description);
         final TextView location = findViewById(R.id.position);
+
+        /*Setting the support action bar to the newly created toolbar*/
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         /*Used to get the id of the listing from the previous activity*/
         String bID = getIntent().getStringExtra("EXTRA_BAND_LISTING_ID");
@@ -98,5 +104,56 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         GlideApp.with(this /* context */)
                 .load(bandPic)
                 .into(bandPhoto);
+    }
+
+    /**
+     * Overriding the up navigation to call onBackPressed
+     * @return true
+     */
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    /**
+     * Checks the user-type. Redirects to console if it is a musician or to the previous activity/fragment if not.
+     */
+    @Override
+    public void onBackPressed() {
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(FirebaseAuth.getInstance().getUid()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            DocumentSnapshot document = task.getResult();
+                            if(document.exists())
+                            {
+                                String accType = document.get("user-type").toString();
+                                if(accType.equals("Venue"))
+                                {
+                                    Intent intent = new Intent(BandListingDetailsActivity.this, NavBarActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                                else
+                                {
+                                    BandListingDetailsActivity.this.onBackPressed();
+                                    finish();
+                                }
+                            }
+                            else
+                            {
+                                Log.d("FIRESTORE", "No such document");
+                            }
+                        }
+                        else
+                        {
+                            Log.d("FIRESTORE", "get failed with ", task.getException());
+                        }
+                    }
+                });
     }
 }

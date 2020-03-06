@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MusicianListingDetailsActivity">
 
+    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
+
     <ImageView
         android:id="@+id/musicianPhoto"
         android:layout_width="0dp"
@@ -13,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         tools:srcCompat="@tools:sample/avatars[0]" />
 
     <TextView
@@ -42,19 +44,11 @@
         app:layout_constraintTop_toBottomOf="@+id/position" />
 
     <TextView
-        android:id="@+id/position"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
-
-    <TextView
         android:id="@+id/distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/position" />
+        app:layout_constraintTop_toBottomOf="@+id/description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
