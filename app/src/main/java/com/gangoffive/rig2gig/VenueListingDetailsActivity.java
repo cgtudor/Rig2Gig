@@ -28,6 +28,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_listing_details);
 
+        /*Setting the support action bar to the newly created toolbar*/
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -110,12 +111,19 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                 .into(venuePhoto);
     }
 
+    /**
+     * Overriding the up navigation to call onBackPressed
+     * @return true
+     */
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
 
+    /**
+     * Checks the user-type. Redirects to console if it is a venue or to the previous activity/fragment if not.
+     */
     @Override
     public void onBackPressed() {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
