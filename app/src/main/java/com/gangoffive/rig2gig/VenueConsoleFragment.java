@@ -131,11 +131,23 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
                                                 editProfileLayout = view.findViewById(R.id.card_view_delete_advert);
                                                 editProfileLayout.setVisibility(View.VISIBLE);
 
+                                                editProfileLayout = view.findViewById(R.id.card_view_create_advert);
+                                                editProfileLayout.setVisibility(View.GONE);
+
                                                 advertReference = adverts.getId();
                                                 break;
                                             }
                                             else
                                             {
+                                                editProfileLayout = view.findViewById(R.id.card_view_edit_advert);
+                                                editProfileLayout.setVisibility(View.GONE);
+
+                                                editProfileLayout = view.findViewById(R.id.card_view_view_advert);
+                                                editProfileLayout.setVisibility(View.GONE);
+
+                                                editProfileLayout = view.findViewById(R.id.card_view_delete_advert);
+                                                editProfileLayout.setVisibility(View.GONE);
+
                                                 editProfileLayout = view.findViewById(R.id.card_view_view_performers);
                                                 editProfileLayout.setVisibility(View.VISIBLE);
 
@@ -144,7 +156,6 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
 
                                                 editProfileLayout = view.findViewById(R.id.card_view_create_advert);
                                                 editProfileLayout.setVisibility(View.VISIBLE);
-                                                break;
                                             }
                                         }
                                     }
