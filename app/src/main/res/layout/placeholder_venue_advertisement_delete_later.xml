@@ -57,5 +57,29 @@
         android:layout_height="wrap_content"
         android:text="Edit Band Details" />
 
+    <Button
+        android:id="@+id/createMusicianAdvert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Musician Advert" />
+
+    <Button
+        android:id="@+id/editMusicianAdvert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit Musician Advert" />
+
+    <Button
+        android:id="@+id/createBandAdvert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Band Advert" />
+
+    <Button
+        android:id="@+id/editBandAdvert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit Band Advert" />
+
 
 </LinearLayout>

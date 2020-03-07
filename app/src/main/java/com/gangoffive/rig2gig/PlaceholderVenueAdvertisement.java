@@ -13,11 +13,16 @@ public class PlaceholderVenueAdvertisement extends Fragment
 {
     private Button editVenueAd, editVenueDetails, createVenueAd,
             editMusicianPerformerAd, editMusicianDetails, createMusicianPerformerAd,
-            editBandPerformerAd, editBandDetails, createBandPerformerAd;
+            editBandPerformerAd, editBandDetails, createBandPerformerAd,
+            editBandAdvert, createBandAdvert,
+            editMusicianAdvert, createMusicianAdvert;
     private String musicianRef = "A6M0CzH2WMkw7FUIFkM8";
-    private String musicianAdvertRef = "8DVBTUHrV5ZWIS46aN6Z";
+    private String musicianPAdvertRef = "8DVBTUHrV5ZWIS46aN6Z";
     private String bandRef = "S0lVRscAvnnE3sbqn9X5";
-    private String bandAdvertRef = "Sbn1SoXanABp2Y3KSZbV";
+    private String bandPAdvertRef = "Sbn1SoXanABp2Y3KSZbV";
+
+    private String bandAdvertRef = "";
+    private String musicianAdvertRef = "";
 
     @Override
     public View onCreateView(LayoutInflater l, ViewGroup vg, Bundle b)
@@ -94,6 +99,34 @@ public class PlaceholderVenueAdvertisement extends Fragment
                 editBandDetails();
             }
         });
+        createBandAdvert = v.findViewById(R.id.createBandAdvert);
+        createBandAdvert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createBandAdvert();
+            }
+        });
+        editBandAdvert = v.findViewById(R.id.editBandAdvert);
+        editBandAdvert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editBandAdvert();
+            }
+        });
+        createMusicianAdvert = v.findViewById(R.id.createMusicianAdvert);
+        createMusicianAdvert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createMusicianAdvert();
+            }
+        });
+        editMusicianAdvert = v.findViewById(R.id.editMusicianAdvert);
+        editMusicianAdvert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editMusicianAdvert();
+            }
+        });
         return v;
     }
 
@@ -110,7 +143,7 @@ public class PlaceholderVenueAdvertisement extends Fragment
     {
         Intent intent = new Intent(getActivity(), PerformerAdvertisementEditor.class);
         intent.putExtra("EXTRA_PERFORMER_ID", musicianRef);
-        intent.putExtra("EXTRA_LISTING_ID",musicianAdvertRef);
+        intent.putExtra("EXTRA_LISTING_ID",musicianPAdvertRef);
         intent.putExtra("EXTRA_PERFORMER_TYPE","Musician");
         startActivity(intent);
     }
@@ -135,7 +168,7 @@ public class PlaceholderVenueAdvertisement extends Fragment
     {
         Intent intent = new Intent(getActivity(), PerformerAdvertisementEditor.class);
         intent.putExtra("EXTRA_PERFORMER_ID", bandRef);
-        intent.putExtra("EXTRA_LISTING_ID",bandAdvertRef);
+        intent.putExtra("EXTRA_LISTING_ID",bandPAdvertRef);
         intent.putExtra("EXTRA_PERFORMER_TYPE","Band");
         startActivity(intent);
     }
@@ -144,6 +177,38 @@ public class PlaceholderVenueAdvertisement extends Fragment
     {
         Intent intent = new Intent(getActivity(), BandDetailsEditor.class);
         intent.putExtra("EXTRA_BAND_ID", bandRef);
+        startActivity(intent);
+    }
+
+    public void createBandAdvert()
+    {
+        Intent intent = new Intent(getActivity(), BandAdvertisementEditor.class);
+        intent.putExtra("EXTRA_BAND_ID", bandRef);
+        intent.putExtra("EXTRA_LISTING_ID","");
+        startActivity(intent);
+    }
+
+    public void editBandAdvert()
+    {
+        Intent intent = new Intent(getActivity(), BandAdvertisementEditor.class);
+        intent.putExtra("EXTRA_BAND_ID", bandRef);
+        intent.putExtra("EXTRA_LISTING_ID",bandAdvertRef);
+        startActivity(intent);
+    }
+
+    public void createMusicianAdvert()
+    {
+        Intent intent = new Intent(getActivity(), MusicianAdvertisementEditor.class);
+        intent.putExtra("EXTRA_MUSICIAN_ID", musicianRef);
+        intent.putExtra("EXTRA_LISTING_ID","");
+        startActivity(intent);
+    }
+
+    public void editMusicianAdvert()
+    {
+        Intent intent = new Intent(getActivity(), MusicianAdvertisementEditor.class);
+        intent.putExtra("EXTRA_MUSICIAN_ID", musicianRef);
+        intent.putExtra("EXTRA_LISTING_ID", musicianAdvertRef);
         startActivity(intent);
     }
 }

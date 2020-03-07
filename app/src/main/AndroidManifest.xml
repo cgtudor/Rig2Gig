@@ -24,6 +24,14 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
+            android:name=".BandAdvertisementEditor"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity
+            android:name=".MusicianAdvertisementEditor"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity
             android:name=".CreateMusicianAdvertisement"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
