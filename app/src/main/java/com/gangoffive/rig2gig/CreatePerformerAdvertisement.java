@@ -67,7 +67,7 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
         super.onCreate(savedInstanceState);
 
 
-        performerRef = getIntent().getStringExtra("EXTRA_BAND_ID");;
+        performerRef = getIntent().getStringExtra("EXTRA_BAND_ID");
         performerType = "Band";
 
         setContentView(R.layout.activity_create_performer_advertisement);

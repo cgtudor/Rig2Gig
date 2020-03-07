@@ -92,7 +92,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        musicianRef = "eg2wI0UaYsnuSfIccKbR";
+        musicianRef = "A6M0CzH2WMkw7FUIFkM8";
         type = "Musician";
 
         listingManager = new ListingManager(musicianRef, type, "");

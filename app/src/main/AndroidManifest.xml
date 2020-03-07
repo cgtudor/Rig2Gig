@@ -27,7 +27,10 @@
             android:name=".CreateMusicianAdvertisement"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CreatePerformerAdvertisement"
+            android:name=".PerformerAdvertisementEditor"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MusicianDetailsEditor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".VenueAdvertisementEditor"

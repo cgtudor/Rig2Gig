@@ -62,16 +62,61 @@ public class ListingManager
         if (type.equals("Band Performer"))
         {
             docRef = db.collection("bands").document(userRef);
-            imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
-            collectionPath = "performer-listings";
-            imagePath = "performance-listings";
+            if (listingRef.equals("profileEdit"))
+            {
+                collectionPath = "bands";
+                imagePath = collectionPath;
+                imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
+                listRef = db.collection(collectionPath).document(userRef);
+                listingImage = storageRef.child("/images/" + imagePath +
+                        "/" + userRef + ".jpg");
+            }
+            else
+            {
+                collectionPath = "performer-listings";
+                imagePath = "performance-listings";
+                if (listingRef.equals(""))
+                {
+                    imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
+                }
+                else
+                {
+                    imageRef = storageRef.child("/images/"+ imagePath +"/" + listingRef + ".jpg");
+                    listRef = db.collection(collectionPath).document(listingRef);
+                    listingImage = storageRef.child("/images/" + imagePath +
+                            "/" + listingRef + ".jpg");
+                }
+            }
         }
         else if (type.equals("Musician Performer"))
         {
             docRef = db.collection("musicians").document(userRef);
-            imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
-            collectionPath = "performer-listings";
-            imagePath = "performance-listings";
+            if (listingRef.equals("profileEdit"))
+            {
+                collectionPath = "musicians";
+                imagePath = collectionPath;
+                imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
+                listRef = db.collection(collectionPath).document(userRef);
+                listingImage = storageRef.child("/images/" + imagePath +
+                        "/" + userRef + ".jpg");
+            }
+            else
+            {
+                collectionPath = "performer-listings";
+                imagePath = "performance-listings";
+                if (listingRef.equals(""))
+                {
+                    imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
+                }
+                else
+                {
+                    imageRef = storageRef.child("/images/"+ imagePath +"/" + listingRef + ".jpg");
+                    listRef = db.collection(collectionPath).document(listingRef);
+                    listingImage = storageRef.child("/images/" + imagePath +
+                            "/" + listingRef + ".jpg");
+                }
+            }
+
         }
         else if (type.equals("Band"))
         {

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -98,6 +99,8 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
         /*Using Glide to load the picture from the reference directly into the ImageView*/
         GlideApp.with(this /* context */)
                 .load(musicianPic)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(musicianPhoto);
     }
 }
