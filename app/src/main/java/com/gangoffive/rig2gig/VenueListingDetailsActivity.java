@@ -23,6 +23,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -32,7 +33,6 @@ import java.util.HashMap;
 public class VenueListingDetailsActivity extends AppCompatActivity {
 
     private Button favourite;
-    private Button contact;
     private final StringBuilder expiry = new StringBuilder("");
     private final StringBuilder venueRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
@@ -52,7 +52,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.position);
         favourite = findViewById(R.id.favourite);
-        contact = findViewById(R.id.contact);
+        final Button contact = findViewById(R.id.contact);
 
         /*Used to get the id of the listing from the previous activity*/
         String vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");
@@ -88,6 +88,28 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                         rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
                                         listingOwner.append(document.get("user-ref").toString());
+
+                                        CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
+                                        sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if(task.isSuccessful())
+                                                        {
+                                                            QuerySnapshot query = task.getResult();
+                                                            if(!query.isEmpty())
+                                                            {
+                                                                contact.setAlpha(.5f);
+                                                                contact.setClickable(false);
+                                                                contact.setText("Contact request sent");
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            Log.e("FIREBASE", "Sent messages failed with ", task.getException());
+                                                        }
+                                                    }
+                                                });
 
                                         getSupportActionBar().setTitle(venueName.getText().toString());
                                     } else {
@@ -185,6 +207,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                     Toast.makeText(VenueListingDetailsActivity.this, "Contact request sent!", Toast.LENGTH_SHORT).show();
                                     contact.setAlpha(.5f);
                                     contact.setClickable(false);
+                                    contact.setText("Contact request sent");
                                 }
                                 else
                                 {
@@ -217,8 +240,6 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                         });
             }
         });
-
-
 
         //Temp wait for pic to upload
         try {
