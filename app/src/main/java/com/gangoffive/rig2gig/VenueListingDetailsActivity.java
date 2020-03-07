@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -31,8 +32,10 @@ import java.util.HashMap;
 public class VenueListingDetailsActivity extends AppCompatActivity {
 
     private Button favourite;
+    private Button contact;
     private final StringBuilder expiry = new StringBuilder("");
     private final StringBuilder venueRef = new StringBuilder("");
+    private final StringBuilder listingOwner = new StringBuilder("");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.position);
         favourite = findViewById(R.id.favourite);
+        contact = findViewById(R.id.contact);
 
         /*Used to get the id of the listing from the previous activity*/
         String vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");
@@ -83,9 +87,9 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                         venueName.setText(document.get("name").toString());
                                         rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
+                                        listingOwner.append(document.get("user-ref").toString());
 
                                         getSupportActionBar().setTitle(venueName.getText().toString());
-
                                     } else {
                                         Log.d("FIRESTORE", "No such document");
                                     }
@@ -107,6 +111,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
             }
         });
 
+        /*On clicking the favourite button we save the listing in the database and then we grey out the button*/
         favourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,7 +130,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful())
                                 {
-                                    Log.d("FIRESTORE", "Favourite successfull");
+                                    Log.d("FIRESTORE", "Favourite successful");
+                                    Toast.makeText(VenueListingDetailsActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
                                     favourite.setAlpha(.5f);
                                     favourite.setClickable(false);
                                 }
@@ -138,6 +144,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
             }
         });
 
+        /*If the listing already exists in the users favourites, then we grey out the button on create*/
         CollectionReference favVenues = db.collection("favourite-ads")
                 .document(FirebaseAuth.getInstance().getUid())
                 .collection("venue-listings");
@@ -156,6 +163,62 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+        contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HashMap<String, Object> request = new HashMap<>();
+                request.put("type", "contact-request");
+                request.put("posting-date", Timestamp.now());
+                request.put("sent-from", FirebaseAuth.getInstance().getUid());
+
+                CollectionReference received = db.collection("communications")
+                        .document(listingOwner.toString())
+                        .collection("received");
+                received.add(request)
+                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                if(task.isSuccessful())
+                                {
+                                    Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
+                                    Toast.makeText(VenueListingDetailsActivity.this, "Contact request sent!", Toast.LENGTH_SHORT).show();
+                                    contact.setAlpha(.5f);
+                                    contact.setClickable(false);
+                                }
+                                else
+                                {
+                                    Log.d("FIRESTORE", "Contact request failed with ", task.getException());
+                                }
+                            }
+                        });
+
+                HashMap<String, Object> requestSent = new HashMap<>();
+                requestSent.put("type", "contact-request");
+                requestSent.put("posting-date", Timestamp.now());
+                requestSent.put("sent-to", listingOwner.toString());
+                CollectionReference sent = db.collection("communications")
+                        .document(FirebaseAuth.getInstance().getUid())
+                        .collection("sent");
+
+                sent.add(requestSent)
+                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                if(task.isSuccessful())
+                                {
+                                    Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
+                                }
+                                else
+                                {
+                                    Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
+                                }
+                            }
+                        });
+            }
+        });
+
+
 
         //Temp wait for pic to upload
         try {

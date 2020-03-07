@@ -116,4 +116,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view14" />
 
+    <Button
+        android:id="@+id/contact"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_bg_rounded_corners"
+        android:text="Request Contact"
+        android:textAllCaps="false"
+        android:textColor="#FFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/favourite" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
