@@ -33,6 +33,9 @@
             android:name=".MusicianDetailsEditor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".BandDetailsEditor"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".VenueAdvertisementEditor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

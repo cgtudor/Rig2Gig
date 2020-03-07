@@ -62,7 +62,7 @@ public class ListingManager
         if (type.equals("Band Performer"))
         {
             docRef = db.collection("bands").document(userRef);
-            if (listingRef.equals("profileEdit"))
+/*            if (listingRef.equals("profileEdit"))
             {
                 collectionPath = "bands";
                 imagePath = collectionPath;
@@ -72,7 +72,7 @@ public class ListingManager
                         "/" + userRef + ".jpg");
             }
             else
-            {
+            {*/
                 collectionPath = "performer-listings";
                 imagePath = "performance-listings";
                 if (listingRef.equals(""))
@@ -86,12 +86,12 @@ public class ListingManager
                     listingImage = storageRef.child("/images/" + imagePath +
                             "/" + listingRef + ".jpg");
                 }
-            }
+/*            }*/
         }
         else if (type.equals("Musician Performer"))
         {
             docRef = db.collection("musicians").document(userRef);
-            if (listingRef.equals("profileEdit"))
+/*            if (listingRef.equals("profileEdit"))
             {
                 collectionPath = "musicians";
                 imagePath = collectionPath;
@@ -99,9 +99,9 @@ public class ListingManager
                 listRef = db.collection(collectionPath).document(userRef);
                 listingImage = storageRef.child("/images/" + imagePath +
                         "/" + userRef + ".jpg");
-            }
-            else
-            {
+            }*/
+/*            else
+            {*/
                 collectionPath = "performer-listings";
                 imagePath = "performance-listings";
                 if (listingRef.equals(""))
@@ -115,22 +115,52 @@ public class ListingManager
                     listingImage = storageRef.child("/images/" + imagePath +
                             "/" + listingRef + ".jpg");
                 }
-            }
+/*            }*/
 
         }
         else if (type.equals("Band"))
         {
             docRef = db.collection("bands").document(userRef);
             imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
-            collectionPath = "band-listings";
+            if (listingRef.equals("profileEdit"))
+            {
+                collectionPath = "bands";
+                /*imagePath = collectionPath;*/
+                /*imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");*/
+                listRef = db.collection(collectionPath).document(userRef);
+            }
+            else
+            {
+                /*imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");*/
+                collectionPath = "band-listings";
+                /*imagePath = collectionPath;*/
+            }
             imagePath = collectionPath;
+            listingImage = storageRef.child("/images/" + imagePath +
+                    "/" + userRef + ".jpg");
+
         }
         else if (type.equals("Musician"))
         {
             docRef = db.collection("musicians").document(userRef);
             imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
-            collectionPath = "musician-listings";
+            if (listingRef.equals("profileEdit"))
+            {
+                collectionPath = "musicians";
+                /*imagePath = collectionPath;*/
+                /*imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");*/
+                listRef = db.collection(collectionPath).document(userRef);
+            }
+            else
+            {
+                /*imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");*/
+                collectionPath = "musician-listings";
+                /*imagePath = collectionPath;*/
+            }
             imagePath = collectionPath;
+            listingImage = storageRef.child("/images/" + imagePath +
+                    "/" + userRef + ".jpg");
+
         }
         else if (type.equals("Venue"))
         {

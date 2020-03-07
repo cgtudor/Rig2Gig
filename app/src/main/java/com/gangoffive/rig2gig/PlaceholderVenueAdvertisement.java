@@ -87,7 +87,7 @@ public class PlaceholderVenueAdvertisement extends Fragment
                 editBandPerformerAd();
             }
         });
-        editBandDetails = v.findViewById(R.id.editMusicianDetails);
+        editBandDetails = v.findViewById(R.id.editBandDetails);
         editBandDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,8 +142,8 @@ public class PlaceholderVenueAdvertisement extends Fragment
 
     public void editBandDetails()
     {
-        Intent intent = new Intent(getActivity(), MusicianDetailsEditor.class);
-        intent.putExtra("EXTRA_MUSICIAN_ID", bandRef);
+        Intent intent = new Intent(getActivity(), BandDetailsEditor.class);
+        intent.putExtra("EXTRA_BAND_ID", bandRef);
         startActivity(intent);
     }
 }
