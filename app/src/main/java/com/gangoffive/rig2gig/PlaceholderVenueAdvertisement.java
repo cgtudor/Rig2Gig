@@ -17,9 +17,9 @@ public class PlaceholderVenueAdvertisement extends Fragment
             editBandAdvert, createBandAdvert,
             editMusicianAdvert, createMusicianAdvert;
     private String musicianRef = "A6M0CzH2WMkw7FUIFkM8";
-    private String musicianPAdvertRef = "8DVBTUHrV5ZWIS46aN6Z";
+    private String musicianPerformerAdvertRef = "8DVBTUHrV5ZWIS46aN6Z";
     private String bandRef = "S0lVRscAvnnE3sbqn9X5";
-    private String bandPAdvertRef = "Sbn1SoXanABp2Y3KSZbV";
+    private String bandPerformerAdvertRef = "Sbn1SoXanABp2Y3KSZbV";
 
     private String bandAdvertRef = "ELxzP1AmD24yfOjALC8Y";
     private String musicianAdvertRef = "J8wNIJeCHyapAJ11khir";
@@ -129,7 +129,7 @@ public class PlaceholderVenueAdvertisement extends Fragment
         });
         return v;
     }
-
+    //create ad for musicians advertising to venues (as performers)
     public void createMusicianPerformerAd()
     {
         Intent intent = new Intent(getActivity(), PerformerAdvertisementEditor.class);
@@ -139,15 +139,35 @@ public class PlaceholderVenueAdvertisement extends Fragment
         startActivity(intent);
     }
 
+    //edit ad for musicians advertising to venues (as performers)
     public void editMusicianPerformerAd()
     {
         Intent intent = new Intent(getActivity(), PerformerAdvertisementEditor.class);
         intent.putExtra("EXTRA_PERFORMER_ID", musicianRef);
-        intent.putExtra("EXTRA_LISTING_ID",musicianPAdvertRef);
+        intent.putExtra("EXTRA_LISTING_ID",musicianPerformerAdvertRef);
         intent.putExtra("EXTRA_PERFORMER_TYPE","Musician");
         startActivity(intent);
     }
 
+    //create ad for musicians advertising themselves to bands (ie musician looking for a band)
+    public void createMusicianAdvert()
+    {
+        Intent intent = new Intent(getActivity(), MusicianAdvertisementEditor.class);
+        intent.putExtra("EXTRA_MUSICIAN_ID", musicianRef);
+        intent.putExtra("EXTRA_LISTING_ID","");
+        startActivity(intent);
+    }
+
+    //edit ad for musicians advertising themselves to bands (ie musician looking for a band)
+    public void editMusicianAdvert()
+    {
+        Intent intent = new Intent(getActivity(), MusicianAdvertisementEditor.class);
+        intent.putExtra("EXTRA_MUSICIAN_ID", musicianRef);
+        intent.putExtra("EXTRA_LISTING_ID", musicianAdvertRef);
+        startActivity(intent);
+    }
+
+    //edit musician details (data held in musicians collection)
     public void editMusicianDetails()
     {
         Intent intent = new Intent(getActivity(), MusicianDetailsEditor.class);
@@ -155,6 +175,7 @@ public class PlaceholderVenueAdvertisement extends Fragment
         startActivity(intent);
     }
 
+    //create ad for bands advertising to venues (as performers)
     public void createBandPerformerAd()
     {
         Intent intent = new Intent(getActivity(), PerformerAdvertisementEditor.class);
@@ -164,22 +185,17 @@ public class PlaceholderVenueAdvertisement extends Fragment
         startActivity(intent);
     }
 
+    //edit ad for bands advertising to venues (as performers)
     public void editBandPerformerAd()
     {
         Intent intent = new Intent(getActivity(), PerformerAdvertisementEditor.class);
         intent.putExtra("EXTRA_PERFORMER_ID", bandRef);
-        intent.putExtra("EXTRA_LISTING_ID",bandPAdvertRef);
+        intent.putExtra("EXTRA_LISTING_ID",bandPerformerAdvertRef);
         intent.putExtra("EXTRA_PERFORMER_TYPE","Band");
         startActivity(intent);
     }
 
-    public void editBandDetails()
-    {
-        Intent intent = new Intent(getActivity(), BandDetailsEditor.class);
-        intent.putExtra("EXTRA_BAND_ID", bandRef);
-        startActivity(intent);
-    }
-
+    //create ad for bands advertising to musicians (ie band looking for new members)
     public void createBandAdvert()
     {
         Intent intent = new Intent(getActivity(), BandAdvertisementEditor.class);
@@ -188,6 +204,7 @@ public class PlaceholderVenueAdvertisement extends Fragment
         startActivity(intent);
     }
 
+    //edit ad for bands advertising to musicians (ie band looking for new members)
     public void editBandAdvert()
     {
         Intent intent = new Intent(getActivity(), BandAdvertisementEditor.class);
@@ -196,19 +213,15 @@ public class PlaceholderVenueAdvertisement extends Fragment
         startActivity(intent);
     }
 
-    public void createMusicianAdvert()
+    //edit band details (data held in bands collection)
+    public void editBandDetails()
     {
-        Intent intent = new Intent(getActivity(), MusicianAdvertisementEditor.class);
-        intent.putExtra("EXTRA_MUSICIAN_ID", musicianRef);
-        intent.putExtra("EXTRA_LISTING_ID","");
+        Intent intent = new Intent(getActivity(), BandDetailsEditor.class);
+        intent.putExtra("EXTRA_BAND_ID", bandRef);
         startActivity(intent);
     }
 
-    public void editMusicianAdvert()
-    {
-        Intent intent = new Intent(getActivity(), MusicianAdvertisementEditor.class);
-        intent.putExtra("EXTRA_MUSICIAN_ID", musicianRef);
-        intent.putExtra("EXTRA_LISTING_ID", musicianAdvertRef);
-        startActivity(intent);
-    }
+
+
+
 }

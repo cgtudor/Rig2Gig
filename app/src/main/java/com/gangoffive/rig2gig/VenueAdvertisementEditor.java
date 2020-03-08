@@ -64,7 +64,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tabbed_editor_layout);
+        setContentView(R.layout.activity_create_venue_advertisement);
         tabTitles = new int[]{R.string.image, R.string.details};
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
                 (this, getSupportFragmentManager(), tabTitles, fragments);

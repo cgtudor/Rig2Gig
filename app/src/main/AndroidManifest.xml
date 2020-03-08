@@ -20,10 +20,6 @@
         <activity android:name=".MusicianListingDetailsActivity" />
         <activity android:name=".VenueListingDetailsActivity" />
         <activity
-            android:name=".CreateBandAdvertisement"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan|adjustResize" />
-        <activity
             android:name=".BandAdvertisementEditor"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
@@ -31,9 +27,6 @@
             android:name=".MusicianAdvertisementEditor"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
-        <activity
-            android:name=".CreateMusicianAdvertisement"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PerformerAdvertisementEditor"
             android:theme="@style/AppTheme.NoActionBar" />

@@ -7,12 +7,17 @@ import androidx.fragment.app.Fragment;
 
 public class PlaceholderPerformerAdvertisement extends Fragment
 {
+    private String musicianRef = "A6M0CzH2WMkw7FUIFkM8";
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        startActivity(new Intent(getActivity(), CreatePerformerAdvertisement.class));
+        Intent intent = new Intent(getActivity(), PerformerAdvertisementEditor.class);
+        intent.putExtra("EXTRA_PERFORMER_ID", musicianRef);
+        intent.putExtra("EXTRA_LISTING_ID","");
+        intent.putExtra("EXTRA_PERFORMER_TYPE","Musician");
+        startActivity(intent);
         //Intent intent = new Intent(CreateBandAdvertisement.this, BandListingDetailsActivity.class);
     }
 }

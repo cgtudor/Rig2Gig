@@ -143,11 +143,10 @@ public class MyBandFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-
-
-
-                Intent intent = new Intent(getActivity(), CreatePerformerAdvertisement.class);
+                Intent intent = new Intent(getActivity(), PerformerAdvertisementEditor.class);
                 intent.putExtra("EXTRA_BAND_ID", bandRef);
+                intent.putExtra("EXTRA_LISTING_ID", "");
+                intent.putExtra("EXTRA_PERFORMER_TYPE", "Band");
                 startActivity(intent);
             }
         });
