@@ -1,6 +1,5 @@
 package com.gangoffive.rig2gig;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -9,21 +8,17 @@ import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -34,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 public class BandAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser, SearchView.OnQueryTextListener {
-
 
     private TextView name, position, description, searchHint;
     private Button createListing, cancel, galleryImage, takePhoto;
@@ -55,36 +49,30 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     private Drawable chosenPic;
     SectionsPagerAdapter sectionsPagerAdapter;
     ViewPager viewPager;
-    // for search bar
     private SearchView searchBar;
     private ListView listResults;
     private ArrayAdapter<String> resultsAdapter;
     private CharSequence query = null;
-
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
-
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             tabPreserver.onFocusChange(hasFocus);
         }
     };
-
     private TextWatcher textWatcher = new TextWatcher() {
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        public void onTextChanged(CharSequence s, int start, int before, int count)
+        {
             validateButton();
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-        }
+        public void afterTextChanged(Editable s) {}
     };
 
     @Override
@@ -100,17 +88,16 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         bandPositions = new ArrayList();
-
-
-
         bandRef = getIntent().getStringExtra("EXTRA_BAND_ID");
         String listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
         type = "Band";
-
         listingManager = new ListingManager(bandRef, type, listingRef);
         listingManager.getUserInfo(this);
     }
 
+    /**
+     * validate current data and grey out create button if necessary
+     */
     public void validateButton()
     {
         if (createListing != null && description!= null
@@ -129,7 +116,6 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         }
     }
 
-
     /**
      * Populate view if database request was successful
      * @param data band data
@@ -143,6 +129,11 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         listingManager.getImage(this);
     }
 
+    /**
+     * Populate view if database request was successful
+     * @param data band data
+     * @param listingData existing listing data
+     */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
         setViewReferences();
@@ -236,6 +227,9 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         }
     }
 
+    /**
+     * Initialises the search bar for position tab
+     */
     public void initialiseSearchBar()
     {
         if(listResults != null)
@@ -282,6 +276,11 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         return false;
     }
 
+    /**
+     * filter search bar list based on typed text
+     * @param typedText text enterd in search bar
+     * @return false
+     */
     @Override
     public boolean onQueryTextChange(String typedText) {
         Filter filter = resultsAdapter.getFilter();
@@ -289,6 +288,9 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         return true;
     }
 
+    /**
+     * set up grid view containing all positions selected by user
+     */
     public void setupGridView()
     {
         DeleteInstrumentAdapter customAdapter = new DeleteInstrumentAdapter(bandPositions, this);

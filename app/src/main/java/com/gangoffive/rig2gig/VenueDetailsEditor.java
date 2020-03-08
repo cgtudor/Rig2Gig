@@ -33,7 +33,6 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                                R.layout.fragment_description_changer};
     private Drawable chosenPic;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
-
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
@@ -43,9 +42,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
 
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -67,9 +64,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-
-        }
+        public void afterTextChanged(Editable s) {}
     };
 
     @Override
@@ -83,12 +78,9 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-
         venueRef = getIntent().getStringExtra("EXTRA_VENUE_ID");
         String listingRef = "profileEdit";
         type = "Venue";
-
-
         listingManager = new ListingManager(venueRef, type, listingRef);
         listingManager.getUserInfo(this);
     }
@@ -347,6 +339,9 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         startActivity(backToMain);
     }
 
+    /**
+     * Populate map with data from textviews
+     */
     @Override
     public void listingDataMap() {
         if (description != null && description.getText() != null && !description.getText().equals("") && venue != null)

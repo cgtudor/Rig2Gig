@@ -7,11 +7,9 @@ import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,12 +32,9 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     private int[] fragments = {R.layout.fragment_create_venue_advertisement_image,
             R.layout.fragment_create_venue_advertisement_details};
     private Drawable chosenPic;
-
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -56,9 +51,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-
-        }
+        public void afterTextChanged(Editable s) {}
     };
 
     @Override
@@ -72,13 +65,9 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-
-
         venueRef = getIntent().getStringExtra("EXTRA_VENUE_ID");
         listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
         type = "Venue";
-
-
         listingManager = new ListingManager(venueRef, type, listingRef);
         listingManager.getUserInfo(this);
     }
@@ -203,7 +192,6 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
         chosenPic = image.getDrawable();
     }
-
 
     /**
      * create advertisement, posting to database

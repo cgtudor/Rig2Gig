@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,9 +20,7 @@ import java.util.Map;
 
 public class MusicianDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
-
     private TextView name, location, distance, genres;
-            //, description;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
     private String musicianRef, type;
@@ -32,22 +29,17 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_image_changer,
             R.layout.fragment_musician_details_changer};
-            //, R.layout.fragment_description_changer};
     private Drawable chosenPic;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
-
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             tabPreserver.onFocusChange(hasFocus);
         }
     };
-
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -63,9 +55,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                     && location.getText().toString().trim().length() > 0
                     && distance.getText().toString().trim().length() > 0
                     && (Integer.parseInt(distance.getText().toString()) > 0)
-                    && genres.getText().toString().trim().length() > 0
-                    //&& description.getText().toString().trim().length() > 0
-                    )
+                    && genres.getText().toString().trim().length() > 0)
             {
                 createListing.setBackgroundColor(Color.parseColor("#008577"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
@@ -73,9 +63,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-
-        }
+        public void afterTextChanged(Editable s) {}
     };
 
     @Override
@@ -90,12 +78,9 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-
         musicianRef = getIntent().getStringExtra("EXTRA_MUSICIAN_ID");
         String listingRef = "profileEdit";
         type = "Musician";
-
-
         listingManager = new ListingManager(musicianRef, type, listingRef);
         listingManager.getUserInfo(this);
     }
@@ -166,12 +151,6 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             genres.setOnFocusChangeListener(editTextFocusListener);
             genres.addTextChangedListener(textWatcher);
         }
-/*        description = findViewById(R.id.description);
-        if (description != null)
-        {
-            description.setOnFocusChangeListener(editTextFocusListener);
-            description.addTextChangedListener(textWatcher);
-        }*/
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,10 +212,6 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         {
             genres.setText(musician.get("genres").toString());
         }
-/*        if(description != null && musician !=null)
-        {
-            description.setText(musician.get("description").toString());
-        }*/
     }
 
     /**
@@ -260,10 +235,6 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     public void reinitialiseTabs() {
         setViewReferences();
         populateInitialFields();
-/*        if (description != null && description.getText() == null)
-        {
-            description.setText(musician.get("description").toString());
-        }*/
     }
 
     @Override
@@ -344,12 +315,11 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         startActivity(backToMain);
     }
 
+    /**
+     * populate map with data from textviews
+     */
     @Override
     public void listingDataMap() {
-/*        if (description != null && description.getText() != null && !description.getText().equals("") && musician != null)
-        {
-            musician.put("description",description.getText().toString());
-        }*/
         if(name != null && name.getText() != null && musician != null)
         {
             musician.put("name",name.getText().toString());
@@ -397,5 +367,4 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     public ImageView getImageView() {
         return image;
     }
-
 }

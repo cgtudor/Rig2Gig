@@ -1,20 +1,12 @@
 package com.gangoffive.rig2gig;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.widget.ImageView;
 import androidx.annotation.NonNull;
-
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.signature.MediaStoreSignature;
-import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,8 +20,6 @@ import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,8 +35,6 @@ public class ListingManager
     private StorageReference storageRef, imageRef, listingImage;
     private Map<String, Object> userInfo,listingInfo;
     private String collectionPath, imagePath, listingRef;
-
-
 
     /**
      * Constructor for ListingManager
@@ -179,7 +167,6 @@ public class ListingManager
                             "/" + listingRef + ".jpg");
                 }
             }
-
         }
     }
 
@@ -230,6 +217,10 @@ public class ListingManager
         });
     }
 
+    /**
+     * Download existing record from database
+     * @param activity activity calling the method
+     */
     public void getListing(CreateAdvertisement activity)
     {
         listRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -258,6 +249,10 @@ public class ListingManager
         });
     }
 
+    /**
+     * Download image from database and set to image view
+     * @param activity calling activity
+     */
     public void getImage(CreateAdvertisement activity)
     {
         GlideApp.with((Activity)activity)
@@ -286,6 +281,12 @@ public class ListingManager
         }
     }
 
+    /**
+     * Create new record in database
+     * @param listing map of data to be created as document
+     * @param image image to be uploaded
+     * @param activity calling activity
+     */
     public void createAdvertisement (HashMap<String, Object> listing, Drawable image, CreateAdvertisement activity)
     {
         listing.put("expiry-date", new Timestamp(getExpiryDate()));
@@ -318,6 +319,12 @@ public class ListingManager
                 });
     }
 
+    /**
+     * Edit record in database
+     * @param listing map of data to be edited
+     * @param image new image to be uploaded
+     * @param activity calling activity
+     */
     public void editAdvertisement (HashMap<String, Object> listing, Drawable image, CreateAdvertisement activity)
     {
         db.runTransaction(new Transaction.Function<Void>() {
@@ -347,6 +354,11 @@ public class ListingManager
                 });
     }
 
+    /**
+     * Upload image to database
+     * @param image image to be uploaded
+     * @param activity calling activity
+     */
     public void uploadImage(Drawable image, CreateAdvertisement activity)
     {
         UploadTask uploadTask = listingImage.putBytes(imageToByteArray(image));
@@ -375,6 +387,7 @@ public class ListingManager
 
     /**
      * convert image of ImageView to byte array for uploading to database
+     * @param image image to be converted
      * @return byte array of image
      */
     public byte[] imageToByteArray(Drawable image)

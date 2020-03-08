@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,9 +20,7 @@ import java.util.Map;
 
 public class BandDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
-
     private TextView name, location, distance, genres, email, phone;
-    //, description;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
     private String bandRef, type;
@@ -32,22 +29,17 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_image_changer,
             R.layout.fragment_band_details_changer};
-    //, R.layout.fragment_description_changer};
     private Drawable chosenPic;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
-
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             tabPreserver.onFocusChange(hasFocus);
         }
     };
-
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -65,9 +57,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                     && (Integer.parseInt(distance.getText().toString()) > 0)
                     && genres.getText().toString().trim().length() > 0
                     && email.getText().toString().trim().length() > 0
-                    && phone.getText().toString().trim().length() > 0
-                //&& description.getText().toString().trim().length() > 0
-            )
+                    && phone.getText().toString().trim().length() > 0)
             {
                 createListing.setBackgroundColor(Color.parseColor("#008577"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
@@ -75,9 +65,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-
-        }
+        public void afterTextChanged(Editable s) {}
     };
 
     @Override
@@ -85,19 +73,15 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_editor_layout);
         tabTitles = new int[]{R.string.image, R.string.details};
-        //, R.string.description};
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
                 (this, getSupportFragmentManager(), tabTitles, fragments);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-
         bandRef = getIntent().getStringExtra("EXTRA_BAND_ID");
         String listingRef = "profileEdit";
         type = "Band";
-
-
         listingManager = new ListingManager(bandRef, type, listingRef);
         listingManager.getUserInfo(this);
     }
@@ -180,12 +164,6 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             phone.setOnFocusChangeListener(editTextFocusListener);
             phone.addTextChangedListener(textWatcher);
         }
-/*        description = findViewById(R.id.description);
-        if (description != null)
-        {
-            description.setOnFocusChangeListener(editTextFocusListener);
-            description.addTextChangedListener(textWatcher);
-        }*/
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,10 +233,6 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         {
             phone.setText(band.get("phone-number").toString());
         }
-/*        if(description != null && band !=null)
-        {
-            description.setText(band.get("description").toString());
-        }*/
     }
 
     /**
@@ -282,12 +256,11 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
     public void reinitialiseTabs() {
         setViewReferences();
         populateInitialFields();
-/*        if (description != null && description.getText() == null)
-        {
-            description.setText(band.get("description").toString());
-        }*/
     }
 
+    /**
+     * Begin process of preserving tab states
+     */
     @Override
     public void beginTabPreservation() {
         tabPreserver.preserveTabState();
@@ -305,7 +278,6 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
         chosenPic = image.getDrawable();
     }
-
 
     /**
      * create advertisement, posting to database
@@ -366,12 +338,12 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         startActivity(backToMain);
     }
 
+    /**
+     * Populate map with data in text views
+     */
     @Override
-    public void listingDataMap() {
-/*        if (description != null && description.getText() != null && !description.getText().equals("") && band != null)
-        {
-            band.put("description",description.getText().toString());
-        }*/
+    public void listingDataMap()
+    {
         if(name != null && name.getText() != null && band != null)
         {
             band.put("name",name.getText().toString());
@@ -396,7 +368,6 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         {
             band.put("phone-number",phone.getText().toString());
         }
-
     }
 
     /**

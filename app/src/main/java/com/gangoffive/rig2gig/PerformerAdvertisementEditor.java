@@ -11,10 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,9 +28,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     private Drawable chosenPic;
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -52,9 +48,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-
-        }
+        public void afterTextChanged(Editable s) {}
     };
 
 
@@ -81,7 +75,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
 
     /**
      * Populate view if database request was successful
-     * @param data band data
+     * @param data performer data
      */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
@@ -90,6 +84,11 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         listingManager.getImage(this);
     }
 
+    /**
+     * Populate view if database request was successful
+     * @param data performer data
+     * @param listingData existing listing data
+     */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
 
@@ -224,10 +223,6 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
                     Toast.LENGTH_LONG).show();
         }
     }
-
-
-
-
 
     /**
      * cancel advertisement creation

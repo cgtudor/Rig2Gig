@@ -7,11 +7,9 @@ import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -32,7 +30,6 @@ import java.util.Map;
 
 public class MusicianAdvertisementEditor extends AppCompatActivity  implements CreateAdvertisement, TabbedViewReferenceInitialiser, SearchView.OnQueryTextListener {
 
-
     private TextView name, position, description, searchHint;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
@@ -51,35 +48,29 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
             (this, getSupportFragmentManager(), tabTitles, fragments);
     ViewPager viewPager;
-    // for search bar
     private SearchView searchBar;
     private ListView listResults;
     private ArrayAdapter<String> resultsAdapter;
     private CharSequence query = null;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
-
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             tabPreserver.onFocusChange(hasFocus);
         }
     };
-
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        public void onTextChanged(CharSequence s, int start, int before, int count)
+        {
             validateButton();
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-
-        }
+        public void afterTextChanged(Editable s) {}
     };
 
     @Override
@@ -113,6 +104,11 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         listingManager.getImage(this);
     }
 
+    /**
+     * Populate view if database request was successful
+     * @param data band data
+     * @param listingData existing listing data
+     */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
         setViewReferences();
@@ -203,6 +199,9 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         }
     }
 
+    /**
+     * Initialises the search bar for position tab
+     */
     public void initialiseSearchBar()
     {
         if(listResults != null)
@@ -249,6 +248,11 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         return false;
     }
 
+    /**
+     * filter search bar list based on typed text
+     * @param typedText text enterd in search bar
+     * @return false
+     */
     @Override
     public boolean onQueryTextChange(String typedText) {
         Filter filter = resultsAdapter.getFilter();
@@ -256,6 +260,9 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         return true;
     }
 
+    /**
+     * set up grid view containing all positions selected by user
+     */
     public void setupGridView()
     {
         DeleteInstrumentAdapter customAdapter = new DeleteInstrumentAdapter(bandPositions, this);
@@ -278,6 +285,9 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         validateButton();
     }
 
+    /**
+     * validate current data and grey out create button if necessary
+     */
     public void validateButton()
     {
         if (createListing != null && description!= null
@@ -354,6 +364,9 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         }
     }
 
+    /**
+     * Begin process of preserving tab states
+     */
     @Override
     public void beginTabPreservation() {
         tabPreserver.preserveTabState();
@@ -371,7 +384,6 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
         chosenPic = image.getDrawable();
     }
-
 
     /**
      * create advertisement, posting to database
