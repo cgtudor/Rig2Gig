@@ -285,7 +285,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
             Toast.makeText(this,"Details updated successfully",
                     Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(MusicianDetailsEditor.this, MainActivity.class);
+            Intent intent = new Intent(MusicianDetailsEditor.this, NavBarActivity.class);
             Toast.makeText(MusicianDetailsEditor.this,
                     "Details successfully updated",
                     Toast.LENGTH_LONG).show();

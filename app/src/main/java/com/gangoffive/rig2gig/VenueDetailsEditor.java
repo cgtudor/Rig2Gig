@@ -335,7 +335,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
      */
     @Override
     public void cancelAdvertisement() {
-        Intent backToMain = new Intent(VenueDetailsEditor.this, MainActivity.class);
+        Intent backToMain = new Intent(VenueDetailsEditor.this, NavBarActivity.class);
         startActivity(backToMain);
     }
 

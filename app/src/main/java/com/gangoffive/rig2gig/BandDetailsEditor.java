@@ -308,7 +308,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
             Toast.makeText(this,"Details updated successfully",
                     Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(BandDetailsEditor.this, MainActivity.class);
+            Intent intent = new Intent(BandDetailsEditor.this, NavBarActivity.class);
             Toast.makeText(BandDetailsEditor.this,
                     "Details successfully updated",
                     Toast.LENGTH_LONG).show();
