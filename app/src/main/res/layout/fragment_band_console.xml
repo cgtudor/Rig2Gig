@@ -59,12 +59,12 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/card_view_edit_musician"
+            android:id="@+id/card_view_edit_band"
             android:layout_width="160dp"
             android:layout_height="165dp"
             android:layout_margin="3dp"
             android:elevation="8dp"
-            android:tag="Edit Musician"
+            android:tag="Edit Band"
             android:visibility="gone">
 
             <LinearLayout
@@ -84,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="@string/edit_musician"
+                    android:text="@string/edit_band"
                     android:textStyle="bold" />
 
                 <View
@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="Edit Musician details"
+                    android:text="Edit Band details"
                     android:textColor="@color/darkGrey" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -112,13 +112,13 @@
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/card_view_my_bands"
+            android:id="@+id/card_view_invite_musician"
             android:layout_width="160dp"
             android:layout_height="165dp"
             android:layout_margin="3dp"
-            android:visibility="gone"
-            android:tag="My Bands"
-            android:elevation="8dp">
+            android:tag="Invite Musician"
+            android:elevation="8dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -138,7 +138,7 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:layout_marginTop="10dp"
-                    android:text="My Bands"/>
+                    android:text="@string/invite_musicians"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -150,7 +150,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="View your bands"
+                    android:text="@string/search_new_talent"
                     android:padding="5dp"
                     android:textColor="@color/darkGrey"/>
             </LinearLayout>
@@ -195,7 +195,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Musician advert"
+                    android:text="Band advert"
                     android:padding="5dp"
                     android:textColor="@color/darkGrey"/>
             </LinearLayout>
