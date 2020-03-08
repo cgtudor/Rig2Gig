@@ -115,8 +115,8 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
                                         {
                                             CardView editProfileLayout;
 
-                                            System.out.println("performer REF GET =================== " + adverts.get("performer-ref"));
-                                            System.out.println("performer REF LOCAL ================= " + musicianRef);
+                                            System.out.println("BAND REF GET =================== " + adverts.get("band-ref"));
+                                            System.out.println("BAND REF LOCAL ================= " + musicianRef);
 
                                             if(adverts.get("performer-ref").toString().equals(musicianRef))
                                             {
