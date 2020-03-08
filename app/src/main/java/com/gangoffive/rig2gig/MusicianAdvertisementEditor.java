@@ -38,7 +38,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     private ImageView image;
     private String musicianRef, type;
     private HashMap<String, Object> listing;
-    private Map<String, Object> musician;
+    private Map<String, Object> musician, previousListing;
     private ListingManager listingManager;
     private int[] tabTitles = {R.string.image, R.string.position, R.string.details};
     private int[] fragments = {R.layout.fragment_create_musician_advertisement_image,
@@ -115,7 +115,17 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
 
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
-
+        setViewReferences();
+        musician = data;
+        previousListing = listingData;
+        bandPositions = (ArrayList)previousListing.get("position");
+        for (Object pos : bandPositions)
+        {
+            positions.remove(pos.toString());
+        }
+        setupGridView();
+        searchHint.setVisibility(View.INVISIBLE);
+        listingManager.getImage(this);
     }
 
     /**
@@ -270,13 +280,13 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
 
     public void validateButton()
     {
-        if (createListing != null
+        if (createListing != null && description!= null
                 &&  (bandPositions.size() == 0
                 || description.getText().toString().trim().length() == 0)) {
             createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
             createListing.setTextColor(Color.parseColor("#4D4D4E"));
         }
-        else if (createListing != null
+        else if (createListing != null && description!= null
                 && description.getText().toString().trim().length() > 0
                 && bandPositions.size() > 0)
         {
@@ -298,6 +308,20 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         {
             image.setImageDrawable(chosenPic);
         }
+        if (description != null && previousListing != null
+                && (listing != null && listing.get("description").toString() == null))
+        {
+            description.setText(previousListing.get("description").toString());
+        }
+        else if (description != null && previousListing != null)
+        {
+            if (listing == null)
+            {
+                listing = new HashMap<>();
+                listing.put("description",previousListing.get("description"));
+            }
+            description.setText(listing.get("description").toString());
+        }
     }
 
     /**
@@ -310,7 +334,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         {
             chosenPic = (image.getDrawable());
         }
-        if (description != null && description.getText() == null)
+        if (description != null && description.getText() != null && listing != null)
         {
             listing.put("description",description.getText().toString());
         }

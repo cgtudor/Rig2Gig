@@ -383,6 +383,10 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                 }
             }
         }
+        if (Integer.parseInt(distance.getText().toString()) < 1)
+        {
+            return false;
+        }
         return true;
     }
 

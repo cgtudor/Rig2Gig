@@ -41,7 +41,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     private ImageView image;
     private String bandRef, type;
     private HashMap<String, Object> listing;
-    private Map<String, Object> band;
+    private Map<String, Object> band, previousListing;
     private ListingManager listingManager;
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_create_band_advertisement_image,
@@ -55,7 +55,6 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     private Drawable chosenPic;
     SectionsPagerAdapter sectionsPagerAdapter;
     ViewPager viewPager;
-
     // for search bar
     private SearchView searchBar;
     private ListView listResults;
@@ -114,20 +113,22 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
 
     public void validateButton()
     {
-        if (createListing != null
-                &&  (bandPositions.size() == 0
-                || description.getText().toString().trim().length() == 0)) {
+        if (createListing != null && description!= null
+            &&  (bandPositions.size() == 0
+            || description.getText().toString().trim().length() == 0))
+        {
             createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
             createListing.setTextColor(Color.parseColor("#4D4D4E"));
         }
-        else if (createListing != null
-                && description.getText().toString().trim().length() > 0
-                && bandPositions.size() > 0)
+        else if (createListing != null && description!= null
+            && description.getText().toString().trim().length() > 0
+            && bandPositions.size() > 0)
         {
             createListing.setBackgroundColor(Color.parseColor("#008577"));
             createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
     }
+
 
     /**
      * Populate view if database request was successful
@@ -144,7 +145,17 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
 
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
-
+        setViewReferences();
+        band = data;
+        previousListing = listingData;
+        bandPositions = (ArrayList)previousListing.get("position");
+        for (Object pos : bandPositions)
+        {
+            positions.remove(pos.toString());
+        }
+        setupGridView();
+        searchHint.setVisibility(View.INVISIBLE);
+        listingManager.getImage(this);
     }
 
     /**
@@ -313,6 +324,20 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         {
             image.setImageDrawable(chosenPic);
         }
+        if (description != null && previousListing != null
+                && (listing != null && listing.get("description").toString() == null))
+        {
+            description.setText(previousListing.get("description").toString());
+        }
+        else if (description != null && previousListing != null)
+        {
+            if (listing == null)
+            {
+                listing = new HashMap<>();
+                listing.put("description",previousListing.get("description"));
+            }
+            description.setText(listing.get("description").toString());
+        }
     }
 
     /**
@@ -455,7 +480,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         {
             chosenPic = (image.getDrawable());
         }
-        if (description != null && description.getText() == null)
+        if (description != null && description.getText() != null && listing != null)
         {
             listing.put("description",description.getText().toString());
         }

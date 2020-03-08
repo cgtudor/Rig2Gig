@@ -21,8 +21,8 @@ public class PlaceholderVenueAdvertisement extends Fragment
     private String bandRef = "S0lVRscAvnnE3sbqn9X5";
     private String bandPAdvertRef = "Sbn1SoXanABp2Y3KSZbV";
 
-    private String bandAdvertRef = "";
-    private String musicianAdvertRef = "";
+    private String bandAdvertRef = "ELxzP1AmD24yfOjALC8Y";
+    private String musicianAdvertRef = "J8wNIJeCHyapAJ11khir";
 
     @Override
     public View onCreateView(LayoutInflater l, ViewGroup vg, Bundle b)

@@ -414,6 +414,10 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                 }
             }
         }
+        if (Integer.parseInt(distance.getText().toString()) < 1)
+        {
+            return false;
+        }
         return true;
     }
 
