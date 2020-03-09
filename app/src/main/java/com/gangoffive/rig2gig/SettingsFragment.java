@@ -33,7 +33,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         setupPreferences();
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
-        if(CredentialActivity.userType.equals("Band"))
+        if(AccountPurposeActivity.userType.equals("Band"))
         {
             Preference preference = getPreferenceManager().findPreference("MusicianUpgrade");
             preference.setVisible(true);

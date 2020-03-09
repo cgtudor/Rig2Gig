@@ -4,6 +4,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AccountPurposeActivity">
+    tools:context=".AccountPurposeActivity"
+    android:background="@drawable/gradient">
+
+    <RadioGroup
+        android:id="@+id/userRadioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountType">
+
+        <RadioButton
+            android:id="@+id/radioBtnFan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="#FFFFFF"
+            android:text="Fan"
+            android:textColor="#FFFFFF" />
+
+        <RadioButton
+            android:id="@+id/radioBtnMusician"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="#FFFFFF"
+            android:text="Musician"
+            android:textColor="#FFFFFF" />
+
+        <RadioButton
+            android:id="@+id/radioBtnVenue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="#FFFFFF"
+            android:text="Venue"
+            android:textColor="#FFFFFF" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/accountType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Account Type"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/submitBtn"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/transparent_button"
+        android:onClick="submitBtnOnClick"
+        android:text="Submit"
+        android:textAllCaps="false"
+        android:textColor="#FFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userRadioGroup" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
