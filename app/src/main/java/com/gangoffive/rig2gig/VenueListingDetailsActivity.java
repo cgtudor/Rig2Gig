@@ -3,10 +3,14 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,7 +29,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
 
         final ImageView venuePhoto = findViewById(R.id.bandPhoto);
         final TextView venueName = findViewById(R.id.bandName);
-        final TextView description = findViewById(R.id.genres);
+        final TextView description = findViewById(R.id.description);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.position);
 
@@ -92,8 +96,17 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         StorageReference venuePic = storage.getReference().child("/images/venue-listings/" + vID + ".jpg");
 
         /*Using Glide to load the picture from the reference directly into the ImageView*/
-        GlideApp.with(this /* context */)
+
+        GlideApp.with(this)
                 .load(venuePic)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(venuePhoto);
     }
+
+    /*@Override
+    public void onBackPressed()
+    {
+        startActivity(new Intent(this, NavBarActivity.class));
+    }*/
 }

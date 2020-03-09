@@ -1,9 +1,13 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,6 +28,35 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
     private HashMap<String, Object> listing;
     private Map<String, Object> band;
     private ListingManager listingManager;
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if ((s.toString().trim().length() == 0 || s.toString().equals("0"))
+                    && createListing != null) {
+                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+            }
+            else if (before == 0 && count == 1 && createListing != null
+                    && name.getText().toString().trim().length() > 0
+                    && distance.getText().toString().trim().length() > 0
+                    && (Integer.parseInt(distance.getText().toString()) > 0))
+            {
+                createListing.setBackgroundColor(Color.parseColor("#008577"));
+                createListing.setTextColor(Color.parseColor("#FFFFFF"));
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
 
     /**
      * setup view and listing manager, initiating getting performer info from database
@@ -33,14 +66,15 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        performerRef = "TvuDGJwqX13vJ6LWZYB2";
+
+        performerRef = getIntent().getStringExtra("EXTRA_BAND_ID");;
         performerType = "Band";
 
         setContentView(R.layout.activity_create_performer_advertisement);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        listingManager = new ListingManager(performerRef, getListingType());
+        listingManager = new ListingManager(performerRef, getListingType(), "");
         listingManager.getUserInfo(this);
     }
 
@@ -77,6 +111,7 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
         name = findViewById(R.id.name);
         image = findViewById(R.id.image);
         distance = findViewById(R.id.distance);
+        distance.addTextChangedListener(textWatcher);
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +174,9 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Intent intent = new Intent(CreatePerformerAdvertisement.this, PerformanceListingDetailsActivity.class);
+            Toast.makeText(this,"Advertisement created successfully",
+                    Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, PerformanceListingDetailsActivity.class);
             intent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingManager.getListingRef());
             startActivity(intent);
             finish();
@@ -165,6 +202,11 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
         band = data;
         setViewReferences();
         listingManager.getImage(this);
+    }
+
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
+
     }
 
     /**
@@ -193,7 +235,7 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
         if (listing == null) {
             listing = new HashMap<>();
             listing.put("performer-ref", performerRef);
-            listing.put("type", performerType);
+            listing.put("performer-type", performerType);
         }
         listing.put("distance", distance.getText().toString());
     }
@@ -210,7 +252,14 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
                 return false;
             }
         }
-        return true;
+        if (listing.get("distance").toString().equals("0"))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     /**

@@ -13,4 +13,7 @@ public interface TabbedViewReferenceInitialiser {
      * reinitialise views in tabs which may have been destroyed
      */
     public void reinitialiseTabs();
+
+
+    public void beginTabPreservation();
 }

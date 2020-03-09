@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -48,6 +49,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 return true;
             }
         });
+        Preference logout = getPreferenceManager().findPreference("Logout");
+        logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                fbLogout();
+                return true;
+            }
+        });
     }
 
     /**
@@ -70,13 +79,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
                         Preference preference;
 
                         preference = getPreferenceManager().findPreference("UserName");
-                        preference.setSummary(document.get("Username").toString());
+                        preference.setSummary(document.get("username").toString());
 
                         preference = getPreferenceManager().findPreference("FullName");
-                        preference.setSummary(document.get("Full Name").toString());
+                        preference.setSummary(document.get("given-name").toString() + " " + document.get("family-name").toString());
 
                         preference = getPreferenceManager().findPreference("UserEmailAddress");
-                        preference.setSummary(document.get("Email Address").toString());
+                        preference.setSummary(document.get("email").toString());
                     }
                     else
                     {
@@ -98,5 +107,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
     {
         ChangePasswordDialog changePasswordDialog = new ChangePasswordDialog();
         changePasswordDialog.show(getFragmentManager(), "Dialog");
+    }
+
+    private void fbLogout()
+    {
+        FirebaseAuth fAuth = FirebaseAuth.getInstance();
+        fAuth.signOut();
+        startActivity(new Intent(getContext(), LoginActivity.class));
     }
 }

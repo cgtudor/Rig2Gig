@@ -21,6 +21,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".NavBarActivity"></activity>
+        <activity android:name=".VenueActivity"></activity>
+        <activity android:name=".MyBandActivity" />
+        <activity android:name=".CreateBandActivity"></activity>
+
         <activity android:name=".BandListingDetailsActivity" />
         <activity android:name=".MusicianListingDetailsActivity" />
         <activity android:name=".VenueListingDetailsActivity" />
@@ -35,17 +43,23 @@
             android:name=".CreatePerformerAdvertisement"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CreateVenueAdvertisement"
+            android:name=".VenueAdvertisementEditor"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VenueDetailsEditor"
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- android:theme="@style/AppTheme" -->
+        <!-- android:windowSoftInputMode="adjustResize"/> -->
         <activity android:name=".PerformanceListingDetailsActivity" />
         <activity android:name=".CredentialActivity" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".MainActivity" />
-        <activity
-            android:name=".NavBarActivity"
-            android:parentActivityName=".MainActivity" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
         <activity
             android:name=".ConcreteFanNavBar"
             android:parentActivityName=".NavBarActivity" />

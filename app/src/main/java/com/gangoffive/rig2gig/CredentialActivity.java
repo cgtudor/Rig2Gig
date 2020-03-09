@@ -16,7 +16,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -65,9 +64,9 @@ public class CredentialActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        cFirstName = findViewById(R.id.cFirstName);
-        cLastName = findViewById(R.id.cLastName);
-        cUsername = findViewById(R.id.cUsername);
+        cFirstName = findViewById(R.id.name);
+        cLastName = findViewById(R.id.location);
+        cUsername = findViewById(R.id.description);
         cPhoneNumber = findViewById(R.id.cPhoneNumber);
         userGroup = findViewById(R.id.userRadioGroup);
 
@@ -122,7 +121,6 @@ public class CredentialActivity extends AppCompatActivity {
         }
         if (password.length() < 6) {
             rPassword.setError("Password needs to be 6 characters or longer!");
-            return;
         }
 
         if (TextUtils.isEmpty(firstName)) {
@@ -166,17 +164,19 @@ public class CredentialActivity extends AppCompatActivity {
                                         user.put("family-name", lastName);
                                         user.put("username", username);
                                         user.put("phone", phoneNumber);
-                                        user.put("gender", gender);
                                         user.put("user-type", userType);
                                         documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Toast.makeText(CredentialActivity.this, "Information Added", Toast.LENGTH_SHORT).show();
-                                                if (userType == "Venue")
+                                                if (userType.equals("Venue"))
                                                 {
-                                                    //startActivity(new Intent(getApplicationContext(), Venue.class));
+                                                    startActivity(new Intent(getApplicationContext(), VenueActivity.class));
                                                 }
-                                                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                                                else
+                                                    {
+                                                        startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                                                    }
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
@@ -203,5 +203,14 @@ public class CredentialActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /**
+     * This method is used to handle the back button.
+     */
+    @Override
+    public void onBackPressed()
+    {
+        Toast.makeText(CredentialActivity.this, "Please fill in your credentials", Toast.LENGTH_LONG).show();
     }
 }

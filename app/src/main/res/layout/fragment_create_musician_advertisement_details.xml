@@ -29,11 +29,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/genres" />
+        app:layout_constraintTop_toBottomOf="@+id/description" />
 
 
     <EditText
-        android:id="@+id/genres"
+        android:id="@+id/description"
         android:layout_width="336dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

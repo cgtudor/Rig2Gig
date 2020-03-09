@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity{
     Button loginBtn;
     TextView registerBtn, forgotPasswordBtn;
     EditText emailAddress, password;
+    private boolean minimise;
 
     /**
      * When the onCreate is called previous states from the activity can be restored.
@@ -354,6 +355,33 @@ public class LoginActivity extends AppCompatActivity{
      */
     public void forgotPasswordBtn(View view) {
         startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
+    }
+
+    /**
+     * This method is used to handle the back button.
+     */
+    @Override
+    public void onBackPressed()
+    {
+        if(minimise)
+        {
+            this.moveTaskToBack(true);
+        }
+        else
+        {
+            Toast.makeText(LoginActivity.this, "Press back again to exit.", Toast.LENGTH_SHORT).show();
+            minimise = true;
+        }
+    }
+
+    /**
+     * This method is used to handle resuming an activity.
+     */
+    @Override
+    public void onResume()
+    {
+        minimise = false;
+        super.onResume();
     }
 }
 
