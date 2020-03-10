@@ -21,11 +21,13 @@ public class AccountPurposeActivity extends AppCompatActivity {
 
     public void musicianBtnOnClick(View view) {
         userType = "Musician";
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " +  userType);
         startActivity(new Intent(getApplicationContext(), CredentialActivity.class));
     }
 
     public void venueBtnOnClick(View view) {
         userType = "Venue";
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " +  userType);
         startActivity(new Intent(getApplicationContext(), CredentialActivity.class));
     }
 }

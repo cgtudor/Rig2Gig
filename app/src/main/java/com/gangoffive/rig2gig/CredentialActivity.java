@@ -83,7 +83,6 @@ public class CredentialActivity extends AppCompatActivity {
         String lastName = cLastName.getText().toString();
         String username = cUsername.getText().toString();
         String phoneNumber = cPhoneNumber.getText().toString();
-        String userType = AccountPurposeActivity.userType;
 
         final String email = rEmailAddress.getText().toString().trim();
         String confirmEmail = rConfirmEmail.getText().toString().trim();
@@ -158,15 +157,18 @@ public class CredentialActivity extends AppCompatActivity {
                                         user.put("given-name", firstName);
                                         user.put("family-name", lastName);
                                         user.put("username", username);
-                                        user.put("phone", phoneNumber);
-                                        user.put("user-type", userType);
+                                        user.put("phone-number", phoneNumber);
+                                        user.put("user-type", AccountPurposeActivity.userType);
                                         documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Toast.makeText(CredentialActivity.this, "Information Added", Toast.LENGTH_SHORT).show();
-                                                if (userType.equals("Venue"))
+                                                if (AccountPurposeActivity.userType.equals("Venue"))
                                                 {
                                                     startActivity(new Intent(getApplicationContext(), VenueActivity.class));
+                                                }
+                                                else if (AccountPurposeActivity.userType.equals("Musician")){
+                                                    startActivity(new Intent(getApplicationContext(), CreateMusicianAccountActivity.class));
                                                 }
                                                 else
                                                     {

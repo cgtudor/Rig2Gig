@@ -120,8 +120,8 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
         String loc = location.getText().toString();
         String venueName = name.getText().toString();
         String venueRating = "-1";
-        ImageView image = new ImageView(this);
-        image.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
+        ImageView defImg = new ImageView(this);
+        defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
 
         if (TextUtils.isEmpty(loc)) {
             location.setError("Please Set A Locaton!");
@@ -146,7 +146,7 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
                         if (document.exists())
                         {
                             Log.d(TAG, "Document exists!");
-                            phoneNumber = document.get("phone").toString();
+                            phoneNumber = document.get("phone-number").toString();
 
                             Map<String, Object> venues = new HashMap<>();
                             venues.put("name", venueName);

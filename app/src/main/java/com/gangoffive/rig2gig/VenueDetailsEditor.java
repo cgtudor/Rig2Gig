@@ -230,7 +230,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         }
         if(email != null && venue !=null)
         {
-            email.setText(venue.get("email").toString());
+            email.setText(venue.get("email-address").toString());
         }
         if(phone != null && venue !=null)
         {

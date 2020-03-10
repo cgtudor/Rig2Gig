@@ -51,7 +51,7 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_venue);
+        setContentView(R.layout.activity_create_musician_account);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -91,8 +91,9 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
         String loc = location.getText().toString();
         String musicianName = name.getText().toString();
         String musicianDistance = distance.getText().toString();
-        ImageView image = new ImageView(this);
-        image.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
+        String genres = genre.getText().toString();
+        ImageView defImg = new ImageView(this);
+        defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
 
         if (TextUtils.isEmpty(loc)) {
             location.setError("Please Set A Locaton!");
@@ -116,24 +117,24 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
                     if (document.exists())
                     {
                         Log.d(TAG, "Document exists!");
-                        phoneNumber = document.get("phone").toString();
+                        phoneNumber = document.get("phone-number").toString();
 
-                        Map<String, Object> venues = new HashMap<>();
-                        venues.put("name", musicianName);
-                        venues.put("location", loc);
-                        venues.put("user-ref", userRef);
-                        venues.put("email-address", email);
-                        venues.put("phone-number", phoneNumber);
-                        venues.put("genres", genre);
-                        venues.put("distance", musicianDistance);
-                        fStore.collection("venues")
-                                .add(venues)
+                        Map<String, Object> musicians = new HashMap<>();
+                        musicians.put("name", musicianName);
+                        musicians.put("location", loc);
+                        musicians.put("user-ref", userRef);
+                        musicians.put("email-address", email);
+                        musicians.put("phone-number", phoneNumber);
+                        musicians.put("genres", genres);
+                        musicians.put("distance", musicianDistance);
+                        fStore.collection("musicians")
+                                .add(musicians)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
                                         Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                                         StorageReference sRef = fStorage.getReference()
-                                                .child("/images/venues/" + documentReference.getId() + ".jpg");
+                                                .child("/images/musicians/" + documentReference.getId() + ".jpg");
                                         UploadTask uploadTask = sRef.putBytes(imageToByteArray(image.getDrawable()));
                                         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                             @Override
