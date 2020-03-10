@@ -31,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.sql.Time;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
@@ -127,7 +128,8 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                        expiry.append(document.get("expiry-date").toString());
+                        Timestamp expiryDate = (Timestamp) document.get("expiry-date");
+                        expiry.append(expiryDate.toDate().toString());
                         performerRef.append(document.get("performer-ref").toString());
                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
                     } else {
