@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:clipToPadding="false"
+
+        android:gravity="center"
         android:orientation="horizontal"
         android:scrollbars="none">
 
@@ -18,43 +21,43 @@
             android:layout_width="160dp"
             android:layout_height="165dp"
             android:layout_margin="3dp"
-            android:visibility="gone"
-            android:tag="View Performers"
-            android:elevation="8dp">
+
+            android:elevation="8dp"
+            android:tag="View Performers">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:scrollbars="none">
 
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_view_venues"
-                    android:padding="10dp"/>
+                    android:padding="10dp"
+                    android:src="@drawable/ic_view_venues" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:layout_marginTop="10dp"
-                    android:text="@string/view_performers"/>
+                    android:text="@string/view_performers"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/lightGrey"
-                    android:layout_margin="10dp"/>
+                    android:layout_margin="10dp"
+                    android:background="@color/lightGrey" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="View all performers here"
                     android:padding="5dp"
-                    android:textColor="@color/darkGrey"/>
+                    android:text="View all performers here"
+                    android:textColor="@color/darkGrey" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -63,43 +66,43 @@
             android:layout_width="160dp"
             android:layout_height="165dp"
             android:layout_margin="3dp"
-            android:visibility="gone"
+            android:elevation="8dp"
             android:tag="Edit Venue"
-            android:elevation="8dp">
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:scrollbars="none">
 
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_settings"
-                    android:padding="10dp"/>
+                    android:padding="10dp"
+                    android:src="@drawable/ic_settings" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:layout_marginTop="10dp"
-                    android:text="@string/view_edit_venue"/>
+                    android:text="@string/view_edit_venue"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/lightGrey"
-                    android:layout_margin="10dp"/>
+                    android:layout_margin="10dp"
+                    android:background="@color/lightGrey" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Edit your Venue details here"
                     android:padding="5dp"
-                    android:textColor="@color/darkGrey"/>
+                    android:text="Edit your Venue details here"
+                    android:textColor="@color/darkGrey" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
@@ -107,8 +110,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:clipToPadding="false"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
@@ -116,43 +119,43 @@
             android:layout_width="160dp"
             android:layout_height="165dp"
             android:layout_margin="3dp"
-            android:visibility="gone"
+            android:elevation="8dp"
             android:tag="Edit Advert"
-            android:elevation="8dp">
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:scrollbars="none">
 
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_settings"
-                    android:padding="10dp"/>
+                    android:padding="10dp"
+                    android:src="@drawable/ic_settings" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:layout_marginTop="10dp"
-                    android:text="Edit Advert"/>
+                    android:text="Edit Advert"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/lightGrey"
-                    android:layout_margin="10dp"/>
+                    android:layout_margin="10dp"
+                    android:background="@color/lightGrey" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Edit your Venue advert here"
                     android:padding="5dp"
-                    android:textColor="@color/darkGrey"/>
+                    android:text="Edit your Venue advert here"
+                    android:textColor="@color/darkGrey" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -161,43 +164,43 @@
             android:layout_width="160dp"
             android:layout_height="165dp"
             android:layout_margin="3dp"
-            android:visibility="gone"
+            android:elevation="8dp"
             android:tag="View Advert"
-            android:elevation="8dp">
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:scrollbars="none">
 
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_view_bands"
-                    android:padding="10dp"/>
+                    android:padding="10dp"
+                    android:src="@drawable/ic_view_bands" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:layout_marginTop="10dp"
-                    android:text="View Advert"/>
+                    android:text="View Advert"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/lightGrey"
-                    android:layout_margin="10dp"/>
+                    android:layout_margin="10dp"
+                    android:background="@color/lightGrey" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="View Venue details here"
                     android:padding="5dp"
-                    android:textColor="@color/darkGrey"/>
+                    android:text="View Venue details here"
+                    android:textColor="@color/darkGrey" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
@@ -205,8 +208,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:clipToPadding="false"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
@@ -214,43 +217,43 @@
             android:layout_width="325dp"
             android:layout_height="150dp"
             android:layout_margin="3dp"
-            android:visibility="gone"
+            android:elevation="8dp"
             android:tag="Delete Advert"
-            android:elevation="8dp">
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:scrollbars="none">
 
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_delete_advert"
-                    android:padding="10dp"/>
+                    android:padding="10dp"
+                    android:src="@drawable/ic_delete_advert" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:layout_marginTop="10dp"
-                    android:text="Delete Advert"/>
+                    android:text="Delete Advert"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/lightGrey"
-                    android:layout_margin="10dp"/>
+                    android:layout_margin="10dp"
+                    android:background="@color/lightGrey" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Delete your Venue advert here"
                     android:padding="5dp"
-                    android:textColor="@color/darkGrey"/>
+                    android:text="Delete your Venue advert here"
+                    android:textColor="@color/darkGrey" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -259,43 +262,43 @@
             android:layout_width="325dp"
             android:layout_height="150dp"
             android:layout_margin="3dp"
-            android:visibility="gone"
+            android:elevation="8dp"
             android:tag="Create Advert"
-            android:elevation="8dp">
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:scrollbars="none">
 
                 <ImageView
-                    android:src="@drawable/ic_create_advert"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:padding="10dp"/>
+                    android:padding="10dp"
+                    android:src="@drawable/ic_create_advert" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:layout_marginTop="10dp"
-                    android:text="Create Advert"/>
+                    android:text="Create Advert"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/lightGrey"
-                    android:layout_margin="10dp"/>
+                    android:layout_margin="10dp"
+                    android:background="@color/lightGrey" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Create your Venue advert here"
                     android:padding="5dp"
-                    android:textColor="@color/darkGrey"/>
+                    android:text="Create your Venue advert here"
+                    android:textColor="@color/darkGrey" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>

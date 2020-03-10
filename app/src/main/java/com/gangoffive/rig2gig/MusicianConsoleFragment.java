@@ -212,7 +212,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                 /*startActivity(new Intent(getActivity(), MusicianDetailsEditor.class).putExtra("EXTRA_MUSICIAN_ID", musicianRef));*/
                 break;
             case "My Bands":
-
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new DisplayMusiciansBands()).commit();
                 break;
             case "Create Advert":
                 /*startActivity(new Intent(getActivity(), PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", performerReference)

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:background="@android:color/darker_gray"/>
+
+
+
+    <!--<androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="165dp"
+        android:layout_margin="3dp"
+        app:cardElevation="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:scrollbars="none">
+
+            <ImageView
+                android:id="@+id/band_picture"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_my_profile" />
+
+            <TextView
+                android:id="@+id/band_name"
+                android:layout_width="170dp"
+                android:layout_height="30dp"
+                android:layout_alignParentTop="true"
+                android:text="Band Name"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>-->
+
+</RelativeLayout>
