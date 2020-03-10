@@ -73,7 +73,7 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
 
         image = findViewById(R.id.imageView);
 
-        String[] venueTypes = { "Funtion Room", "Pub", "Club"};
+        String[] venueTypes = { "Function Room", "Pub", "Club"};
 
 
         Spinner spin = findViewById(R.id.spinner1);
