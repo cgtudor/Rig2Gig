@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageViewPhoto"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:padding="2dp"/>
+
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/imageViewPhoto"/>
+
+            <TextView
+                android:id="@+id/textViewType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="wants to contact you."
+                android:textSize="20sp"
+                android:layout_marginLeft="5dp"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/textViewName"/>
+
+            <ImageView
+                android:id="@+id/imageViewIcon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:padding="2dp"
+                android:layout_below="@+id/textViewName"
+                android:layout_toEndOf="@+id/imageViewPhoto"
+                android:src="@drawable/ic_person_add_black_24dp"/>
+
+            <TextView
+                android:id="@+id/textViewDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12th Jan"
+                android:textSize="10sp"
+                android:layout_below="@+id/textViewName"
+                android:layout_toEndOf="@+id/imageViewIcon"/>
+
+            <ImageView
+                android:id="@+id/imageViewAccept"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="2dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_check_circle_black_24dp"/>
+
+            <ImageView
+                android:id="@+id/imageViewDecline"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="2dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/imageViewAccept"
+                android:src="@drawable/ic_cancel_black_24dp"/>
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
+
