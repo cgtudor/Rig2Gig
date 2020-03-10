@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -140,7 +139,7 @@ public class CreateMusicianAdvertisement extends AppCompatActivity  implements C
             image.setImageDrawable(null);
         }
         position = findViewById(R.id.position);
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.distance);
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);

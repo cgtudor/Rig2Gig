@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -166,7 +165,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
             phone.setOnFocusChangeListener(editTextFocusListener);
             phone.addTextChangedListener(textWatcher);
         }
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.distance);
         if (description != null)
         {
             description.setOnFocusChangeListener(editTextFocusListener);

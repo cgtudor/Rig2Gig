@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,7 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,12 +29,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.twitter.sdk.android.core.models.ImageValue;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class VenueActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
@@ -59,7 +57,7 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
         fStore = FirebaseFirestore.getInstance();
         fStorage = FirebaseStorage.getInstance();
 
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.distance);
         location = findViewById(R.id.location);
         name = findViewById(R.id.name);
         venueType = findViewById(R.id.type);
@@ -122,8 +120,21 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
         String loc = location.getText().toString();
         String venueName = name.getText().toString();
         String venueRating = "-1";
-        ImageView defImg = new ImageView(this);
-        defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
+        ImageView image = new ImageView(this);
+        image.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
+
+        if (TextUtils.isEmpty(loc)) {
+            location.setError("Please Set A Locaton!");
+            return;
+        }
+        if (TextUtils.isEmpty(desc)) {
+            description.setError("Please Enter A Venue Description!");
+            return;
+        }
+        if (TextUtils.isEmpty(venueName)) {
+            name.setError("Please Enter A Venue Name!");
+            return;
+        }
 
 
         fStore.collection("users").document(userRef).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

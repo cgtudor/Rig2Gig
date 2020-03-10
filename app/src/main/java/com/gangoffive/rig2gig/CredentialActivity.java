@@ -5,14 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -27,7 +24,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,9 +62,8 @@ public class CredentialActivity extends AppCompatActivity {
 
         cFirstName = findViewById(R.id.name);
         cLastName = findViewById(R.id.location);
-        cUsername = findViewById(R.id.description);
+        cUsername = findViewById(R.id.distance);
         cPhoneNumber = findViewById(R.id.cPhoneNumber);
-        userGroup = findViewById(R.id.userRadioGroup);
 
         rEmailAddress = findViewById(R.id.emailReset);
         rConfirmEmail = findViewById(R.id.registerConfirmEmail);

@@ -25,7 +25,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
 
         final ImageView bandPhoto = findViewById(R.id.bandPhoto);
         final TextView bandName = findViewById(R.id.bandName);
-        final TextView genre = findViewById(R.id.description);
+        final TextView genre = findViewById(R.id.distance);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.position);
         final TextView distance = findViewById(R.id.position);

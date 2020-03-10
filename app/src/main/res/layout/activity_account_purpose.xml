@@ -7,40 +7,40 @@
     tools:context=".AccountPurposeActivity"
     android:background="@drawable/gradient">
 
-    <RadioGroup
-        android:id="@+id/userRadioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/accountType">
+<!--    <RadioGroup-->
+<!--        android:id="@+id/userRadioGroup"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="100dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/accountType">-->
 
-        <RadioButton
-            android:id="@+id/radioBtnFan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="#FFFFFF"
-            android:text="Fan"
-            android:textColor="#FFFFFF" />
+<!--        <RadioButton-->
+<!--            android:id="@+id/radioBtnFan"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:buttonTint="#FFFFFF"-->
+<!--            android:text="Fan"-->
+<!--            android:textColor="#FFFFFF" />-->
 
-        <RadioButton
-            android:id="@+id/radioBtnMusician"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="#FFFFFF"
-            android:text="Musician"
-            android:textColor="#FFFFFF" />
+<!--        <RadioButton-->
+<!--            android:id="@+id/radioBtnMusician"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:buttonTint="#FFFFFF"-->
+<!--            android:text="Musician"-->
+<!--            android:textColor="#FFFFFF" />-->
 
-        <RadioButton
-            android:id="@+id/radioBtnVenue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:buttonTint="#FFFFFF"
-            android:text="Venue"
-            android:textColor="#FFFFFF" />
+<!--        <RadioButton-->
+<!--            android:id="@+id/radioBtnVenue"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:buttonTint="#FFFFFF"-->
+<!--            android:text="Venue"-->
+<!--            android:textColor="#FFFFFF" />-->
 
-    </RadioGroup>
+<!--    </RadioGroup>-->
 
     <TextView
         android:id="@+id/accountType"
@@ -54,18 +54,66 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+<!--    <Button-->
+<!--        android:id="@+id/submitBtn"-->
+<!--        android:layout_width="280dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:background="@drawable/transparent_button"-->
+<!--        android:onClick="submitBtnOnClick"-->
+<!--        android:text="Submit"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:textColor="#FFF"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.496"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/userRadioGroup" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/fanBtn"-->
+<!--        android:layout_width="244dp"-->
+<!--        android:layout_height="102dp"-->
+<!--        android:layout_marginTop="108dp"-->
+<!--        android:background="@drawable/transparent_button"-->
+<!--        android:text="Fan"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:textColor="#FFFF"-->
+<!--        android:textSize="36sp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.497"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/accountType" />-->
+
     <Button
-        android:id="@+id/submitBtn"
-        android:layout_width="280dp"
-        android:layout_height="40dp"
+        android:id="@+id/musicianBtn"
+        android:layout_width="244dp"
+        android:layout_height="102dp"
+        android:layout_marginTop="140dp"
+        android:background="@drawable/transparent_button"
+        android:onClick="musicianBtnOnClick"
+        android:text="Musician"
+        android:textAllCaps="false"
+        android:textColor="#FFFF"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountType" />
+
+    <Button
+        android:id="@+id/venueBtn"
+        android:layout_width="244dp"
+        android:layout_height="102dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/transparent_button"
-        android:onClick="submitBtnOnClick"
-        android:text="Submit"
+        android:text="Venue"
         android:textAllCaps="false"
-        android:textColor="#FFF"
+        android:textColor="#FFFF"
+        android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userRadioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/musicianBtn"
+        android:onClick="venueBtnOnClick"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

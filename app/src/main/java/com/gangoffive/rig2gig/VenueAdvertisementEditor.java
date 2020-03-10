@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -130,7 +129,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         {
             image.setImageDrawable(null);
         }
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.distance);
         if (description != null)
         {
 
