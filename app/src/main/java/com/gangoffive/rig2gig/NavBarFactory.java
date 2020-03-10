@@ -33,7 +33,7 @@ public class NavBarFactory
         fragmentMap.put("View Bands", new ViewBandsFragment());
         fragmentMap.put("View Musicians", new ViewMusiciansFragment());
 
-        fragmentMap.put("Notifications", new NotificationsFragment());
+        fragmentMap.put("Notifications", new ViewCommsFragment());
         fragmentMap.put("About Us", new AboutUsFragment());
         fragmentMap.put("Settings", new SettingsFragment());
 

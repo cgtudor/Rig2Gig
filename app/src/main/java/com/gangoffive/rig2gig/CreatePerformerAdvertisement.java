@@ -68,7 +68,7 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
 
 
         performerRef = getIntent().getStringExtra("EXTRA_BAND_ID");;
-        performerType = "Band";
+        performerType = "Musician";
 
         setContentView(R.layout.activity_create_performer_advertisement);
         Toolbar toolbar = findViewById(R.id.toolbar);

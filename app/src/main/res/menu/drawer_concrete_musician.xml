@@ -34,9 +34,9 @@
         <item android:id="@+id/nav_view_venues"
             android:icon="@drawable/ic_view_venues"
             android:title="View Venues"/>
-        <!--<item android:id="@+id/nav_notifications"
+        <item android:id="@+id/nav_notifications"
             android:icon="@drawable/ic_notifications"
-            android:title="Notifications"/>-->
+            android:title="Notifications"/>
         <!--<item android:id="@+id/nav_about_us"
             android:icon="@drawable/ic_about_us"
             android:title="About Us"/>-->
