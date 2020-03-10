@@ -206,23 +206,25 @@
         android:id="@+id/loginEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="68dp"
+        android:width="280dp"
         android:background="@android:color/transparent"
         android:ems="10"
         android:hint="Email Address"
         android:inputType="textEmailAddress"
         android:textColor="#FFF"
+        android:textColorHint="#F6F6F6"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.298"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        android:textColorHint="#F6F6F6"/>
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <EditText
         android:id="@+id/loginPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:width="280dp"
         android:background="@android:color/transparent"
         android:ems="10"
         android:hint="Password"
@@ -230,7 +232,7 @@
         android:textColor="#FFFFFF"
         android:textColorHint="#F6F6F6"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.298"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view2" />
 
