@@ -47,11 +47,8 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
 
     String email, userRef, phoneNumber, type;
 
-    private DocumentReference docRef, listRef;
-    private StorageReference storageRef, imageRef, listingImage;
-    private Map<String, Object> userInfo,listingInfo;
-    private String collectionPath, imagePath, listingRef, listingPath;
-
+    private ImageView image;
+    private Drawable chosenPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +71,7 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
         takePhotoBtn = findViewById(R.id.takePhoto);
         uploadPhotoBtn = findViewById(R.id.uploadBtn);
 
+        image = findViewById(R.id.imageView);
 
         String[] venueTypes = { "Funtion Room", "Pub", "Club"};
 
@@ -156,7 +154,7 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
                                             Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                                             StorageReference sRef = fStorage.getReference()
                                                     .child("/images/venues/" + documentReference.getId() + ".jpg");
-                                            UploadTask uploadTask = sRef.putBytes(imageToByteArray(defImg.getDrawable()));
+                                            UploadTask uploadTask = sRef.putBytes(imageToByteArray(image.getDrawable()));
                                             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                 @Override
                                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -197,9 +195,24 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void uploadBtnOnClick(View view) {
+        ImageRequestHandler.getGalleryImage(view);
 
     }
 
     public void takeBtnOnClick(View view) {
+        ImageRequestHandler.getCameraImage(view);
+    }
+
+    /**
+     * handles activity results
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
+        chosenPic = image.getDrawable();
     }
 }
