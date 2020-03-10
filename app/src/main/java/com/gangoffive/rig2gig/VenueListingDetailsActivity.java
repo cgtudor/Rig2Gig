@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,6 +18,8 @@ import android.widget.Toast;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,7 +36,7 @@ import java.util.HashMap;
 
 public class VenueListingDetailsActivity extends AppCompatActivity {
 
-    private Button favourite;
+    private String vID;
     private final StringBuilder expiry = new StringBuilder("");
     private final StringBuilder venueRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
@@ -51,11 +55,10 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         final TextView description = findViewById(R.id.description);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.position);
-        favourite = findViewById(R.id.favourite);
         final Button contact = findViewById(R.id.contact);
 
         /*Used to get the id of the listing from the previous activity*/
-        String vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");
+        vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -132,59 +135,6 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                 }
             }
         });
-
-        /*On clicking the favourite button we save the listing in the database and then we grey out the button*/
-        favourite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HashMap<String, String> listing = new HashMap<>();
-                listing.put("description", description.getText().toString());
-                listing.put("expiry-date", expiry.toString());
-                listing.put("venue-ref", venueRef.toString());
-
-                CollectionReference favVenues = db.collection("favourite-ads")
-                        .document(FirebaseAuth.getInstance().getUid())
-                        .collection("venue-listings");
-                favVenues.document(vID)
-                        .set(listing)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful())
-                                {
-                                    Log.d("FIRESTORE", "Favourite successful");
-                                    Toast.makeText(VenueListingDetailsActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
-                                    favourite.setAlpha(.5f);
-                                    favourite.setClickable(false);
-                                }
-                                else
-                                {
-                                    Log.d("FIRESTORE", "Task failed with ", task.getException());
-                                }
-                            }
-                        });
-            }
-        });
-
-        /*If the listing already exists in the users favourites, then we grey out the button on create*/
-        CollectionReference favVenues = db.collection("favourite-ads")
-                .document(FirebaseAuth.getInstance().getUid())
-                .collection("venue-listings");
-        favVenues.document(vID).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful())
-                        {
-                            DocumentSnapshot document = task.getResult();
-                            if(document.exists())
-                            {
-                                favourite.setAlpha(.5f);
-                                favourite.setClickable(false);
-                            }
-                        }
-                    }
-                });
 
         contact.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,5 +259,103 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.listing_menu, menu);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference favVenues = db.collection("favourite-ads")
+                .document(FirebaseAuth.getInstance().getUid())
+                .collection("venue-listings");
+        favVenues.document(vID).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            DocumentSnapshot document = task.getResult();
+                            if(document.exists())
+                            {
+                                MenuItem star = menu.findItem(R.id.saveButton);
+                                star.setIcon(R.drawable.ic_full_star);
+                            }
+                        }
+                    }
+                });
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        TextView description = findViewById(R.id.description);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        if(id == R.id.saveButton)
+        {
+            HashMap<String, String> listing = new HashMap<>();
+            listing.put("description", description.getText().toString());
+            listing.put("expiry-date", expiry.toString());
+            listing.put("venue-ref", venueRef.toString());
+
+            CollectionReference favVenues = db.collection("favourite-ads")
+                    .document(FirebaseAuth.getInstance().getUid())
+                    .collection("venue-listings");
+            favVenues.document(vID).get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if(task.isSuccessful())
+                            {
+                                DocumentSnapshot document = task.getResult();
+                                if(document.exists())
+                                {
+                                    favVenues.document(vID)
+                                            .delete()
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d("FIRESTORE", "Favourite successfully deleted!");
+                                                    item.setIcon(R.drawable.ic_empty_star);
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w("FIRESTORE", "Error deleting document", e);
+                                                }
+                                            });
+                                }
+                                else
+                                {
+                                    favVenues.document(vID)
+                                            .set(listing)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful())
+                                                    {
+                                                        Log.d("FIRESTORE", "Favourite successful");
+                                                        Toast.makeText(VenueListingDetailsActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
+                                                        item.setIcon(R.drawable.ic_full_star);
+                                                    }
+                                                    else
+                                                    {
+                                                        Log.d("FIRESTORE", "Task failed with ", task.getException());
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                            else
+                            {
+                                Log.d("FIRESTORE", "Failed with: ", task.getException());
+                            }
+                        }
+                    });
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
