@@ -82,7 +82,7 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
     @Override
     public AdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_my_bands, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_musician_bands, parent, false);
 
         return new AdapterViewHolder(view, listener);
     }
