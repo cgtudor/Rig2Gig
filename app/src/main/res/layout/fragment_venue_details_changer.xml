@@ -16,7 +16,19 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="#000000"/>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="280dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:background="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView3"
@@ -26,7 +38,8 @@
         android:layout_marginTop="24dp"
         android:text="Venue Name:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        android:textColor="#000000"/>
 
     <TextView
         android:id="@+id/textView4"
@@ -36,7 +49,8 @@
         android:layout_marginTop="24dp"
         android:text="Venue Location:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        android:textColor="#000000"/>
 
     <TextView
         android:id="@+id/textView5"
@@ -46,7 +60,8 @@
         android:layout_marginTop="24dp"
         android:text="Venue Type: "
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        android:textColor="#000000"/>
 
     <TextView
         android:id="@+id/textView6"
@@ -56,7 +71,8 @@
         android:layout_marginTop="24dp"
         android:text="Email:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        android:textColor="#000000"/>
 
     <TextView
         android:id="@+id/textView8"
@@ -66,7 +82,8 @@
         android:layout_marginTop="24dp"
         android:text="Phone Number:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        android:textColor="#000000"/>
 
     <EditText
         android:id="@+id/name"
