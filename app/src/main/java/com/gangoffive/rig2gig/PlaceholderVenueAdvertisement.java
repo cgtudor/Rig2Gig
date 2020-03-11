@@ -33,7 +33,7 @@ public class PlaceholderVenueAdvertisement extends Fragment
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), VenueAdvertisementEditor.class);
-                intent.putExtra("EXTRA_VENUE_ID", "80kaTvOTmggcOWjMqW8r");
+                intent.putExtra("EXTRA_VENUE_ID", "0wRVzyLdNSHlMQv31g1y");
                 intent.putExtra("EXTRA_LISTING_ID","");
                 startActivity(intent);
             }
@@ -43,8 +43,8 @@ public class PlaceholderVenueAdvertisement extends Fragment
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), VenueAdvertisementEditor.class);
-                intent.putExtra("EXTRA_VENUE_ID", "80kaTvOTmggcOWjMqW8r");
-                intent.putExtra("EXTRA_LISTING_ID","t1izIZlw870JdYRMhAWI");
+                intent.putExtra("EXTRA_VENUE_ID", "0wRVzyLdNSHlMQv31g1y");
+                intent.putExtra("EXTRA_LISTING_ID","xqVn92V8BvUkdPby4Kus");
                 startActivity(intent);
             }
         });
@@ -53,7 +53,7 @@ public class PlaceholderVenueAdvertisement extends Fragment
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), VenueDetailsEditor.class);
-                intent.putExtra("EXTRA_VENUE_ID", "80kaTvOTmggcOWjMqW8r");
+                intent.putExtra("EXTRA_VENUE_ID", "0wRVzyLdNSHlMQv31g1y");
                 startActivity(intent);
             }
         });
@@ -220,8 +220,5 @@ public class PlaceholderVenueAdvertisement extends Fragment
         intent.putExtra("EXTRA_BAND_ID", bandRef);
         startActivity(intent);
     }
-
-
-
 
 }

@@ -222,7 +222,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         }
         if(email != null && venue !=null)
         {
-            email.setText(venue.get("email").toString());
+            email.setText(venue.get("email-address").toString());
         }
         if(phone != null && venue !=null)
         {
@@ -362,7 +362,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         }
         if(email != null && email.getText() != null && venue != null)
         {
-            venue.put("email",email.getText().toString());
+            venue.put("email-address",email.getText().toString());
         }
         if(phone != null && phone.getText() != null && venue != null)
         {
