@@ -82,7 +82,7 @@ public class ViewCommsFragment extends Fragment
         String uID = FirebaseAuth.getInstance().getUid();
 
         db = FirebaseFirestore.getInstance();
-        colRef = db.collection("communication").document("uID").collection("recieved");
+        colRef = db.collection("communications").document(uID).collection("received");
 
         communications = new ArrayList<>();
 

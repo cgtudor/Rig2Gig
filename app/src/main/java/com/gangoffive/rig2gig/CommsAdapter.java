@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -144,7 +145,7 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
     @Override
     public CommsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.venue_listing, parent, false);
+                .inflate(R.layout.comms_listing, parent, false);
 
         return new CommsAdapter.ViewHolder(v, listener);
     }
@@ -156,7 +157,7 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
         holder.commRef = communication.getCommRef();
 
         commDocRef = db.collection("communications")
-                .document(communication.getUserRef())
+                .document((FirebaseAuth.getInstance().getUid()))
                 .collection("received")
                 .document(holder.commRef);
 
