@@ -57,8 +57,8 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
         final TextView performerName = findViewById(R.id.bandName);
         final TextView genre = findViewById(R.id.genre);
         final TextView rating = findViewById(R.id.rating);
-        final TextView location = findViewById(R.id.position);
-        final TextView distance = findViewById(R.id.position);
+        final TextView location = findViewById(R.id.location);
+        final TextView distance = findViewById(R.id.distance);
         final Button contact = findViewById(R.id.contact);
 
         /*Used to get the id of the listing from the previous activity*/
@@ -297,13 +297,13 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        TextView description = findViewById(R.id.description);
+        TextView distance = findViewById(R.id.distance);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if(id == R.id.saveButton)
         {
             HashMap<String, String> listing = new HashMap<>();
-            listing.put("description", description.getText().toString());
+            listing.put("distance", distance.getText().toString());
             listing.put("expiry-date", expiry.toString());
             listing.put("performer-ref", performerRef.toString());
             listing.put("performer-type",performerTypeGlobal.toString());

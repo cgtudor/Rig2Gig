@@ -115,6 +115,6 @@ public class SavedPerformersFragment extends Fragment implements DefaultGoBack
 
     @Override
     public boolean onBackPressed() {
-        return true;
+        return false;
     }
 }
