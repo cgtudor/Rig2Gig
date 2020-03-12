@@ -87,52 +87,58 @@ public class DisplayMusiciansBands extends Fragment
                                 {
                                     for(String b : bands)
                                     {
-                                        bandRef.document(b).get()
-                                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                        if(task.isSuccessful()) {
-                                                            DocumentSnapshot bandSnapshot = task.getResult();
+                                        bandRef.document(b).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                                        {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                            {
+                                                if(task.isSuccessful())
+                                                {
+                                                    DocumentSnapshot bandSnapshot = task.getResult();
 
-                                                            System.out.println(TAG + " database document: " + bandSnapshot.getId() + " local document " + b);
+                                                    System.out.println(TAG + " database document: " + bandSnapshot.getId() + " local document " + b);
 
-                                                            MusiciansBands band = new MusiciansBands(bandSnapshot.getId());
-                                                            musiciansBands.add(band);
+                                                    MusiciansBands band = new MusiciansBands(bandSnapshot.getId());
+                                                    musiciansBands.add(band);
 
-                                                            adapter = new MusiciansBandsAdapter(musiciansBands, getContext());
+                                                    adapter = new MusiciansBandsAdapter(musiciansBands, getContext());
 
-                                                            adapter.setOnItemClickListener(new MusiciansBandsAdapter.OnItemClickListener()
-                                                            {
-                                                                @Override
-                                                                public void onItemClick(int position)
-                                                                {
-                                            /*Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
-                                            String listingRef = musiciansBands.get(position).getreference();
-                                            openListingIntent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingRef);
-                                            v.getContext().startActivity(openListingIntent);*/
-                                                                }
-                                                            });
-
-                                                            recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-                                                            recyclerView.setHasFixedSize(true);
-                                                            recyclerView.setAdapter(adapter);
-                                                            LinearLayoutManager llManager = new LinearLayoutManager(getContext());
-                                                            recyclerView.setLayoutManager(llManager);
-
-                                                        } else {
-
+                                                    adapter.setOnItemClickListener(new MusiciansBandsAdapter.OnItemClickListener()
+                                                    {
+                                                        @Override
+                                                        public void onItemClick(int position)
+                                                        {
+                                                            //Uncomment following when the fragment/activity to view a band's details has been created.
+                                                            /*Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
+                                                            String listingRef = musiciansBands.get(position).getreference();
+                                                            openListingIntent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingRef);
+                                                            v.getContext().startActivity(openListingIntent);*/
                                                         }
-                                                    }
-                                                });
+                                                    });
+
+                                                    recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+                                                    recyclerView.setHasFixedSize(true);
+                                                    recyclerView.setAdapter(adapter);
+                                                    LinearLayoutManager llManager = new LinearLayoutManager(getContext());
+                                                    recyclerView.setLayoutManager(llManager);
+
+                                                }
+                                                else
+                                                {
+
+                                                }
+                                            }
+                                        });
                                     }
-
-
-
                                 }
-                            } else {
+                            }
+                            else
+                            {
                                 Log.d(TAG, "get successful without data");
                             }
-                        } else {
+                        }
+                        else
+                        {
                             Log.d(TAG, "get failed with ", task.getException());
                         }
                     }

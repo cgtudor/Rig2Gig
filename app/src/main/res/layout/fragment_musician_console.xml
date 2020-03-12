@@ -112,7 +112,7 @@
         android:clipToPadding="false"
         android:orientation="horizontal">
 
-        <androidx.cardview.widget.CardView
+        <!--<androidx.cardview.widget.CardView
             android:id="@+id/card_view_my_bands"
             android:layout_width="160dp"
             android:layout_height="165dp"
@@ -155,11 +155,11 @@
                     android:padding="5dp"
                     android:textColor="@color/darkGrey"/>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>-->
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view_create_advert"
-            android:layout_width="160dp"
+            android:layout_width="325dp"
             android:layout_height="165dp"
             android:layout_margin="3dp"
             android:visibility="gone"
@@ -204,7 +204,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view_view_advert"
-            android:layout_width="160dp"
+            android:layout_width="325dp"
             android:layout_height="165dp"
             android:layout_margin="3dp"
             android:visibility="gone"

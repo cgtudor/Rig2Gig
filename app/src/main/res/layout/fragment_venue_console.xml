@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-
         android:gravity="center"
         android:orientation="horizontal"
         android:scrollbars="none">
@@ -21,7 +20,7 @@
             android:layout_width="160dp"
             android:layout_height="165dp"
             android:layout_margin="3dp"
-
+            android:visibility="gone"
             android:elevation="8dp"
             android:tag="View Performers">
 

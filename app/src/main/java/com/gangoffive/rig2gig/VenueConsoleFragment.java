@@ -84,7 +84,7 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
     private void databaseQuery()
     {
 
-        getVenues.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        getVenues.whereEqualTo("user-ref", USERID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -93,88 +93,74 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
 
                 if(!venues.isEmpty())
                 {
-                    for(DocumentSnapshot venue : venues)
+                    venueRef = venues.get(0).getId();
+
+                    DocumentSnapshot venue = venues.get(0);
+
+                    getVenueAdverts.whereEqualTo("venue-ref", venue.getId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
                     {
-                        if(venue.get("user-ref").equals(USERID))
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots)
                         {
-                            venueRef = venue.getId();
+                            venueAdverts = queryDocumentSnapshots.getDocuments();
 
-                            getVenueAdverts.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+                            CardView editProfileLayout;
+
+                            if(!venueAdverts.isEmpty())
                             {
-                                @Override
-                                public void onSuccess(QuerySnapshot queryDocumentSnapshots)
-                                {
-                                    venueAdverts = queryDocumentSnapshots.getDocuments();
+                                Log.d(TAG, "DATABASEQUERY ------------------ get successful with advert");
 
-                                    if(!venueAdverts.isEmpty())
-                                    {
-                                        Log.d(TAG, "DATABASEQUERY ------------------ get successful with data");
+                                editProfileLayout = view.findViewById(R.id.card_view_view_performers);
+                                editProfileLayout.setVisibility(View.VISIBLE);
 
-                                        for(DocumentSnapshot adverts : venueAdverts)
-                                        {
-                                            CardView editProfileLayout;
+                                editProfileLayout = view.findViewById(R.id.card_view_edit_venue);
+                                editProfileLayout.setVisibility(View.VISIBLE);
 
-                                            if(adverts.get("venue-ref").toString().equals(venueRef))
-                                            {
-                                                editProfileLayout = view.findViewById(R.id.card_view_view_performers);
-                                                editProfileLayout.setVisibility(View.VISIBLE);
+                                editProfileLayout = view.findViewById(R.id.card_view_edit_advert);
+                                editProfileLayout.setVisibility(View.VISIBLE);
 
-                                                editProfileLayout = view.findViewById(R.id.card_view_edit_venue);
-                                                editProfileLayout.setVisibility(View.VISIBLE);
+                                editProfileLayout = view.findViewById(R.id.card_view_view_advert);
+                                editProfileLayout.setVisibility(View.VISIBLE);
 
-                                                editProfileLayout = view.findViewById(R.id.card_view_edit_advert);
-                                                editProfileLayout.setVisibility(View.VISIBLE);
+                                editProfileLayout = view.findViewById(R.id.card_view_delete_advert);
+                                editProfileLayout.setVisibility(View.VISIBLE);
 
-                                                editProfileLayout = view.findViewById(R.id.card_view_view_advert);
-                                                editProfileLayout.setVisibility(View.VISIBLE);
+                                editProfileLayout = view.findViewById(R.id.card_view_create_advert);
+                                editProfileLayout.setVisibility(View.GONE);
 
-                                                editProfileLayout = view.findViewById(R.id.card_view_delete_advert);
-                                                editProfileLayout.setVisibility(View.VISIBLE);
-
-                                                editProfileLayout = view.findViewById(R.id.card_view_create_advert);
-                                                editProfileLayout.setVisibility(View.GONE);
-
-                                                advertReference = adverts.getId();
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                editProfileLayout = view.findViewById(R.id.card_view_edit_advert);
-                                                editProfileLayout.setVisibility(View.GONE);
-
-                                                editProfileLayout = view.findViewById(R.id.card_view_view_advert);
-                                                editProfileLayout.setVisibility(View.GONE);
-
-                                                editProfileLayout = view.findViewById(R.id.card_view_delete_advert);
-                                                editProfileLayout.setVisibility(View.GONE);
-
-                                                editProfileLayout = view.findViewById(R.id.card_view_view_performers);
-                                                editProfileLayout.setVisibility(View.VISIBLE);
-
-                                                editProfileLayout = view.findViewById(R.id.card_view_edit_venue);
-                                                editProfileLayout.setVisibility(View.VISIBLE);
-
-                                                editProfileLayout = view.findViewById(R.id.card_view_create_advert);
-                                                editProfileLayout.setVisibility(View.VISIBLE);
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Log.d(TAG, "get successful without data");
-                                    }
-                                }
-                            }).addOnFailureListener(new OnFailureListener()
+                                advertReference = venueAdverts.get(0).getId();
+                            }
+                            else
                             {
-                                @Override
-                                public void onFailure(@NonNull Exception e)
-                                {
-                                    Log.d(TAG, e.toString());
-                                }
-                            });
-                            break;
+                                Log.d(TAG, "get successful without advert");
+
+                                editProfileLayout = view.findViewById(R.id.card_view_edit_advert);
+                                editProfileLayout.setVisibility(View.GONE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_view_advert);
+                                editProfileLayout.setVisibility(View.GONE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_delete_advert);
+                                editProfileLayout.setVisibility(View.GONE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_view_performers);
+                                editProfileLayout.setVisibility(View.VISIBLE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_edit_venue);
+                                editProfileLayout.setVisibility(View.VISIBLE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_create_advert);
+                                editProfileLayout.setVisibility(View.VISIBLE);
+                            }
                         }
-                    }
+                    }).addOnFailureListener(new OnFailureListener()
+                    {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            Log.d(TAG, e.toString());
+                        }
+                    });
                 }
                 else
                 {
@@ -221,7 +207,7 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
      */
     private void deleteAdvert()
     {
-        getVenueAdverts.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        getVenueAdverts.whereEqualTo("venue-ref", venueRef).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -230,21 +216,14 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
 
                 if(!venueAdverts.isEmpty())
                 {
-                    Log.d(TAG, "DELETEADVERT ------------------ get successful with data");
+                    Log.d(TAG, "DELETEADVERT ------------------ get successful with advert");
 
-                    for(DocumentSnapshot adverts : venueAdverts)
-                    {
-                        if(adverts.get("venue-ref").toString().equals(venueRef))
-                        {
-                            venueAdvertsReference.document(adverts.getId()).delete();
-                            restartFragment();
-                            break;
-                        }
-                    }
+                    //venueAdvertsReference.document(venueAdverts.get(0).getId()).delete();
+                    restartFragment();
                 }
                 else
                 {
-                    Log.d(TAG, "get successful without data");
+                    Log.d(TAG, "get successful without advert");
                 }
             }
         }).addOnFailureListener(new OnFailureListener()
