@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -43,7 +44,11 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
     @Override
     public void onBackPressed()
     {
-        if(drawer.isDrawerOpen(GravityCompat.START))
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if ((fragment instanceof DefaultGoBack) && ((DefaultGoBack) fragment).onBackPressed()) {
+            super.onBackPressed();
+        }
+        else if(drawer.isDrawerOpen(GravityCompat.START))
         {
             drawer.closeDrawer(GravityCompat.START);
         }

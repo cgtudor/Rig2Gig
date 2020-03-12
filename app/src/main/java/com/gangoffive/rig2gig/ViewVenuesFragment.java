@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,6 +53,8 @@ public class ViewVenuesFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         final View v = inflater.inflate(R.layout.fragment_view_venues, container, false);
+
+        setHasOptionsMenu(true);
 
         db = FirebaseFirestore.getInstance();
         colRef = db.collection("venue-listings");
@@ -105,5 +111,27 @@ public class ViewVenuesFragment extends Fragment
                 });
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.test, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem)
+    {
+        switch(menuItem.getItemId())
+        {
+            case R.id.favourite_icon:
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new SavedVenuesFragment()).commit();
+                break;
+            default:
+                break;
+        }
+
+        return true;
     }
 }

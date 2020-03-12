@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SavedPerformersFragment extends Fragment
+public class SavedPerformersFragment extends Fragment implements DefaultGoBack
 {
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
@@ -50,7 +50,7 @@ public class SavedPerformersFragment extends Fragment
         String uID = FirebaseAuth.getInstance().getUid();
 
         db = FirebaseFirestore.getInstance();
-        colRef = db.collection("favourite-ads").document("uID").collection("performer-listings");
+        colRef = db.collection("favourite-ads").document(uID).collection("performer-listings");
 
         performerListings = new ArrayList<>();
 
@@ -111,5 +111,10 @@ public class SavedPerformersFragment extends Fragment
     public void onStart() {
         super.onStart();
 
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return true;
     }
 }

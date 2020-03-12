@@ -41,6 +41,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
     private final StringBuilder expiry = new StringBuilder("");
     private final StringBuilder performerRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
+    private final StringBuilder performerTypeGlobal = new StringBuilder("");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +132,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                         //Timestamp expiryDate = (Timestamp) document.get("expiry-date");
                         //expiry.append(expiryDate.toDate().toString());
                         performerRef.append(document.get("performer-ref").toString());
+                        performerTypeGlobal.append(document.get("performer-type").toString());
                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
                     } else {
                         Log.d("FIRESTORE", "No such document");
@@ -304,6 +306,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
             listing.put("description", description.getText().toString());
             listing.put("expiry-date", expiry.toString());
             listing.put("performer-ref", performerRef.toString());
+            listing.put("performer-type",performerTypeGlobal.toString());
 
             CollectionReference favPerformers = db.collection("favourite-ads")
                     .document(FirebaseAuth.getInstance().getUid())

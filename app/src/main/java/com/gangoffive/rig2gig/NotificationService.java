@@ -142,7 +142,7 @@ public class NotificationService extends Service {
                                             PendingIntent pendingIntent = PendingIntent.getActivity(NotificationService.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                                             NotificationCompat.Builder builder = new NotificationCompat.Builder(NotificationService.this, CHANNEL_ID)
-                                                    .setSmallIcon(R.drawable.ic_email_black_24dp)
+                                                    .setSmallIcon(R.drawable.ic_email_black)
                                                     .setContentTitle(notifTitle)
                                                     .setContentText(notifMessage)
                                                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)

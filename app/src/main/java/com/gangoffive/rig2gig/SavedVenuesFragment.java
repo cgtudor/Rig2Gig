@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -25,7 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SavedVenuesFragment extends Fragment
+public class SavedVenuesFragment extends Fragment implements DefaultGoBack
 {
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
@@ -49,12 +51,20 @@ public class SavedVenuesFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewVenuesFragment()).commit();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+
         final View v = inflater.inflate(R.layout.fragment_saved_venues, container, false);
 
         String uID = FirebaseAuth.getInstance().getUid();
 
         db = FirebaseFirestore.getInstance();
-        colRef = db.collection("favourite-ads").document("uID").collection("venue-listings");
+        colRef = db.collection("favourite-ads").document(uID).collection("venue-listings");
 
         venueListings = new ArrayList<>();
 
@@ -108,5 +118,16 @@ public class SavedVenuesFragment extends Fragment
                 });
 
         return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return true;
     }
 }
