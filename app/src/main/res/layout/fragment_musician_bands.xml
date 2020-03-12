@@ -15,7 +15,6 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginTop="20dp"
-            android:src="@drawable/ic_my_profile"
             android:layout_centerHorizontal="true"/>
 
         <TextView
@@ -25,7 +24,6 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="25dp"
-            android:text="Band Name"
             android:textColor="@color/darkGrey"
             android:textSize="20sp"
             android:textStyle="bold" />

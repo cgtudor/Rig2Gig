@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -111,7 +112,7 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
 
                         holder.textView.setText(document.get("name").toString());
                         StorageReference bandPic = storage.getReference().child("/images/bands/" + currentBand.getreference() + ".jpg");
-                        GlideApp.with(holder.imageView.getContext()).load(bandPic).into(holder.imageView);
+                        GlideApp.with(holder.imageView.getContext()).load(bandPic).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(holder.imageView);
                     }
                 }
             }

@@ -43,7 +43,7 @@ public class DisplayMusiciansBands extends Fragment
     private CollectionReference musiciansRef = db.collection("musicians");
     private List<DocumentSnapshot> musicians;
 
-    private CollectionReference bandsRef = db.collection("bands");
+    private CollectionReference bandRef = db.collection("bands");
     private List<DocumentSnapshot> bandsList;
 
     private ArrayList<MusiciansBands> musiciansBands;
@@ -60,9 +60,8 @@ public class DisplayMusiciansBands extends Fragment
         musiciansBands = new ArrayList<>();
 
         Query first = musiciansRef;
-        Query second = bandsRef;
 
-        first.get()
+        first.whereEqualTo("user-ref", USERID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
                 {
                     @Override
@@ -76,101 +75,64 @@ public class DisplayMusiciansBands extends Fragment
                             {
                                 Log.d(TAG, "get successful with data");
 
-                                for(DocumentSnapshot musician : musicians)
+                                DocumentSnapshot musician = musicians.get(0);
+
+                                musicianId = musician.getId();
+
+                                bands = (ArrayList<String>) musician.get("bands");
+
+                                System.out.println(TAG + " band size = " + bands.size());
+
+                                if(bands.size() > 0)
                                 {
-                                    System.out.println(TAG + " databse user-ref " + musician.get("user-ref"));
-                                    System.out.println(TAG + " local USERID " + USERID);
-                                    if(musician.get("user-ref").equals(USERID))
+                                    for(String b : bands)
                                     {
-                                        musicianId = musician.getId();
+                                        bandRef.document(b).get()
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if(task.isSuccessful()) {
+                                                            DocumentSnapshot bandSnapshot = task.getResult();
 
-                                        bands = (ArrayList<String>) musician.get("bands");
+                                                            System.out.println(TAG + " database document: " + bandSnapshot.getId() + " local document " + b);
 
-                                        System.out.println(TAG + " band size = " + bands.size());
+                                                            MusiciansBands band = new MusiciansBands(bandSnapshot.getId());
+                                                            musiciansBands.add(band);
 
-                                        if(bands.size() > 0)
-                                        {
-                                            second.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                                            {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task)
-                                                {
-                                                    if(task.isSuccessful())
-                                                    {
-                                                        bandsList = task.getResult().getDocuments();
+                                                            adapter = new MusiciansBandsAdapter(musiciansBands, getContext());
 
-                                                        System.out.println(TAG + " band List = " + bandsList.size());
-
-                                                        if(!bandsList.isEmpty())
-                                                        {
-                                                            for(DocumentSnapshot bandsSnapshot : bandsList)
+                                                            adapter.setOnItemClickListener(new MusiciansBandsAdapter.OnItemClickListener()
                                                             {
-                                                                for(String b : bands)
+                                                                @Override
+                                                                public void onItemClick(int position)
                                                                 {
-                                                                    System.out.println(TAG + " database document: " + bandsSnapshot.getId() + " local document " + b);
-
-                                                                    if(bandsSnapshot.getId().equals(b))
-                                                                    {
-                                                                        MusiciansBands band = new MusiciansBands(bandsSnapshot.getId());
-
-                                                                        adapter = new MusiciansBandsAdapter(musiciansBands, getContext());
-
-                                                                        adapter.setOnItemClickListener(new MusiciansBandsAdapter.OnItemClickListener()
-                                                                        {
-                                                                            @Override
-                                                                            public void onItemClick(int position)
-                                                                            {
-                                                                                /*Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
-                                                                                String listingRef = musiciansBands.get(position).getreference();
-                                                                                openListingIntent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingRef);
-                                                                                v.getContext().startActivity(openListingIntent);*/
-                                                                            }
-                                                                        });
-
-                                                                        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-                                                                        recyclerView.setHasFixedSize(true);
-                                                                        recyclerView.setAdapter(adapter);
-                                                                        LinearLayoutManager llManager = new LinearLayoutManager(getContext());
-                                                                        recyclerView.setLayoutManager(llManager);
-
-                                                                        break;
-                                                                    }
+                                            /*Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
+                                            String listingRef = musiciansBands.get(position).getreference();
+                                            openListingIntent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingRef);
+                                            v.getContext().startActivity(openListingIntent);*/
                                                                 }
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            System.out.println(TAG + " Band list is empty");
-                                                            //What do we do if bands are empty???
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        Log.d(TAG, "Task is successful with data.");
-                                                    }
-                                                }
-                                            });
-                                        }
-                                        else
-                                        {
-                                            //What do we do if we have no bands to show???
-                                        }
+                                                            });
 
-                                        break;
+                                                            recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+                                                            recyclerView.setHasFixedSize(true);
+                                                            recyclerView.setAdapter(adapter);
+                                                            LinearLayoutManager llManager = new LinearLayoutManager(getContext());
+                                                            recyclerView.setLayoutManager(llManager);
+
+                                                        } else {
+
+                                                        }
+                                                    }
+                                                });
                                     }
-                                    else
-                                    {
-                                        Log.d(TAG, "musician.get(\"user-ref\") does not match USERID");
-                                    }
+
+
+
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 Log.d(TAG, "get successful without data");
                             }
-                        }
-                        else
-                        {
+                        } else {
                             Log.d(TAG, "get failed with ", task.getException());
                         }
                     }
