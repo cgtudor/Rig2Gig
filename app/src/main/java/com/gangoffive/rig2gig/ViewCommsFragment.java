@@ -129,7 +129,7 @@ public class ViewCommsFragment extends Fragment
                                         //
                                     }*/
                                     @Override
-                                    public void onAcceptClick(int position) {
+                                    public void onTopButtonClick(int position) {
 
                                         switch (communications.get(position).getCommType())
                                         {
@@ -244,7 +244,7 @@ public class ViewCommsFragment extends Fragment
                                     }
 
                                     @Override
-                                    public void onDeclineClick(int position) {
+                                    public void onBotButtonClick(int position) {
 
                                         switch (communications.get(position).getCommType())
                                         {
@@ -285,7 +285,7 @@ public class ViewCommsFragment extends Fragment
                                                                 if(task.isSuccessful())
                                                                 {
                                                                     Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
-                                                                    Toast.makeText(getActivity(), "Contact request accepted!", Toast.LENGTH_SHORT).show();
+                                                                    Toast.makeText(getActivity(), "Contact request denied!", Toast.LENGTH_SHORT).show();
 
                                                                     communications.get(position).setCommType("contact-retain");
                                                                     adapter.notifyItemChanged(position);
