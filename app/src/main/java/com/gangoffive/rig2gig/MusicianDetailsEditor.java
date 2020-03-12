@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -14,36 +11,51 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
+import com.google.android.material.tabs.TabLayout;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VenueAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement {
+public class MusicianDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
-
-    private TextView name, description;
+    private TextView name, location, distance, genres;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
-    private String venueRef, type, listingRef;
-    private HashMap<String, Object> listing;
-    private Map<String, Object> venue, previousListing;
+    private String musicianRef, type;
+    private Map<String, Object> musician;
     private ListingManager listingManager;
     private int[] tabTitles;
-    private int[] fragments = {R.layout.fragment_create_venue_advertisement_image,
-            R.layout.fragment_create_venue_advertisement_details};
+    private int[] fragments = {R.layout.fragment_image_changer,
+            R.layout.fragment_musician_details_changer};
     private Drawable chosenPic;
+    private TabStatePreserver tabPreserver = new TabStatePreserver(this);
+    private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            tabPreserver.onFocusChange(hasFocus);
+        }
+    };
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.toString().trim().length() == 0 && createListing != null) {
+            if (createListing != null && (s.toString().trim().length() == 0 ||
+                    (distance.getText().toString().length() != 0 &&
+                    (Integer.parseInt(distance.getText().toString()) < 1))))
+                     {
                 createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
                 createListing.setTextColor(Color.parseColor("#4D4D4E"));
             }
             else if (before == 0 && count == 1 && createListing != null
-                    && description.getText().toString().trim().length() > 0)
+                    && name.getText().toString().trim().length() > 0
+                    && location.getText().toString().trim().length() > 0
+                    && distance.getText().toString().trim().length() > 0
+                    && (Integer.parseInt(distance.getText().toString()) > 0)
+                    && genres.getText().toString().trim().length() > 0)
             {
                 createListing.setBackgroundColor(Color.parseColor("#008577"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
@@ -57,18 +69,19 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_venue_advertisement);
+        setContentView(R.layout.activity_tabbed_editor_layout);
         tabTitles = new int[]{R.string.image, R.string.details};
+                //, R.string.description};
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
                 (this, getSupportFragmentManager(), tabTitles, fragments);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-        venueRef = getIntent().getStringExtra("EXTRA_VENUE_ID");
-        listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
-        type = "Venue";
-        listingManager = new ListingManager(venueRef, type, listingRef);
+        musicianRef = getIntent().getStringExtra("EXTRA_MUSICIAN_ID");
+        String listingRef = "profileEdit";
+        type = "Musician";
+        listingManager = new ListingManager(musicianRef, type, listingRef);
         listingManager.getUserInfo(this);
     }
 
@@ -77,13 +90,10 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      * @param data band data
      */
     @Override
-    public void onSuccessFromDatabase(Map<String, Object> data) {
+    public void onSuccessFromDatabase(Map<String, Object> data)
+    {
         setViewReferences();
-        if (description.getText().toString().trim().length() == 0 && createListing != null) {
-            createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-            createListing.setTextColor(Color.parseColor("#4D4D4E"));
-        }
-        venue = data;
+        musician = data;
         listingManager.getImage(this);
     }
 
@@ -94,10 +104,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData)
     {
-        setViewReferences();
-        venue = data;
-        previousListing = listingData;
-        listingManager.getImage(this);
+        //not required as not editing a listing
     }
 
     /**
@@ -106,6 +113,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     public void onSuccessfulImageDownload() {
         populateInitialFields();
+        saveTabs();
     }
 
     /**
@@ -113,16 +121,35 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public void setViewReferences() {
-        name = findViewById(R.id.name);
         image = findViewById(R.id.image);
         if (image != null)
         {
             image.setImageDrawable(null);
         }
-        description = findViewById(R.id.distance);
-        if (description != null)
+        name = findViewById(R.id.name);
+        if (name != null)
         {
-            description.addTextChangedListener(textWatcher);
+            name.setOnFocusChangeListener(editTextFocusListener);
+            name.addTextChangedListener(textWatcher);
+
+        }
+        location = findViewById(R.id.location);
+        if (location != null)
+        {
+            location.setOnFocusChangeListener(editTextFocusListener);
+            location.addTextChangedListener(textWatcher);
+        }
+        distance = findViewById(R.id.distance);
+        if (distance != null)
+        {
+            distance.setOnFocusChangeListener(editTextFocusListener);
+            distance.addTextChangedListener(textWatcher);
+        }
+        genres = findViewById(R.id.genres);
+        if (genres != null)
+        {
+            genres.setOnFocusChangeListener(editTextFocusListener);
+            genres.addTextChangedListener(textWatcher);
         }
         createListing = findViewById(R.id.createListing);
         createListing.setOnClickListener(new View.OnClickListener() {
@@ -165,20 +192,55 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public void populateInitialFields() {
-        if(name != null && venue !=null && name.getText() != venue.get("name") && name.getText() == "")
-        {
-            name.setText(venue.get("name").toString());
-        }
         if (chosenPic != null && image != null)
         {
             image.setImageDrawable(chosenPic);
         }
-        if(description != null && previousListing !=null)
+        if(name != null && musician !=null)
         {
-            description.setText(previousListing.get("description").toString());
+            name.setText(musician.get("name").toString());
+        }
+        if(location != null && musician !=null)
+        {
+            location.setText(musician.get("location").toString());
+        }
+        if(distance != null && musician !=null)
+        {
+            distance.setText(musician.get("distance").toString());
+        }
+        if(genres != null && musician !=null)
+        {
+            genres.setText(musician.get("genres").toString());
         }
     }
 
+    /**
+     * Save values of tabs that may be destroyed
+     */
+    @Override
+    public void saveTabs()
+    {
+        if (image != null && image.getDrawable() != null)
+        {
+            chosenPic = (image.getDrawable());
+        }
+        listingDataMap();
+        reinitialiseTabs();
+    }
+
+    /**
+     * Reinitialise values of tabs that may have been destroyed
+     */
+    @Override
+    public void reinitialiseTabs() {
+        setViewReferences();
+        populateInitialFields();
+    }
+
+    @Override
+    public void beginTabPreservation() {
+        tabPreserver.preserveTabState();
+    }
 
     /**
      * handles activity results
@@ -193,20 +255,21 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         chosenPic = image.getDrawable();
     }
 
+
     /**
      * create advertisement, posting to database
      */
     @Override
     public void createAdvertisement() {
-        listingDataMap();
-        if (chosenPic == null)
+        saveTabs();
+        if (chosenPic != null)
         {
             chosenPic = image.getDrawable();
         }
         if (validateDataMap()) {
-            listingManager.postDataToDatabase(listing, chosenPic, this);
+            listingManager.postDataToDatabase((HashMap)musician, chosenPic, this);
         } else {
-            Toast.makeText(VenueAdvertisementEditor.this,
+            Toast.makeText(MusicianDetailsEditor.this,
                     "Listing not created.  Ensure all fields are complete " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
@@ -220,28 +283,23 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            if (listingRef.equals(""))
-            {
-                Toast.makeText(this,"Advertisement created successfully",
-                        Toast.LENGTH_LONG).show();
-            }
-            else
-            {
-                Toast.makeText(this,"Advertisement edited successfully",
-                        Toast.LENGTH_LONG).show();
-            }
-            Intent intent = new Intent(VenueAdvertisementEditor.this, VenueListingDetailsActivity.class);
+            Toast.makeText(this,"Details updated successfully",
+                    Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(MusicianDetailsEditor.this, NavBarActivity.class);
+            Toast.makeText(MusicianDetailsEditor.this,
+                    "Details successfully updated",
+                    Toast.LENGTH_LONG).show();
             intent.putExtra("EXTRA_VENUE_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(VenueAdvertisementEditor.this,
+            Toast.makeText(MusicianDetailsEditor.this,
                     "Listing creation failed.  Check your connection " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(VenueAdvertisementEditor.this,
+            Toast.makeText(MusicianDetailsEditor.this,
                     "Listing creation failed.  Check your connection " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
@@ -253,22 +311,30 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public void cancelAdvertisement() {
-        Intent backToMain = new Intent(VenueAdvertisementEditor.this,
-                MainActivity.class);
+        Intent backToMain = new Intent(MusicianDetailsEditor.this, MainActivity.class);
         startActivity(backToMain);
     }
 
     /**
-     * populate listing map with combination of values from text views and map generated from database
+     * populate map with data from textviews
      */
+    @Override
     public void listingDataMap() {
-        if (listing == null) {
-            listing = new HashMap<>();
-            listing.put("venue-ref", venueRef);
-        }
-        if(description != null)
+        if(name != null && name.getText() != null && musician != null)
         {
-            listing.put("description", description.getText().toString());
+            musician.put("name",name.getText().toString());
+        }
+        if(location != null && location.getText() != null && musician != null)
+        {
+            musician.put("location",location.getText().toString());
+        }
+        if(distance != null && distance.getText() != null && musician != null)
+        {
+            musician.put("distance",distance.getText().toString());
+        }
+        if(genres != null && genres.getText() != null && musician != null)
+        {
+            musician.put("genres",genres.getText().toString());
         }
     }
 
@@ -278,11 +344,18 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public boolean validateDataMap() {
-        for (Map.Entry element : listing.entrySet()) {
-            String val = element.getValue().toString();
-            if (val == null || val.trim().isEmpty()) {
-                return false;
+        for (Map.Entry element : musician.entrySet()) {
+            if (!(element.getValue().toString().equals("bands")))
+            {
+                String val = element.getValue().toString();
+                if (val == null || val.trim().isEmpty()) {
+                    return false;
+                }
             }
+        }
+        if (Integer.parseInt(distance.getText().toString()) < 1)
+        {
+            return false;
         }
         return true;
     }
@@ -294,5 +367,4 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     public ImageView getImageView() {
         return image;
     }
-
 }

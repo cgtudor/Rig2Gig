@@ -14,6 +14,8 @@ public interface TabbedViewReferenceInitialiser {
      */
     public void reinitialiseTabs();
 
-
+    /**
+     * commence tab preservation process where required
+     */
     public void beginTabPreservation();
 }

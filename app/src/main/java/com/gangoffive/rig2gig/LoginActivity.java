@@ -74,34 +74,6 @@ public class LoginActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //Uncomment this for login testing
-        if (fAuth.getCurrentUser() != null)
-        {
-            final String getUserId = fAuth.getUid();
-            DocumentReference docIdRef = fStore.collection("users").document(getUserId);
-            docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-            {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task)
-                {
-                    if (task.isSuccessful())
-                    {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists())
-                        {
-                            Log.d(TAG, "Document exists!");
-                            CredentialActivity.userType = document.get("user-type").toString();
-                            startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
-                        }
-                        else
-                        {
-                            Log.d(TAG, "Document doesn't exists!");
-                        }
-                    }
-                }
-            });
-        }
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -194,7 +166,7 @@ public class LoginActivity extends AppCompatActivity{
                                         if (document.exists())
                                         {
                                             Log.d(TAG, "Document exists!");
-                                            CredentialActivity.userType = document.get("user-type").toString();
+                                            AccountPurposeActivity.userType = document.get("user-type").toString();
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
                                         }
                                         else
@@ -271,7 +243,7 @@ public class LoginActivity extends AppCompatActivity{
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
                                             Log.d(TAG, "Document exists!");
-                                            CredentialActivity.userType = document.get("User Type").toString();
+                                            AccountPurposeActivity.userType = document.get("User Type").toString();
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
                                         } else {
                                             Log.d(TAG, "Document does not exist!");
@@ -331,7 +303,7 @@ public class LoginActivity extends AppCompatActivity{
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
                                             Log.d(TAG, "Document exists!");
-                                            CredentialActivity.userType = document.get("User Type").toString();
+                                            AccountPurposeActivity.userType = document.get("User Type").toString();
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
                                         } else {
                                             Log.d(TAG, "Document does not exist!");
@@ -374,7 +346,7 @@ public class LoginActivity extends AppCompatActivity{
      * @param view
      */
     public void loginRegisterBtn(View view) {
-        startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+        startActivity(new Intent(getApplicationContext(), AccountPurposeActivity.class));
     }
 
     /**

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -25,7 +26,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
 
         final ImageView bandPhoto = findViewById(R.id.bandPhoto);
         final TextView bandName = findViewById(R.id.bandName);
-        final TextView genre = findViewById(R.id.description);
+        final TextView genre = findViewById(R.id.distance);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.position);
         final TextView distance = findViewById(R.id.position);
@@ -97,7 +98,9 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
 
         /*Using Glide to load the picture from the reference directly into the ImageView*/
         GlideApp.with(this /* context */)
-                 .load(bandPic)
+                .load(bandPic)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(bandPhoto);
     }
 }

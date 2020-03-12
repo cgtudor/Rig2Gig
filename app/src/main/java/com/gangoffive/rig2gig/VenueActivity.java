@@ -5,14 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,23 +31,24 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.twitter.sdk.android.core.models.ImageValue;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
-public class VenueActivity extends AppCompatActivity {
+public class VenueActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private final String TAG = "@@@@@@@@@@@@@@@@";
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     FirebaseStorage fStorage;
     EditText description, location, name, venueType;
-    Button submit;
+    Button submit, takePhotoBtn, uploadPhotoBtn;
 
-    String email, userRef, phoneNumber;
+    String email, userRef, phoneNumber, type;
+
+    private ImageView image;
+    private Drawable chosenPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +59,7 @@ public class VenueActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         fStorage = FirebaseStorage.getInstance();
 
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.distance);
         location = findViewById(R.id.location);
         name = findViewById(R.id.name);
         venueType = findViewById(R.id.type);
@@ -61,6 +68,19 @@ public class VenueActivity extends AppCompatActivity {
         userRef = fAuth.getUid();
         email = fAuth.getCurrentUser().getEmail();
 
+        takePhotoBtn = findViewById(R.id.takePhoto);
+        uploadPhotoBtn = findViewById(R.id.uploadBtn);
+
+        image = findViewById(R.id.imageView);
+
+        String[] venueTypes = { "Function Room", "Pub", "Club"};
+
+
+        Spinner spin = findViewById(R.id.spinner1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner, venueTypes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin.setAdapter(adapter);
+        spin.setOnItemSelectedListener(this);
 
         /**
          * description
@@ -73,14 +93,50 @@ public class VenueActivity extends AppCompatActivity {
          */
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+
+        switch (position) {
+            case 0:
+                // Whatever you want to happen when the first item gets selected
+                type = "Funtion Room";
+                break;
+            case 1:
+                // Whatever you want to happen when the second item gets selected
+                type = "pub";
+                break;
+            case 2:
+                // Whatever you want to happen when the thrid item gets selected
+                type = "club";
+                break;
+        }
+
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + type);
+    }
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO - Custom Code
+    }
+
     public void submitBtnOnClick(View view) {
         String desc = description.getText().toString();
         String loc = location.getText().toString();
         String venueName = name.getText().toString();
-        String type = venueType.getText().toString();
         String venueRating = "-1";
         ImageView defImg = new ImageView(this);
         defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
+
+        if (TextUtils.isEmpty(loc)) {
+            location.setError("Please Set A Locaton!");
+            return;
+        }
+        if (TextUtils.isEmpty(desc)) {
+            description.setError("Please Enter A Venue Description!");
+            return;
+        }
+        if (TextUtils.isEmpty(venueName)) {
+            name.setError("Please Enter A Venue Name!");
+            return;
+        }
 
 
         fStore.collection("users").document(userRef).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -92,7 +148,7 @@ public class VenueActivity extends AppCompatActivity {
                         if (document.exists())
                         {
                             Log.d(TAG, "Document exists!");
-                            phoneNumber = document.get("phone").toString();
+                            phoneNumber = document.get("phone-number").toString();
 
                             Map<String, Object> venues = new HashMap<>();
                             venues.put("name", venueName);
@@ -100,7 +156,7 @@ public class VenueActivity extends AppCompatActivity {
                             venues.put("description", desc);
                             venues.put("user-ref", userRef);
                             venues.put("venue-type", type);
-                            venues.put("email", email);
+                            venues.put("email-address", email);
                             venues.put("phone-number", phoneNumber);
                             venues.put("rating", venueRating);
                             fStore.collection("venues")
@@ -111,7 +167,7 @@ public class VenueActivity extends AppCompatActivity {
                                             Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                                             StorageReference sRef = fStorage.getReference()
                                                     .child("/images/venues/" + documentReference.getId() + ".jpg");
-                                            UploadTask uploadTask = sRef.putBytes(imageToByteArray(defImg.getDrawable()));
+                                            UploadTask uploadTask = sRef.putBytes(imageToByteArray(image.getDrawable()));
                                             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                 @Override
                                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -149,5 +205,27 @@ public class VenueActivity extends AppCompatActivity {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return stream.toByteArray();
+    }
+
+    public void uploadBtnOnClick(View view) {
+        ImageRequestHandler.getGalleryImage(view);
+
+    }
+
+    public void takeBtnOnClick(View view) {
+        ImageRequestHandler.getCameraImage(view);
+    }
+
+    /**
+     * handles activity results
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
+        chosenPic = image.getDrawable();
     }
 }

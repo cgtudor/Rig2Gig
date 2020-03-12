@@ -13,6 +13,8 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_constraintTop_toTopOf="parent" >
+        android:focusable="true"
+        android:focusableInTouchMode="true"
 
         <TextView
             android:id="@+id/title"
@@ -21,7 +23,7 @@
             android:gravity="center"
             android:minHeight="?actionBarSize"
             android:padding="@dimen/appbar_padding"
-            android:text="Edit details"
+            android:text="Advertise yourself to performers"
             android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
             android:textColor="#FFFFFF" />
 
@@ -30,6 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary" />
+
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
@@ -61,7 +65,7 @@
             android:layout_height="fill_parent"
             android:layout_marginStart="50dp"
             android:layout_weight="1.0"
-            android:background="#008577"
+            android:backgroundTint="#008577"
             android:text="Cancel"
             android:textColor="#FFFFFF"
             style="?android:attr/borderlessButtonStyle"/>

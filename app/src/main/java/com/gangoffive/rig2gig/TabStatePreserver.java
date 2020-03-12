@@ -12,6 +12,10 @@ public class TabStatePreserver {
     private boolean breakout;
     private TabbedViewReferenceInitialiser tabView;
 
+    /**
+     * Constructor for TabStatePreserver
+     * @param tabbedView interface creating object
+     */
     public TabStatePreserver(TabbedViewReferenceInitialiser tabbedView)
     {
         editingText = false;
@@ -21,6 +25,9 @@ public class TabStatePreserver {
         tabView = tabbedView;
     }
 
+    /**
+     * Determine if saving tabs is required
+     */
     public void preserveTabState()
     {
         if (!editingText && !breakout)
@@ -41,6 +48,9 @@ public class TabStatePreserver {
         }
     }
 
+    /**
+     * Determine if sufficient loops have occurred to ensure tabs are preserved
+     */
     public void breakOut() {
         saveLoopCount++;
         if (saveLoopCount > 15)
@@ -50,6 +60,10 @@ public class TabStatePreserver {
         }
     }
 
+    /**
+     * Ensure tracing variables are correct on focus change
+     * @param hasFocus true if has focus
+     */
     public void onFocusChange(boolean hasFocus)
     {
         if (hasFocus)
