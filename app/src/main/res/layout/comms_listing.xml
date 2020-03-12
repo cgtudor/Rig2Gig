@@ -24,7 +24,7 @@
                 android:id="@+id/textViewName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name"
+                android:text=""
                 android:textSize="13.5sp"
                 android:textStyle="bold"
                 android:layout_alignParentTop="true"
@@ -34,7 +34,7 @@
                 android:id="@+id/textViewType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="wants to contact you."
+                android:text=""
                 android:textSize="13.5sp"
                 android:layout_marginLeft="5dp"
                 android:layout_alignParentTop="true"
@@ -46,34 +46,31 @@
                 android:layout_height="16dp"
                 android:padding="2dp"
                 android:layout_below="@+id/textViewName"
-                android:layout_toEndOf="@+id/imageViewPhoto"
-                android:src="@drawable/ic_person_add_black_24dp"/>
+                android:layout_toEndOf="@+id/imageViewPhoto"/>
 
             <TextView
                 android:id="@+id/textViewDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12th Jan"
+                android:text=""
                 android:textSize="10sp"
                 android:layout_below="@+id/textViewName"
                 android:layout_toEndOf="@+id/imageViewIcon"/>
 
             <ImageView
-                android:id="@+id/imageViewAccept"
+                android:id="@+id/imageViewTopButton"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:padding="2dp"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_check_circle_black_24dp"/>
+                android:layout_alignParentRight="true"/>
 
             <ImageView
-                android:id="@+id/imageViewDecline"
+                android:id="@+id/imageViewBotButton"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:padding="2dp"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/imageViewAccept"
-                android:src="@drawable/ic_cancel_black_24dp"/>
+                android:layout_below="@+id/imageViewTopButton"/>
 
 
         </RelativeLayout>

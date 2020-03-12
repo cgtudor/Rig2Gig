@@ -22,16 +22,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.w3c.dom.Document;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> {
+
+    private static final int VIEW_TYPE_EMPTY_LIST_PLACEHOLDER = 0;
+    private static final int VIEW_TYPE_OBJECT_VIEW = 1;
 
     private FirebaseFirestore db;
     private FirebaseStorage storage;
@@ -46,8 +44,8 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
         /*void onItemClick(int position);*/
         /*void onPhotoClick(int position);
         void onNameClick(int position);*/
-        void onAcceptClick(int position);
-        void onDeclineClick(int position);
+        void onTopButtonClick(int position);
+        void onBotButtonClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -61,8 +59,8 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
         public TextView textViewType;
         public ImageView imageViewIcon;
         public TextView textViewDate;
-        public ImageView imageViewAccept;
-        public ImageView imageViewDecline;
+        public ImageView imageViewTopButton;
+        public ImageView imageViewBotButton;
 
         public ViewHolder(@NonNull View itemView, CommsAdapter.OnItemClickListener listener) {
             super(itemView);
@@ -72,8 +70,8 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
             textViewType = (TextView) itemView.findViewById(R.id.textViewType);
             imageViewIcon = (ImageView) itemView.findViewById(R.id.imageViewIcon);
             textViewDate = (TextView) itemView.findViewById(R.id.textViewDate);
-            imageViewAccept = (ImageView) itemView.findViewById(R.id.imageViewAccept);
-            imageViewDecline = (ImageView) itemView.findViewById(R.id.imageViewDecline);
+            imageViewTopButton = (ImageView) itemView.findViewById(R.id.imageViewTopButton);
+            imageViewBotButton = (ImageView) itemView.findViewById(R.id.imageViewBotButton);
 
             /*itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -111,25 +109,25 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                 }
             });*/
 
-            imageViewAccept.setOnClickListener(new View.OnClickListener() {
+            imageViewTopButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if(position != RecyclerView.NO_POSITION) {
-                            listener.onAcceptClick(position);
+                            listener.onTopButtonClick(position);
                         }
                     }
                 }
             });
 
-            imageViewDecline.setOnClickListener(new View.OnClickListener() {
+            imageViewBotButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if(position != RecyclerView.NO_POSITION) {
-                            listener.onDeclineClick(position);
+                            listener.onBotButtonClick(position);
                         }
                     }
                 }
@@ -149,9 +147,19 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
     @NonNull
     @Override
     public CommsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        /*switch(viewType) {
+            case VIEW_TYPE_EMPTY_LIST_PLACEHOLDER:
+                //fill in
+                break;
+            case VIEW_TYPE_OBJECT_VIEW:
+                View v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.comms_listing, parent, false);
+                return new CommsAdapter.ViewHolder(v, listener);
+                break;
+        }*/
+
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.comms_listing, parent, false);
-
         return new CommsAdapter.ViewHolder(v, listener);
     }
 
@@ -183,32 +191,28 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                         switch(commDoc.get("type").toString()) {
                             case "contact-request":
                                 holder.textViewType.setText("wants to contact you.");
-                                holder.imageViewAccept.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check_circle_black_24dp));
-                                holder.imageViewDecline.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_cancel_black_24dp));
+                                holder.imageViewTopButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check_circle_green));
+                                holder.imageViewBotButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_cancel_red));
                                 break;
                             case "contact-accept":
                                 holder.textViewType.setText("has accepted your contact request.");
-                                holder.imageViewAccept.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_phone_black_24dp));
-                                holder.imageViewDecline.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_email_black_24dp));
-                                //contact info @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                                //communication.get(position).getUserRef() => database call to user to get user type
-                                //find collection (usertype) that has same user ref.
+                                holder.imageViewTopButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_phone_black));
+                                holder.imageViewBotButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_email_black));
                                 break;
                             case "contact-send":
                                 holder.textViewType.setText("has shared their contact details");
-                                holder.imageViewAccept.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_phone_black_24dp));
-                                holder.imageViewDecline.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_email_black_24dp));
-                                //contact info @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                                holder.imageViewTopButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_phone_black));
+                                holder.imageViewBotButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_email_black));
                                 break;
                             case "contact-decline":
                                 holder.textViewType.setText("has declined your contact request.");
-                                holder.imageViewAccept.setVisibility(View.GONE);
-                                holder.imageViewDecline.setVisibility(View.GONE);
+                                holder.imageViewTopButton.setVisibility(View.GONE);
+                                holder.imageViewBotButton.setVisibility(View.GONE);
                                 break;
                             case "contact-retain":
                                 holder.textViewType.setText("did not recieve your contact details");
-                                holder.imageViewAccept.setVisibility(View.GONE);
-                                holder.imageViewDecline.setVisibility(View.GONE);
+                                holder.imageViewTopButton.setVisibility(View.GONE);
+                                holder.imageViewBotButton.setVisibility(View.GONE);
                                 break;
                             default:
                                 //
@@ -272,5 +276,14 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return communications.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(communications.isEmpty()) {
+            return VIEW_TYPE_EMPTY_LIST_PLACEHOLDER;
+        } else {
+            return VIEW_TYPE_OBJECT_VIEW;
+        }
     }
 }
