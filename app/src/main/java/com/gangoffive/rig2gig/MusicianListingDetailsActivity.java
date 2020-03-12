@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,6 +24,10 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_musician_listing_details);
+
+        /*Setting the support action bar to the newly created toolbar*/
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final ImageView musicianPhoto = findViewById(R.id.musicianPhoto);
         final TextView musicianName = findViewById(R.id.musicianName);
@@ -63,6 +69,8 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
                                         location.setText(document.get("location").toString());
 
+                                        getSupportActionBar().setTitle(musicianName.getText().toString());
+
                                     } else {
                                         Log.d("FIRESTORE", "No such document");
                                     }
@@ -99,5 +107,55 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
         GlideApp.with(this /* context */)
                 .load(musicianPic)
                 .into(musicianPhoto);
+    }
+    /**
+     * Overriding the up navigation to call onBackPressed
+     * @return true
+     */
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    /**
+     * Checks the user-type. Redirects to console if it is a musician or to the previous activity/fragment if not.
+     */
+    @Override
+    public void onBackPressed() {
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(FirebaseAuth.getInstance().getUid()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            DocumentSnapshot document = task.getResult();
+                            if(document.exists())
+                            {
+                                String accType = document.get("user-type").toString();
+                                if(accType.equals("Musician"))
+                                {
+                                    Intent intent = new Intent(MusicianListingDetailsActivity.this, NavBarActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                                else
+                                {
+                                    MusicianListingDetailsActivity.this.onBackPressed();
+                                    finish();
+                                }
+                            }
+                            else
+                            {
+                                Log.d("FIRESTORE", "No such document");
+                            }
+                        }
+                        else
+                        {
+                            Log.d("FIRESTORE", "get failed with ", task.getException());
+                        }
+                    }
+                });
     }
 }
