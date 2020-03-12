@@ -17,8 +17,15 @@
     <string name="account_settings">Account</string>
     <string name="privacy_settings">Privacy</string>
     <string name="venue_console">Venue Console</string>
+    <string name="musician_console">Musician Console</string>
+    <string name="band_console">Band Console</string>
     <string name="view_performers">Performers</string>
     <string name="view_edit_venue">Edit Venue</string>
+    <string name="view_venues">Venues</string>
+    <string name="edit_musician">Edit Musician</string>
+    <string name="edit_band">Edit Band</string>
+    <string name="invite_musicians">Invite Musicians</string>
+    <string name="search_new_talent">Search New Talent</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

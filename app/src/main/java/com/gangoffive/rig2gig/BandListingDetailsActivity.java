@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,9 +29,9 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         final ImageView bandPhoto = findViewById(R.id.bandPhoto);
         final TextView bandName = findViewById(R.id.bandName);
         final TextView rating = findViewById(R.id.rating);
-        final TextView genres = findViewById(R.id.description);
+        final TextView genres = findViewById(R.id.distance);
         final TextView position = findViewById(R.id.position);
-        final TextView description = findViewById(R.id.description);
+        final TextView description = findViewById(R.id.distance);
         final TextView location = findViewById(R.id.position);
 
         /*Setting the support action bar to the newly created toolbar*/
@@ -105,6 +106,8 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         /*Using Glide to load the picture from the reference directly into the ImageView*/
         GlideApp.with(this /* context */)
                 .load(bandPic)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(bandPhoto);
     }
 

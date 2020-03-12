@@ -7,12 +7,16 @@ import androidx.fragment.app.Fragment;
 
 public class PlaceholderBandAdvertisement extends Fragment
 {
+
+    private String bandRef = "S0lVRscAvnnE3sbqn9X5";
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        startActivity(new Intent(getActivity(), CreateBandAdvertisement.class));
-        //Intent intent = new Intent(CreateBandAdvertisement.this, BandListingDetailsActivity.class);
+        Intent intent = new Intent(getActivity(), BandAdvertisementEditor.class);
+        intent.putExtra("EXTRA_BAND_ID", bandRef);
+        intent.putExtra("EXTRA_LISTING_ID","");
+        startActivity(intent);
     }
 }

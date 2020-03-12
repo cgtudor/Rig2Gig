@@ -17,25 +17,40 @@
         android:theme="@style/AppTheme">
 
         <service android:name=".NotificationService"></service>
+        <activity android:name=".CreateMusicianAccountActivity"></activity>
+        <activity android:name=".AccountPurposeActivity" />
+        <activity android:name=".SplashScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <activity android:name=".VenueActivity"></activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".NavBarActivity" />
+        <activity android:name=".VenueActivity" />
         <activity android:name=".MyBandActivity" />
-        <activity android:name=".CreateBandActivity"></activity>
-        <activity android:name=".BandListingDetailsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".MusicianListingDetailsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".VenueListingDetailsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".CreateBandActivity" />
+        <activity android:name=".BandListingDetailsActivity" />
+        <activity android:name=".MusicianListingDetailsActivity" />
+        <activity android:name=".VenueListingDetailsActivity" />
         <activity
-            android:name=".CreateBandAdvertisement"
+            android:name=".BandAdvertisementEditor"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name=".CreateMusicianAdvertisement"
+            android:name=".MusicianAdvertisementEditor"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity
+            android:name=".PerformerAdvertisementEditor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CreatePerformerAdvertisement"
+            android:name=".MusicianDetailsEditor"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BandDetailsEditor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".VenueAdvertisementEditor"
@@ -53,23 +68,6 @@
         <activity android:name=".CredentialActivity" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".MainActivity" />
-        <activity
-            android:name=".NavBarActivity"
-            android:parentActivityName=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

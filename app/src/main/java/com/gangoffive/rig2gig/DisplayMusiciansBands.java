@@ -1,0 +1,149 @@
+package com.gangoffive.rig2gig;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.StorageReference;
+
+import org.w3c.dom.Document;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class DisplayMusiciansBands extends Fragment
+{
+    private RecyclerView recyclerView;
+    private MusiciansBandsAdapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+    private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+
+    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private final String USERID = fAuth.getUid();
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference musiciansRef = db.collection("musicians");
+    private List<DocumentSnapshot> musicians;
+
+    private CollectionReference bandRef = db.collection("bands");
+    private List<DocumentSnapshot> bandsList;
+
+    private ArrayList<MusiciansBands> musiciansBands;
+    private ArrayList<String> bands;
+
+    private String musicianId;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
+        View v = inflater.inflate(R.layout.fragment_my_bands, container, false);
+
+        musiciansBands = new ArrayList<>();
+
+        Query first = musiciansRef;
+
+        first.whereEqualTo("user-ref", USERID).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                    {
+                        if(task.isSuccessful())
+                        {
+                            musicians = task.getResult().getDocuments();
+
+                            if(!musicians.isEmpty())
+                            {
+                                Log.d(TAG, "get successful with data");
+
+                                DocumentSnapshot musician = musicians.get(0);
+
+                                musicianId = musician.getId();
+
+                                bands = (ArrayList<String>) musician.get("bands");
+
+                                System.out.println(TAG + " band size = " + bands.size());
+
+                                if(bands.size() > 0)
+                                {
+                                    for(String b : bands)
+                                    {
+                                        bandRef.document(b).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                                        {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                            {
+                                                if(task.isSuccessful())
+                                                {
+                                                    DocumentSnapshot bandSnapshot = task.getResult();
+
+                                                    System.out.println(TAG + " database document: " + bandSnapshot.getId() + " local document " + b);
+
+                                                    MusiciansBands band = new MusiciansBands(bandSnapshot.getId());
+                                                    musiciansBands.add(band);
+
+                                                    adapter = new MusiciansBandsAdapter(musiciansBands, getContext());
+
+                                                    adapter.setOnItemClickListener(new MusiciansBandsAdapter.OnItemClickListener()
+                                                    {
+                                                        @Override
+                                                        public void onItemClick(int position)
+                                                        {
+                                                            //Uncomment following when the fragment/activity to view a band's details has been created.
+                                                            /*Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
+                                                            String listingRef = musiciansBands.get(position).getreference();
+                                                            openListingIntent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingRef);
+                                                            v.getContext().startActivity(openListingIntent);*/
+                                                        }
+                                                    });
+
+                                                    recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+                                                    recyclerView.setHasFixedSize(true);
+                                                    recyclerView.setAdapter(adapter);
+                                                    LinearLayoutManager llManager = new LinearLayoutManager(getContext());
+                                                    recyclerView.setLayoutManager(llManager);
+
+                                                }
+                                                else
+                                                {
+
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Log.d(TAG, "get successful without data");
+                            }
+                        }
+                        else
+                        {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+
+        return v;
+    }
+}

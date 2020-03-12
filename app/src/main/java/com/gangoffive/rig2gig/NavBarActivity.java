@@ -17,7 +17,7 @@ public class NavBarActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         NavigationContext navigationContext = new NavigationContext();
-        Intent fragIntent = new Intent(this, navigationContext.navBarFinder(CredentialActivity.userType));
+/*        Intent fragIntent = new Intent(this, navigationContext.navBarFinder(CredentialActivity.userType));
 
         if(savedInstanceState != null)
         {
@@ -36,6 +36,7 @@ public class NavBarActivity extends AppCompatActivity
 
         //Decide which navbar to display.
 
-        startActivity(fragIntent);
+        startActivity(fragIntent);*/
+        startActivity(new Intent(this, navigationContext.navBarFinder(AccountPurposeActivity.userType)));
     }
 }

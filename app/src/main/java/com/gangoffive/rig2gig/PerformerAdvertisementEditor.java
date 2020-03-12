@@ -2,10 +2,8 @@ package com.gangoffive.rig2gig;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -13,26 +11,24 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Manages the user interface for creating a performer advertisement
- */
-public class CreatePerformerAdvertisement extends AppCompatActivity implements CreateAdvertisement {
+public class PerformerAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement {
 
     private TextView distance, name;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
-    private String performerRef, performerType;
+    private String performerRef, performerType, listingRef;
     private HashMap<String, Object> listing;
-    private Map<String, Object> band;
+    private Map<String, Object> band, previousListing;
     private ListingManager listingManager;
+    private Drawable chosenPic;
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -52,9 +48,7 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-
-        }
+        public void afterTextChanged(Editable s) {}
     };
 
 
@@ -67,28 +61,108 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
         super.onCreate(savedInstanceState);
 
 
-        performerRef = getIntent().getStringExtra("EXTRA_BAND_ID");;
-        performerType = "Musician";
+        performerRef = getIntent().getStringExtra("EXTRA_PERFORMER_ID");
+        performerType = getIntent().getStringExtra("EXTRA_PERFORMER_TYPE");
+        listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
 
         setContentView(R.layout.activity_create_performer_advertisement);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        listingManager = new ListingManager(performerRef, getListingType(), "");
+        listingManager = new ListingManager(performerRef, performerType + " Performer", listingRef);
         listingManager.getUserInfo(this);
     }
 
     /**
-     * determine if the listing type is for a band or musician (convert to Enum once user Enums are known)
-     * @return type of listing
+     * Populate view if database request was successful
+     * @param data performer data
      */
-    public String getListingType() {
-        if (performerType.equals("Band")) {
-            return "Band Performer";
-        } else if (performerType.equals("Musician")) {
-            return "Musician Performer";
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data) {
+        setViewReferences();
+        band = data;
+        listingManager.getImage(this);
+    }
+
+    /**
+     * Populate view if database request was successful
+     * @param data performer data
+     * @param listingData existing listing data
+     */
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
+
+        setViewReferences();
+        band = data;
+        previousListing = listingData;
+        listingManager.getImage(this);
+    }
+
+    /**
+     * Populate view if database request was successful
+     */
+    @Override
+    public void onSuccessfulImageDownload() {populateInitialFields();}
+
+    /**
+     * set references to text and image views and buttons
+     */
+    @Override
+    public void setViewReferences() {
+        name = findViewById(R.id.name);
+        image = findViewById(R.id.image);
+        if (image != null)
+        {
+            image.setImageDrawable(null);
         }
-        return "";
+        distance = findViewById(R.id.distance);
+        if (distance != null)
+        {
+            distance.addTextChangedListener(textWatcher);
+        }
+        createListing = findViewById(R.id.createListing);
+        createListing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {createAdvertisement();}
+        });
+        cancel = findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {cancelAdvertisement();}
+        });
+        galleryImage = findViewById(R.id.galleryImage);
+        galleryImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {ImageRequestHandler.getGalleryImage(v);}
+        });
+        takePhoto = findViewById(R.id.takePhoto);
+        takePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {ImageRequestHandler.getCameraImage(v);}
+        });
+    }
+
+    /**
+     * populate text views
+     */
+    @Override
+    public void populateInitialFields() {
+        if(name != null && band !=null && name.getText() != band.get("name") && name.getText() == "")
+        {
+            name.setText(band.get("name").toString());
+        }
+        if (chosenPic != null && image != null)
+        {
+            image.setImageDrawable(chosenPic);
+        }
+        if(distance != null && previousListing !=null)
+        {
+            distance.setText(previousListing.get("distance").toString());
+        }
+        else if (distance != null)
+        {
+            distance.setText(band.get("distance").toString());
+        }
     }
 
     /**
@@ -101,54 +175,7 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
-    }
-
-    /**
-     * set references to text and image views and buttons
-     */
-    @Override
-    public void setViewReferences() {
-        name = findViewById(R.id.name);
-        image = findViewById(R.id.image);
-        distance = findViewById(R.id.distance);
-        distance.addTextChangedListener(textWatcher);
-        createListing = findViewById(R.id.createListing);
-        createListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAdvertisement();
-            }
-        });
-        cancel = findViewById(R.id.cancel);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelAdvertisement();
-            }
-        });
-        galleryImage = findViewById(R.id.galleryImage);
-        galleryImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageRequestHandler.getGalleryImage(v);
-            }
-        });
-        takePhoto = findViewById(R.id.takePhoto);
-        takePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageRequestHandler.getCameraImage(v);
-            }
-        });
-    }
-
-    /**
-     * populate text views
-     */
-    @Override
-    public void populateInitialFields() {
-        name.setText(band.get("name").toString());
-        distance.setText(band.get("distance").toString());
+        chosenPic = image.getDrawable();
     }
 
     /**
@@ -157,10 +184,14 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
     @Override
     public void createAdvertisement() {
         listingDataMap();
+        if (chosenPic == null)
+        {
+            chosenPic = image.getDrawable();
+        }
         if (validateDataMap()) {
-            listingManager.postDataToDatabase(listing, image.getDrawable(), this);
+            listingManager.postDataToDatabase(listing, chosenPic, this);
         } else {
-            Toast.makeText(CreatePerformerAdvertisement.this,
+            Toast.makeText(PerformerAdvertisementEditor.this,
                     "Listing not created.  Ensure all fields are complete " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
@@ -181,12 +212,12 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(CreatePerformerAdvertisement.this,
+            Toast.makeText(PerformerAdvertisementEditor.this,
                     "Listing creation failed.  Check your connection " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(CreatePerformerAdvertisement.this,
+            Toast.makeText(PerformerAdvertisementEditor.this,
                     "Listing creation failed.  Check your connection " +
                             "and try again",
                     Toast.LENGTH_LONG).show();
@@ -194,36 +225,11 @@ public class CreatePerformerAdvertisement extends AppCompatActivity implements C
     }
 
     /**
-     * Populate view if database request was successful
-     * @param data band data
-     */
-    @Override
-    public void onSuccessFromDatabase(Map<String, Object> data) {
-        band = data;
-        setViewReferences();
-        listingManager.getImage(this);
-    }
-
-    @Override
-    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
-
-    }
-
-    /**
-     * Populate view if database request was successful
-     */
-    @Override
-    public void onSuccessfulImageDownload() {
-
-        populateInitialFields();
-    }
-
-    /**
      * cancel advertisement creation
      */
     @Override
     public void cancelAdvertisement() {
-        Intent backToMain = new Intent(CreatePerformerAdvertisement.this,
+        Intent backToMain = new Intent(PerformerAdvertisementEditor.this,
                 MainActivity.class);
         startActivity(backToMain);
     }

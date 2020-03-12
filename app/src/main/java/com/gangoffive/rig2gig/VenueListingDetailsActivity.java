@@ -54,7 +54,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         final TextView venueName = findViewById(R.id.bandName);
         final TextView description = findViewById(R.id.description);
         final TextView rating = findViewById(R.id.rating);
-        final TextView location = findViewById(R.id.position);
+        final TextView location = findViewById(R.id.location);
         final Button contact = findViewById(R.id.contact);
 
         /*Used to get the id of the listing from the previous activity*/

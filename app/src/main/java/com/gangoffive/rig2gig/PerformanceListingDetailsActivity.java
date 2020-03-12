@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -54,7 +55,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
 
         final ImageView performerPhoto = findViewById(R.id.bandPhoto);
         final TextView performerName = findViewById(R.id.bandName);
-        final TextView genre = findViewById(R.id.description);
+        final TextView genre = findViewById(R.id.genre);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.position);
         final TextView distance = findViewById(R.id.position);
@@ -209,7 +210,6 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
         StorageReference performerPic = storage.getReference().child("/images/performance-listings/" + pID + ".jpg");
 
         /*Using Glide to load the picture from the reference directly into the ImageView*/
-
         GlideApp.with(this)
                 .load(performerPic)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)

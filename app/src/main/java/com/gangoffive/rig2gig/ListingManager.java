@@ -1,20 +1,12 @@
 package com.gangoffive.rig2gig;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.widget.ImageView;
 import androidx.annotation.NonNull;
-
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.signature.MediaStoreSignature;
-import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,8 +20,6 @@ import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,8 +34,7 @@ public class ListingManager
     private DocumentReference docRef, listRef;
     private StorageReference storageRef, imageRef, listingImage;
     private Map<String, Object> userInfo,listingInfo;
-    private String collectionPath, imagePath, listingRef, listingPath;;
-
+    private String collectionPath, imagePath, listingRef;
 
 
     /**
@@ -62,30 +51,94 @@ public class ListingManager
         if (type.equals("Band Performer"))
         {
             docRef = db.collection("bands").document(userRef);
-            imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
             collectionPath = "performer-listings";
             imagePath = "performance-listings";
+            if (listingRef.equals(""))
+            {
+                imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
+            }
+            else
+            {
+                imageRef = storageRef.child("/images/"+ imagePath +"/" + listingRef + ".jpg");
+                listRef = db.collection(collectionPath).document(listingRef);
+                listingImage = storageRef.child("/images/" + imagePath +
+                        "/" + listingRef + ".jpg");
+            }
         }
         else if (type.equals("Musician Performer"))
         {
             docRef = db.collection("musicians").document(userRef);
-            imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
             collectionPath = "performer-listings";
             imagePath = "performance-listings";
+            if (listingRef.equals(""))
+            {
+                imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
+            }
+            else
+            {
+                imageRef = storageRef.child("/images/"+ imagePath +"/" + listingRef + ".jpg");
+                listRef = db.collection(collectionPath).document(listingRef);
+                listingImage = storageRef.child("/images/" + imagePath +
+                        "/" + listingRef + ".jpg");
+            }
         }
         else if (type.equals("Band"))
         {
             docRef = db.collection("bands").document(userRef);
-            imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
-            collectionPath = "band-listings";
-            imagePath = collectionPath;
+            if (listingRef.equals("profileEdit"))
+            {
+                imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
+                collectionPath = "bands";
+                listRef = db.collection(collectionPath).document(userRef);
+                imagePath = collectionPath;
+                listingImage = storageRef.child("/images/" + imagePath +
+                        "/" + userRef + ".jpg");
+            }
+            else
+            {
+                collectionPath = "band-listings";
+                imagePath = collectionPath;
+                if (!adRef.equals(""))
+                {
+                    imageRef = storageRef.child("/images/band-listings/" + adRef + ".jpg");
+                    listingImage = storageRef.child("/images/" + imagePath +
+                            "/" + adRef + ".jpg");
+                    listRef = db.collection(collectionPath).document(adRef);
+                }
+                else
+                {
+                    imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
+                }
+            }
         }
         else if (type.equals("Musician"))
         {
             docRef = db.collection("musicians").document(userRef);
-            imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
-            collectionPath = "musician-listings";
-            imagePath = collectionPath;
+            if (listingRef.equals("profileEdit"))
+            {
+                imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
+                collectionPath = "musicians";
+                listRef = db.collection(collectionPath).document(userRef);
+                imagePath = collectionPath;
+                listingImage = storageRef.child("/images/" + imagePath +
+                        "/" + userRef + ".jpg");
+            }
+            else
+            {
+                collectionPath = "musician-listings";
+                imagePath = collectionPath;
+                if (!adRef.equals(""))
+                {
+                    imageRef = storageRef.child("/images/musician-listings/" + adRef + ".jpg");
+                    listingImage = storageRef.child("/images/" + imagePath +
+                            "/" + adRef + ".jpg");
+                    listRef = db.collection(collectionPath).document(adRef);
+                }
+                else
+                {
+                    imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
+                }
+            }
         }
         else if (type.equals("Venue"))
         {
@@ -115,7 +168,6 @@ public class ListingManager
                             "/" + listingRef + ".jpg");
                 }
             }
-
         }
     }
 
@@ -166,6 +218,10 @@ public class ListingManager
         });
     }
 
+    /**
+     * Download existing record from database
+     * @param activity activity calling the method
+     */
     public void getListing(CreateAdvertisement activity)
     {
         listRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -194,6 +250,10 @@ public class ListingManager
         });
     }
 
+    /**
+     * Download image from database and set to image view
+     * @param activity calling activity
+     */
     public void getImage(CreateAdvertisement activity)
     {
         GlideApp.with((Activity)activity)
@@ -222,6 +282,12 @@ public class ListingManager
         }
     }
 
+    /**
+     * Create new record in database
+     * @param listing map of data to be created as document
+     * @param image image to be uploaded
+     * @param activity calling activity
+     */
     public void createAdvertisement (HashMap<String, Object> listing, Drawable image, CreateAdvertisement activity)
     {
         listing.put("expiry-date", new Timestamp(getExpiryDate()));
@@ -254,6 +320,12 @@ public class ListingManager
                 });
     }
 
+    /**
+     * Edit record in database
+     * @param listing map of data to be edited
+     * @param image new image to be uploaded
+     * @param activity calling activity
+     */
     public void editAdvertisement (HashMap<String, Object> listing, Drawable image, CreateAdvertisement activity)
     {
         db.runTransaction(new Transaction.Function<Void>() {
@@ -283,6 +355,11 @@ public class ListingManager
                 });
     }
 
+    /**
+     * Upload image to database
+     * @param image image to be uploaded
+     * @param activity calling activity
+     */
     public void uploadImage(Drawable image, CreateAdvertisement activity)
     {
         UploadTask uploadTask = listingImage.putBytes(imageToByteArray(image));
@@ -311,6 +388,7 @@ public class ListingManager
 
     /**
      * convert image of ImageView to byte array for uploading to database
+     * @param image image to be converted
      * @return byte array of image
      */
     public byte[] imageToByteArray(Drawable image)
