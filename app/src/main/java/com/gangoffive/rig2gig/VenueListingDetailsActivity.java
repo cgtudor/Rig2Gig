@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -29,7 +28,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
 
         final ImageView venuePhoto = findViewById(R.id.bandPhoto);
         final TextView venueName = findViewById(R.id.bandName);
-        final TextView description = findViewById(R.id.description);
+        final TextView description = findViewById(R.id.distance);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.position);
 

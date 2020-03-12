@@ -34,7 +34,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         setupPreferences();
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
-        if(CredentialActivity.userType.equals("Band"))
+        if(AccountPurposeActivity.userType.equals("Band"))
         {
             Preference preference = getPreferenceManager().findPreference("MusicianUpgrade");
             preference.setVisible(true);
@@ -85,7 +85,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                         preference.setSummary(document.get("given-name").toString() + " " + document.get("family-name").toString());
 
                         preference = getPreferenceManager().findPreference("UserEmailAddress");
-                        preference.setSummary(document.get("email").toString());
+                        preference.setSummary(document.get("email-address").toString());
                     }
                     else
                     {

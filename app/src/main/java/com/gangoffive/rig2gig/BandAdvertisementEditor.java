@@ -173,7 +173,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             image.setImageDrawable(null);
         }
         position = findViewById(R.id.position);
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.distance);
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);

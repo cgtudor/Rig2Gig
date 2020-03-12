@@ -36,6 +36,7 @@ public class ListingManager
     private Map<String, Object> userInfo,listingInfo;
     private String collectionPath, imagePath, listingRef;
 
+
     /**
      * Constructor for ListingManager
      * @param userRef reference of user

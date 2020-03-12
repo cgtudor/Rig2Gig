@@ -18,6 +18,6 @@ public class NavBarActivity extends AppCompatActivity
 
         //Decide which navbar to display.
         NavigationContext navigationContext = new NavigationContext();
-        startActivity(new Intent(this, navigationContext.navBarFinder(CredentialActivity.userType)));
+        startActivity(new Intent(this, navigationContext.navBarFinder(AccountPurposeActivity.userType)));
     }
 }

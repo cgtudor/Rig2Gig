@@ -119,7 +119,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         {
             image.setImageDrawable(null);
         }
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.distance);
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);

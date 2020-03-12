@@ -27,7 +27,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
         final ImageView musicianPhoto = findViewById(R.id.musicianPhoto);
         final TextView musicianName = findViewById(R.id.musicianName);
         final TextView position = findViewById(R.id.position);
-        final TextView description = findViewById(R.id.description);
+        final TextView description = findViewById(R.id.distance);
         final TextView location = findViewById(R.id.position);
         final TextView distance = findViewById(R.id.distance);
 

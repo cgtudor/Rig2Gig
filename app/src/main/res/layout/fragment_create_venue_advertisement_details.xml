@@ -9,7 +9,7 @@
 
 
     <EditText
-        android:id="@+id/description"
+        android:id="@+id/distance"
         android:layout_width="364dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -49,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        app:layout_constraintTop_toBottomOf="@+id/distance" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
