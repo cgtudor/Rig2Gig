@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -227,5 +228,11 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
         super.onActivityResult(requestCode, resultCode, data);
         image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
         chosenPic = image.getDrawable();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        Toast.makeText(this, "Please fill in your credentials!", Toast.LENGTH_SHORT).show();
     }
 }

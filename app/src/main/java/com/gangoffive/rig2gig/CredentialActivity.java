@@ -208,6 +208,6 @@ public class CredentialActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        Toast.makeText(CredentialActivity.this, "Please fill in your credentials", Toast.LENGTH_LONG).show();
+        super.onBackPressed();
     }
 }

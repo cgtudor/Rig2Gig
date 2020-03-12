@@ -192,23 +192,23 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewVenuesFragment()).commit();
                 break;
             case "Edit Musician":
-                /*startActivity(new Intent(getActivity(), MusicianDetailsEditor.class).putExtra("EXTRA_MUSICIAN_ID", musicianRef));*/
+                startActivity(new Intent(getActivity(), MusicianDetailsEditor.class).putExtra("EXTRA_MUSICIAN_ID", musicianRef));
                 break;
             case "My Bands":
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, new DisplayMusiciansBands()).commit();
                 break;
             case "Create Advert":
-                /*startActivity(new Intent(getActivity(), PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", performerReference)
+                startActivity(new Intent(getActivity(), PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", musicianRef)
                                                                                           .putExtra("EXTRA_LISTING_ID", "")
-                                                                                          .putExtra("EXTRA_PERFORMER_TYPE", "Musician"));*/
+                                                                                          .putExtra("EXTRA_PERFORMER_TYPE", "Musician"));
                 break;
             case "Edit Advert":
-                /*startActivity(new Intent(getActivity(), PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", performerReference)
-                                                                                      .putExtra("EXTRA_LISTING_ID", musicianRef)
-                                                                                      .putExtra("EXTRA_PERFORMER_TYPE", "Musician"));*/
+                startActivity(new Intent(getActivity(), PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", musicianRef)
+                                                                                      .putExtra("EXTRA_LISTING_ID", performerReference)
+                                                                                      .putExtra("EXTRA_PERFORMER_TYPE", "Musician"));
                 break;
             case "View Advert":
-                /*startActivity(new Intent(getActivity(), PerformanceListingDetailsActivity.class).putExtra("EXTRA_PERFORMANCE_LISTING_ID", performerReference));*/
+                startActivity(new Intent(getActivity(), PerformanceListingDetailsActivity.class).putExtra("EXTRA_PERFORMANCE_LISTING_ID", performerReference));
                 break;
             case "Delete Advert":
                 deleteAdvert();
@@ -234,7 +234,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                 {
                     Log.d(TAG, "DELETEADVERT ------------------ get successful with advert");
 
-                    //performerAdvertsReference.document(performerAdverts.get(0).getId()).delete();
+                    performerAdvertsReference.document(performerAdverts.get(0).getId()).delete();
                     restartFragment();
                 }
                 else
