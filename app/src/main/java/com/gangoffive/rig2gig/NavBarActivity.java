@@ -16,8 +16,26 @@ public class NavBarActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
-        //Decide which navbar to display.
         NavigationContext navigationContext = new NavigationContext();
-        startActivity(new Intent(this, navigationContext.navBarFinder(CredentialActivity.userType)));
+        Intent fragIntent = new Intent(this, navigationContext.navBarFinder(CredentialActivity.userType));
+
+        if(savedInstanceState != null)
+        {
+            String extra = savedInstanceState.getString("CALLED_FROM");
+            String normalExtra = savedInstanceState.get("CALLED_FROM").toString();
+
+            System.out.println(
+            "");
+            System.out.println("");
+        }
+
+        if(savedInstanceState != null && savedInstanceState.getString("CALLED_FROM") != null)
+        {
+            fragIntent.putExtra("OPEN", "NOTIFICATIONS");
+        }
+
+        //Decide which navbar to display.
+
+        startActivity(fragIntent);
     }
 }

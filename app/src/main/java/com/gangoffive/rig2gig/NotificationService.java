@@ -78,14 +78,14 @@ public class NotificationService extends Service {
                     }
 
                     List<QueryDocumentSnapshot> messages = new ArrayList<>();
-                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        messages.add(doc);
-                }
                 for(DocumentChange dc : queryDocumentSnapshots.getDocumentChanges())
                 {
                     switch (dc.getType())
                     {
                         case ADDED:
+                            messages.add(dc.getDocument());
+                            break;
+                        case MODIFIED:
                             messages.add(dc.getDocument());
                             break;
                     }
@@ -137,8 +137,9 @@ public class NotificationService extends Service {
 
                                         if(notification) {
                                             Intent intent = new Intent(NotificationService.this, NavBarActivity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            PendingIntent pendingIntent = PendingIntent.getActivity(NotificationService.this, 0, intent, 0);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                            intent.putExtra("CALLED_FROM", "NOTIF");
+                                            PendingIntent pendingIntent = PendingIntent.getActivity(NotificationService.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                                             NotificationCompat.Builder builder = new NotificationCompat.Builder(NotificationService.this, CHANNEL_ID)
                                                     .setSmallIcon(R.drawable.ic_email_black_24dp)
@@ -153,7 +154,8 @@ public class NotificationService extends Service {
 
                                             Random r = new Random();
 
-                                            notificationManager.notify(r.nextInt(), builder.build());
+                                            //FOR RELEASE
+                                            //notificationManager.notify(r.nextInt(), builder.build());
                                         }
                                     } else {
                                         Log.d("FIRESTORE NOTIFICATION", "User does not exist");

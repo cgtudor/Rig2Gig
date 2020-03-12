@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
@@ -22,6 +23,8 @@ public class ConcreteVenueNavBar extends NavBarCompatActivity implements Navigat
     {
         super.onCreate(savedInstanceState);
 
+
+
         setContentView(R.layout.activity_concrete_venue_nav_bar);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -35,8 +38,17 @@ public class ConcreteVenueNavBar extends NavBarCompatActivity implements Navigat
         if (savedInstanceState == null)
         {
             //Following line determines the first fragment shown to the user.
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new VenueConsoleFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_console);
+            Intent intent = getIntent();
+            if(intent != null && intent.getStringExtra("OPEN") != null && intent.getStringExtra("OPEN").equals("NOTIFICATION"))
+            {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewCommsFragment()).commit();
+                navigationView.setCheckedItem(R.id.nav_notifications);
+            }
+            else
+            {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new VenueConsoleFragment()).commit();
+                navigationView.setCheckedItem(R.id.nav_console);
+            }
         }
     }
 }
