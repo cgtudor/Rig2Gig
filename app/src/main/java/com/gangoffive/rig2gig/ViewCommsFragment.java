@@ -1,6 +1,7 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -129,82 +130,122 @@ public class ViewCommsFragment extends Fragment
                                     }*/
                                     @Override
                                     public void onAcceptClick(int position) {
-                                        DocumentReference updateRef = db.collection("communications")
-                                                .document(uID)
-                                                .collection("received")
-                                                .document(communications.get(position).getCommRef());
 
-                                        updateRef.update("type" , "contact-send")
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if(task.isSuccessful())
-                                                        {
-                                                            Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
-                                                        }
-                                                        else
-                                                        {
-                                                            Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
-                                                        }
-                                                    }
-                                                });
+                                        switch (communications.get(position).getCommType())
+                                        {
+                                            case "contact-request":
+                                                DocumentReference updateRef = db.collection("communications")
+                                                        .document(uID)
+                                                        .collection("received")
+                                                        .document(communications.get(position).getCommRef());
 
-                                        HashMap<String, Object> request = new HashMap<>();
-                                        request.put("type", "contact-accept");
-                                        request.put("posting-date", Timestamp.now());
-                                        request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                                updateRef.update("type" , "contact-send")
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if(task.isSuccessful())
+                                                                {
+                                                                    Log.d("FIRESTORE", "Contact request update successful");
+                                                                }
+                                                                else
+                                                                {
+                                                                    Log.d("FIRESTORE", "Contact request update failed: " + task.getException());
+                                                                }
+                                                            }
+                                                        });
 
-                                        CollectionReference received = db.collection("communications")
-                                                .document(communications.get(position).getUserRef())
-                                                .collection("received");
+                                                HashMap<String, Object> request = new HashMap<>();
+                                                request.put("type", "contact-accept");
+                                                request.put("posting-date", Timestamp.now());
+                                                request.put("sent-from", FirebaseAuth.getInstance().getUid());
 
-                                        received.add(request)
-                                                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                        if(task.isSuccessful())
-                                                        {
-                                                            Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
-                                                            Toast.makeText(getActivity(), "Contact request accepted!", Toast.LENGTH_SHORT).show();
+                                                CollectionReference received = db.collection("communications")
+                                                        .document(communications.get(position).getUserRef())
+                                                        .collection("received");
 
-                                                            communications.get(position).setCommType("contact-send");
-                                                            adapter.notifyItemChanged(position);
-                                                        }
-                                                        else
-                                                        {
-                                                            Log.d("FIRESTORE", "Contact request failed with ", task.getException());
-                                                        }
-                                                    }
-                                                });
+                                                received.add(request)
+                                                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                                if(task.isSuccessful())
+                                                                {
+                                                                    Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
+                                                                    Toast.makeText(getActivity(), "Contact request accepted!", Toast.LENGTH_SHORT).show();
 
-                                        HashMap<String, Object> requestSent = new HashMap<>();
-                                        requestSent.put("type", "contact-send");
-                                        requestSent.put("posting-date", Timestamp.now());
-                                        requestSent.put("sent-to", communications.get(position).getUserRef());
-                                        CollectionReference sent = db.collection("communications")
-                                                .document(FirebaseAuth.getInstance().getUid())
-                                                .collection("sent");
+                                                                    communications.get(position).setCommType("contact-send");
+                                                                    adapter.notifyItemChanged(position);
+                                                                }
+                                                                else
+                                                                {
+                                                                    Log.d("FIRESTORE", "Contact request failed with ", task.getException());
+                                                                }
+                                                            }
+                                                        });
 
-                                        sent.add(requestSent)
-                                                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                        if(task.isSuccessful())
-                                                        {
-                                                            Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
-                                                        }
-                                                        else
-                                                        {
-                                                            Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
-                                                        }
-                                                    }
-                                                });
+                                                HashMap<String, Object> requestSent = new HashMap<>();
+                                                requestSent.put("type", "contact-send");
+                                                requestSent.put("posting-date", Timestamp.now());
+                                                requestSent.put("sent-to", communications.get(position).getUserRef());
+                                                CollectionReference sent = db.collection("communications")
+                                                        .document(FirebaseAuth.getInstance().getUid())
+                                                        .collection("sent");
+
+                                                sent.add(requestSent)
+                                                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                                if(task.isSuccessful())
+                                                                {
+                                                                    Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
+                                                                }
+                                                                else
+                                                                {
+                                                                    Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
+                                                                }
+                                                            }
+                                                        });
+                                                break;
+                                            case "contact-accept":
+                                            case "contact-send":
+
+                                                DocumentReference userDetails = db.collection("users")
+                                                        .document(communications.get(position).getUserRef());
+
+                                                userDetails.get()
+                                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                if(task.isSuccessful())
+                                                                {
+                                                                    DocumentSnapshot userDoc = task.getResult();
+                                                                    if(userDoc.exists())
+                                                                    {
+                                                                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                                                                        intent.setData(Uri.parse("tel:" + userDoc.get("phone-number")));
+                                                                        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                                                            startActivity(intent);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        Log.d(TAG, "User not found");
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    Log.e(TAG, "Get user failed");
+                                                                }
+                                                            }
+                                                        }});
+                                                break;
+                                            default:
+                                                //
+                                        }
+
                                     }
 
                                     @Override
                                     public void onDeclineClick(int position) {
 
-                                        System.out.println("clicked");
                                         switch (communications.get(position).getCommType())
                                         {
                                             case "contact-request":
@@ -219,11 +260,11 @@ public class ViewCommsFragment extends Fragment
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 if(task.isSuccessful())
                                                                 {
-                                                                    Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
+                                                                    Log.d("FIRESTORE", "Contact request update successful");
                                                                 }
                                                                 else
                                                                 {
-                                                                    Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
+                                                                    Log.d("FIRESTORE", "Contact request update failed with" + task.getException().toString());
                                                                 }
                                                             }
                                                         });
@@ -280,44 +321,9 @@ public class ViewCommsFragment extends Fragment
                                                         });
                                                 break;
                                             case "contact-accept":
-
-                                                System.out.println("here");
-                                                DocumentReference userDetails = db.collection("users")
-                                                        .document(communications.get(position).getUserRef());
-
-                                                userDetails.get()
-                                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                if(task.isSuccessful())
-                                                                {
-                                                                    DocumentSnapshot userDoc = task.getResult();
-                                                                    if(userDoc.exists())
-                                                                    {
-                                                                        Intent email = new Intent(Intent.ACTION_SEND);
-                                                                        email.putExtra(Intent.EXTRA_EMAIL, new String[]{ userDoc.get("email-address").toString()});
-                                                                        email.putExtra(Intent.EXTRA_SUBJECT, "We are interested in your advert!");
-                                                                        email.putExtra(Intent.EXTRA_TEXT, "We found you on Rig2Gig and you look like the best fit for us!");
-
-                                                                        email.setType("text/plain");
-
-                                                                        startActivity(Intent.createChooser(email, "Choose an Email client :"));
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        Log.d(TAG, "User not found");
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    Log.e(TAG, "Get user failed");
-                                                                }
-                                                            }
-                                                        });
-                                                break;
                                             case "contact-send":
-                                                System.out.println("here");
-                                                userDetails = db.collection("users")
+
+                                                DocumentReference userDetails = db.collection("users")
                                                         .document(communications.get(position).getUserRef());
 
                                                 userDetails.get()
