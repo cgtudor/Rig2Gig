@@ -128,8 +128,8 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                        Timestamp expiryDate = (Timestamp) document.get("expiry-date");
-                        expiry.append(expiryDate.toDate().toString());
+                        //Timestamp expiryDate = (Timestamp) document.get("expiry-date");
+                        //expiry.append(expiryDate.toDate().toString());
                         performerRef.append(document.get("performer-ref").toString());
                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
                     } else {
