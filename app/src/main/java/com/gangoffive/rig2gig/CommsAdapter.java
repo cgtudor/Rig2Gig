@@ -24,7 +24,12 @@ import com.google.firebase.storage.StorageReference;
 
 import org.w3c.dom.Document;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> {
 
@@ -170,27 +175,35 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + commDoc.getData());
 
                         Timestamp postingDate = (Timestamp) commDoc.get("posting-date");
-                        holder.textViewDate.setText(postingDate.toDate().toString());
+                        Date pDate = postingDate.toDate();
+                        String pattern = "dd/MM/yyyy HH:mm";
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                        holder.textViewDate.setText(simpleDateFormat.format(pDate));
 
                         switch(commDoc.get("type").toString()) {
                             case "contact-request":
                                 holder.textViewType.setText("wants to contact you.");
-                                //holder.imageViewIcon   change icon based on comm type
+                                holder.imageViewAccept.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check_circle_black_24dp));
+                                holder.imageViewDecline.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_cancel_black_24dp));
                                 break;
                             case "contact-accept":
                                 holder.textViewType.setText("has accepted your contact request.");
+                                holder.imageViewAccept.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_phone_black_24dp));
+                                holder.imageViewDecline.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_email_black_24dp));
                                 //contact info @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                                 //communication.get(position).getUserRef() => database call to user to get user type
                                 //find collection (usertype) that has same user ref.
                                 break;
                             case "contact-send":
                                 holder.textViewType.setText("has shared their contact details");
-                                holder.imageViewAccept.setVisibility(View.GONE);
-                                holder.imageViewDecline.setVisibility(View.GONE);
+                                holder.imageViewAccept.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_phone_black_24dp));
+                                holder.imageViewDecline.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_email_black_24dp));
                                 //contact info @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                                 break;
                             case "contact-decline":
                                 holder.textViewType.setText("has declined your contact request.");
+                                holder.imageViewAccept.setVisibility(View.GONE);
+                                holder.imageViewDecline.setVisibility(View.GONE);
                                 break;
                             case "contact-retain":
                                 holder.textViewType.setText("did not recieve your contact details");
