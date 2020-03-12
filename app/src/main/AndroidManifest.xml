@@ -15,6 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service android:name=".NotificationService"></service>
+
         <activity android:name=".VenueActivity"></activity>
         <activity android:name=".MyBandActivity" />
         <activity android:name=".CreateBandActivity"></activity>

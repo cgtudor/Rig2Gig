@@ -16,6 +16,7 @@ import android.os.Bundle;
             setContentView(R.layout.activity_main);
             //setContentView(R.layout.activity_main);
 
+
             //Following intent creates the navbar activity. Ensure last in executions.
             Intent intent = new Intent(this, NavBarActivity.class);
             startActivity(intent);

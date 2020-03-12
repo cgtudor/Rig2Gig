@@ -74,6 +74,9 @@ public class LoginActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Intent serviceIntent = new Intent(this, NotificationService.class);
+        startService(serviceIntent);
+
         //Uncomment this for login testing
         if (fAuth.getCurrentUser() != null)
         {
