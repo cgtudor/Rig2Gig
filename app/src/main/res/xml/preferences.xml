@@ -90,7 +90,7 @@
             app:fragment="com.gangoffive.rig2gig.ReportFragment"/>-->
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/privacy_settings"
+    <!--<PreferenceCategory android:title="@string/privacy_settings"
         app:iconSpaceReserved="false">
 
         <SwitchPreference
@@ -105,7 +105,7 @@
             app:defaultValue="true"
             app:iconSpaceReserved="false"/>
 
-    </PreferenceCategory>
+    </PreferenceCategory>-->
 
     <PreferenceCategory android:title="@string/legal_settings"
         app:iconSpaceReserved="false">

@@ -78,7 +78,7 @@ public class ChangePasswordDialog extends DialogFragment
                     if (document.exists())
                     {
                         Log.d("FIRESTORE", "DocumentSnapshot data" + document.getData());
-                        String email = document.get("Email Address").toString().trim();
+                        String email = document.get("email-address").toString().trim();
                         fAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>()
                         {
                             @Override

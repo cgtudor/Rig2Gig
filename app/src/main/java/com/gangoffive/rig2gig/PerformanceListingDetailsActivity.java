@@ -248,11 +248,13 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                     Intent intent = new Intent(PerformanceListingDetailsActivity.this, NavBarActivity.class);
                                     startActivity(intent);
                                     finish();
+
                                 }
                                 else
                                 {
-                                    PerformanceListingDetailsActivity.this.onBackPressed();
+                                    PerformanceListingDetailsActivity.this.genericBack();
                                     finish();
+
                                 }
                             }
                             else
@@ -266,6 +268,11 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    public void genericBack()
+    {
+        super.onBackPressed();
     }
 
     @Override

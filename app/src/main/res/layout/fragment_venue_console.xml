@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,8 +21,8 @@
             android:layout_width="160dp"
             android:layout_height="165dp"
             android:layout_margin="3dp"
-            android:visibility="gone"
             android:elevation="8dp"
+            android:visibility="gone"
             android:tag="View Performers">
 
             <LinearLayout

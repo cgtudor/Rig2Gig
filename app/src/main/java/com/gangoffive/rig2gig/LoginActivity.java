@@ -132,7 +132,16 @@ public class LoginActivity extends AppCompatActivity{
      * @param view
      */
     public void LoginBtnOnClick(View view) {
+
         final String getEmail = emailAddress.getText().toString().trim();
+
+        if(getEmail == null || getEmail.equals(""))
+        {
+            Toast.makeText(this, "You must provide an email", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
 
         /*Creating an empty char array with the length of the password*/
         char[] passChars = new char[password.getText().length()];
@@ -145,6 +154,13 @@ public class LoginActivity extends AppCompatActivity{
         encryptedPassword.access(new GuardedString.Accessor() {
             @Override
             public void access(char[] clearChars) {
+
+                if(clearChars.length == 0)
+                {
+                    Toast.makeText(LoginActivity.this, "You must provide a password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 fAuth.signInWithEmailAndPassword(getEmail, new String(clearChars)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task)
@@ -167,8 +183,8 @@ public class LoginActivity extends AppCompatActivity{
                                         {
                                             Log.d(TAG, "Document exists!");
                                             AccountPurposeActivity.userType = document.get("user-type").toString();
-                                            Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
-                                            startService(serviceIntent);
+                                            /*Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
+                                            startService(serviceIntent);*/
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
                                         }
                                         else
@@ -246,8 +262,8 @@ public class LoginActivity extends AppCompatActivity{
                                         if (document.exists()) {
                                             Log.d(TAG, "Document exists!");
                                             AccountPurposeActivity.userType = document.get("User Type").toString();
-                                            Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
-                                            startService(serviceIntent);
+                                            /*Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
+                                            startService(serviceIntent);*/
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
                                         } else {
                                             Log.d(TAG, "Document does not exist!");
@@ -262,8 +278,8 @@ public class LoginActivity extends AppCompatActivity{
                                                 public void onSuccess(Void aVoid) {
                                                     Toast.makeText(LoginActivity.this, "Account has been created!", Toast.LENGTH_SHORT).show();
                                                     Log.d(TAG, "onSuccess: user Profile is created for "+ userId);
-                                                    Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
-                                                    startService(serviceIntent);
+                                                    /*Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
+                                                    startService(serviceIntent);*/
                                                     startActivity(new Intent(getApplicationContext(),CredentialActivity.class));
                                                 }
                                             });
@@ -310,8 +326,8 @@ public class LoginActivity extends AppCompatActivity{
                                         if (document.exists()) {
                                             Log.d(TAG, "Document exists!");
                                             AccountPurposeActivity.userType = document.get("User Type").toString();
-                                            Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
-                                            startService(serviceIntent);
+                                            /*Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
+                                            startService(serviceIntent);*/
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
                                         } else {
                                             Log.d(TAG, "Document does not exist!");
@@ -326,8 +342,8 @@ public class LoginActivity extends AppCompatActivity{
                                                 public void onSuccess(Void aVoid) {
                                                     Toast.makeText(LoginActivity.this, "Account has been created!", Toast.LENGTH_SHORT).show();
                                                     Log.d(TAG, "onSuccess: user Profile is created for "+ userId);
-                                                    Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
-                                                    startService(serviceIntent);
+                                                    /*Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
+                                                    startService(serviceIntent);*/
                                                     startActivity(new Intent(getApplicationContext(),CredentialActivity.class));
                                                 }
                                             });

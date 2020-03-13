@@ -244,7 +244,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                 }
                                 else
                                 {
-                                    VenueListingDetailsActivity.this.onBackPressed();
+                                    VenueListingDetailsActivity.this.genericBack();
                                     finish();
                                 }
                             }
@@ -259,6 +259,11 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    public void genericBack()
+    {
+        super.onBackPressed();
     }
 
     @Override

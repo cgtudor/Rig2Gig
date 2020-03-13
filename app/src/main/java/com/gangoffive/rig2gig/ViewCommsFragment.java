@@ -340,7 +340,7 @@ public class ViewCommsFragment extends Fragment
                                                                         email.putExtra(Intent.EXTRA_SUBJECT, "We are interested in your advert!");
                                                                         email.putExtra(Intent.EXTRA_TEXT, "We found you on Rig2Gig and you look like the best fit for us!");
 
-                                                                        email.setType("text/plain");
+                                                                        email.setType("message/rfc822");
 
                                                                         startActivity(Intent.createChooser(email, "Choose an Email client :"));
                                                                     }
