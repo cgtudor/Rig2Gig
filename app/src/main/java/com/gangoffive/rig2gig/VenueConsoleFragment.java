@@ -218,7 +218,7 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
                 {
                     Log.d(TAG, "DELETEADVERT ------------------ get successful with advert");
 
-                    //venueAdvertsReference.document(venueAdverts.get(0).getId()).delete();
+                    venueAdvertsReference.document(venueAdverts.get(0).getId()).delete();
                     restartFragment();
                 }
                 else
