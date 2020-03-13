@@ -44,7 +44,7 @@ public class ConcreteMusicianNavBar extends NavBarCompatActivity
             }
             else
             {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new VenueConsoleFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MusicianConsoleFragment()).commit();
                 navigationView.setCheckedItem(R.id.nav_console);
             }
         }
