@@ -6,7 +6,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -260,8 +266,19 @@ public class ListingManager
                 .load(imageRef)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        activity.onSuccessfulImageDownload();
+                        return false;
+                    }
+                })
                 .into(activity.getImageView());
-        activity.onSuccessfulImageDownload();
     }
 
     /**
@@ -342,7 +359,14 @@ public class ListingManager
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                uploadImage(image, activity);
+                if (image != null)
+                {
+                    uploadImage(image, activity);
+                }
+                else
+                {
+                    activity.handleDatabaseResponse(CreationResult.SUCCESS);
+                }
                 Log.d(TAG, "Transaction success!");
             }
         })

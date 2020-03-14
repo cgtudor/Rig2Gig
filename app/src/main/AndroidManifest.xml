@@ -35,6 +35,8 @@
         <activity android:name=".BandListingDetailsActivity" />
         <activity android:name=".MusicianListingDetailsActivity" />
         <activity android:name=".VenueListingDetailsActivity" />
+        <activity android:name=".ManageBandMembersActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".DeleteMemberConfirmation" android:theme="@style/AppTheme.TranslucentBackground"/>
         <activity
             android:name=".BandAdvertisementEditor"
             android:theme="@style/AppTheme.NoActionBar"

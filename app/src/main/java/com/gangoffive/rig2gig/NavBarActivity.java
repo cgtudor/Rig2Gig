@@ -37,6 +37,22 @@ public class NavBarActivity extends AppCompatActivity
         //Decide which navbar to display.
 
         startActivity(fragIntent);*/
-        startActivity(new Intent(this, navigationContext.navBarFinder(AccountPurposeActivity.userType)));
+
+
+
+        //uncomment this
+        /*startActivity(new Intent(this, navigationContext.navBarFinder(AccountPurposeActivity.userType)));*/
+
+        //remove this
+/*        Intent intent = new Intent(this, MusicianAdvertisementEditor.class);
+        intent.putExtra("EXTRA_MUSICIAN_ID", "1b5k7KLAv4yTk4vzOVQx");
+        intent.putExtra("EXTRA_LISTING_ID","");
+        startActivity(intent);*/
+
+        //remove this
+        Intent intent = new Intent(this, ManageBandMembersActivity.class);
+        intent.putExtra("EXTRA_BAND_ID", "S0lVRscAvnnE3sbqn9X5");
+        startActivity(intent);
+
     }
 }

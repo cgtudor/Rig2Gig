@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ManageBandMembersActivity"
+    tools:showIn="@layout/activity_manage_band_members">
+
+    <ImageView
+        android:id="@+id/addImage"
+        android:layout_width="60dp"
+        android:layout_height="52dp"
+        app:layout_constraintStart_toStartOf="@id/constraintLayout"
+        app:layout_constraintTop_toTopOf="@id/constraintLayout"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+    <TextView
+        android:id="@+id/addMemberText"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:gravity="center_vertical"
+        android:text="  Add members"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@id/constraintLayout"
+        app:layout_constraintStart_toEndOf="@+id/addImage"
+        app:layout_constraintTop_toTopOf="@id/constraintLayout" />
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@+id/addMemberText"
+        app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
+        app:layout_constraintStart_toStartOf="@id/constraintLayout">
+
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numColumns="1"
+            android:padding="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/scroll"
+            app:layout_constraintTop_toTopOf="@+id/scroll">
+
+
+        </GridView>
+
+    </ScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
