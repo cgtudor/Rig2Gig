@@ -39,6 +39,8 @@ public class NavBarFactory
 
         fragmentMap.put("Venue Console", new VenueConsoleFragment());
         fragmentMap.put("Musician Console", new MusicianConsoleFragment());
+
+        fragmentMap.put("My Bands", new DisplayMusiciansBands());
     }
 
     /**
