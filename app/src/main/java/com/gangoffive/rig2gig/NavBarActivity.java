@@ -3,6 +3,8 @@ package com.gangoffive.rig2gig;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class NavBarActivity extends AppCompatActivity
@@ -37,6 +39,9 @@ public class NavBarActivity extends AppCompatActivity
         //Decide which navbar to display.
 
         startActivity(fragIntent);*/
+
         startActivity(new Intent(this, navigationContext.navBarFinder(AccountPurposeActivity.userType)));
+
+        finish();
     }
 }

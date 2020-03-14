@@ -186,6 +186,7 @@ public class LoginActivity extends AppCompatActivity{
                                             /*Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
                                             startService(serviceIntent);*/
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                                            finish();
                                         }
                                         else
                                         {
@@ -265,6 +266,7 @@ public class LoginActivity extends AppCompatActivity{
                                             /*Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
                                             startService(serviceIntent);*/
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                                            finish();
                                         } else {
                                             Log.d(TAG, "Document does not exist!");
                                             System.out.println("================================== Doc dont exist");
@@ -329,6 +331,7 @@ public class LoginActivity extends AppCompatActivity{
                                             /*Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
                                             startService(serviceIntent);*/
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                                            finish();
                                         } else {
                                             Log.d(TAG, "Document does not exist!");
                                             System.out.println("================================== Doc dont exist");

@@ -45,11 +45,13 @@ public class SplashScreenActivity extends AppCompatActivity {
                             Log.d(TAG, "Document exists!");
                             AccountPurposeActivity.userType = document.get("user-type").toString();
                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                            finish();
                         }
                         else
                         {
                             Log.d(TAG, "Document doesn't exists!");
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                            finish();
                         }
                     }
                 }
@@ -58,6 +60,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         else
             {
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                finish();
             }
     }
 }
