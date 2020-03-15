@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class DeleteMemberConfirmation extends Activity {
+public class AddMemberConfirmation extends Activity {
 
     private int height, width;
     private Button yes, no;
@@ -28,7 +28,7 @@ public class DeleteMemberConfirmation extends Activity {
         String name = intent.getStringExtra("EXTRA_NAME");
         int position = intent.getIntExtra("EXTRA_POSITION", -1);
         confirmationText = findViewById(R.id.confirmationText);
-        confirmationText.setText("Are you sure you want to remove this person from your band?");
+        confirmationText.setText("Are you sure you want to invite this person to your band?");
         yes = findViewById(R.id.yes);
         yes.setOnClickListener(new View.OnClickListener() {
             @Override

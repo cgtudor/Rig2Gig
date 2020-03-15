@@ -8,22 +8,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.Nullable;
-
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class BandMemberAdapter extends BaseAdapter {
-
+public class BandMemberAdderAdapter  extends BaseAdapter
+{
 
     private Context context;
     private ArrayList<Drawable> images;
@@ -32,10 +24,9 @@ public class BandMemberAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private StorageReference imageRef;
     private FirebaseStorage storage;
-    private ManageBandMembersActivity bandManager;
+    private MusicianSearchActivity bandManager;
 
-
-    public BandMemberAdapter(ArrayList memberNames, List refs, ManageBandMembersActivity con)
+    public BandMemberAdderAdapter(ArrayList memberNames, List refs, MusicianSearchActivity con)
     {
         context = con;
         bandManager = con;
@@ -91,7 +82,7 @@ public class BandMemberAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null)
         {
-            convertView = inflater.inflate(R.layout.band_member_list_item, parent, false);
+            convertView = inflater.inflate(R.layout.band_member_adder_item, parent, false);
 
         }
         /* View view = context.getLayoutInflater().inflate(R.layout.band_member_list_item, null);*/
@@ -128,7 +119,7 @@ public class BandMemberAdapter extends BaseAdapter {
             @Override
             public void onClick(View v)
             {
-                bandManager.confirmRemoveMember(names.get(position).toString(), position);
+                bandManager.confirmAddMember(names.get(position).toString(), position);
             }
         });
         return convertView;

@@ -7,7 +7,7 @@
     tools:context=".DeleteMemberConfirmation">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/confirmationText"
         android:layout_width="309dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -15,7 +15,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="20dp"
-        android:text="Are you sure you want to remove this member from your band?"
+        android:text=""
         android:textAlignment="center"
         android:textColor="#FFFFFF" />
 

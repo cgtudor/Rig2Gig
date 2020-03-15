@@ -33,9 +33,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addMemberText"
         app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
-        app:layout_constraintStart_toStartOf="@id/constraintLayout">
+        >
 
         <GridView
             android:id="@+id/gridView"
@@ -45,8 +46,6 @@
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="@+id/scroll"
             app:layout_constraintTop_toTopOf="@+id/scroll">
-
-
         </GridView>
 
     </ScrollView>

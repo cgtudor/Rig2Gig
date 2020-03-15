@@ -1,25 +1,20 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +30,8 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     private int membersDownloaded;
     private GridView gridView;
     private int position;
+    private ImageView addImage;
+    private TextView addMemberText;
 
 
     @Override
@@ -50,6 +47,16 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         membersDownloaded = 0;
         bandInfoManager = new ListingManager(bandRef, type, listingRef);
         bandInfoManager.getUserInfo(this);
+        addMemberText = findViewById(R.id.addMemberText);
+        addMemberText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {searchForMembers();}
+        });
+        addImage = findViewById(R.id.addImage);
+        addImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {searchForMembers();}
+        });
     }
 
     @Override
@@ -90,7 +97,7 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     @Override
     public void populateInitialFields() {
         gridView = (GridView) findViewById( R.id.gridView);
-        BandMemberAdapter customAdapter = new BandMemberAdapter(names, memberRefs, this);
+        BandMemberRemoverAdapter customAdapter = new BandMemberRemoverAdapter(names, memberRefs, this);
         gridView.setAdapter(customAdapter);
     }
 
@@ -150,6 +157,14 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
                     Toast.LENGTH_LONG).show();
             memberRefs.add(position,removedRef);
         }
+    }
+
+    public void searchForMembers()
+    {
+        Intent intent = new Intent(this, MusicianSearchActivity.class);
+        intent.putExtra("EXTRA_CURRENT_MEMBERS", (Serializable) memberRefs);
+        intent.putExtra("EXTRA_BAND_ID", bandRef);
+        startActivity(intent);
     }
 
     @Override

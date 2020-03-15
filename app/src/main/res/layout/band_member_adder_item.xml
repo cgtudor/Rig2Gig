@@ -41,7 +41,7 @@
                 android:layout_toEndOf="@+id/name"
                 android:gravity="center_vertical"
                 android:paddingRight="10dp"
-                android:text="Remove"
+                android:text="Invite"
                 android:textAlignment="center" />
 
         </RelativeLayout>
