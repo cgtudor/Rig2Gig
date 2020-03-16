@@ -53,8 +53,8 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final ImageView performerPhoto = findViewById(R.id.bandPhoto);
-        final TextView performerName = findViewById(R.id.bandName);
+        final ImageView performerPhoto = findViewById(R.id.performerPhoto);
+        final TextView performerName = findViewById(R.id.performerName);
         final TextView genre = findViewById(R.id.genre);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
