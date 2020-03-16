@@ -120,8 +120,16 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                                         }
                                                     }
                                                 });
-
-                                        getSupportActionBar().setTitle(performerName.getText().toString());
+                                        if(listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()))
+                                        {
+                                            getSupportActionBar().setTitle("My Advert");
+                                            contact.setClickable(false);
+                                            contact.setVisibility(View.GONE);
+                                        }
+                                        else
+                                        {
+                                            getSupportActionBar().setTitle(performerName.getText().toString());
+                                        }
                                     } else {
                                         Log.d("FIRESTORE", "No such document");
                                     }
@@ -279,25 +287,82 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.listing_menu, menu);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference favPerformers = db.collection("favourite-ads")
-                .document(FirebaseAuth.getInstance().getUid())
-                .collection("performer-listings");
-        favPerformers.document(pID).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful())
-                        {
-                            DocumentSnapshot document = task.getResult();
-                            if(document.exists())
-                            {
-                                MenuItem star = menu.findItem(R.id.saveButton);
-                                star.setIcon(R.drawable.ic_full_star);
+        pID = getIntent().getStringExtra("EXTRA_PERFORMANCE_LISTING_ID");
+
+        /*Firestore & Cloud Storage initialization*/
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        /*Finding the listing by its ID in the "performer-listings" subfolder*/
+        DocumentReference performerListing = db.collection("performer-listings").document(pID);
+
+        /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
+        performerListing.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+
+                        String performerType = document.get("performer-type").toString().equals("Band") ? "bands" : "musicians";
+
+                        /*Find the performer reference by looking for the performer ID in the "performers" subfolder*/
+                        DocumentReference performer = db.collection(performerType).document(document.get("performer-ref").toString());
+
+                        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+
+                                        if(document.get("user-ref").toString().equals(FirebaseAuth.getInstance().getUid()))
+                                        {
+                                            MenuItem star = menu.findItem(R.id.saveButton);
+                                            star.setIcon(R.drawable.ic_full_star);
+                                            star.setVisible(false);
+                                        }
+                                        else
+                                        {
+                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                            CollectionReference favVenues = db.collection("favourite-ads")
+                                                    .document(FirebaseAuth.getInstance().getUid())
+                                                    .collection("performer-listings");
+                                            favVenues.document(pID).get()
+                                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                            if(task.isSuccessful())
+                                                            {
+                                                                DocumentSnapshot document = task.getResult();
+                                                                if(document.exists())
+                                                                {
+                                                                    MenuItem star = menu.findItem(R.id.saveButton);
+                                                                    star.setIcon(R.drawable.ic_full_star);
+                                                                }
+                                                            }
+                                                        }
+                                                    });
+                                        }
+                                    } else {
+                                        Log.d("FIRESTORE", "No such document");
+                                    }
+                                } else {
+                                    Log.d("FIRESTORE", "get failed with ", task.getException());
+                                }
                             }
-                        }
+                        });
+                    } else {
+                        Log.d("FIRESTORE", "No such document");
                     }
-                });
+                } else {
+                    Log.d("FIRESTORE", "get failed with ", task.getException());
+                }
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
 
