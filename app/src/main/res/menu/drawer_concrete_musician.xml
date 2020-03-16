@@ -31,10 +31,11 @@
         <item android:id="@+id/nav_create_band"
             android:icon="@drawable/ic_create_band"
             android:title="Create Band"/>
+        -->
+
         <item android:id="@+id/nav_view_bands"
             android:icon="@drawable/ic_view_bands"
-            android:title="View Bands"/>-->
-
+            android:title="View Bands"/>
         <item android:id="@+id/nav_view_musicians"
             android:icon="@drawable/ic_view_bands"
             android:title="View Musicians"/>

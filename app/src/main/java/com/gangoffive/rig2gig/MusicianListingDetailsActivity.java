@@ -35,7 +35,7 @@ import java.util.HashMap;
 
 public class MusicianListingDetailsActivity extends AppCompatActivity {
 
-    private String pID;
+    private String mID;
     private final StringBuilder expiry = new StringBuilder("");
     private final StringBuilder musicianRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
@@ -60,14 +60,14 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
         final Button contact = findViewById(R.id.contact);
 
         /*Used to get the id of the listing from the previous activity*/
-        pID = getIntent().getStringExtra("EXTRA_MUSICIAN_LISTING_ID");
+        mID = getIntent().getStringExtra("EXTRA_MUSICIAN_LISTING_ID");
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         /*Finding the listing by its ID in the "musician-listings" subfolder*/
-        DocumentReference musicianListing = db.collection("musician-listings").document(pID);
+        DocumentReference musicianListing = db.collection("musician-listings").document(mID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
         musicianListing.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -213,7 +213,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
         }
 
         /*Find reference for the photo associated with the listing inside the according subtree*/
-        StorageReference musicianPic = storage.getReference().child("/images/musician-listings/" + pID + ".jpg");
+        StorageReference musicianPic = storage.getReference().child("/images/musician-listings/" + mID + ".jpg");
 
         /*Using Glide to load the picture from the reference directly into the ImageView*/
 
@@ -251,14 +251,14 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.listing_menu, menu);
 
-        pID = getIntent().getStringExtra("EXTRA_MUSICIAN_LISTING_ID");
+        mID = getIntent().getStringExtra("EXTRA_MUSICIAN_LISTING_ID");
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         /*Finding the listing by its ID in the "performer-listings" subfolder*/
-        DocumentReference performerListing = db.collection("musician-listings").document(pID);
+        DocumentReference performerListing = db.collection("musician-listings").document(mID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
         performerListing.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -292,7 +292,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                             CollectionReference favMusicians = db.collection("favourite-ads")
                                                     .document(FirebaseAuth.getInstance().getUid())
                                                     .collection("musician-listings");
-                                            favMusicians.document(pID).get()
+                                            favMusicians.document(mID).get()
                                                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -345,7 +345,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
             CollectionReference favMusicians = db.collection("favourite-ads")
                     .document(FirebaseAuth.getInstance().getUid())
                     .collection("musician-listings");
-            favMusicians.document(pID).get()
+            favMusicians.document(mID).get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -354,7 +354,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                 DocumentSnapshot document = task.getResult();
                                 if(document.exists())
                                 {
-                                    favMusicians.document(pID)
+                                    favMusicians.document(mID)
                                             .delete()
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
@@ -372,7 +372,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                 }
                                 else
                                 {
-                                    favMusicians.document(pID)
+                                    favMusicians.document(mID)
                                             .set(listing)
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
