@@ -494,6 +494,7 @@ public class ViewCommsFragment extends Fragment
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.d(TAG, "Band added to musician's band list successfully!");
+                                        Toast.makeText(getActivity(), "Band joined!", Toast.LENGTH_SHORT).show();
                                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                                         if (Build.VERSION.SDK_INT >= 26) {
                                             ft.setReorderingAllowed(false);

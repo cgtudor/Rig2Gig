@@ -26,12 +26,15 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     private Map<String, Object> band;
     private List memberRefs;
     private ArrayList  names;
+    private ArrayList<List> musicanBands;
     private ArrayList <ListingManager> musicianManagers;
+    private ArrayList <Map<String, Object>> musicians;
     private int membersDownloaded;
     private GridView gridView;
     private int position;
     private ImageView addImage;
     private TextView addMemberText;
+    private boolean firstDeletion;
 
 
     @Override
@@ -45,6 +48,7 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         type = "Band";
         position = -1;
         membersDownloaded = 0;
+        firstDeletion = false;
         bandInfoManager = new ListingManager(bandRef, type, listingRef);
         bandInfoManager.getUserInfo(this);
         addMemberText = findViewById(R.id.addMemberText);
@@ -69,10 +73,12 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
             if (memberRefs.size() > 0)
             {
                 names = new ArrayList<>();
+                musicanBands = new ArrayList<>();
                 musicianManagers = new ArrayList<>();
+                musicians = new ArrayList<>();
                 for (int i = 0; i < memberRefs.size(); i++)
                 {
-                    musicianManagers.add(new ListingManager(memberRefs.get(i).toString(),"Musician",""));
+                    musicianManagers.add(new ListingManager(memberRefs.get(i).toString(),"Musician","profileEdit"));
                 }
                 musicianManagers.get(membersDownloaded).getUserInfo(this);
             }
@@ -84,12 +90,16 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         else if (membersDownloaded != memberRefs.size() - 1)
         {
             names.add(data.get("name").toString());
+            musicanBands.add((List)(data.get("bands")));
+            musicians.add(data);
             membersDownloaded++;
             musicianManagers.get(membersDownloaded).getUserInfo(this);
         }
         else
         {
             names.add(data.get("name").toString());
+            musicanBands.add((List)(data.get("bands")));
+            musicians.add(data);
             populateInitialFields();
         }
     }
@@ -131,13 +141,17 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         removedRef = (String)memberRefs.get(position);
         memberRefs.remove(position);
         band.put("members",memberRefs);
+        firstDeletion = true;
         bandInfoManager.postDataToDatabase((HashMap)band, null, this);
+        musicanBands.get(position).remove(bandRef);
+        musicians.get(position).put("bands",musicanBands.get(position));
+        musicianManagers.get(position).postDataToDatabase((HashMap)musicians.get(position),null,this);
     }
 
     @Override
     public void handleDatabaseResponse(Enum creationResult)
     {
-        if (creationResult == ListingManager.CreationResult.SUCCESS)
+        if (!firstDeletion && creationResult == ListingManager.CreationResult.SUCCESS)
         {
             Toast.makeText(ManageBandMembersActivity.this,
                     names.get(position) + " has been removed",
@@ -157,6 +171,7 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
                     Toast.LENGTH_LONG).show();
             memberRefs.add(position,removedRef);
         }
+        firstDeletion = false;
     }
 
     public void searchForMembers()
