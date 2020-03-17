@@ -84,12 +84,14 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
         final CardView card_view_view_bands = view.findViewById(R.id.card_view_view_Bands);
         final CardView card_view_edit_band_musician = view.findViewById(R.id.card_view_edit_band_musician);
         final CardView card_view_create_band_musician_advert = view.findViewById(R.id.card_view_create_band_musician_advert);
+        final CardView card_view_view_band_musician_advert = view.findViewById(R.id.card_view_view_band_musician_advert);
         final CardView card_view_edit_band_musician_advert = view.findViewById(R.id.card_view_edit_band_musician_advert);
         final CardView card_view_delete_band_musician_advert = view.findViewById(R.id.card_view_delete_band_musician_advert);
 
         card_view_view_bands.setOnClickListener(this);
         card_view_edit_band_musician.setOnClickListener(this);
         card_view_create_band_musician_advert.setOnClickListener(this);
+        card_view_view_band_musician_advert.setOnClickListener(this);
         card_view_edit_band_musician_advert.setOnClickListener(this);
         card_view_delete_band_musician_advert.setOnClickListener(this);
 
@@ -150,9 +152,6 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                                 editProfileLayout = view.findViewById(R.id.card_view_delete_performer_advert);
                                 editProfileLayout.setVisibility(View.VISIBLE);
 
-                                editProfileLayout = view.findViewById(R.id.card_view_create_performer_advert);
-                                editProfileLayout.setVisibility(View.GONE);
-
                                 performerReference = performerAdverts.get(0).getId();
                             }
                             else
@@ -161,15 +160,6 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
 
                                 titleView = view.findViewById(R.id.performer_advert_title);
                                 titleView.setVisibility(View.VISIBLE);
-
-                                /*editProfileLayout = view.findViewById(R.id.card_view_edit_performer_advert);
-                                editProfileLayout.setVisibility(View.GONE);
-
-                                editProfileLayout = view.findViewById(R.id.card_view_view_performer_advert);
-                                editProfileLayout.setVisibility(View.GONE);
-
-                                editProfileLayout = view.findViewById(R.id.card_view_delete_performer_advert);
-                                editProfileLayout.setVisibility(View.GONE);*/
 
                                 editProfileLayout = view.findViewById(R.id.card_view_view_Venues);
                                 editProfileLayout.setVisibility(View.VISIBLE);
@@ -213,6 +203,9 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                                 editProfileLayout = view.findViewById(R.id.card_view_edit_band_musician);
                                 editProfileLayout.setVisibility(View.VISIBLE);
 
+                                editProfileLayout = view.findViewById(R.id.card_view_view_band_musician_advert);
+                                editProfileLayout.setVisibility(View.VISIBLE);
+
                                 editProfileLayout = view.findViewById(R.id.card_view_edit_band_musician_advert);
                                 editProfileLayout.setVisibility(View.VISIBLE);
 
@@ -229,9 +222,6 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                                 titleView.setVisibility(View.VISIBLE);
 
                                 editProfileLayout = view.findViewById(R.id.card_view_view_Bands);
-                                editProfileLayout.setVisibility(View.VISIBLE);
-
-                                editProfileLayout = view.findViewById(R.id.card_view_edit_band_musician);
                                 editProfileLayout.setVisibility(View.VISIBLE);
 
                                 editProfileLayout = view.findViewById(R.id.card_view_edit_band_musician);
@@ -291,6 +281,9 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                 //Create Intent here.
                 break;
             case "Create Band Musician Advert":
+                //Create Intent here.
+                break;
+            case "View Band Musician Advert":
                 //Create Intent here.
                 break;
             case "Edit Band Musician Advert":

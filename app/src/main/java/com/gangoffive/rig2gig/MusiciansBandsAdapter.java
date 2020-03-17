@@ -93,9 +93,9 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
     {
         MusiciansBands currentBand = musiciansBandsArrayList.get(position);
 
-        holder.listingReference = currentBand.getreference();
+        holder.listingReference = currentBand.getReference();
 
-        docRef = db.collection("bands").document(currentBand.getreference());
+        docRef = db.collection("bands").document(currentBand.getReference());
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
@@ -111,7 +111,7 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                         holder.textView.setText(document.get("name").toString());
-                        StorageReference bandPic = storage.getReference().child("/images/bands/" + currentBand.getreference() + ".jpg");
+                        StorageReference bandPic = storage.getReference().child("/images/bands/" + currentBand.getReference() + ".jpg");
                         GlideApp.with(holder.imageView.getContext()).load(bandPic).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(holder.imageView);
                     }
                 }

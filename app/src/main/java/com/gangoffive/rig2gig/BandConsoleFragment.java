@@ -42,6 +42,7 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
     private View view;
 
     private String bandRef;
+    private String displayMusicianBandsReference;
     private String performerReference;
 
     /**
@@ -55,7 +56,7 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        view = inflater.inflate(R.layout.fragment_band_console, container, false);
+        view = inflater.inflate(R.layout.activity_band_console, container, false);
 
         final CardView card_view_view_venues = view.findViewById(R.id.card_view_view_Venues);
         final CardView card_view_edit_band = view.findViewById(R.id.card_view_edit_musician);
