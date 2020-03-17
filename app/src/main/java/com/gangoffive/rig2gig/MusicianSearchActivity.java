@@ -205,10 +205,10 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
     {
         if (gridRefs.size() > 0)
         {
-            CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
             for (int i = 0; i < gridRefs.size(); i++)
             {
-                sentMessages.whereEqualTo("sent-to", userRefs.get(i)).whereEqualTo("type", "join-request").get()
+                CollectionReference sentMessages = db.collection("communications").document(userRefs.get(i)).collection("received");
+                sentMessages.whereEqualTo("sent-from", FirebaseAuth.getInstance().getUid()).whereEqualTo("type", "join-request").get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
