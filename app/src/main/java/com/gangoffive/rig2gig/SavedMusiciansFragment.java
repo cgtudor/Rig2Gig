@@ -65,11 +65,11 @@ public class SavedMusiciansFragment extends Fragment
                                 Log.d(TAG, "get successful with data");
 
                                 for(DocumentSnapshot documentSnapshot : documentSnapshots){
-
+                                    ArrayList<String> positions = (ArrayList<String>) documentSnapshot.get("position");
                                     MusicianListing musicianListing = new MusicianListing(
                                             documentSnapshot.getId(),
                                             documentSnapshot.get("musician-ref").toString(),
-                                            documentSnapshot.get("position").toString());
+                                            positions);
 
                                     musicianListings.add(musicianListing);
                                 }

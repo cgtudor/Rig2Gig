@@ -45,8 +45,10 @@ public class MusicianAdapter extends RecyclerView.Adapter<MusicianAdapter.ViewHo
         public ImageView imageViewPhoto;
         public TextView textViewName;
         public TextView textViewGenres;
+        public TextView textViewPos;
         public TextView textViewLoc;
         public TextView textViewRating;
+        public TextView textViewRatingText;
 
         public ViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
@@ -54,8 +56,10 @@ public class MusicianAdapter extends RecyclerView.Adapter<MusicianAdapter.ViewHo
             imageViewPhoto = (ImageView) itemView.findViewById(R.id.imageViewPhoto);
             textViewName = (TextView) itemView.findViewById(R.id.textViewName);
             textViewGenres = (TextView) itemView.findViewById(R.id.textViewGenres);
+            textViewPos = (TextView) itemView.findViewById(R.id.textViewPos);
             textViewLoc = (TextView) itemView.findViewById(R.id.textViewLoc);
             textViewRating = (TextView) itemView.findViewById(R.id.textViewRating);
+            textViewRatingText = (TextView) itemView.findViewById(R.id.textViewRatingText);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,8 +110,15 @@ public class MusicianAdapter extends RecyclerView.Adapter<MusicianAdapter.ViewHo
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
                         holder.textViewName.setText(document.get("name").toString());
                         holder.textViewGenres.setText(document.get("genres").toString());
+                        String positions = "";
+                        for(String position : musicianListing.getPosition()) {
+                            positions += position + " ";
+                        }
+                        positions = positions.trim();
+                        holder.textViewPos.setText(positions);
                         holder.textViewLoc.setText(document.get("location").toString());
                         holder.textViewRating.setText(document.get("rating").toString());
+                        holder.textViewRatingText.setText("out of 5");
                         StorageReference bandPic = storage.getReference().child("/images/musician-listings/" + musicianListing.getListingRef() + ".jpg");
                         GlideApp.with(holder.imageViewPhoto.getContext()).load(bandPic).into(holder.imageViewPhoto);
 

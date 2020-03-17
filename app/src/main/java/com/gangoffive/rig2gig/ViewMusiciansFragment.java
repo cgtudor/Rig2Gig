@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -43,6 +46,8 @@ public class ViewMusiciansFragment extends Fragment
     {
         final View v = inflater.inflate(R.layout.fragment_view_performers, container, false);
 
+        setHasOptionsMenu(true);
+
         db = FirebaseFirestore.getInstance();
         colRef = db.collection("musician-listings");
 
@@ -62,11 +67,11 @@ public class ViewMusiciansFragment extends Fragment
                                 Log.d(TAG, "get successful with data");
 
                                 for(DocumentSnapshot documentSnapshot : documentSnapshots){
-
+                                    ArrayList<String> positions = (ArrayList<String>) documentSnapshot.get("position");
                                     MusicianListing musicianListing = new MusicianListing(
                                             documentSnapshot.getId(),
                                             documentSnapshot.get("musician-ref").toString(),
-                                            documentSnapshot.get("position").toString());
+                                            positions);
 
                                     musicianListings.add(musicianListing);
                                 }
@@ -102,8 +107,24 @@ public class ViewMusiciansFragment extends Fragment
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.test, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem)
+    {
+        switch(menuItem.getItemId())
+        {
+            case R.id.favourite_icon:
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new SavedMusiciansFragment()).commit();
+                break;
+            default:
+                break;
+        }
+
+        return true;
     }
 }

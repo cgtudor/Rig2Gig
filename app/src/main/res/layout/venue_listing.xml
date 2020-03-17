@@ -24,7 +24,7 @@
                 android:id="@+id/textViewName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name"
+                android:text=""
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_alignParentTop="true"
@@ -34,7 +34,7 @@
                 android:id="@+id/textViewLoc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Location"
+                android:text=""
                 android:textSize="15sp"
                 android:layout_marginStart="8dp"
                 android:layout_below="@+id/textViewName"
@@ -44,11 +44,21 @@
                 android:id="@+id/textViewRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewName"
-                android:layout_alignParentEnd="true"
+                android:layout_above="@+id/textViewRatingText"
+                android:layout_alignStart="@+id/textViewRatingText"
                 android:layout_marginEnd="1dp"
-                android:text="5.0"
+                android:text=""
                 android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/textViewRatingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/textViewLoc"
+                android:layout_marginEnd="1dp"
+                android:text=""
+                android:textSize="15sp" />
 
         </RelativeLayout>
 
