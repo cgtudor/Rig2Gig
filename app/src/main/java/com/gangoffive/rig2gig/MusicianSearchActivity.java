@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -17,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -39,12 +41,13 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
     private SearchView searchBar;
     private ListView listResults;
     private ArrayAdapter<String> resultsAdapter;
-    private ArrayList<String> musicians, currentMemberRefs, searchRefs, searchNames, names, gridRefs;
+    private ArrayList<String> musicians, currentMemberRefs, searchRefs, searchNames, names, gridRefs, userRefs;
+    private ArrayList<Boolean> invitesSent;
     private FirebaseFirestore db;
     private CollectionReference musicianDb;
     private Activity activityRef;
     private ArrayList <ListingManager> musicianManagers;
-    private int membersDownloaded, remainingHeight, addPosition;
+    private int membersDownloaded, remainingHeight, addPosition, invitesChecked;
     private GridView gridView;
     private ScrollView scroll;
     private String bandRef;
@@ -61,11 +64,10 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         musicianDb = db.collection("musicians");
         resetLists();
         membersDownloaded = 0;
+        invitesChecked = 0;
         activityRef = this;
         addPosition = -1;
         setupSearchBar();
-
-
     }
 
     public void setupSearchBar()
@@ -101,6 +103,7 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
             {
                 resetLists();
                 membersDownloaded = 0;
+                invitesChecked = 0;
                 if (gridView != null)
                 {
                     gridView.setMinimumHeight(0);
@@ -142,6 +145,7 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
                                     if (!currentMemberRefs.contains(document.getId()))
                                     {
                                         searchRefs.add(document.getId());
+                                        userRefs.add(document.getData().get("user-ref").toString());
                                         searchNames.add(document.getData().get("name").toString());
                                         if (!musicians.contains(document.getData().get("name").toString()))
                                         {
@@ -149,7 +153,6 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
                                         }
                                     }
                                 }
-
                             }
                             listResults.setAdapter(resultsAdapter = new ArrayAdapter<String>(activityRef,
                                     android.R.layout.simple_list_item_1,
@@ -194,7 +197,45 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         }
         else
         {
-            populateInitialFields();
+            checkInvitesSent();
+        }
+    }
+
+    public void checkInvitesSent()
+    {
+        if (gridRefs.size() > 0)
+        {
+            CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
+            for (int i = 0; i < gridRefs.size(); i++)
+            {
+                sentMessages.whereEqualTo("sent-to", userRefs.get(i)).whereEqualTo("type", "join-request").get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if(task.isSuccessful())
+                                {
+                                    QuerySnapshot query = task.getResult();
+                                    if(!query.isEmpty())
+                                    {
+                                        invitesSent.add(true);
+                                    }
+                                    else
+                                    {
+                                        invitesSent.add(false);
+                                    }
+                                    invitesChecked++;
+                                    if (invitesChecked == gridRefs.size())
+                                    {
+                                        populateInitialFields();
+                                    }
+                                }
+                                else
+                                {
+                                    Log.e("FIREBASE", "Sent messages failed with ", task.getException());
+                                }
+                            }
+                        });
+            }
         }
     }
 
@@ -209,7 +250,7 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         else
         {
             names.add(data.get("name").toString());
-            populateInitialFields();
+            checkInvitesSent();
         }
     }
 
@@ -219,7 +260,14 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         scroll = findViewById( R.id.scroll);
         scroll.setMinimumHeight(remainingHeight);
         gridView.setMinimumHeight(remainingHeight);
-        BandMemberAdderAdapter customAdapter = new BandMemberAdderAdapter(names, gridRefs, this);
+        BandMemberAdderAdapter customAdapter = new BandMemberAdderAdapter(names, gridRefs, userRefs, invitesSent, this);
+        for (int i = 0; i < gridRefs.size();i++)
+        {
+            if (invitesSent.get(i) == true)
+            {
+
+            }
+        }
         gridView.setAdapter(customAdapter);
     }
 
@@ -229,6 +277,9 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         Intent intent =  new Intent(this, AddMemberConfirmation.class);
         intent.putExtra("EXTRA_NAME", member);
         intent.putExtra("EXTRA_POSITION", position);
+        intent.putExtra("EXTRA_MUSICIAN_ID",searchRefs.get(position));
+        intent.putExtra("EXTRA_BAND_ID",bandRef);
+        intent.putExtra("EXTRA_USER_ID",userRefs.get(position));
         startActivityForResult(intent, 1);
     }
 
@@ -240,7 +291,7 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
             addPosition = data.getIntExtra("EXTRA_POSITION", -1);
             if (addPosition != -1)
             {
-                inviteMember(addPosition);
+                inviteMember();
             }
             else
             {
@@ -249,13 +300,12 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         }
     }
 
-    public void inviteMember(int pos)
+    public void inviteMember()
     {
-        addPosition = pos;
-        String musicianRef = (String)searchRefs.get(addPosition);
-        // send invite to musician if not currently in band
-        Toast.makeText(this,searchNames.get(addPosition) + " has been invited",
-                Toast.LENGTH_LONG).show();
+        membersDownloaded = 0;
+        invitesChecked = 0;
+        invitesSent = new ArrayList<>();
+        checkInvitesSent();
         searchBar.clearFocus();
     }
 
@@ -267,6 +317,8 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         names = new ArrayList<>();
         musicianManagers = new ArrayList<>();
         gridRefs = new ArrayList<>();
+        userRefs = new ArrayList<>();
+        invitesSent = new ArrayList<>();
     }
 
     @Override
@@ -276,8 +328,6 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         intent.putExtra("EXTRA_BAND_ID", bandRef);
         startActivity(intent);
     }
-
-
 
     @Override
     public void setViewReferences() {

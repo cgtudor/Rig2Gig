@@ -2,13 +2,23 @@ package com.gangoffive.rig2gig;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
@@ -20,25 +30,40 @@ public class BandMemberAdderAdapter  extends BaseAdapter
     private Context context;
     private ArrayList<Drawable> images;
     private ArrayList<String> names;
-    private List memberRefs;
+    private ArrayList<Boolean> invitesSent;
+    private List musicianRefs, userRefs;
     private LayoutInflater inflater;
     private StorageReference imageRef;
     private FirebaseStorage storage;
     private MusicianSearchActivity bandManager;
+    private FirebaseFirestore db;
 
-    public BandMemberAdderAdapter(ArrayList memberNames, List refs, MusicianSearchActivity con)
+
+    public BandMemberAdderAdapter(ArrayList musicianNames, List musicRefs, List userIds, ArrayList invited, MusicianSearchActivity con)
     {
+        db = FirebaseFirestore.getInstance();
         context = con;
         bandManager = con;
         inflater = LayoutInflater.from(context);
-        names = memberNames;
-        memberRefs = refs;
+        names = musicianNames;
+        musicianRefs = musicRefs;
+        userRefs = userIds;
+        invitesSent = invited;
         storage = FirebaseStorage.getInstance();
         images = new ArrayList();
         for (String member : names)
         {
             images.add(null);
         }
+
+
+
+
+
+
+
+
+
     }
 
 
@@ -87,41 +112,36 @@ public class BandMemberAdderAdapter  extends BaseAdapter
         }
         /* View view = context.getLayoutInflater().inflate(R.layout.band_member_list_item, null);*/
         ImageView image = (ImageView)convertView.findViewById(R.id.bandMemberImage);
-        imageRef = storage.getReference().child("/images/musicians/" + memberRefs.get(position) + ".jpg");
+        imageRef = storage.getReference().child("/images/musicians/" + musicianRefs.get(position) + ".jpg");
         if (images.get(position) == null)
         {
             GlideApp.with(context)
                     .load(imageRef)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
-/*                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            images.set(position, resource);
-                            return false;
-                        }
-                    })*/
                     .into(image);
         }
-/*        else
-        {
-            image.setImageDrawable(images.get(position));
-        }*/
         TextView name = (TextView)convertView.findViewById(R.id.name);
         name.setText(names.get(position).toString());
-        TextView remove = (TextView)convertView.findViewById(R.id.remove);
-        remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                bandManager.confirmAddMember(names.get(position).toString(), position);
-            }
-        });
+        TextView invite = (TextView)convertView.findViewById(R.id.invite);
+
+        if (invitesSent.get(position) == true)
+        {
+            image.setAlpha(.5f);
+            name.setAlpha(.5f);
+            invite.setText("Invited");
+            invite.setAlpha(.5f);
+        }
+        else
+        {
+            invite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+                    bandManager.confirmAddMember(names.get(position).toString(), position);
+                }
+            });
+        }
         return convertView;
     }
 }
