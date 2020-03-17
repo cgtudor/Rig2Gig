@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +28,7 @@ import java.util.List;
 public class MusicianConsoleFragment extends Fragment implements View.OnClickListener
 {
     private List<DocumentSnapshot> performerAdverts;
+    private List<DocumentSnapshot> musicianAdverts;
     private List<DocumentSnapshot> musicians;
 
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
@@ -38,12 +41,16 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
     private final CollectionReference performerAdvertsReference = FSTORE.collection("performer-listings");
     private final Query getPerformerAdverts = performerAdvertsReference;
 
+    private final CollectionReference musicianAdvertsReference= FSTORE.collection("musician-listings");
+    private final Query getMusicianAdverts = musicianAdvertsReference;
+
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
 
     private View view;
 
     private String musicianRef;
     private String performerReference;
+    private String musicianAdvertReference;
 
     /**
      * Upon creation of the VenueConsoleFragment, create the fragment_venue_console layout.
@@ -58,21 +65,33 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
     {
         view = inflater.inflate(R.layout.fragment_musician_console, container, false);
 
+        //Performer Section.
         final CardView card_view_view_venues = view.findViewById(R.id.card_view_view_Venues);
         final CardView card_view_edit_musician = view.findViewById(R.id.card_view_edit_musician);
-        //final CardView card_view_my_bands = view.findViewById(R.id.card_view_my_bands);
-        final CardView card_view_create_advert = view.findViewById(R.id.card_view_create_advert);
-        final CardView card_view_edit_advert = view.findViewById(R.id.card_view_edit_advert);
-        final CardView card_view_view_advert = view.findViewById(R.id.card_view_view_advert);
-        final CardView card_view_delete_advert = view.findViewById(R.id.card_view_delete_advert);
+        final CardView card_view_create_advert = view.findViewById(R.id.card_view_create_performer_advert);
+        final CardView card_view_edit_advert = view.findViewById(R.id.card_view_edit_performer_advert);
+        final CardView card_view_view_advert = view.findViewById(R.id.card_view_view_performer_advert);
+        final CardView card_view_delete_advert = view.findViewById(R.id.card_view_delete_performer_advert);
 
         card_view_view_venues.setOnClickListener(this);
         card_view_edit_musician.setOnClickListener(this);
-        //card_view_my_bands.setOnClickListener(this);
         card_view_create_advert.setOnClickListener(this);
         card_view_edit_advert.setOnClickListener(this);
         card_view_view_advert.setOnClickListener(this);
         card_view_delete_advert.setOnClickListener(this);
+
+        //Band Section
+        final CardView card_view_view_bands = view.findViewById(R.id.card_view_view_Bands);
+        final CardView card_view_edit_band_musician = view.findViewById(R.id.card_view_edit_band_musician);
+        final CardView card_view_create_band_musician_advert = view.findViewById(R.id.card_view_create_band_musician_advert);
+        final CardView card_view_edit_band_musician_advert = view.findViewById(R.id.card_view_edit_band_musician_advert);
+        final CardView card_view_delete_band_musician_advert = view.findViewById(R.id.card_view_delete_band_musician_advert);
+
+        card_view_view_bands.setOnClickListener(this);
+        card_view_edit_band_musician.setOnClickListener(this);
+        card_view_create_band_musician_advert.setOnClickListener(this);
+        card_view_edit_band_musician_advert.setOnClickListener(this);
+        card_view_delete_band_musician_advert.setOnClickListener(this);
 
         databaseQuery();
 
@@ -107,10 +126,14 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                             performerAdverts = queryDocumentSnapshots.getDocuments();
 
                             CardView editProfileLayout;
+                            LinearLayout titleView;
 
                             if(!performerAdverts.isEmpty())
                             {
-                                Log.d(TAG, "DATABASEQUERY ------------------ get successful with advert");
+                                Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful with advert");
+
+                                titleView = view.findViewById(R.id.performer_advert_title);
+                                titleView.setVisibility(View.VISIBLE);
 
                                 editProfileLayout = view.findViewById(R.id.card_view_view_Venues);
                                 editProfileLayout.setVisibility(View.VISIBLE);
@@ -118,35 +141,35 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                                 editProfileLayout = view.findViewById(R.id.card_view_edit_musician);
                                 editProfileLayout.setVisibility(View.VISIBLE);
 
-                                editProfileLayout = view.findViewById(R.id.card_view_edit_advert);
+                                editProfileLayout = view.findViewById(R.id.card_view_edit_performer_advert);
                                 editProfileLayout.setVisibility(View.VISIBLE);
 
-                                editProfileLayout = view.findViewById(R.id.card_view_view_advert);
+                                editProfileLayout = view.findViewById(R.id.card_view_view_performer_advert);
                                 editProfileLayout.setVisibility(View.VISIBLE);
 
-                                editProfileLayout = view.findViewById(R.id.card_view_delete_advert);
+                                editProfileLayout = view.findViewById(R.id.card_view_delete_performer_advert);
                                 editProfileLayout.setVisibility(View.VISIBLE);
 
-                                //editProfileLayout = view.findViewById(R.id.card_view_my_bands);
-                                //editProfileLayout.setVisibility(View.VISIBLE);
-
-                                editProfileLayout = view.findViewById(R.id.card_view_create_advert);
+                                editProfileLayout = view.findViewById(R.id.card_view_create_performer_advert);
                                 editProfileLayout.setVisibility(View.GONE);
 
                                 performerReference = performerAdverts.get(0).getId();
                             }
                             else
                             {
-                                Log.d(TAG, "get successful without advert");
+                                Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful without advert");
 
-                                editProfileLayout = view.findViewById(R.id.card_view_edit_advert);
+                                titleView = view.findViewById(R.id.performer_advert_title);
+                                titleView.setVisibility(View.VISIBLE);
+
+                                /*editProfileLayout = view.findViewById(R.id.card_view_edit_performer_advert);
                                 editProfileLayout.setVisibility(View.GONE);
 
-                                editProfileLayout = view.findViewById(R.id.card_view_view_advert);
+                                editProfileLayout = view.findViewById(R.id.card_view_view_performer_advert);
                                 editProfileLayout.setVisibility(View.GONE);
 
-                                editProfileLayout = view.findViewById(R.id.card_view_delete_advert);
-                                editProfileLayout.setVisibility(View.GONE);
+                                editProfileLayout = view.findViewById(R.id.card_view_delete_performer_advert);
+                                editProfileLayout.setVisibility(View.GONE);*/
 
                                 editProfileLayout = view.findViewById(R.id.card_view_view_Venues);
                                 editProfileLayout.setVisibility(View.VISIBLE);
@@ -154,11 +177,8 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                                 editProfileLayout = view.findViewById(R.id.card_view_edit_musician);
                                 editProfileLayout.setVisibility(View.VISIBLE);
 
-                                editProfileLayout = view.findViewById(R.id.card_view_create_advert);
+                                editProfileLayout = view.findViewById(R.id.card_view_create_performer_advert);
                                 editProfileLayout.setVisibility(View.VISIBLE);
-
-                                //editProfileLayout = view.findViewById(R.id.card_view_my_bands);
-                                //editProfileLayout.setVisibility(View.VISIBLE);
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener()
@@ -167,6 +187,59 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                         public void onFailure(@NonNull Exception e)
                         {
                             Log.d(TAG, e.toString());
+                        }
+                    });
+
+                    getMusicianAdverts.whereEqualTo("musician-ref", musicianRef).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+                    {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots)
+                        {
+                            musicianAdverts = queryDocumentSnapshots.getDocuments();
+
+                            CardView editProfileLayout;
+                            LinearLayout titleView;
+
+                            if(!musicianAdverts.isEmpty())
+                            {
+                                Log.d(TAG, "DATABASEQUERY MUSICIAN ------------------ get successful with advert");
+
+                                titleView = view.findViewById(R.id.band_advert_title);
+                                titleView.setVisibility(View.VISIBLE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_view_Bands);
+                                editProfileLayout.setVisibility(View.VISIBLE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_edit_band_musician);
+                                editProfileLayout.setVisibility(View.VISIBLE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_edit_band_musician_advert);
+                                editProfileLayout.setVisibility(View.VISIBLE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_delete_band_musician_advert);
+                                editProfileLayout.setVisibility(View.VISIBLE);
+
+                                musicianAdvertReference = musicianAdverts.get(0).getId();
+                            }
+                            else
+                            {
+                                Log.d(TAG, "DATABASEQUERY MUSICIAN ------------------ get successful without advert");
+
+                                titleView = view.findViewById(R.id.band_advert_title);
+                                titleView.setVisibility(View.VISIBLE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_view_Bands);
+                                editProfileLayout.setVisibility(View.VISIBLE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_edit_band_musician);
+                                editProfileLayout.setVisibility(View.VISIBLE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_edit_band_musician);
+                                editProfileLayout.setVisibility(View.VISIBLE);
+
+                                editProfileLayout = view.findViewById(R.id.card_view_create_band_musician_advert);
+                                editProfileLayout.setVisibility(View.VISIBLE);
+                            }
                         }
                     });
                 }
@@ -194,24 +267,36 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
             case "Edit Musician":
                 startActivity(new Intent(getActivity(), MusicianDetailsEditor.class).putExtra("EXTRA_MUSICIAN_ID", musicianRef));
                 break;
-            case "My Bands":
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new DisplayMusiciansBands()).commit();
-                break;
-            case "Create Advert":
+            case "Create Performer Advert":
                 startActivity(new Intent(getActivity(), PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", musicianRef)
                                                                                           .putExtra("EXTRA_LISTING_ID", "")
                                                                                           .putExtra("EXTRA_PERFORMER_TYPE", "Musician"));
                 break;
-            case "Edit Advert":
+            case "Edit Performer Advert":
                 startActivity(new Intent(getActivity(), PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", musicianRef)
                                                                                       .putExtra("EXTRA_LISTING_ID", performerReference)
                                                                                       .putExtra("EXTRA_PERFORMER_TYPE", "Musician"));
                 break;
-            case "View Advert":
+            case "View Performer Advert":
                 startActivity(new Intent(getActivity(), PerformanceListingDetailsActivity.class).putExtra("EXTRA_PERFORMANCE_LISTING_ID", performerReference));
                 break;
-            case "Delete Advert":
-                deleteAdvert();
+            case "Delete Performer Advert":
+                deletePerformerAdvert();
+                break;
+            case "View Bands":
+                //Create Intent here.
+                break;
+            case "Edit Band Musician":
+                //Create Intent here.
+                break;
+            case "Create Band Musician Advert":
+                //Create Intent here.
+                break;
+            case "Edit Band Musician Advert":
+                //Create Intent here.
+                break;
+            case "Delete Band Musician advert":
+                deleteMusicianAdvert();
                 break;
             default:
                 break;
@@ -221,7 +306,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
     /**
      * This method is used to find the logged in venue's advert and delete it from the database.
      */
-    private void deleteAdvert()
+    private void deletePerformerAdvert()
     {
         getPerformerAdverts.whereEqualTo("performer-ref", musicianRef).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
@@ -240,6 +325,33 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                 else
                 {
                     Log.d(TAG, "get successful without advert");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Log.d(TAG, e.toString());
+            }
+        });
+    }
+
+    private void deleteMusicianAdvert()
+    {
+        getMusicianAdverts.whereEqualTo("musician-ref", musicianRef).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots)
+            {
+                musicianAdverts = queryDocumentSnapshots.getDocuments();
+
+                if(!musicianAdverts.isEmpty())
+                {
+                    Log.d(TAG, "DELETEADVERT ------------------ get successful with advert");
+
+                    musicianAdvertsReference.document(musicianAdverts.get(0).getId()).delete();
+                    restartFragment();
                 }
             }
         }).addOnFailureListener(new OnFailureListener()
