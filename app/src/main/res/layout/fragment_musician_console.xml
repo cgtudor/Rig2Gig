@@ -535,6 +535,7 @@
                 android:layout_height="165dp"
                 android:layout_margin="3dp"
                 android:elevation="8dp"
+                android:visibility="gone"
                 android:tag="View Band Musician Advert">
 
                 <LinearLayout
@@ -579,6 +580,7 @@
                 android:layout_height="165dp"
                 android:layout_margin="3dp"
                 android:elevation="8dp"
+                android:visibility="gone"
                 android:tag="Edit Band Musician Advert">
 
                 <LinearLayout

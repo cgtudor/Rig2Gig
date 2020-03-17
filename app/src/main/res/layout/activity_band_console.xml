@@ -351,6 +351,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
+            android:visibility="gone"
             android:layout_margin="10dp">
 
             <View
@@ -388,6 +389,7 @@
                 android:layout_height="165dp"
                 android:layout_margin="3dp"
                 android:elevation="8dp"
+                android:visibility="gone"
                 android:tag="View Musicians">
 
                 <LinearLayout
@@ -432,6 +434,7 @@
                 android:layout_height="165dp"
                 android:layout_margin="3dp"
                 android:elevation="8dp"
+                android:visibility="gone"
                 android:tag="Edit Band">
 
                 <LinearLayout
@@ -530,6 +533,7 @@
                 android:layout_height="165dp"
                 android:layout_margin="3dp"
                 android:elevation="8dp"
+                android:visibility="gone"
                 android:tag="View Band Advert">
 
                 <LinearLayout
@@ -574,6 +578,7 @@
                 android:layout_height="165dp"
                 android:layout_margin="3dp"
                 android:elevation="8dp"
+                android:visibility="gone"
                 android:tag="Edit Band Advert">
 
                 <LinearLayout
@@ -626,6 +631,7 @@
                 android:layout_height="165dp"
                 android:layout_margin="3dp"
                 android:tag="Delete Band Advert"
+                android:visibility="gone"
                 android:elevation="8dp">
 
                 <LinearLayout

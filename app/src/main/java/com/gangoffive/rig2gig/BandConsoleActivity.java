@@ -26,6 +26,7 @@ import java.util.List;
 public class BandConsoleActivity extends AppCompatActivity implements View.OnClickListener
 {
     private List<DocumentSnapshot> bandAdverts;
+    private List<DocumentSnapshot> performerAdverts;
     private List<DocumentSnapshot> bands;
 
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
@@ -37,6 +38,9 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
 
     private final CollectionReference bandAdvertsReference = FSTORE.collection("band-listings");
     private final Query getBandAdverts = bandAdvertsReference;
+
+    private final CollectionReference performerAdvertsReference = FSTORE.collection("performer-listings");
+    private final Query getPerformerAdverts = performerAdvertsReference;
 
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
 
@@ -68,9 +72,9 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(bandName);
 
+        //Performer Advert Section
         final CardView card_view_view_venues = findViewById(R.id.card_view_view_Venues);
         final CardView card_view_edit_band = findViewById(R.id.card_view_edit_band);
-        //final CardView card_view_invite_musicians = view.findViewById(R.id.card_view_my_bands); REMOVE THIS
         final CardView card_view_create_advert = findViewById(R.id.card_view_create_performer_advert);
         final CardView card_view_edit_advert = findViewById(R.id.card_view_edit_performer_advert);
         final CardView card_view_view_advert = findViewById(R.id.card_view_view_performer_advert);
@@ -78,11 +82,25 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
 
         card_view_view_venues.setOnClickListener(this);
         card_view_edit_band.setOnClickListener(this);
-        //card_view_invite_musicians.setOnClickListener(this); REMOVE THIS
         card_view_create_advert.setOnClickListener(this);
         card_view_edit_advert.setOnClickListener(this);
         card_view_view_advert.setOnClickListener(this);
         card_view_delete_advert.setOnClickListener(this);
+
+        //Band Advert Section
+        final CardView card_view_view_musicians = findViewById(R.id.card_view_view_musicians);
+        final CardView card_view_edit_band_advert = findViewById(R.id.card_view_edit_band_advert);
+        final CardView card_view_create_band_advert = findViewById(R.id.card_view_create_band_advert);
+        final CardView card_view_view_band_advert = findViewById(R.id.card_view_view_band_advert);
+        final CardView card_view_edit_band_band_advert = findViewById(R.id.card_view_edit_band_band_advert);
+        final CardView card_view_delete_band_advert = findViewById(R.id.card_view_delete_band_advert);
+
+        card_view_view_musicians.setOnClickListener(this);
+        card_view_edit_band_advert.setOnClickListener(this);
+        card_view_create_band_advert.setOnClickListener(this);
+        card_view_view_band_advert.setOnClickListener(this);
+        card_view_edit_band_band_advert.setOnClickListener(this);
+        card_view_delete_band_advert.setOnClickListener(this);
 
         databaseQuery();
     }
@@ -93,17 +111,17 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
      */
     private void databaseQuery()
     {
-        getBandAdverts.whereEqualTo("band-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        getPerformerAdverts.whereEqualTo("performer-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
             {
-                bandAdverts = queryDocumentSnapshots.getDocuments();
+                performerAdverts = queryDocumentSnapshots.getDocuments();
 
                 CardView editProfileLayout;
                 LinearLayout textView;
 
-                if(!bandAdverts.isEmpty())
+                if(!performerAdverts.isEmpty())
                 {
                     Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful with advert");
 
@@ -116,16 +134,16 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
                     editProfileLayout = findViewById(R.id.card_view_edit_band);
                     editProfileLayout.setVisibility(View.VISIBLE);
 
-                    editProfileLayout = findViewById(R.id.card_view_edit_advert);
+                    editProfileLayout = findViewById(R.id.card_view_edit_performer_advert);
                     editProfileLayout.setVisibility(View.VISIBLE);
 
                     editProfileLayout = findViewById(R.id.card_view_view_performer_advert);
                     editProfileLayout.setVisibility(View.VISIBLE);
 
-                    editProfileLayout = findViewById(R.id.card_view_delete_advert);
+                    editProfileLayout = findViewById(R.id.card_view_delete_performer_advert);
                     editProfileLayout.setVisibility(View.VISIBLE);
 
-                    performerReference = bandAdverts.get(0).getId();
+                    performerReference = performerAdverts.get(0).getId();
                 }
                 else
                 {
@@ -153,7 +171,58 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
+        getBandAdverts.whereEqualTo("band-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots)
+            {
+                bandAdverts = queryDocumentSnapshots.getDocuments();
 
+                CardView editProfileLayout;
+                LinearLayout textView;
+
+                if(!bandAdverts.isEmpty())
+                {
+                    Log.d(TAG, "DATABASEQUERY BAND ------------------ get successful with advert");
+
+                    textView = findViewById(R.id.musician_advert_title);
+                    textView.setVisibility(View.VISIBLE);
+
+                    editProfileLayout = findViewById(R.id.card_view_view_musicians);
+                    editProfileLayout.setVisibility(View.VISIBLE);
+
+                    editProfileLayout = findViewById(R.id.card_view_edit_band_advert);
+                    editProfileLayout.setVisibility(View.VISIBLE);
+
+                    editProfileLayout = findViewById(R.id.card_view_view_band_advert);
+                    editProfileLayout.setVisibility(View.VISIBLE);
+
+                    editProfileLayout = findViewById(R.id.card_view_edit_band_band_advert);
+                    editProfileLayout.setVisibility(View.VISIBLE);
+
+                    editProfileLayout = findViewById(R.id.card_view_delete_band_advert);
+                    editProfileLayout.setVisibility(View.VISIBLE);
+
+                    bandRef = bandAdverts.get(0).getId();
+                }
+                else
+                {
+                    Log.d(TAG, "DATABASEQUERY BAND ------------------ get successful with advert");
+
+                    textView = findViewById(R.id.musician_advert_title);
+                    textView.setVisibility(View.VISIBLE);
+
+                    editProfileLayout = findViewById(R.id.card_view_view_musicians);
+                    editProfileLayout.setVisibility(View.VISIBLE);
+
+                    editProfileLayout = findViewById(R.id.card_view_edit_band_advert);
+                    editProfileLayout.setVisibility(View.VISIBLE);
+
+                    editProfileLayout = findViewById(R.id.card_view_create_band_advert);
+                    editProfileLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     /**
@@ -209,18 +278,20 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
      */
     private void deleteBandAdvert()
     {
-        getBandAdverts.whereEqualTo("band-ref", bandRef).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        getBandAdverts.whereEqualTo("band-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
             {
                 bandAdverts = queryDocumentSnapshots.getDocuments();
+                System.out.println("displayMusicianBandsReference ====================== " + displayMusicianBandsReference);
+                System.out.println("band adverts index 0" + bandAdverts.get(0).getReference());
 
                 if(!bandAdverts.isEmpty())
                 {
                     Log.d(TAG, "DELETEADVERT ------------------ get successful with advert");
 
-                    //bandAdvertsReference.document(bandAdverts.get(0).getId()).delete();
+                    bandAdvertsReference.document(bandAdverts.get(0).getId()).delete();
                     restartFragment();
                 }
                 else
@@ -243,7 +314,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
      */
     private void deletePerformerAdvert()
     {
-        getBandAdverts.whereEqualTo("performer-ref", bandRef).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        getBandAdverts.whereEqualTo("performer-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -254,7 +325,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
                 {
                     Log.d(TAG, "DELETEADVERT ------------------ get successful with advert");
 
-                    //bandAdvertsReference.document(bandAdverts.get(0).getId()).delete();
+                    //performerAdvertsReference.document(bandAdverts.get(0).getId()).delete();
                     restartFragment();
                 }
                 else
