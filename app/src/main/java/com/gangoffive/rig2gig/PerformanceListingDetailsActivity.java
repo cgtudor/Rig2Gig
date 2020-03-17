@@ -155,55 +155,74 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
         contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HashMap<String, Object> request = new HashMap<>();
-                request.put("type", "contact-request");
-                request.put("posting-date", Timestamp.now());
-                request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                db.collection("venues").whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid())
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            QuerySnapshot venues = task.getResult();
+                            if(!venues.isEmpty())
+                            {
+                                DocumentSnapshot venue = venues.getDocuments().get(0);
+                                HashMap<String, Object> request = new HashMap<>();
+                                request.put("type", "contact-request");
+                                request.put("posting-date", Timestamp.now());
+                                request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                request.put("notification-title", "Someone is interested in your advert!");
+                                request.put("notification-message", venue.get("name") + " is interested in you! Share contact details?");
 
-                CollectionReference received = db.collection("communications")
-                        .document(listingOwner.toString())
-                        .collection("received");
-                received.add(request)
-                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                if(task.isSuccessful())
-                                {
-                                    Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
-                                    Toast.makeText(PerformanceListingDetailsActivity.this, "Contact request sent!", Toast.LENGTH_SHORT).show();
-                                    contact.setAlpha(.5f);
-                                    contact.setClickable(false);
-                                    contact.setText("Contact request sent");
-                                }
-                                else
-                                {
-                                    Log.d("FIRESTORE", "Contact request failed with ", task.getException());
-                                }
+                                CollectionReference received = db.collection("communications")
+                                        .document(listingOwner.toString())
+                                        .collection("received");
+                                received.add(request)
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                if(task.isSuccessful())
+                                                {
+                                                    Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
+                                                    Toast.makeText(PerformanceListingDetailsActivity.this, "Contact request sent!", Toast.LENGTH_SHORT).show();
+                                                    contact.setAlpha(.5f);
+                                                    contact.setClickable(false);
+                                                    contact.setText("Contact request sent");
+                                                }
+                                                else
+                                                {
+                                                    Log.d("FIRESTORE", "Contact request failed with ", task.getException());
+                                                }
+                                            }
+                                        });
+
+                                HashMap<String, Object> requestSent = new HashMap<>();
+                                requestSent.put("type", "contact-request");
+                                requestSent.put("posting-date", Timestamp.now());
+                                requestSent.put("sent-to", listingOwner.toString());
+                                requestSent.put("notification-title", "Someone is interested in your advert!");
+                                requestSent.put("notification-message", venue.get("name") + " is interested in you! Share contact details?");
+                                CollectionReference sent = db.collection("communications")
+                                        .document(FirebaseAuth.getInstance().getUid())
+                                        .collection("sent");
+
+                                sent.add(requestSent)
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                if(task.isSuccessful())
+                                                {
+                                                    Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
+                                                }
+                                                else
+                                                {
+                                                    Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
+                                                }
+                                            }
+                                        });
                             }
-                        });
+                        }
+                    }
+                });
 
-                HashMap<String, Object> requestSent = new HashMap<>();
-                requestSent.put("type", "contact-request");
-                requestSent.put("posting-date", Timestamp.now());
-                requestSent.put("sent-to", listingOwner.toString());
-                CollectionReference sent = db.collection("communications")
-                        .document(FirebaseAuth.getInstance().getUid())
-                        .collection("sent");
-
-                sent.add(requestSent)
-                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                if(task.isSuccessful())
-                                {
-                                    Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
-                                }
-                                else
-                                {
-                                    Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
-                                }
-                            }
-                        });
             }
         });
 
