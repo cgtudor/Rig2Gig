@@ -127,9 +127,6 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
                                 editProfileLayout = view.findViewById(R.id.card_view_delete_advert);
                                 editProfileLayout.setVisibility(View.VISIBLE);
 
-                                //editProfileLayout = view.findViewById(R.id.card_view_my_bands);
-                                //editProfileLayout.setVisibility(View.VISIBLE);
-
                                 editProfileLayout = view.findViewById(R.id.card_view_create_advert);
                                 editProfileLayout.setVisibility(View.GONE);
 
@@ -155,9 +152,6 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
 
                                 editProfileLayout = view.findViewById(R.id.card_view_create_advert);
                                 editProfileLayout.setVisibility(View.VISIBLE);
-
-                                //editProfileLayout = view.findViewById(R.id.card_view_my_bands);
-                                //editProfileLayout.setVisibility(View.VISIBLE);
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener()
