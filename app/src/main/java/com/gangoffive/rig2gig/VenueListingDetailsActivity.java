@@ -192,6 +192,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                 requestSent.put("type", "contact-request");
                                 requestSent.put("posting-date", Timestamp.now());
                                 requestSent.put("sent-to", listingOwner.toString());
+                                requestSent.put("notification-title", "Someone is interested in your advert!");
+                                requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
                                 CollectionReference sent = db.collection("communications")
                                         .document(FirebaseAuth.getInstance().getUid())
                                         .collection("sent");
@@ -213,7 +215,6 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                             }
                         }
                     }});
-
             }
         });
 
