@@ -49,8 +49,6 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     private String bandName;
     private String performerReference;
 
-    private Toolbar toolbar;
-
     /**
      * Upon creation of the VenueConsoleFragment, create the fragment_venue_console layout.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
@@ -71,6 +69,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(bandName);
+
 
         //Performer Advert Section
         final CardView card_view_view_venues = findViewById(R.id.card_view_view_Venues);
@@ -235,8 +234,9 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         System.out.println(v.getTag().toString());
         switch(v.getTag().toString())
         {
-            case "View Venues":
-                //To be implemented
+            case "View Venues": //Broken for some reason...
+                ViewVenuesFragment viewVenuesFragment = new ViewVenuesFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, viewVenuesFragment).addToBackStack(viewVenuesFragment.getClass().getSimpleName()).commit();
                 break;
             case "Edit Musician":
                 //To be implemented
@@ -325,7 +325,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
                 {
                     Log.d(TAG, "DELETEADVERT ------------------ get successful with advert");
 
-                    //performerAdvertsReference.document(bandAdverts.get(0).getId()).delete();
+                    performerAdvertsReference.document(bandAdverts.get(0).getId()).delete();
                     restartFragment();
                 }
                 else
