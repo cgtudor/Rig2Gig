@@ -41,7 +41,7 @@ public class NavBarActivity extends AppCompatActivity
 
 
         //uncomment this
-        /*startActivity(new Intent(this, navigationContext.navBarFinder(AccountPurposeActivity.userType)));*/
+        startActivity(new Intent(this, navigationContext.navBarFinder(AccountPurposeActivity.userType)));
 
         //remove this
 /*        Intent intent = new Intent(this, MusicianAdvertisementEditor.class);
@@ -50,9 +50,9 @@ public class NavBarActivity extends AppCompatActivity
         startActivity(intent);*/
 
         //remove this
-        Intent intent = new Intent(this, ManageBandMembersActivity.class);
+/*        Intent intent = new Intent(this, ManageBandMembersActivity.class);
         intent.putExtra("EXTRA_BAND_ID", "S0lVRscAvnnE3sbqn9X5");
-        startActivity(intent);
+        startActivity(intent);*/
 
     }
 }

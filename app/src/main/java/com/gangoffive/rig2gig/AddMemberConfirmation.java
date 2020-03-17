@@ -74,6 +74,7 @@ public class AddMemberConfirmation extends Activity {
         request.put("posting-date", Timestamp.now());
         request.put("sent-from", FirebaseAuth.getInstance().getUid());
         request.put("band-ref",bandRef);
+        request.put("musician-ref", musicianRef);
 
         CollectionReference received = db.collection("communications")
                 .document(userRef)
@@ -105,6 +106,7 @@ public class AddMemberConfirmation extends Activity {
         request.put("posting-date", Timestamp.now());
         request.put("sent-to", userRef);
         request.put("band-ref",bandRef);
+        request.put("musician-ref", musicianRef);
 
         CollectionReference received = db.collection("communications")
                 .document(FirebaseAuth.getInstance().getUid())
