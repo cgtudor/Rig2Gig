@@ -138,7 +138,7 @@ public class BandMemberAdderAdapter  extends BaseAdapter
                 @Override
                 public void onClick(View v)
                 {
-                    bandManager.confirmAddMember(names.get(position).toString(), position);
+                    bandManager.beginConfirmAddMember(names.get(position).toString(), position);
                 }
             });
         }

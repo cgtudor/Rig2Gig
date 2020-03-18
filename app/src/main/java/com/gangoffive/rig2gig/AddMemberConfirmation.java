@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +22,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class AddMemberConfirmation extends Activity {
+public class AddMemberConfirmation extends Activity implements CreateAdvertisement{
 
     private int height, width;
     private Button yes, no;
@@ -30,7 +33,9 @@ public class AddMemberConfirmation extends Activity {
     private FirebaseFirestore db;
     private int position;
     private String name;
-    private String musicianRef, bandRef, userRef, bandName, inviterName;
+    private String musicianRef, bandRef, userRef, bandName, inviterName, usersMusicianRef;
+    private boolean sendingInvite, checkIfInBand;
+    private ListingManager musicManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,13 +56,17 @@ public class AddMemberConfirmation extends Activity {
         userRef = intent.getStringExtra("EXTRA_USER_ID");
         bandName = getIntent().getStringExtra("EXTRA_BAND_NAME");
         inviterName = getIntent().getStringExtra("EXTRA_INVITER_NAME");
+        usersMusicianRef = getIntent().getStringExtra("EXTRA_USER_MUSICIAN_REF");
+        musicManager = new ListingManager(usersMusicianRef,"Musician","");
         confirmationText = findViewById(R.id.confirmationText);
         confirmationText.setText("Are you sure you want to invite this person to your band?");
+        sendingInvite = false;
+        checkIfInBand = false;
         yes = findViewById(R.id.yes);
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendInvite();
+                beginSendInvite();
             }
         });
         no = findViewById(R.id.no);
@@ -67,6 +76,34 @@ public class AddMemberConfirmation extends Activity {
                 finish();
             }
         });
+    }
+
+    public void beginSendInvite()
+    {
+        sendingInvite = true;
+        checkIfInBand();
+    }
+
+    public void checkIfInBand()
+    {
+        checkIfInBand = true;
+        musicManager.getUserInfo(this);
+    }
+
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data) {
+        if (checkIfInBand) {
+            checkIfInBand = false;
+            if (!((List) data.get("bands")).contains(bandRef)) {
+                Intent intent = new Intent(this, NavBarActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            else if (sendingInvite) {
+                sendingInvite = false;
+                sendInvite();
+            }
+        }
     }
 
     public void sendInvite()
@@ -143,5 +180,55 @@ public class AddMemberConfirmation extends Activity {
         result.putExtra("EXTRA_POSITION", position);
         setResult(RESULT_OK, result);
         finish();
+    }
+
+    @Override
+    public void setViewReferences() {
+
+    }
+
+    @Override
+    public void populateInitialFields() {
+
+    }
+
+    @Override
+    public void createAdvertisement() {
+
+    }
+
+    @Override
+    public void cancelAdvertisement() {
+
+    }
+
+    @Override
+    public void listingDataMap() {
+
+    }
+
+    @Override
+    public boolean validateDataMap() {
+        return false;
+    }
+
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
+
+    }
+
+    @Override
+    public ImageView getImageView() {
+        return null;
+    }
+
+    @Override
+    public void handleDatabaseResponse(Enum creationResult) {
+
+    }
+
+    @Override
+    public void onSuccessfulImageDownload() {
+
     }
 }
