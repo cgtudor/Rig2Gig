@@ -37,6 +37,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.identityconnectors.common.security.GuardedString;
 
@@ -171,6 +172,7 @@ public class LoginActivity extends AppCompatActivity{
                                 // This is an existing user, show them a welcome back screen.
                             final String getUserId = fAuth.getUid();
                             DocumentReference docIdRef = fStore.collection("users").document(getUserId);
+                            docIdRef.update("token", FirebaseInstanceId.getInstance().getToken());
                             docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                             {
                                 @Override

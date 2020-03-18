@@ -228,8 +228,8 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                                         if (task.isSuccessful()) {
                                             DocumentSnapshot document = task.getResult();
                                             if (document.exists()) {
-                                                holder.textViewType.setText("has invited you to join their band " +
-                                                        document.getData().get("name").toString() + ".");
+                                                holder.textViewType.setText("has invited you to join their band ");// +
+                                                        //document.getData().get("name").toString() + ".");
                                                 holder.imageViewTopButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check_circle_green));
                                                 holder.imageViewBotButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_cancel_red));
                                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
