@@ -50,7 +50,7 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
     private int membersDownloaded, remainingHeight, addPosition, invitesChecked;
     private GridView gridView;
     private ScrollView scroll;
-    private String bandRef;
+    private String bandRef, bandName, userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,8 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         setSupportActionBar(toolbar);
         currentMemberRefs = (ArrayList<String>)getIntent().getSerializableExtra("EXTRA_CURRENT_MEMBERS");
         bandRef = getIntent().getStringExtra("EXTRA_BAND_ID");
+        bandName = getIntent().getStringExtra("EXTRA_BAND_NAME");
+        userName = getIntent().getStringExtra("EXTRA_USER_NAME");
         db = FirebaseFirestore.getInstance();
         musicianDb = db.collection("musicians");
         resetLists();
@@ -280,6 +282,8 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         intent.putExtra("EXTRA_MUSICIAN_ID",searchRefs.get(position));
         intent.putExtra("EXTRA_BAND_ID",bandRef);
         intent.putExtra("EXTRA_USER_ID",userRefs.get(position));
+        intent.putExtra("EXTRA_INVITER_NAME", userName);
+        intent.putExtra("EXTRA_BAND_NAME", bandName);
         startActivityForResult(intent, 1);
     }
 

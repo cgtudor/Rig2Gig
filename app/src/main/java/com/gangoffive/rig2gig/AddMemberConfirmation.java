@@ -30,7 +30,7 @@ public class AddMemberConfirmation extends Activity {
     private FirebaseFirestore db;
     private int position;
     private String name;
-    private String musicianRef, bandRef, userRef;
+    private String musicianRef, bandRef, userRef, bandName, inviterName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,8 @@ public class AddMemberConfirmation extends Activity {
         musicianRef = intent.getStringExtra("EXTRA_MUSICIAN_ID");
         bandRef = intent.getStringExtra("EXTRA_BAND_ID");
         userRef = intent.getStringExtra("EXTRA_USER_ID");
+        bandName = getIntent().getStringExtra("EXTRA_BAND_NAME");
+        inviterName = getIntent().getStringExtra("EXTRA_INVITER_NAME");
         confirmationText = findViewById(R.id.confirmationText);
         confirmationText.setText("Are you sure you want to invite this person to your band?");
         yes = findViewById(R.id.yes);
@@ -75,6 +77,8 @@ public class AddMemberConfirmation extends Activity {
         request.put("sent-from", FirebaseAuth.getInstance().getUid());
         request.put("band-ref",bandRef);
         request.put("musician-ref", musicianRef);
+        request.put("notification-title","You have been invited to join a band!");
+        request.put("notification-message", inviterName + " would like you to join their band " + bandName + ".");
 
         CollectionReference received = db.collection("communications")
                 .document(userRef)
@@ -107,6 +111,8 @@ public class AddMemberConfirmation extends Activity {
         request.put("sent-to", userRef);
         request.put("band-ref",bandRef);
         request.put("musician-ref", musicianRef);
+        request.put("notification-title","You have been invited to join a band!");
+        request.put("notification-message", inviterName + " would like you to join their band " + bandName + ".");
 
         CollectionReference received = db.collection("communications")
                 .document(FirebaseAuth.getInstance().getUid())

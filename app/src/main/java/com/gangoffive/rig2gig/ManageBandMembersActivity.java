@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +23,7 @@ import java.util.Map;
 
 public class ManageBandMembersActivity extends AppCompatActivity implements CreateAdvertisement{
 
-    private String bandRef, type, removedRef;
+    private String bandRef, type, removedRef, uID, userName;
     private ListingManager bandInfoManager;
     private Map<String, Object> band;
     private List memberRefs;
@@ -29,9 +31,8 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     private ArrayList<List> musicanBands;
     private ArrayList <ListingManager> musicianManagers;
     private ArrayList <Map<String, Object>> musicians;
-    private int membersDownloaded;
+    private int membersDownloaded, position;
     private GridView gridView;
-    private int position;
     private ImageView addImage;
     private TextView addMemberText;
     private boolean firstDeletion;
@@ -43,6 +44,7 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         setContentView(R.layout.activity_manage_band_members);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        uID = FirebaseAuth.getInstance().getUid();
         bandRef = getIntent().getStringExtra("EXTRA_BAND_ID");
         String listingRef = "profileEdit";
         type = "Band";
@@ -100,6 +102,13 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
             names.add(data.get("name").toString());
             musicanBands.add((List)(data.get("bands")));
             musicians.add(data);
+            for (Map<String, Object> musician: musicians)
+            {
+                if (musician.get("user-ref").equals(uID))
+                {
+                    userName = musician.get("name").toString();
+                }
+            }
             populateInitialFields();
         }
     }
@@ -179,6 +188,8 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         Intent intent = new Intent(this, MusicianSearchActivity.class);
         intent.putExtra("EXTRA_CURRENT_MEMBERS", (Serializable) memberRefs);
         intent.putExtra("EXTRA_BAND_ID", bandRef);
+        intent.putExtra("EXTRA_BAND_NAME",band.get("name").toString());
+        intent.putExtra("EXTRA_USER_NAME",userName);
         startActivity(intent);
     }
 
