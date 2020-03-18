@@ -187,6 +187,7 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
             }
         }
         //use search refs to generate grid view of results
+        userRefs = new ArrayList<>();
         if (gridRefs.size() > 0)
         {
             names = new ArrayList<>();
@@ -246,12 +247,14 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         if (membersDownloaded != gridRefs.size() - 1)
         {
             names.add(data.get("name").toString());
+            userRefs.add(data.get("user-ref").toString());
             membersDownloaded++;
             musicianManagers.get(membersDownloaded).getUserInfo(this);
         }
         else
         {
             names.add(data.get("name").toString());
+            userRefs.add(data.get("user-ref").toString());
             checkInvitesSent();
         }
     }
