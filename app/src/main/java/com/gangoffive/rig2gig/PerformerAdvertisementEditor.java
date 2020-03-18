@@ -32,15 +32,29 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if ((s.toString().trim().length() == 0 || s.toString().equals("0"))
-                    && createListing != null) {
+            int leadingZeros = 0;
+            String distanceValue = distance.getText().toString();
+            while (true)
+            {
+                if (distanceValue.length() != 0 && distanceValue.length() > leadingZeros && distanceValue.charAt(leadingZeros) == '0')
+                {
+                    leadingZeros++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
+            if (createListing != null && (s.toString().trim().length() == 0 ||
+                    actualNumber.length() == 0))
+            {
                 createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
                 createListing.setTextColor(Color.parseColor("#4D4D4E"));
             }
             else if (before == 0 && count == 1 && createListing != null
                     && name.getText().toString().trim().length() > 0
-                    && distance.getText().toString().trim().length() > 0
-                    && (Integer.parseInt(distance.getText().toString()) > 0))
+            )
             {
                 createListing.setBackgroundColor(Color.parseColor("#008577"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
@@ -121,6 +135,8 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             distance.addTextChangedListener(textWatcher);
         }
         createListing = findViewById(R.id.createListing);
+        createListing.setBackgroundColor(Color.parseColor("#008577"));
+        createListing.setTextColor(Color.parseColor("#FFFFFF"));
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {createAdvertisement();}
@@ -258,14 +274,25 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
                 return false;
             }
         }
-        if (listing.get("distance").toString().equals("0"))
+        int leadingZeros = 0;
+        String distanceValue = distance.getText().toString();
+        while (true)
+        {
+            if (distanceValue.length() != 0 && distanceValue.length() > leadingZeros && distanceValue.charAt(leadingZeros) == '0')
+            {
+                leadingZeros++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
+        if (actualNumber.length() == 0)
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
+        return true;
     }
 
     /**
