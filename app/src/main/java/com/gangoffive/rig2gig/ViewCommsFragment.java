@@ -127,7 +127,8 @@ public class ViewCommsFragment extends Fragment
                                                 documentSnapshot.get("sent-from").toString(),
                                                 documentSnapshot.get("type").toString());
                                     }
-                                    if (!communication.getCommType().equals("accepted-invite"))
+                                    if (!communication.getCommType().equals("accepted-invite")
+                                            && !communication.getCommType().equals("rejected-invite"))
                                     {
                                         communications.add(communication);
                                     }
@@ -263,8 +264,6 @@ public class ViewCommsFragment extends Fragment
                                             case "join-request":
                                                 handleJoinBand(position, uID);
                                                 break;
-                                            case "accepted-invite":
-                                                break;
                                             default:
                                                 //
                                         }
@@ -384,6 +383,9 @@ public class ViewCommsFragment extends Fragment
                                                             }
                                                         });
                                                 break;
+                                            case "join-request":
+                                                handleNotJoinBand(position, uID);
+                                                break;
                                             default:
                                                 //
                                         }
@@ -427,7 +429,7 @@ public class ViewCommsFragment extends Fragment
                               updateBandMembers(bandRef, musicianRef);
                         }
                         else {
-                            Log.d("FIRESTORE", "Contact request update failed: " + task.getException());
+                            Log.d("FIRESTORE", "Join band update failed: " + task.getException());
                         }
                 }});
     }
@@ -458,12 +460,12 @@ public class ViewCommsFragment extends Fragment
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "Musician added to band members list successfully!");
+                                        Log.d("FIRESTORE", "Musician added to band members list successfully!");
                                         updateMusiciansBands(bandRef, musicianRef);
                                     }});
                 }}
                 else {
-                    Log.w(TAG, "Error adding musician to band!");
+                    Log.w("FIRESTORE", "Error adding musician to band!");
                 }}});
     }
 
@@ -493,18 +495,48 @@ public class ViewCommsFragment extends Fragment
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "Band added to musician's band list successfully!");
+                                        Log.d("FIRESTORE", "Band added to musician's band list successfully!");
                                         Toast.makeText(getActivity(), "Band joined!", Toast.LENGTH_SHORT).show();
-                                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                                        if (Build.VERSION.SDK_INT >= 26) {
-                                            ft.setReorderingAllowed(false);
-                                        }
-                                        ft.detach(ViewCommsFragment.this).attach(ViewCommsFragment.this).commit();
-                                        swipeLayout.setRefreshing(false);
+                                        refreshScreen();
                                     }});
                     }}
                 else {
-                    Log.w(TAG, "Error adding band to musician's band list!");
+                    Log.w("FIRESTORE", "Error adding band to musician's band list!");
                 }}});
+    }
+
+    public void handleNotJoinBand(int position, String uID)
+    {
+        String bandRef = communications.get(position).getBandRef();
+        String musicianRef = communications.get(position).getMusicianRef();
+        DocumentReference receiverCommDoc = db.collection("communications")
+                .document(uID)
+                .collection("received")
+                .document(communications.get(position).getCommRef());
+        receiverCommDoc.update("type" , "rejected-invite")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    //on successfully updating invite comm document with accepted-invite
+                    //attempt to get band document
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()) {
+                            Log.d("FIRESTORE", "Band invite rejection successful");
+                            Toast.makeText(getActivity(), "Band not joined!", Toast.LENGTH_SHORT).show();
+                            refreshScreen();
+                        }
+                        else {
+                            Log.d("FIRESTORE", "Band rejection update failed: " + task.getException());
+                        }
+                    }});
+    }
+
+    public void refreshScreen()
+    {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if (Build.VERSION.SDK_INT >= 26) {
+            ft.setReorderingAllowed(false);
+        }
+        ft.detach(ViewCommsFragment.this).attach(ViewCommsFragment.this).commit();
+        swipeLayout.setRefreshing(false);
     }
 }
