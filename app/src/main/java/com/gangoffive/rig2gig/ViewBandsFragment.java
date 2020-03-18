@@ -1,6 +1,7 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,8 +14,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,6 +34,8 @@ public class ViewBandsFragment extends Fragment
 {
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
+    SwipeRefreshLayout swipeLayout;
+
     private FirebaseFirestore db;
     private CollectionReference colRef;
     private List<DocumentSnapshot> documentSnapshots;
@@ -46,7 +51,26 @@ public class ViewBandsFragment extends Fragment
     {
         final View v = inflater.inflate(R.layout.fragment_view_bands, container, false);
 
-        setHasOptionsMenu(true);
+        swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
+
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.d(TAG, "get successful with data123213213");
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                if (Build.VERSION.SDK_INT >= 26) {
+                    ft.setReorderingAllowed(false);
+                }
+                ft.detach(ViewBandsFragment.this).attach(ViewBandsFragment.this).commit();
+                swipeLayout.setRefreshing(false);
+            }
+        });
+        swipeLayout.setColorSchemeColors(getResources().getColor(android.R.color.holo_green_dark),
+                getResources().getColor(android.R.color.holo_red_dark),
+                getResources().getColor(android.R.color.holo_blue_dark),
+                getResources().getColor(android.R.color.holo_orange_dark));
+
+        /*setHasOptionsMenu(true);*/
 
         db = FirebaseFirestore.getInstance();
         colRef = db.collection("band-listings");
@@ -83,7 +107,7 @@ public class ViewBandsFragment extends Fragment
                                         Intent openListingIntent = new Intent(v.getContext(), BandListingDetailsActivity.class);
                                         String listingRef = bandListings.get(position).getListingRef();
                                         openListingIntent.putExtra("EXTRA_BAND_LISTING_ID", listingRef);
-                                        v.getContext().startActivity(openListingIntent);
+                                        startActivityForResult(openListingIntent, 1);
                                     }
                                 });
 
@@ -105,7 +129,7 @@ public class ViewBandsFragment extends Fragment
         return v;
     }
 
-    @Override
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         inflater.inflate(R.menu.test, menu);
@@ -125,5 +149,16 @@ public class ViewBandsFragment extends Fragment
         }
 
         return true;
+    }*/
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "get successful with data123213213");
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if (Build.VERSION.SDK_INT >= 26) {
+            ft.setReorderingAllowed(false);
+        }
+        ft.detach(ViewBandsFragment.this).attach(ViewBandsFragment.this).commit();
     }
 }

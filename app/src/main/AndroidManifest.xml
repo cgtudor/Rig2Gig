@@ -15,9 +15,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".VenueAdvertIndexActivity"
+            android:label="@string/title_activity_venue_advert_index"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <service android:name=".NotificationService"></service>
-        <activity android:name=".CreateMusicianAccountActivity"></activity>
+        <service android:name=".NotificationService" />
+
+        <activity android:name=".CreateMusicianAccountActivity" />
         <activity android:name=".AccountPurposeActivity" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
@@ -26,7 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".NavBarActivity" />
         <activity android:name=".VenueActivity" />
@@ -63,8 +68,9 @@
         <!-- </intent-filter> -->
         <!-- android:theme="@style/AppTheme" -->
         <!-- android:windowSoftInputMode="adjustResize"/> -->
-        <activity android:name=".PerformanceListingDetailsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".PerformanceListingDetailsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".CredentialActivity" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".RegisterActivity" />

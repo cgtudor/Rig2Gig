@@ -136,5 +136,9 @@
     <string name="change_password_dialog_title">Confirm to send a change password email.</string>
     <string name="change_password_confirm">Confirm</string>
     <string name="change_password_cancel">Cancel</string>
+    <string name="title_activity_venue_advert_index">VenueAdvertIndexActivity</string>
 
+    //Carter: no idea where to put things in here so I'll put here
+    <string name="all">All</string>
+    <string name="favourites">Favourites</string>
 </resources>
