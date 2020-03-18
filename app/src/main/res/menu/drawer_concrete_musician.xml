@@ -31,6 +31,7 @@
         <item android:id="@+id/nav_create_band"
             android:icon="@drawable/ic_create_band"
             android:title="Create Band"/>-->
+
         <item android:id="@+id/nav_view_venues"
             android:icon="@drawable/ic_view_venues"
             android:title="View Venues"/>

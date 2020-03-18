@@ -9,7 +9,7 @@
     <include android:id="@+id/toolbar" layout="@layout/toolbar" />
 
     <ImageView
-        android:id="@+id/bandPhoto"
+        android:id="@+id/venuePhoto"
         android:layout_width="0dp"
         android:layout_height="275dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,17 +20,17 @@
         android:contentDescription="TODO" />
 
     <TextView
-        android:id="@+id/bandName"
+        android:id="@+id/venueName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="68dp"
         android:layout_marginTop="16dp"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bandPhoto" />
+        app:layout_constraintTop_toBottomOf="@+id/venuePhoto" />
 
     <View
-        android:id="@+id/view2"
+        android:id="@+id/venueNameBar"
         android:layout_width="280dp"
         android:layout_height="2dp"
         android:layout_marginTop="8dp"
@@ -38,7 +38,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.519"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bandName" />
+        app:layout_constraintTop_toBottomOf="@+id/venueName" />
 
     <TextView
         android:id="@+id/rating"
@@ -48,12 +48,12 @@
         android:layout_marginTop="8dp"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        app:layout_constraintTop_toBottomOf="@+id/venueNameBar" />
 
 
 
     <View
-        android:id="@+id/view13"
+        android:id="@+id/ratingBar"
         android:layout_width="280dp"
         android:layout_height="2dp"
         android:layout_marginTop="8dp"
@@ -71,11 +71,11 @@
         android:layout_marginTop="8dp"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view13" />
+        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
 
     <View
-        android:id="@+id/view14"
+        android:id="@+id/locationBar"
         android:layout_width="280dp"
         android:layout_height="2dp"
         android:layout_marginTop="8dp"
@@ -94,10 +94,10 @@
         android:layout_marginTop="8dp"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view14" />
+        app:layout_constraintTop_toBottomOf="@+id/locationBar" />
 
     <View
-        android:id="@+id/view15"
+        android:id="@+id/descriptionBar"
         android:layout_width="280dp"
         android:layout_height="2dp"
         android:layout_marginTop="8dp"
@@ -118,6 +118,6 @@
         android:textColor="#FFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        app:layout_constraintTop_toBottomOf="@+id/descriptionBar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
