@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "241691688280-qf19fd52jieimpue1obvvct53mortb87.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gangoffive.rig2gig",
+            "certificate_hash": "40a526570fa0b3efe14262a046413b5dfa694f8b"
+          }
+        },
+        {
           "client_id": "241691688280-gir9dfkg8d7pepo3n4krfo8i33jflrn3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
