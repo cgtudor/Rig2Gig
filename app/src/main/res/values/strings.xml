@@ -36,6 +36,8 @@
     <string name="details">Details</string>
     <string name="description">Description</string>
     <string name="position">Position</string>
+    <string name="personalInformation">Personal Information</string>
+    <string name="venueInformation">Venue Information</string>
     <string name="title_activity_test_transition">TestTransitionActivity</string>
     <string name="title_activity_create_performer_advertisement">CreatePerformerAdvertisement
     </string>

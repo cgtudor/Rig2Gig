@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VenueActivity"
+    tools:context=".CreateVenueFragment"
     android:background="@drawable/gradient">
 
     <TextView
@@ -123,7 +123,6 @@
         android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/transparent_button"
-        android:onClick="submitBtnOnClick"
         android:text="Submit"
         android:textAllCaps="false"
         android:textColor="#FFF"
@@ -139,7 +138,6 @@
         android:layout_height="34dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/transparent_button"
-        android:onClick="uploadBtnOnClick"
         android:text="Upload Photo"
         android:textAllCaps="false"
         android:textColor="#FFF"
@@ -155,7 +153,6 @@
         android:layout_height="34dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/transparent_button"
-        android:onClick="takeBtnOnClick"
         android:text="Take Photo"
         android:textAllCaps="false"
         android:textColor="#FFF"

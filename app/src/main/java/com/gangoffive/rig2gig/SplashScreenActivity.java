@@ -15,6 +15,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import org.identityconnectors.framework.impl.api.local.operations.SpiOperationLoggingUtil;
+
 public class SplashScreenActivity extends AppCompatActivity {
 
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
@@ -26,6 +28,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+        System.out.println("@@@@2@@@@@@@@@@@@@@@@@@@@@@2 " + fAuth.getUid());
 
         //Uncomment this for login testing
         if (fAuth.getCurrentUser() != null)

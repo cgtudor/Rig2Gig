@@ -28,6 +28,6 @@ public class AccountPurposeActivity extends AppCompatActivity {
     public void venueBtnOnClick(View view) {
         userType = "Venue";
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " +  userType);
-        startActivity(new Intent(getApplicationContext(), CredentialActivity.class));
+        startActivity(new Intent(getApplicationContext(), TabbedVenueActivity.class));
     }
 }
