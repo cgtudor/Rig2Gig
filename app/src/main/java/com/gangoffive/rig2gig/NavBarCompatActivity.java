@@ -73,15 +73,15 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
         {
             drawer.closeDrawer(GravityCompat.START);
         }
-        else if(!drawer.isDrawerOpen(GravityCompat.START) && backStackEntryCount == 1)
-        {
-            Toast.makeText(getApplicationContext(), "Press back again to exit.", Toast.LENGTH_SHORT).show();
-            minimise = true;
-        }
         else if(!drawer.isDrawerOpen(GravityCompat.START) && minimise && backStackEntryCount == 1)
         {
             minimise = false;
             this.moveTaskToBack(true);
+        }
+        else if(!drawer.isDrawerOpen(GravityCompat.START) && backStackEntryCount == 1)
+        {
+            Toast.makeText(getApplicationContext(), "Press back again to exit.", Toast.LENGTH_SHORT).show();
+            minimise = true;
         }
         else if(backStackEntryCount > 1)
         {
