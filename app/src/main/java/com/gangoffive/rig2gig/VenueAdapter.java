@@ -46,6 +46,7 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.ViewHolder> 
         public TextView textViewName;
         public TextView textViewLoc;
         public TextView textViewRating;
+        public TextView textViewRatingText;
 
         public ViewHolder(@NonNull View itemView, VenueAdapter.OnItemClickListener listener) {
             super(itemView);
@@ -54,6 +55,7 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.ViewHolder> 
             textViewName = (TextView) itemView.findViewById(R.id.textViewName);
             textViewLoc = (TextView) itemView.findViewById(R.id.textViewLoc);
             textViewRating = (TextView) itemView.findViewById(R.id.textViewRating);
+            textViewRatingText = (TextView) itemView.findViewById(R.id.textViewRatingText);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -105,6 +107,7 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.ViewHolder> 
                         holder.textViewName.setText(document.get("name").toString());
                         holder.textViewLoc.setText(document.get("location").toString());
                         holder.textViewRating.setText(document.get("rating").toString());
+                        holder.textViewRatingText.setText("out of 5");
                         StorageReference venuePic = storage.getReference().child("/images/venue-listings/" + venueListing.getListingRef() + ".jpg");
                         GlideApp.with(holder.imageViewPhoto.getContext()).load(venuePic).into(holder.imageViewPhoto);
 

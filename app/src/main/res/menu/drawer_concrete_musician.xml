@@ -13,48 +13,26 @@
             android:title="My Band"/>-->
         <item android:id="@+id/nav_console"
             android:icon="@drawable/ic_console"
-            android:title="@string/musician_console"
-            />
+            android:title="@string/musician_console" />
         <item
             android:id="@+id/nav_my_bands"
             android:icon="@drawable/ic_my_band"
             android:title="My Bands"/>
-
-        <!--<item android:id="@+id/nav_create_band_advertisement"
-            android:title="Create band ad"
-            android:icon="@drawable/ic_create_band_ad"/>
-
-        <item android:id="@+id/nav_create_venue_advertisement"
-            android:title="Create venue ad"
-            android:icon="@drawable/ic_create_band_ad"/>
-        <item android:id="@+id/nav_create_performer_advertisement"
-            android:title="Create performer ad"
-            android:icon="@drawable/ic_create_band_ad"/>
-        <item android:id="@+id/nav_create_musician_advertisement"
-            android:title="Create musician ad"
-            android:icon="@drawable/ic_create_band_ad"/>
-
-        <item android:id="@+id/nav_create_band"
-            android:icon="@drawable/ic_create_band"
-            android:title="Create Band"/>
-        <item android:id="@+id/nav_view_bands"
-            android:icon="@drawable/ic_view_bands"
-            android:title="View Bands"/>-->
         <item android:id="@+id/nav_view_venues"
             android:icon="@drawable/ic_view_venues"
             android:title="View Venues"/>
+        <item android:id="@+id/nav_view_bands"
+            android:icon="@drawable/ic_view_bands"
+            android:title="View Bands"/>
+        <item android:id="@+id/nav_view_musicians"
+            android:icon="@drawable/ic_view_bands"
+            android:title="View Musicians"/>
         <item android:id="@+id/nav_notifications"
             android:icon="@drawable/ic_notifications"
             android:title="Notifications"/>
-        <!--<item android:id="@+id/nav_about_us"
-            android:icon="@drawable/ic_about_us"
-            android:title="About Us"/>-->
         <item android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
             android:title="Settings" />
-        <!--<item android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_logout"
-            android:title="Logout"/>-->
     </group>
 
 

@@ -1,16 +1,18 @@
 package com.gangoffive.rig2gig;
 
+import java.util.ArrayList;
+
 public class MusicianListing {
 
     private String listingRef;
     private String musicianRef;
-    private String position;
+    private ArrayList<String> position;
 
     public MusicianListing() {
 
     }
 
-    public MusicianListing(String listingRef, String musicianRef, String position) {
+    public MusicianListing(String listingRef, String musicianRef, ArrayList<String> position) {
         this.listingRef = listingRef;
         this.musicianRef = musicianRef;
         this.position = position;
@@ -24,7 +26,7 @@ public class MusicianListing {
         return musicianRef;
     }
 
-    public String getPosition() {
+    public ArrayList<String> getPosition() {
         return position;
     }
 }

@@ -252,8 +252,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
         switch(v.getTag().toString())
         {
             case "View Venues":
-                ViewVenuesFragment viewVenuesFragment = new ViewVenuesFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, viewVenuesFragment).addToBackStack(viewVenuesFragment.getClass().getSimpleName()).commit();
+                startActivity(new Intent(getActivity(), VenueAdvertIndexActivity.class));
                 break;
             case "Edit Musician":
                 startActivity(new Intent(getActivity(), MusicianDetailsEditor.class).putExtra("EXTRA_MUSICIAN_ID", musicianRef));

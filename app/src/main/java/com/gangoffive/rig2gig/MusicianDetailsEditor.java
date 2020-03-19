@@ -43,24 +43,37 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            int leadingZeros = 0;
+            String distanceValue = distance.getText().toString();
+            while (true)
+            {
+                if (distanceValue.length() != 0 && distanceValue.length() > leadingZeros && distanceValue.charAt(leadingZeros) == '0')
+                {
+                    leadingZeros++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
             if (createListing != null && (s.toString().trim().length() == 0 ||
-                    (distance.getText().toString().length() != 0 &&
-                    (Integer.parseInt(distance.getText().toString()) < 1))))
-                     {
+                    actualNumber.length() == 0))
+            {
                 createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
                 createListing.setTextColor(Color.parseColor("#4D4D4E"));
             }
             else if (before == 0 && count == 1 && createListing != null
                     && name.getText().toString().trim().length() > 0
                     && location.getText().toString().trim().length() > 0
-                    && distance.getText().toString().trim().length() > 0
-                    && (Integer.parseInt(distance.getText().toString()) > 0)
-                    && genres.getText().toString().trim().length() > 0)
+                    && genres.getText().toString().trim().length() > 0
+            )
             {
                 createListing.setBackgroundColor(Color.parseColor("#008577"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
         }
+
 
         @Override
         public void afterTextChanged(Editable s) {}
@@ -152,6 +165,8 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             genres.addTextChangedListener(textWatcher);
         }
         createListing = findViewById(R.id.createListing);
+        createListing.setBackgroundColor(Color.parseColor("#008577"));
+        createListing.setTextColor(Color.parseColor("#FFFFFF"));
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -353,7 +368,21 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                 }
             }
         }
-        if (Integer.parseInt(distance.getText().toString()) < 1)
+        int leadingZeros = 0;
+        String distanceValue = distance.getText().toString();
+        while (true)
+        {
+            if (distanceValue.length() != 0 && distanceValue.length() > leadingZeros && distanceValue.charAt(leadingZeros) == '0')
+            {
+                leadingZeros++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
+        if (actualNumber.length() == 0)
         {
             return false;
         }

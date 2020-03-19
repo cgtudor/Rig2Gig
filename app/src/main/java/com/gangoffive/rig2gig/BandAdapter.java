@@ -47,6 +47,7 @@ public class BandAdapter extends RecyclerView.Adapter<BandAdapter.ViewHolder>{
         public TextView textViewGenres;
         public TextView textViewLoc;
         public TextView textViewRating;
+        public TextView textViewRatingText;
 
         public ViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
@@ -56,6 +57,7 @@ public class BandAdapter extends RecyclerView.Adapter<BandAdapter.ViewHolder>{
             textViewGenres = (TextView) itemView.findViewById(R.id.textViewGenres);
             textViewLoc = (TextView) itemView.findViewById(R.id.textViewLoc);
             textViewRating = (TextView) itemView.findViewById(R.id.textViewRating);
+            textViewRatingText = (TextView) itemView.findViewById(R.id.textViewRatingText);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -108,6 +110,7 @@ public class BandAdapter extends RecyclerView.Adapter<BandAdapter.ViewHolder>{
                         holder.textViewGenres.setText(document.get("genres").toString());
                         holder.textViewLoc.setText(document.get("location").toString());
                         holder.textViewRating.setText(document.get("rating").toString());
+                        holder.textViewRatingText.setText("out of 5");
                         StorageReference bandPic = storage.getReference().child("/images/band-listings/" + bandListing.getListingRef() + ".jpg");
                         GlideApp.with(holder.imageViewPhoto.getContext()).load(bandPic).into(holder.imageViewPhoto);
 
