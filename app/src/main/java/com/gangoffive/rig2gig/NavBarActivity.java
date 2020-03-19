@@ -37,6 +37,17 @@ public class NavBarActivity extends AppCompatActivity
         //Decide which navbar to display.
 
         startActivity(fragIntent);*/
+
+
+
+
         startActivity(new Intent(this, navigationContext.navBarFinder(AccountPurposeActivity.userType)));
+
+
+        //for demonstrating band manager
+/*        Intent intent = new Intent(this, ManageBandMembersActivity.class);
+        intent.putExtra("EXTRA_BAND_ID", "S0lVRscAvnnE3sbqn9X5");
+        startActivity(intent);*/
+
     }
 }

@@ -26,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static androidx.constraintlayout.widget.Constraints.TAG;
+
 public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> {
 
     private static final int VIEW_TYPE_EMPTY_LIST_PLACEHOLDER = 0;
@@ -214,9 +216,36 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                                 holder.imageViewTopButton.setVisibility(View.GONE);
                                 holder.imageViewBotButton.setVisibility(View.GONE);
                                 break;
+                            case "join-request":
+                                DocumentReference bandDocRef = db.collection("bands").document(commDoc.get("band-ref").toString());
+                                bandDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    /**
+                                     * on successful database query, return data and image to calling activity
+                                     */
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                    {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document = task.getResult();
+                                            if (document.exists()) {
+                                                holder.textViewType.setText("has invited you to join their band ");// +
+                                                        //document.getData().get("name").toString() + ".");
+                                                holder.imageViewTopButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check_circle_green));
+                                                holder.imageViewBotButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_cancel_red));
+                                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                            } else {
+                                                Log.d(TAG, "No such document");
+                                            }
+                                        } else {
+                                            Log.d(TAG, "get failed with ", task.getException());
+                                        }
+                                    }
+                                });
+                                break;
                             default:
                                 //
                         }
+
 
                         String userRef = commDoc.get("sent-from").toString();
                         DocumentReference userDocRef = db.collection("users").document(userRef);
@@ -245,14 +274,25 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                                                                 Log.d("FIRESTORE", "No results for user ref " + userRef);
                                                             } else {
                                                                 Log.d("FIRESTORE", "DocumentSnapshot data:333 " + commDoc.getData());
+
                                                                 DocumentSnapshot refDoc = snap.getDocuments().get(0);
 
                                                                 holder.textViewName.setText(refDoc.get("name").toString());
 
-                                                                String photoID = refDoc.getId();
+                                                                if (commDoc.get("type").toString().equals("join-request"))
+                                                                {
+                                                                    String photoID = commDoc.get("band-ref").toString();
+                                                                    StorageReference bandPic = storage.getReference().child("/images/bands/" + photoID + ".jpg");
+                                                                    GlideApp.with(holder.imageViewPhoto.getContext()).load(bandPic).into(holder.imageViewPhoto);
+                                                                }
+                                                                else
+                                                                {
+                                                                    String photoID = refDoc.getId();
 
-                                                                StorageReference venuePic = storage.getReference().child("/images/" + userType + "/" + photoID + ".jpg");
-                                                                GlideApp.with(holder.imageViewPhoto.getContext()).load(venuePic).into(holder.imageViewPhoto);
+                                                                    StorageReference venuePic = storage.getReference().child("/images/" + userType + "/" + photoID + ".jpg");
+                                                                    GlideApp.with(holder.imageViewPhoto.getContext()).load(venuePic).into(holder.imageViewPhoto);
+                                                                }
+
                                                             }
                                                         }
                                                     }
