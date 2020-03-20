@@ -243,9 +243,9 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                 startActivity(new Intent(getActivity(), MusicianDetailsEditor.class).putExtra("EXTRA_MUSICIAN_ID", musicianRef));
                 break;
             case "Create Performer Advert":
-                startActivity(new Intent(getActivity(), PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", musicianRef)
+                startActivityForResult(new Intent(getActivity(), PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", musicianRef)
                                                                                            .putExtra("EXTRA_LISTING_ID", "")
-                                                                                           .putExtra("EXTRA_PERFORMER_TYPE", "Musician"));
+                                                                                           .putExtra("EXTRA_PERFORMER_TYPE", "Musician"), 1);
                 break;
             case "Edit Performer Advert":
                 startActivity(new Intent(getActivity(), PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", musicianRef)
@@ -259,8 +259,8 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                 deletePerformerAdvert();
                 break;
             case "Create Band Musician Advert":
-                startActivity(new Intent(getActivity(), MusicianAdvertisementEditor.class).putExtra("EXTRA_MUSICIAN_ID", musicianRef)
-                                                                                          .putExtra("EXTRA_LISTING_ID", ""));
+                startActivityForResult(new Intent(getActivity(), MusicianAdvertisementEditor.class).putExtra("EXTRA_MUSICIAN_ID", musicianRef)
+                                                                                          .putExtra("EXTRA_LISTING_ID", ""),1);
                 break;
             case "View Band Musician Advert":
                 startActivity(new Intent(getActivity(), MusicianListingDetailsActivity.class).putExtra("EXTRA_MUSICIAN_LISTING_ID", musicianAdvertReference));
@@ -345,5 +345,12 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
     private void restartFragment()
     {
         getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        restartFragment();
     }
 }
