@@ -320,13 +320,9 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
             Toast.makeText(this,"Details updated successfully",
                     Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(BandDetailsEditor.this, NavBarActivity.class);
             Toast.makeText(BandDetailsEditor.this,
                     "Details successfully updated",
                     Toast.LENGTH_LONG).show();
-            intent.putExtra("EXTRA_VENUE_LISTING_ID", listingManager.getListingRef());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
             Toast.makeText(BandDetailsEditor.this,
@@ -346,8 +342,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
      */
     @Override
     public void cancelAdvertisement() {
-        Intent backToMain = new Intent(BandDetailsEditor.this, MainActivity.class);
-        startActivity(backToMain);
+        finish();
     }
 
     /**
