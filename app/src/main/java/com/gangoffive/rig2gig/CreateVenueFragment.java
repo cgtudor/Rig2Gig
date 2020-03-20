@@ -1,11 +1,13 @@
 package com.gangoffive.rig2gig;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,9 +48,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CreateVenueFragment extends Fragment implements View.OnClickListener
-{
+public class CreateVenueFragment extends Fragment implements View.OnClickListener {
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1888;
 
     SwipeRefreshLayout swipeLayout;
 
@@ -69,15 +71,15 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
 
     /**
      * Upon creation of the ViewVenuesFragment, create the fragment_view_venues layout.
-     * @param inflater The inflater is used to read the passed xml file.
-     * @param container The views base class.
+     *
+     * @param inflater           The inflater is used to read the passed xml file.
+     * @param container          The views base class.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
      * @return Returns a View of the fragment_upgrade_to_musicians layout.
      */
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
@@ -104,15 +106,9 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
         venueType = v.findViewById(R.id.type);
         submit = v.findViewById(R.id.submitBtn);
 
-        userRef = fAuth.getUid();
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ + " + userRef);
-        email = fAuth.getCurrentUser().getEmail();
-
-
-
 
         image = v.findViewById(R.id.imageViewVenue);
-        image.setBackgroundResource(R.drawable.com_facebook_profile_picture_blank_portrait);
+        //image.setBackgroundResource(R.drawable.com_facebook_profile_picture_blank_portrait);
 
         //image = v.findViewById(R.id.imageViewVenue);
 
@@ -130,6 +126,9 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.submitBtn:
+                userRef = fAuth.getUid();
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ + " + userRef);
+                email = fAuth.getCurrentUser().getEmail();
                 String desc = description.getText().toString();
                 String loc = location.getText().toString();
                 String venueName = name.getText().toString();
@@ -154,11 +153,9 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
                 fStore.collection("users").document(fAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful())
-                        {
+                        if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-                            if (document.exists())
-                            {
+                            if (document.exists()) {
                                 Log.d(TAG, "Document exists!");
                                 phoneNumber = document.get("phone-number").toString();
 
@@ -202,9 +199,7 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
                                                 Log.w(TAG, "Error adding document", e);
                                             }
                                         });
-                            }
-                            else
-                            {
+                            } else {
                                 Log.d(TAG, "Document doesn't exists!");
                             }
                         }
@@ -214,7 +209,8 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.takeBtn:
                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@2 take phgot");
-                ImageRequestHandler.getCameraImage(v);
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                getActivity().startActivityFromFragment(CreateVenueFragment.this, cameraIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
                 break;
             case R.id.uploadBtn:
                 ImageRequestHandler.getGalleryImage(v);
@@ -228,8 +224,7 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
         return true;
     }
 
-    public byte[] imageToByteArray(Drawable image)
-    {
+    public byte[] imageToByteArray(Drawable image) {
         Bitmap bitmap = ((BitmapDrawable) image).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -238,6 +233,7 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
 
     /**
      * handles activity results
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -245,13 +241,29 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
-        chosenPic = image.getDrawable();
-        Log.d(TAG, "get successful with data123213213");
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        if (Build.VERSION.SDK_INT >= 26) {
-            ft.setReorderingAllowed(false);
+        try {
+            if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+
+                    Bitmap bmp = (Bitmap) data.getExtras().get("data");
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+                    image.setImageBitmap(bmp);
+
+                }
+            }
+        }catch(Exception e){
+           // Toast.makeText(this.getActivity(), e+"Something went wrong", Toast.LENGTH_LONG).show();
+
         }
-        ft.detach(CreateVenueFragment.this).attach(CreateVenueFragment.this).commit();
-    }
-}
+                Log.d(TAG, "get successful with data123213213");
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                if (Build.VERSION.SDK_INT >= 26) {
+                    ft.setReorderingAllowed(false);
+                }
+                ft.detach(CreateVenueFragment.this).attach(CreateVenueFragment.this).commit();
+            }
+        }
+
+
+

@@ -32,36 +32,38 @@ public class SplashScreenActivity extends AppCompatActivity {
         System.out.println("@@@@2@@@@@@@@@@@@@@@@@@@@@@2 " + fAuth.getUid());
 
         //Uncomment this for login testing
-        if (fAuth.getCurrentUser() != null)
-        {
-            final String getUserId = fAuth.getUid();
-            DocumentReference docIdRef = fStore.collection("users").document(getUserId);
-            docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-            {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task)
-                {
-                    if (task.isSuccessful())
-                    {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists())
-                        {
-                            Log.d(TAG, "Document exists!");
-                            AccountPurposeActivity.userType = document.get("user-type").toString();
-                            startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
-                        }
-                        else
-                        {
-                            Log.d(TAG, "Document doesn't exists!");
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        }
-                    }
-                }
-            });
-        }
-        else
-            {
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            }
+//        if (fAuth.getCurrentUser() != null)
+//        {
+//            final String getUserId = fAuth.getUid();
+//            DocumentReference docIdRef = fStore.collection("users").document(getUserId);
+//            docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+//            {
+//                @Override
+//                public void onComplete(@NonNull Task<DocumentSnapshot> task)
+//                {
+//                    if (task.isSuccessful())
+//                    {
+//                        DocumentSnapshot document = task.getResult();
+//                        if (document.exists())
+//                        {
+//                            Log.d(TAG, "Document exists!");
+//                            AccountPurposeActivity.userType = document.get("user-type").toString();
+//                            startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+//                        }
+//                        else
+//                        {
+//                            Log.d(TAG, "Document doesn't exists!");
+//                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+//                        }
+//                    }
+//                }
+//            });
+//        }
+//        else
+//            {
+//                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+//            }
+
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
     }
 }

@@ -98,7 +98,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/accountType" />
+        app:layout_constraintTop_toBottomOf="@+id/accountType"
+        android:drawableLeft="@drawable/ic_band_button"/>
 
     <Button
         android:id="@+id/venueBtn"
@@ -114,6 +115,8 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/musicianBtn"
-        android:onClick="venueBtnOnClick"/>
+        android:onClick="venueBtnOnClick"
+        android:drawableLeft="@drawable/ic_venues_button"
+        android:drawablePadding="-40dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

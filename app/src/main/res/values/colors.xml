@@ -2,8 +2,8 @@
 <resources>
     <color name="colorPrimary">#12c2e9</color>
     <color name="colorPrimaryDark">#12c2e9</color>
-    <color name="colorAccent">#c471ed</color>
-    <color name="dividerColor">#c471ed</color>
+    <color name="colorAccent">#12c2e9</color>
+    <color name="dividerColor">#12c2e9</color>
     <color name="lightGrey">#ededed</color>
     <color name="darkGrey">#808080</color>
 </resources>
