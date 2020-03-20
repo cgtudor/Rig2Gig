@@ -25,4 +25,10 @@ public class MusicianAdvertIndexActivity extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        finish();
+    }
 }

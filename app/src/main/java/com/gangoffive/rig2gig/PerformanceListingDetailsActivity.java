@@ -85,6 +85,11 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                         /*Find the performer reference by looking for the performer ID in the "performers" subfolder*/
                         DocumentReference performer = db.collection(performerType).document(document.get("performer-ref").toString());
 
+                        if(performerType.equals("bands"))
+                        {
+                            listingOwner.append(document.get("listing-owner").toString());
+                        }
+
                         performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -97,7 +102,11 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                         rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
                                         genre.setText(document.get("genres").toString());
-                                        listingOwner.append(document.get("user-ref").toString());
+
+                                        if(performerType.equals("musicians"))
+                                        {
+                                            listingOwner.append(document.get("user-ref").toString());
+                                        }
 
                                         CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
                                         sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get()
@@ -140,6 +149,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                         });
                         //Timestamp expiryDate = (Timestamp) document.get("expiry-date");
                         //expiry.append(expiryDate.toDate().toString());
+
                         performerRef.append(document.get("performer-ref").toString());
                         performerTypeGlobal.append(document.get("performer-type").toString());
                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
@@ -258,48 +268,10 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
      * Checks the user-type. Redirects to console if it is a musician or to the previous activity/fragment if not.
      */
     @Override
-    public void onBackPressed() {
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(FirebaseAuth.getInstance().getUid()).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful())
-                        {
-                            DocumentSnapshot document = task.getResult();
-                            if(document.exists())
-                            {
-                                String accType = document.get("user-type").toString();
-                                if(accType.equals("Musician"))
-                                {
-                                    Intent intent = new Intent(PerformanceListingDetailsActivity.this, NavBarActivity.class);
-                                    startActivity(intent);
-                                    finish();
-
-                                }
-                                else
-                                {
-                                    PerformanceListingDetailsActivity.this.genericBack();
-                                    finish();
-
-                                }
-                            }
-                            else
-                            {
-                                Log.d("FIRESTORE", "No such document");
-                            }
-                        }
-                        else
-                        {
-                            Log.d("FIRESTORE", "get failed with ", task.getException());
-                        }
-                    }
-                });
-    }
-
-    public void genericBack()
+    public void onBackPressed()
     {
         super.onBackPressed();
+        finish();
     }
 
     @Override
@@ -329,6 +301,10 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                         /*Find the performer reference by looking for the performer ID in the "performers" subfolder*/
                         DocumentReference performer = db.collection(performerType).document(document.get("performer-ref").toString());
 
+                        StringBuilder listingOwner = new StringBuilder();
+
+                        listingOwner.append(document.get("performer-type").equals("Band") ? document.get("listing-owner").toString() : "");
+
                         performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -337,7 +313,12 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                     if (document.exists()) {
                                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
-                                        if(document.get("user-ref").toString().equals(FirebaseAuth.getInstance().getUid()))
+                                        if(listingOwner.toString().equals(""))
+                                        {
+                                            listingOwner.append(document.get("user-ref"));
+                                        }
+
+                                        if(listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()))
                                         {
                                             MenuItem star = menu.findItem(R.id.saveButton);
                                             star.setIcon(R.drawable.ic_full_star);

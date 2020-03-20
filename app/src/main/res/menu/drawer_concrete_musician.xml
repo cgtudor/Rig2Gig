@@ -18,7 +18,7 @@
             android:id="@+id/nav_my_bands"
             android:icon="@drawable/ic_my_band"
             android:title="My Bands"/>
-        <item android:id="@+id/nav_view_venues"
+        <!--<item android:id="@+id/nav_view_venues"
             android:icon="@drawable/ic_view_venues"
             android:title="View Venues"/>
         <item android:id="@+id/nav_view_bands"
@@ -26,7 +26,7 @@
             android:title="View Bands"/>
         <item android:id="@+id/nav_view_musicians"
             android:icon="@drawable/ic_view_bands"
-            android:title="View Musicians"/>
+            android:title="View Musicians"/>-->
         <item android:id="@+id/nav_notifications"
             android:icon="@drawable/ic_notifications"
             android:title="Notifications"/>

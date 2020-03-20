@@ -69,7 +69,7 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
         if ((fragment instanceof DefaultGoBack) && ((DefaultGoBack) fragment).onBackPressed()) {
             super.onBackPressed();
         }
-        else if(drawer.isDrawerOpen(GravityCompat.START))
+        if(drawer.isDrawerOpen(GravityCompat.START))
         {
             drawer.closeDrawer(GravityCompat.START);
         }

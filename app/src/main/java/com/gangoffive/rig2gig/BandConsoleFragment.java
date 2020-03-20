@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -183,7 +184,7 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
         switch(v.getTag().toString())
         {
             case "View Venues":
-                //To be implemented
+                startActivity(new Intent(getActivity(), VenueAdvertIndexActivity.class));
                 break;
             case "Edit Musician":
                 //To be implemented

@@ -45,9 +45,9 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
 
     private String bandRef;
-    private String displayMusicianBandsReference;
+    private String displayMusicianBandsReference; //The band reference.
     private String bandName;
-    private String performerReference;
+    private String performerReference; //The band's performer advert.
 
     /**
      * Upon creation of the VenueConsoleFragment, create the fragment_venue_console layout.
@@ -88,19 +88,18 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
 
         //Band Advert Section
         final CardView card_view_view_musicians = findViewById(R.id.card_view_view_musicians);
-        final CardView card_view_edit_band_advert = findViewById(R.id.card_view_edit_band_advert);
         final CardView card_view_create_band_advert = findViewById(R.id.card_view_create_band_advert);
         final CardView card_view_view_band_advert = findViewById(R.id.card_view_view_band_advert);
         final CardView card_view_edit_band_band_advert = findViewById(R.id.card_view_edit_band_band_advert);
         final CardView card_view_delete_band_advert = findViewById(R.id.card_view_delete_band_advert);
 
         card_view_view_musicians.setOnClickListener(this);
-        card_view_edit_band_advert.setOnClickListener(this);
         card_view_create_band_advert.setOnClickListener(this);
         card_view_view_band_advert.setOnClickListener(this);
         card_view_edit_band_band_advert.setOnClickListener(this);
         card_view_delete_band_advert.setOnClickListener(this);
 
+        //Setup layout
         databaseQuery();
     }
 
@@ -110,6 +109,21 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
      */
     private void databaseQuery()
     {
+        CardView editProfileLayout;
+        LinearLayout textView;
+
+        textView = findViewById(R.id.general_title);
+        textView.setVisibility(View.VISIBLE);
+
+        editProfileLayout = findViewById(R.id.card_view_view_Venues);
+        editProfileLayout.setVisibility(View.VISIBLE);
+
+        editProfileLayout = findViewById(R.id.card_view_view_musicians);
+        editProfileLayout.setVisibility(View.VISIBLE);
+
+        editProfileLayout = findViewById(R.id.card_view_edit_band);
+        editProfileLayout.setVisibility(View.VISIBLE);
+
         getPerformerAdverts.whereEqualTo("performer-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
@@ -120,18 +134,12 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
                 CardView editProfileLayout;
                 LinearLayout textView;
 
+                textView = findViewById(R.id.performer_advert_title);
+                textView.setVisibility(View.VISIBLE);
+
                 if(!performerAdverts.isEmpty())
                 {
                     Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful with advert");
-
-                    textView = findViewById(R.id.performer_advert_title);
-                    textView.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_view_Venues);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_edit_band);
-                    editProfileLayout.setVisibility(View.VISIBLE);
 
                     editProfileLayout = findViewById(R.id.card_view_edit_performer_advert);
                     editProfileLayout.setVisibility(View.VISIBLE);
@@ -147,15 +155,6 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
                 else
                 {
                     Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful without advert");
-
-                    textView = findViewById(R.id.performer_advert_title);
-                    textView.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_view_Venues);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_edit_band);
-                    editProfileLayout.setVisibility(View.VISIBLE);
 
                     editProfileLayout = findViewById(R.id.card_view_create_performer_advert);
                     editProfileLayout.setVisibility(View.VISIBLE);
@@ -180,18 +179,12 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
                 CardView editProfileLayout;
                 LinearLayout textView;
 
+                textView = findViewById(R.id.band_advert_title);
+                textView.setVisibility(View.VISIBLE);
+
                 if(!bandAdverts.isEmpty())
                 {
                     Log.d(TAG, "DATABASEQUERY BAND ------------------ get successful with advert");
-
-                    textView = findViewById(R.id.musician_advert_title);
-                    textView.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_view_musicians);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_edit_band_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
 
                     editProfileLayout = findViewById(R.id.card_view_view_band_advert);
                     editProfileLayout.setVisibility(View.VISIBLE);
@@ -207,15 +200,6 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
                 else
                 {
                     Log.d(TAG, "DATABASEQUERY BAND ------------------ get successful with advert");
-
-                    textView = findViewById(R.id.musician_advert_title);
-                    textView.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_view_musicians);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_edit_band_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
 
                     editProfileLayout = findViewById(R.id.card_view_create_band_advert);
                     editProfileLayout.setVisibility(View.VISIBLE);
@@ -234,36 +218,41 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         System.out.println(v.getTag().toString());
         switch(v.getTag().toString())
         {
-            case "View Venues": //Broken for some reason...
-                ViewVenuesFragment viewVenuesFragment = new ViewVenuesFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, viewVenuesFragment).addToBackStack(viewVenuesFragment.getClass().getSimpleName()).commit();
-                break;
-            case "Edit Musician":
-                //To be implemented
+            case "View Venues":
+                startActivity(new Intent(this, VenueAdvertIndexActivity.class));
                 break;
             case "Create Performer Advert":
-                //To be implemented
+                startActivityForResult(new Intent(this, PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", displayMusicianBandsReference)
+                                                                                                 .putExtra("EXTRA_LISTING_ID", "")
+                                                                                                 .putExtra("EXTRA_PERFORMER_TYPE", "Band"), 1);
                 break;
             case "Edit Performer Advert":
-                //To be implemented
+                startActivity(new Intent(this, PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", displayMusicianBandsReference)
+                                                                                                 .putExtra("EXTRA_LISTING_ID", performerReference)
+                                                                                                 .putExtra("EXTRA_PERFORMER_TYPE", "Band"));
                 break;
             case "View Performer Advert":
-                //To be implemented
+                startActivity(new Intent(this, PerformanceListingDetailsActivity.class).putExtra("EXTRA_PERFORMANCE_LISTING_ID", performerReference));
                 break;
             case "Delete Performer Advert":
                 deletePerformerAdvert();
                 break;
+            case "Create Band Advert":
+                startActivityForResult(new Intent(this, BandAdvertisementEditor.class).putExtra("EXTRA_BAND_ID", displayMusicianBandsReference)
+                                                                                            .putExtra("EXTRA_LISTING_ID", ""), 1);
+                break;
             case "View Musicians":
-                //To be implemented.
+                startActivity(new Intent(this, MusicianAdvertIndexActivity.class));
                 break;
             case "Edit Band":
-                //To be implemented.
+                startActivity(new Intent(this, BandDetailsEditor.class).putExtra("EXTRA_BAND_ID", displayMusicianBandsReference));
                 break;
             case "View Band Advert":
-                //To be implemented.
+                startActivity(new Intent(this, BandListingDetailsActivity.class).putExtra("EXTRA_BAND_LISTING_ID", bandRef));
                 break;
             case "Edit Band Advert":
-                //To be implemented.
+                startActivity(new Intent(this, BandAdvertisementEditor.class).putExtra("EXTRA_BAND_ID", displayMusicianBandsReference)
+                                                                                            .putExtra("EXTRA_LISTING_ID", bandRef));
                 break;
             case "Delete Band Advert":
                 deleteBandAdvert(); //Refactor deleteBandAdvert()
@@ -292,7 +281,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
                     Log.d(TAG, "DELETEADVERT ------------------ get successful with advert");
 
                     bandAdvertsReference.document(bandAdverts.get(0).getId()).delete();
-                    restartFragment();
+                    restartActivity();
                 }
                 else
                 {
@@ -314,19 +303,19 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
      */
     private void deletePerformerAdvert()
     {
-        getBandAdverts.whereEqualTo("performer-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        getPerformerAdverts.whereEqualTo("performer-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
             {
-                bandAdverts = queryDocumentSnapshots.getDocuments();
+                performerAdverts = queryDocumentSnapshots.getDocuments();
 
-                if(!bandAdverts.isEmpty())
+                if(!performerAdverts.isEmpty())
                 {
                     Log.d(TAG, "DELETEADVERT ------------------ get successful with advert");
 
-                    performerAdvertsReference.document(bandAdverts.get(0).getId()).delete();
-                    restartFragment();
+                    performerAdvertsReference.document(performerAdverts.get(0).getId()).delete();
+                    restartActivity();
                 }
                 else
                 {
@@ -347,7 +336,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
      * This method is used to reload the activity layout once the advert has been deleted.
      * This is so the appropriate layout is given to the user based upon whether they have an advert or not.
      */
-    private void restartFragment()
+    private void restartActivity()
     {
         recreate();
     }
@@ -363,5 +352,12 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     public void onBackPressed()
     {
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        recreate();
     }
 }

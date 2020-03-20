@@ -23,8 +23,6 @@ public class ConcreteVenueNavBar extends NavBarCompatActivity implements Navigat
     {
         super.onCreate(savedInstanceState);
 
-
-
         setContentView(R.layout.activity_concrete_venue_nav_bar);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
