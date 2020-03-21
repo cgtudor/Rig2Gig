@@ -15,20 +15,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".BandMemberDetails"></activity>
         <activity
             android:name=".MusicianSearchActivity"
             android:label="@string/title_activity_musician_search"
-        android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".VenueAdvertIndexActivity"
             android:label="@string/title_activity_venue_advert_index"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".NotificationService" />
 
         <activity android:name=".CreateMusicianAccountActivity" />
 
-        <service android:name=".NotificationService"></service>
+        <service android:name=".NotificationService" />
         <service
             android:name=".FirebaseNotificationService"
             android:exported="false">
@@ -36,6 +37,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <activity android:name=".AccountPurposeActivity" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
@@ -45,14 +47,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-
-        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
-     See README(https://goo.gl/l4GJaQ) for more. -->
+        <!--
+ Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notifications_active_black_24dp" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <!--
+ Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
@@ -144,8 +149,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".BandConsoleActivity" />
-        <activity android:name=".BandAdvertIndexActivity"/>
-        <activity android:name=".MusicianAdvertIndexActivity"/>
+        <activity android:name=".BandAdvertIndexActivity" />
+        <activity android:name=".MusicianAdvertIndexActivity" />
     </application>
 
 </manifest>

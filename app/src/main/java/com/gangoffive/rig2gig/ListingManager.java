@@ -175,6 +175,11 @@ public class ListingManager
                 }
             }
         }
+        else if (type.equals("User"))
+        {
+            docRef = db.collection("users").document(userRef);
+            collectionPath = "users";
+        }
     }
 
     /**
