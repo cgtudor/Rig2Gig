@@ -79,7 +79,7 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
-                        listingOwner.append(document.get("lisiting-owner").toString());
+                        listingOwner.append(document.get("listing-owner").toString());
 
                         /*Find the band reference by looking for the band ID in the "bands" subfolder*/
                         DocumentReference band = db.collection("bands").document(document.get("band-ref").toString());

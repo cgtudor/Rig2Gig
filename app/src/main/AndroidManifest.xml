@@ -26,6 +26,8 @@
 
         <service android:name=".NotificationService" />
 
+        <activity android:name=".VenueProfileActivity" />
+
         <activity android:name=".CreateMusicianAccountActivity" />
 
         <service android:name=".NotificationService"></service>
