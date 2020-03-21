@@ -44,7 +44,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                         {
                             Log.d(TAG, "Document exists!");
                             AccountPurposeActivity.userType = document.get("user-type").toString();
-                            startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+
+                            Intent newIntent = new Intent(getApplicationContext(), MusicianProfileActivity.class);
+                            newIntent.putExtra("EXTRA_MUSICIAN_ID", "7HxfHz85VKcDb9wyGWR1");
+                            startActivity(newIntent);
+                            /*startActivity(new Intent(getApplicationContext(), NavBarActivity.class));*/
                             finish();
                         }
                         else
