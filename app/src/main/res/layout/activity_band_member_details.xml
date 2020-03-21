@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#009688"
+    android:background="@drawable/border"
     tools:context=".BandMemberDetails">
 
     <TextView
@@ -17,7 +17,7 @@
         android:layout_marginEnd="20dp"
         android:text="Name:"
         android:textAlignment="viewStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <TextView
         android:id="@+id/name"
@@ -31,7 +31,7 @@
         android:layout_toEndOf="@+id/nameLabel"
         android:text=""
         android:textAlignment="viewStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <TextView
         android:id="@+id/userNameLabel"
@@ -44,7 +44,7 @@
         android:layout_marginEnd="20dp"
         android:text="User name:"
         android:textAlignment="viewStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <TextView
         android:id="@+id/userName"
@@ -60,7 +60,7 @@
         android:layout_toEndOf="@+id/nameLabel"
         android:text=""
         android:textAlignment="viewStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <TextView
         android:id="@+id/locationLabel"
@@ -73,7 +73,7 @@
         android:layout_marginEnd="20dp"
         android:text="Location"
         android:textAlignment="viewStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <TextView
         android:id="@+id/location"
@@ -89,7 +89,7 @@
         android:layout_toEndOf="@+id/nameLabel"
         android:text=""
         android:textAlignment="viewStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <TextView
         android:id="@+id/phoneLabel"
@@ -102,7 +102,7 @@
         android:layout_marginEnd="20dp"
         android:text="Phone number:"
         android:textAlignment="viewStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <TextView
         android:id="@+id/phone"
@@ -118,7 +118,7 @@
         android:layout_toEndOf="@+id/nameLabel"
         android:text=""
         android:textAlignment="viewStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <TextView
         android:id="@+id/emailLabel"
@@ -131,7 +131,7 @@
         android:layout_marginEnd="20dp"
         android:text="Email address:"
         android:textAlignment="viewStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <TextView
         android:id="@+id/email"
@@ -147,7 +147,7 @@
         android:layout_toEndOf="@+id/nameLabel"
         android:text=""
         android:textAlignment="viewStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <TextView
         android:id="@+id/ratingLabel"
@@ -160,7 +160,7 @@
         android:layout_marginEnd="20dp"
         android:text="Rating:"
         android:textAlignment="viewStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <TextView
         android:id="@+id/rating"
@@ -176,7 +176,7 @@
         android:layout_toEndOf="@+id/nameLabel"
         android:text=""
         android:textAlignment="viewStart"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <Button
         android:id="@+id/ok"
@@ -186,6 +186,5 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp"
         android:text="OK" />
-
 
 </RelativeLayout>
