@@ -41,6 +41,7 @@ public class ListingManager
     private StorageReference storageRef, imageRef, listingImage;
     private Map<String, Object> userInfo,listingInfo;
     private String collectionPath, imagePath, listingRef;
+    private boolean needPayment;
 
 
     /**
@@ -50,6 +51,15 @@ public class ListingManager
      */
     ListingManager(String userRef, String type, String adRef)
     {
+        if (type.equals("Band Performer") || type.equals("Musician Performer")
+                || type.equals("Venue"))
+        {
+            needPayment = true;
+        }
+        else
+        {
+            needPayment = false;
+        }
         listingRef = adRef;
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -442,7 +452,11 @@ public class ListingManager
      */
     public Date getExpiryDate() {
         Calendar calendar = Calendar.getInstance();
-        if (Calendar.HOUR_OF_DAY == 0
+        if (needPayment)
+        {
+            calendar.add(Calendar.DATE, -1);
+        }
+        else if (Calendar.HOUR_OF_DAY == 0
                 && Calendar.MINUTE == 0
                 && Calendar.SECOND == 0
                 && Calendar.MILLISECOND == 0) {
