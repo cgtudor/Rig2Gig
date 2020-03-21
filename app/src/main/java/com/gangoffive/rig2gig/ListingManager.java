@@ -51,130 +51,29 @@ public class ListingManager
      */
     ListingManager(String userRef, String type, String adRef)
     {
-        if (type.equals("Band Performer") || type.equals("Musician Performer")
-                || type.equals("Venue"))
+        if (userRef != null)
         {
-            needPayment = true;
-        }
-        else
-        {
-            needPayment = false;
-        }
-        listingRef = adRef;
-        db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReference();
-        if (type.equals("Band Performer"))
-        {
-            docRef = db.collection("bands").document(userRef);
-            collectionPath = "performer-listings";
-            imagePath = "performance-listings";
-            if (listingRef.equals(""))
+            if (type.equals("Band Performer") || type.equals("Musician Performer")
+                    || type.equals("Venue"))
             {
-                imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
+                needPayment = true;
             }
             else
             {
-                imageRef = storageRef.child("/images/"+ imagePath +"/" + listingRef + ".jpg");
-                listRef = db.collection(collectionPath).document(listingRef);
-                listingImage = storageRef.child("/images/" + imagePath +
-                        "/" + listingRef + ".jpg");
+                needPayment = false;
             }
-        }
-        else if (type.equals("Musician Performer"))
-        {
-            docRef = db.collection("musicians").document(userRef);
-            collectionPath = "performer-listings";
-            imagePath = "performance-listings";
-            if (listingRef.equals(""))
+            listingRef = adRef;
+            db = FirebaseFirestore.getInstance();
+            storage = FirebaseStorage.getInstance();
+            storageRef = storage.getReference();
+            if (type.equals("Band Performer"))
             {
-                imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
-            }
-            else
-            {
-                imageRef = storageRef.child("/images/"+ imagePath +"/" + listingRef + ".jpg");
-                listRef = db.collection(collectionPath).document(listingRef);
-                listingImage = storageRef.child("/images/" + imagePath +
-                        "/" + listingRef + ".jpg");
-            }
-        }
-        else if (type.equals("Band"))
-        {
-            docRef = db.collection("bands").document(userRef);
-            if (listingRef.equals("profileEdit"))
-            {
-                imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
-                collectionPath = "bands";
-                listRef = db.collection(collectionPath).document(userRef);
-                imagePath = collectionPath;
-                listingImage = storageRef.child("/images/" + imagePath +
-                        "/" + userRef + ".jpg");
-            }
-            else
-            {
-                collectionPath = "band-listings";
-                imagePath = collectionPath;
-                if (!adRef.equals(""))
-                {
-                    imageRef = storageRef.child("/images/band-listings/" + adRef + ".jpg");
-                    listingImage = storageRef.child("/images/" + imagePath +
-                            "/" + adRef + ".jpg");
-                    listRef = db.collection(collectionPath).document(adRef);
-                }
-                else
-                {
-                    imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
-                }
-            }
-        }
-        else if (type.equals("Musician"))
-        {
-            docRef = db.collection("musicians").document(userRef);
-            if (listingRef.equals("profileEdit"))
-            {
-                imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
-                collectionPath = "musicians";
-                listRef = db.collection(collectionPath).document(userRef);
-                imagePath = collectionPath;
-                listingImage = storageRef.child("/images/" + imagePath +
-                        "/" + userRef + ".jpg");
-            }
-            else
-            {
-                collectionPath = "musician-listings";
-                imagePath = collectionPath;
-                if (!adRef.equals(""))
-                {
-                    imageRef = storageRef.child("/images/musician-listings/" + adRef + ".jpg");
-                    listingImage = storageRef.child("/images/" + imagePath +
-                            "/" + adRef + ".jpg");
-                    listRef = db.collection(collectionPath).document(adRef);
-                }
-                else
-                {
-                    imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
-                }
-            }
-        }
-        else if (type.equals("Venue"))
-        {
-            docRef = db.collection("venues").document(userRef);
-            if (listingRef.equals("profileEdit"))
-            {
-                collectionPath = "venues";
-                imagePath = collectionPath;
-                imageRef = storageRef.child("/images/venues/" + userRef + ".jpg");
-                listRef = db.collection(collectionPath).document(userRef);
-                listingImage = storageRef.child("/images/" + imagePath +
-                        "/" + userRef + ".jpg");
-            }
-            else
-            {
-                collectionPath = "venue-listings";
-                imagePath = collectionPath;
+                docRef = db.collection("bands").document(userRef);
+                collectionPath = "performer-listings";
+                imagePath = "performance-listings";
                 if (listingRef.equals(""))
                 {
-                    imageRef = storageRef.child("/images/venues/" + userRef + ".jpg");
+                    imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
                 }
                 else
                 {
@@ -184,11 +83,115 @@ public class ListingManager
                             "/" + listingRef + ".jpg");
                 }
             }
-        }
-        else if (type.equals("User"))
-        {
-            docRef = db.collection("users").document(userRef);
-            collectionPath = "users";
+            else if (type.equals("Musician Performer"))
+            {
+                docRef = db.collection("musicians").document(userRef);
+                collectionPath = "performer-listings";
+                imagePath = "performance-listings";
+                if (listingRef.equals(""))
+                {
+                    imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
+                }
+                else
+                {
+                    imageRef = storageRef.child("/images/"+ imagePath +"/" + listingRef + ".jpg");
+                    listRef = db.collection(collectionPath).document(listingRef);
+                    listingImage = storageRef.child("/images/" + imagePath +
+                            "/" + listingRef + ".jpg");
+                }
+            }
+            else if (type.equals("Band"))
+            {
+                docRef = db.collection("bands").document(userRef);
+                if (listingRef.equals("profileEdit"))
+                {
+                    imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
+                    collectionPath = "bands";
+                    listRef = db.collection(collectionPath).document(userRef);
+                    imagePath = collectionPath;
+                    listingImage = storageRef.child("/images/" + imagePath +
+                            "/" + userRef + ".jpg");
+                }
+                else
+                {
+                    collectionPath = "band-listings";
+                    imagePath = collectionPath;
+                    if (!adRef.equals(""))
+                    {
+                        imageRef = storageRef.child("/images/band-listings/" + adRef + ".jpg");
+                        listingImage = storageRef.child("/images/" + imagePath +
+                                "/" + adRef + ".jpg");
+                        listRef = db.collection(collectionPath).document(adRef);
+                    }
+                    else
+                    {
+                        imageRef = storageRef.child("/images/bands/" + userRef + ".jpg");
+                    }
+                }
+            }
+            else if (type.equals("Musician"))
+            {
+                docRef = db.collection("musicians").document(userRef);
+                if (listingRef.equals("profileEdit"))
+                {
+                    imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
+                    collectionPath = "musicians";
+                    listRef = db.collection(collectionPath).document(userRef);
+                    imagePath = collectionPath;
+                    listingImage = storageRef.child("/images/" + imagePath +
+                            "/" + userRef + ".jpg");
+                }
+                else
+                {
+                    collectionPath = "musician-listings";
+                    imagePath = collectionPath;
+                    if (!adRef.equals(""))
+                    {
+                        imageRef = storageRef.child("/images/musician-listings/" + adRef + ".jpg");
+                        listingImage = storageRef.child("/images/" + imagePath +
+                                "/" + adRef + ".jpg");
+                        listRef = db.collection(collectionPath).document(adRef);
+                    }
+                    else
+                    {
+                        imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
+                    }
+                }
+            }
+            else if (type.equals("Venue"))
+            {
+                docRef = db.collection("venues").document(userRef);
+                if (listingRef.equals("profileEdit"))
+                {
+                    collectionPath = "venues";
+                    imagePath = collectionPath;
+                    imageRef = storageRef.child("/images/venues/" + userRef + ".jpg");
+                    listRef = db.collection(collectionPath).document(userRef);
+                    listingImage = storageRef.child("/images/" + imagePath +
+                            "/" + userRef + ".jpg");
+                }
+                else
+                {
+                    collectionPath = "venue-listings";
+                    imagePath = collectionPath;
+                    if (listingRef.equals(""))
+                    {
+                        imageRef = storageRef.child("/images/venues/" + userRef + ".jpg");
+                    }
+                    else
+                    {
+                        imageRef = storageRef.child("/images/"+ imagePath +"/" + listingRef + ".jpg");
+                        listRef = db.collection(collectionPath).document(listingRef);
+                        listingImage = storageRef.child("/images/" + imagePath +
+                                "/" + listingRef + ".jpg");
+                    }
+                }
+            }
+            else if (type.equals("User"))
+            {
+                docRef = db.collection("users").document(userRef);
+                collectionPath = "users";
+            }
         }
     }
 
@@ -206,37 +209,45 @@ public class ListingManager
      */
     public void getUserInfo(CreateAdvertisement activity)
     {
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            /**
-             * on successful database query, return data and image to calling activity
-             */
-            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-            {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        userInfo = document.getData();
-                        if (listingRef.equals("") || listingRef.equals("profileEdit"))
-                        {
-                            activity.onSuccessFromDatabase(userInfo);
-                        }
-                        else
-                        {
-                            getListing(activity);
-                        }
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+        if (docRef != null)
+        {
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                /**
+                 * on successful database query, return data and image to calling activity
+                 */
+                public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            userInfo = document.getData();
+                            if (listingRef.equals("") || listingRef.equals("profileEdit"))
+                            {
+                                activity.onSuccessFromDatabase(userInfo);
+                            }
+                            else
+                            {
+                                getListing(activity);
+                            }
+                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
 
-                    } else {
-                        Log.d(TAG, "No such document");
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    }
+                    else
+                    {
+                        Log.d(TAG, "get failed with ", task.getException());
                     }
                 }
-                else
-                    {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
+            });
+        }
+        else
+        {
+            activity.onSuccessFromDatabase(userInfo);
+        }
+
     }
 
     /**

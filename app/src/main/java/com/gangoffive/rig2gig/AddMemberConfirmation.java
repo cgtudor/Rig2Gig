@@ -94,15 +94,26 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
     public void onSuccessFromDatabase(Map<String, Object> data) {
         if (checkIfInBand) {
             checkIfInBand = false;
-            if (!((List) data.get("bands")).contains(bandRef)) {
-                Intent intent = new Intent(this, NavBarActivity.class);
-                startActivity(intent);
+            if (data != null)
+            {
+                if (!((List) data.get("bands")).contains(bandRef)) {
+                    Intent intent = new Intent(this, NavBarActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if (sendingInvite) {
+                    sendingInvite = false;
+                    sendInvite();
+                }
+            }
+            else
+            {
+                Toast.makeText(this,
+                        "Invite not sent.  Check you connection and try again.",
+                        Toast.LENGTH_LONG).show();
                 finish();
             }
-            else if (sendingInvite) {
-                sendingInvite = false;
-                sendInvite();
-            }
+
         }
     }
 
