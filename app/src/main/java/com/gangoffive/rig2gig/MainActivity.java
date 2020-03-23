@@ -20,5 +20,6 @@ import android.os.Bundle;
             //Following intent creates the navbar activity. Ensure last in executions.
             Intent intent = new Intent(this, NavBarActivity.class);
             startActivity(intent);
+            finish();
         }
     }

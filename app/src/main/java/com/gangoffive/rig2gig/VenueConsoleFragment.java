@@ -180,7 +180,6 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
         switch(v.getTag().toString())
         {
             case "View Performers":
-                /*getFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewPerformersFragment()).commit();*/
                 startActivity(new Intent(getActivity(), VenueAdvertIndexActivity.class));
                 break;
             case "Edit Venue":

@@ -59,6 +59,7 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         final TextView description = findViewById(R.id.description);
         final Button contact = findViewById(R.id.contact);
 
+
         /*Used to get the id of the listing from the previous activity*/
         bID = getIntent().getStringExtra("EXTRA_BAND_LISTING_ID");
 
@@ -78,6 +79,8 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
+                        listingOwner.append(document.get("listing-owner").toString());
+
                         /*Find the band reference by looking for the band ID in the "bands" subfolder*/
                         DocumentReference band = db.collection("bands").document(document.get("band-ref").toString());
 
@@ -93,7 +96,6 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                                         rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
                                         ArrayList<String> members = (ArrayList<String>) document.get("members");
-                                        listingOwner.append(members.get(0));
 
                                         CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
                                         sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get()
@@ -117,38 +119,6 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                                                     }
                                                 });
                                         Log.d("AUTH CHECK" ,"LISTING OWNER: " + listingOwner.toString() + "\nCURRENT USER: " + FirebaseAuth.getInstance().getUid());
-                                        Query musiciansInBand = db.collection("musicians").whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid());
-                                        musiciansInBand.get()
-                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                        if(task.isSuccessful())
-                                                        {
-                                                            QuerySnapshot docs = task.getResult();
-                                                            if(!docs.isEmpty())
-                                                            {
-                                                                if(members.contains(docs.getDocuments().get(0).getId()))
-                                                                {
-                                                                    getSupportActionBar().setTitle("My Advert");
-                                                                    contact.setClickable(false);
-                                                                    contact.setVisibility(View.GONE);
-                                                                }
-                                                                else
-                                                                {
-                                                                    getSupportActionBar().setTitle(bandName.getText().toString());
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                Log.d("FIRESTORE", "User not a musician!");
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            Log.d("FIRESTORE", "query failed with" , task.getException());
-                                                        }
-                                                    }
-                                                });
                                     } else {
                                         Log.d("FIRESTORE", "No such document");
                                     }
@@ -335,6 +305,10 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                                                                     MenuItem star = menu.findItem(R.id.saveButton);
                                                                     star.setIcon(R.drawable.ic_full_star);
                                                                     star.setVisible(false);
+                                                                    getSupportActionBar().setTitle("My Advert");
+                                                                    Button contact = findViewById(R.id.contact);
+                                                                    contact.setClickable(false);
+                                                                    contact.setVisibility(View.GONE);
                                                                 }
                                                                 else
                                                                 {

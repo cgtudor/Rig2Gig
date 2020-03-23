@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -15,6 +17,8 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
 {
     protected DrawerLayout drawer;
     protected boolean minimise = false;
+    protected String visibleFragmentName;
+    protected Fragment visibleFragment;
 
     public NavBarCompatActivity()
     {
@@ -31,7 +35,18 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
     {
         minimise = false;
         NavBarFactory navBarFactory = new NavBarFactory();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, navBarFactory.selectFragment(menuItem)).commit() ;
+
+        if(visibleFragmentName != null && visibleFragment != null && visibleFragment.isVisible() && navBarFactory.selectFragment(menuItem).getClass().getSimpleName().equals(visibleFragment.getClass().getSimpleName()))
+        {
+
+        }
+        else
+        {
+            visibleFragmentName = navBarFactory.selectFragment(menuItem).getClass().getSimpleName();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, navBarFactory.selectFragment(menuItem), visibleFragmentName).addToBackStack(visibleFragmentName).commit();
+            getSupportFragmentManager().executePendingTransactions();
+            visibleFragment = getSupportFragmentManager().findFragmentByTag(visibleFragmentName);
+        }
 
         drawer.closeDrawer(GravityCompat.START);
 
@@ -44,23 +59,50 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
     @Override
     public void onBackPressed()
     {
+        System.out.println("CURRENT FRAGMENT =================== " + getSupportFragmentManager().findFragmentByTag(visibleFragmentName));
+
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+
+        System.out.println("BACK STACK ENTRY COUNT ============= " + backStackEntryCount);
+
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if ((fragment instanceof DefaultGoBack) && ((DefaultGoBack) fragment).onBackPressed()) {
             super.onBackPressed();
         }
-        else if(drawer.isDrawerOpen(GravityCompat.START))
+        if(drawer.isDrawerOpen(GravityCompat.START))
         {
             drawer.closeDrawer(GravityCompat.START);
         }
-        else if(!drawer.isDrawerOpen(GravityCompat.START) && !minimise)
+        else if(!drawer.isDrawerOpen(GravityCompat.START) && minimise && backStackEntryCount == 1)
+        {
+            minimise = false;
+            this.moveTaskToBack(true);
+        }
+        else if(!drawer.isDrawerOpen(GravityCompat.START) && backStackEntryCount == 1)
         {
             Toast.makeText(getApplicationContext(), "Press back again to exit.", Toast.LENGTH_SHORT).show();
             minimise = true;
         }
-        else if(!drawer.isDrawerOpen(GravityCompat.START) && minimise)
+        else if(backStackEntryCount > 1)
         {
-            minimise = false;
-            this.moveTaskToBack(true);
+            //System.out.println("BACK STACK ENTRY COUNT ============= " + backStackEntryCount);
+            int index = backStackEntryCount - 2;
+            FragmentManager.BackStackEntry backStackEntry = getSupportFragmentManager().getBackStackEntryAt(index);
+
+            System.out.println(backStackEntry.getName());
+
+            visibleFragmentName = backStackEntry.getName();
+            visibleFragment = getSupportFragmentManager().findFragmentByTag(visibleFragmentName);
+
+            super.onBackPressed();
+
+            System.out.println(backStackEntryCount);
+            System.out.println(backStackEntry.getClass().getSimpleName());
+
+
+
+            System.out.println("VISIBLE FRAGMENT NAME AFTER BACK ================= " + visibleFragmentName);
+            System.out.println("VISIBLE FRAGMENT SIMPLE NAME AFTER BACK ========== " + visibleFragment);
         }
     }
 

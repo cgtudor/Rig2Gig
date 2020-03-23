@@ -3,6 +3,8 @@ package com.gangoffive.rig2gig;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class NavBarActivity extends AppCompatActivity
@@ -38,16 +40,13 @@ public class NavBarActivity extends AppCompatActivity
 
         startActivity(fragIntent);*/
 
-
-
-
         startActivity(new Intent(this, navigationContext.navBarFinder(AccountPurposeActivity.userType)));
 
+        finish();
 
         //for demonstrating band manager
 /*        Intent intent = new Intent(this, ManageBandMembersActivity.class);
         intent.putExtra("EXTRA_BAND_ID", "S0lVRscAvnnE3sbqn9X5");
         startActivity(intent);*/
-
     }
 }

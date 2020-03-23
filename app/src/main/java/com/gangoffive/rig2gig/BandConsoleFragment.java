@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
     private View view;
 
     private String bandRef;
+    private String displayMusicianBandsReference;
     private String performerReference;
 
     /**
@@ -55,7 +57,7 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        view = inflater.inflate(R.layout.fragment_band_console, container, false);
+        view = inflater.inflate(R.layout.activity_band_console, container, false);
 
         final CardView card_view_view_venues = view.findViewById(R.id.card_view_view_Venues);
         final CardView card_view_edit_band = view.findViewById(R.id.card_view_edit_musician);
@@ -127,9 +129,6 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
                                 editProfileLayout = view.findViewById(R.id.card_view_delete_advert);
                                 editProfileLayout.setVisibility(View.VISIBLE);
 
-                                //editProfileLayout = view.findViewById(R.id.card_view_my_bands);
-                                //editProfileLayout.setVisibility(View.VISIBLE);
-
                                 editProfileLayout = view.findViewById(R.id.card_view_create_advert);
                                 editProfileLayout.setVisibility(View.GONE);
 
@@ -155,9 +154,6 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
 
                                 editProfileLayout = view.findViewById(R.id.card_view_create_advert);
                                 editProfileLayout.setVisibility(View.VISIBLE);
-
-                                //editProfileLayout = view.findViewById(R.id.card_view_my_bands);
-                                //editProfileLayout.setVisibility(View.VISIBLE);
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener()
@@ -188,7 +184,7 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
         switch(v.getTag().toString())
         {
             case "View Venues":
-                //To be implemented
+                startActivity(new Intent(getActivity(), VenueAdvertIndexActivity.class));
                 break;
             case "Edit Musician":
                 //To be implemented

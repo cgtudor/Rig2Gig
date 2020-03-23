@@ -3,13 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         android:padding="0dp"
-        android:background="@color/tw__solid_white"
-        android:scrollbars="vertical">
+        android:fitsSystemWindows="true">
+
+        <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title=""/>
 
         <LinearLayout
             android:id="@+id/general_title"
@@ -46,59 +56,15 @@
             android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:gravity="center"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_view_view_Bands"
-                android:layout_width="160dp"
-                android:layout_height="165dp"
-                android:layout_margin="3dp"
-                android:elevation="8dp"
-                android:visibility="gone"
-                android:tag="View Bands">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:scrollbars="none">
-
-                    <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_view_venues" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="Bands"
-                        android:textStyle="bold" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_margin="10dp"
-                        android:background="@color/lightGrey" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:text="View Band adverts"
-                        android:textColor="@color/darkGrey" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            android:orientation="horizontal"
+            android:scrollbars="none">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_view_view_Venues"
                 android:layout_width="160dp"
                 android:layout_height="165dp"
                 android:layout_margin="3dp"
-                android:elevation="20dp"
+                android:elevation="8dp"
                 android:visibility="gone"
                 android:tag="View Venues">
 
@@ -137,6 +103,51 @@
                         android:textColor="@color/darkGrey" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_view_musicians"
+                android:layout_width="160dp"
+                android:layout_height="165dp"
+                android:layout_margin="3dp"
+                android:elevation="8dp"
+                android:visibility="gone"
+                android:tag="View Musicians">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:scrollbars="none">
+
+                    <ImageView
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_view_venues" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Musicians"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/lightGrey" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="View Musician adverts"
+                        android:textColor="@color/darkGrey" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
 
         <LinearLayout
@@ -148,13 +159,13 @@
             android:scrollbars="none">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/card_view_edit_musician"
+                android:id="@+id/card_view_edit_band"
                 android:layout_width="325dp"
                 android:layout_height="165dp"
                 android:layout_margin="3dp"
                 android:elevation="8dp"
                 android:visibility="gone"
-                android:tag="Edit Musician">
+                android:tag="Edit Band">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -173,7 +184,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="@string/edit_musician"
+                        android:text="@string/edit_band"
                         android:textStyle="bold" />
 
                     <View
@@ -187,7 +198,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="Edit Musician details"
+                        android:text="Edit Band details"
                         android:textColor="@color/darkGrey" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -269,7 +280,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Create Performer advert"
+                        android:text="Advertise yourself as a Performer to Venues"
                         android:padding="5dp"
                         android:textColor="@color/darkGrey"/>
                 </LinearLayout>
@@ -419,7 +430,7 @@
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
-        <!--BAND ADVERT FOLLOWS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+        <!--MUSICIAN ADVERT @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
 
         <LinearLayout
             android:id="@+id/band_advert_title"
@@ -460,13 +471,58 @@
             android:scrollbars="none">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/card_view_create_band_musician_advert"
+                android:id="@+id/card_view_create_band_advert"
                 android:layout_width="325dp"
                 android:layout_height="165dp"
                 android:layout_margin="3dp"
+                android:tag="Create Band Advert"
+                android:visibility="gone"
+                android:elevation="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:scrollbars="none">
+
+                    <ImageView
+                        android:src="@drawable/ic_create_advert"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:padding="10dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        android:text="Create Band Ad"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/lightGrey"
+                        android:layout_margin="10dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Advertise your Band to Musicians"
+                        android:padding="5dp"
+                        android:textColor="@color/darkGrey"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_view_band_advert"
+                android:layout_width="160dp"
+                android:layout_height="165dp"
+                android:layout_margin="3dp"
                 android:elevation="8dp"
                 android:visibility="gone"
-                android:tag="Create Band Musician Advert">
+                android:tag="View Band Advert">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -479,13 +535,13 @@
                         android:layout_width="64dp"
                         android:layout_height="64dp"
                         android:padding="10dp"
-                        android:src="@drawable/ic_create_advert" />
+                        android:src="@drawable/ic_view_venues" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Create Musician Ad"
+                        android:text="View Band Ad"
                         android:textStyle="bold" />
 
                     <View
@@ -499,73 +555,19 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="Create Musician advert"
-                        android:textColor="@color/darkGrey" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:scrollbars="none">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_view_view_band_musician_advert"
-                android:layout_width="160dp"
-                android:layout_height="165dp"
-                android:layout_margin="3dp"
-                android:elevation="8dp"
-                android:visibility="gone"
-                android:tag="View Band Musician Advert">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:scrollbars="none">
-
-                    <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_view_bands" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="View Musician ad"
-                        android:textStyle="bold" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_margin="10dp"
-                        android:background="@color/lightGrey" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:text="View your Musician ad"
+                        android:text="View your Band advert"
                         android:textColor="@color/darkGrey" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/card_view_edit_band_musician_advert"
+                android:id="@+id/card_view_edit_band_band_advert"
                 android:layout_width="160dp"
                 android:layout_height="165dp"
                 android:layout_margin="3dp"
                 android:elevation="8dp"
                 android:visibility="gone"
-                android:tag="Edit Band Musician Advert">
+                android:tag="Edit Band Advert">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -584,7 +586,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Edit Musician ad"
+                        android:text="Edit Band ad"
                         android:textStyle="bold" />
 
                     <View
@@ -598,7 +600,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="Edit your Musician ad"
+                        android:text="Edit your Band advert details"
                         android:textColor="@color/darkGrey" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -607,102 +609,54 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:scrollbars="none">
+            android:clipToPadding="false"
+            android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/card_view_delete_band_musician_advert"
+                android:id="@+id/card_view_delete_band_advert"
                 android:layout_width="325dp"
                 android:layout_height="165dp"
                 android:layout_margin="3dp"
-                android:elevation="8dp"
+                android:tag="Delete Band Advert"
                 android:visibility="gone"
-                android:tag="Delete Band Musician advert">
+                android:elevation="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
                     android:orientation="vertical"
+                    android:gravity="center"
                     android:scrollbars="none">
 
                     <ImageView
+                        android:src="@drawable/ic_delete_advert"
                         android:layout_width="64dp"
                         android:layout_height="64dp"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_delete_advert" />
+                        android:padding="10dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:layout_marginTop="10dp"
-                        android:text="Delete Musician ad"
-                        android:textStyle="bold" />
+                        android:text="Delete Band Ad"/>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_margin="10dp"
-                        android:background="@color/lightGrey" />
+                        android:background="@color/lightGrey"
+                        android:layout_margin="10dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:text="Delete Band advert"
                         android:padding="5dp"
-                        android:text="Delete your Musician ad"
-                        android:textColor="@color/darkGrey" />
+                        android:textColor="@color/darkGrey"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
-
-        <!--The Following card view is used to correct the scrolling bug. DO NOT REMOVE UNLESS FIXED.-->
-        <androidx.cardview.widget.CardView
-            android:layout_width="325dp"
-            android:layout_height="100dp"
-            android:layout_margin="3dp"
-            android:visibility="invisible"
-            android:clickable="false"
-            android:tag="Create Performer Advert"
-            android:elevation="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:scrollbars="none">
-
-                <ImageView
-                    android:src="@drawable/ic_create_advert"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:padding="10dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:layout_marginTop="10dp"
-                    android:text="Create Performer Ad"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/lightGrey"
-                    android:layout_margin="10dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Create Performer advert"
-                    android:padding="5dp"
-                    android:textColor="@color/darkGrey"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
     </LinearLayout>
 </ScrollView>

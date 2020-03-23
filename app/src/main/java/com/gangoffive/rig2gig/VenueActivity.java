@@ -174,6 +174,7 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
                                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                                     Log.d("STORAGE SUCCEEDED", taskSnapshot.getMetadata().toString());
                                                     startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                                                    finish();
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                                 @Override

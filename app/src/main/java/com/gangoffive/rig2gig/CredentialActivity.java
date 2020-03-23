@@ -290,6 +290,7 @@ public class CredentialActivity extends AppCompatActivity {
                                                         else
                                                         {
                                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                                                            finish();
                                                         }
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {

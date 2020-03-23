@@ -13,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -244,10 +247,15 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
      * cancel advertisement creation
      */
     @Override
-    public void cancelAdvertisement() {
-        Intent backToMain = new Intent(PerformerAdvertisementEditor.this,
-                MainActivity.class);
-        startActivity(backToMain);
+    public void cancelAdvertisement()
+    {
+        finish();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        finish();
     }
 
     /**
@@ -258,6 +266,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             listing = new HashMap<>();
             listing.put("performer-ref", performerRef);
             listing.put("performer-type", performerType);
+            listing.put("listing-owner", FirebaseAuth.getInstance().getUid());
         }
         listing.put("distance", distance.getText().toString());
     }

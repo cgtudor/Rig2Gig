@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
@@ -418,10 +420,9 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
      * cancel advertisement creation
      */
     @Override
-    public void cancelAdvertisement() {
-        Intent backToMain = new Intent(BandAdvertisementEditor.this,
-                MainActivity.class);
-        startActivity(backToMain);
+    public void cancelAdvertisement()
+    {
+        finish();
     }
 
     /**
@@ -434,6 +435,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         }
 
         listing.put("position", bandPositions);
+        listing.put("listing-owner", FirebaseAuth.getInstance().getUid());
         if(description != null)
         {
             listing.put("description", description.getText().toString());
@@ -487,5 +489,11 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             listing.put("description",description.getText().toString());
         }
         reinitialiseTabs();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        finish();
     }
 }

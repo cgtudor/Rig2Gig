@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,7 +33,6 @@ public class DisplayMusiciansBands extends Fragment
 {
     private RecyclerView recyclerView;
     private MusiciansBandsAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
 
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
@@ -55,7 +55,7 @@ public class DisplayMusiciansBands extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        View v = inflater.inflate(R.layout.fragment_my_bands, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_bands, container, false);
 
         musiciansBands = new ArrayList<>();
 
@@ -98,7 +98,7 @@ public class DisplayMusiciansBands extends Fragment
 
                                                     System.out.println(TAG + " database document: " + bandSnapshot.getId() + " local document " + b);
 
-                                                    MusiciansBands band = new MusiciansBands(bandSnapshot.getId());
+                                                    MusiciansBands band = new MusiciansBands(bandSnapshot.getId(), bandSnapshot.get("name").toString());
                                                     musiciansBands.add(band);
 
                                                     adapter = new MusiciansBandsAdapter(musiciansBands, getContext());
@@ -109,14 +109,16 @@ public class DisplayMusiciansBands extends Fragment
                                                         public void onItemClick(int position)
                                                         {
                                                             //Uncomment following when the fragment/activity to view a band's details has been created.
-                                                            /*Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
-                                                            String listingRef = musiciansBands.get(position).getreference();
-                                                            openListingIntent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingRef);
-                                                            v.getContext().startActivity(openListingIntent);*/
+                                                            Intent selectedBand = new Intent(view.getContext(), BandConsoleActivity.class);
+                                                            String bandReference = musiciansBands.get(position).getReference();
+                                                            String bandName = musiciansBands.get(position).getBandName();
+                                                            selectedBand.putExtra("EXTRA_SELECTED_BAND_ID", bandReference);
+                                                            selectedBand.putExtra("EXTRA_SELECTED_BAND_NAME", bandName);
+                                                            view.getContext().startActivity(selectedBand);
                                                         }
                                                     });
 
-                                                    recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+                                                    recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
                                                     recyclerView.setHasFixedSize(true);
                                                     recyclerView.setAdapter(adapter);
                                                     LinearLayoutManager llManager = new LinearLayoutManager(getContext());
@@ -144,6 +146,6 @@ public class DisplayMusiciansBands extends Fragment
                     }
                 });
 
-        return v;
+        return view;
     }
 }

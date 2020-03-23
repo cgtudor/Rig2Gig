@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -35,16 +36,24 @@ public class ConcreteMusicianNavBar extends NavBarCompatActivity
 
         if (savedInstanceState == null)
         {
-            //Following line determines the first fragment shown to the user.
             Intent intent = getIntent();
             if(intent != null && intent.getStringExtra("OPEN") != null && intent.getStringExtra("OPEN").equals("NOTIFICATION"))
             {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewCommsFragment()).commit();
+                ViewCommsFragment viewCommsFragment = new ViewCommsFragment();
+                visibleFragmentName = viewCommsFragment.getClass().getSimpleName();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, viewCommsFragment, visibleFragmentName).addToBackStack(visibleFragmentName).commit();
+                getSupportFragmentManager().executePendingTransactions();
+                visibleFragment = getSupportFragmentManager().findFragmentByTag(visibleFragmentName);
                 navigationView.setCheckedItem(R.id.nav_notifications);
             }
             else
             {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MusicianConsoleFragment()).commit();
+                MusicianConsoleFragment startFragment = new MusicianConsoleFragment();
+                visibleFragmentName = startFragment.getClass().getSimpleName();
+                //Following line determines the first fragment shown to the user.
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, startFragment, visibleFragmentName).addToBackStack(visibleFragmentName).commit();
+                getSupportFragmentManager().executePendingTransactions();
+                visibleFragment = getSupportFragmentManager().findFragmentByTag(visibleFragmentName);
                 navigationView.setCheckedItem(R.id.nav_console);
             }
         }

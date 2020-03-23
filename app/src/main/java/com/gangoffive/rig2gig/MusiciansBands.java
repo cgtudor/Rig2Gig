@@ -3,14 +3,21 @@ package com.gangoffive.rig2gig;
 public class MusiciansBands
 {
     private String reference;
+    private String bandName;
 
-    public MusiciansBands(String reference)
+    public MusiciansBands(String reference, String bandName)
     {
         this.reference = reference;
+        this.bandName = bandName;
     }
 
-    public String getreference()
+    public String getReference()
     {
-        return reference;
+        return this.reference;
+    }
+
+    public String getBandName()
+    {
+        return bandName;
     }
 }
