@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -33,15 +34,32 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.ParsePosition;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
-public class VenueListingDetailsActivity extends AppCompatActivity {
+import android.os.Bundle;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.w3c.dom.Document;
+
+public class VenueListingDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private String vID;
     private final StringBuilder expiry = new StringBuilder("");
     private final StringBuilder venueRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
+    private GoogleMap googleMap;
+    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
+
+    /*Firestore & Cloud Storage initialization*/
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +77,12 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         final TextView location = findViewById(R.id.location);
         final Button contact = findViewById(R.id.contact);
 
+        //Initialising the Google Map. See onMapReady().
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+        mapFragment.getMapAsync(this);
+
         /*Used to get the id of the listing from the previous activity*/
         vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");
-
-        /*Firestore & Cloud Storage initialization*/
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
 
         /*Finding the listing by its ID in the "venue-listings" subfolder*/
         DocumentReference venueListing = db.collection("venue-listings").document(vID);
@@ -444,5 +462,83 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                     });
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap)
+    {
+        this.googleMap = googleMap;
+
+        final DocumentReference venueLocation = db.collection("venue-listings").document(vID);
+
+        venueLocation.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+                if(task.isSuccessful())
+                {
+                    Log.d(TAG, "Google Map get location successful");
+
+                    DocumentSnapshot document = task.getResult();
+
+                    if(document.exists())
+                    {
+                        Log.d(TAG, "Venue Document exists");
+
+                        LatLng venueLocation = new LatLng(Double.parseDouble(document.get("latitude").toString()), Double.parseDouble(document.get("longitude").toString()));
+
+                        final DocumentReference venue = db.collection("venues").document(document.get("venue-ref").toString());
+
+                        venue.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                        {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                            {
+                                Log.d(TAG, "Google Map get venue successful");
+
+                                if(task.isSuccessful())
+                                {
+                                    Log.d(TAG, "Google Map get venue completed");
+
+                                    DocumentSnapshot document = task.getResult();
+
+                                    String venueName = document.get("name").toString();
+
+                                    googleMap.addMarker(new MarkerOptions().position(venueLocation).title(venueName));
+                                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(venueLocation, 16));
+                                }
+                                else
+                                {
+                                    Log.d(TAG, "Google Map get venue failed");
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener()
+                        {
+                            @Override
+                            public void onFailure(@NonNull Exception e)
+                            {
+                                Log.d(TAG, "Google Map get venue unsuccessful");
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Log.d(TAG, "Venue Document does not exist");
+                    }
+                }
+                else
+                {
+                    Log.d(TAG, "Google Map get location unsuccessful");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Log.d(TAG, "Google Map get location failed.");
+            }
+        });
     }
 }
