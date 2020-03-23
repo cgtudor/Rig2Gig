@@ -250,7 +250,8 @@ public class CredentialActivity extends AppCompatActivity {
                 /**
                  * Creating an account with Firebase from the information that the user has inputted.
                  */
-                fAuth.createUserWithEmailAndPassword(email, new String(chars)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                String pass = new String(chars);
+                fAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -263,7 +264,7 @@ public class CredentialActivity extends AppCompatActivity {
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(CredentialActivity.this, "Account has been created!", Toast.LENGTH_SHORT).show();
                                     Log.d(TAG, "onSuccess: user Profile is created for " + userId);
-                                    fAuth.signInWithEmailAndPassword(email, new String(chars)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    fAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                         @Override
                                         public void onComplete(@NonNull Task<AuthResult> task) {
                                             if (task.isSuccessful()) {
