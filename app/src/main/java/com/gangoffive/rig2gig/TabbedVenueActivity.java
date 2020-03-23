@@ -84,8 +84,14 @@ public class TabbedVenueActivity extends AppCompatActivity{
         test = findViewById(R.id.submitBtn);
     }
 
-    public void confirmOnClick(View view) {
+    public void confirmOnClick(View view)
+    {
         CredentialFragment.btn.performClick();
         System.out.println("clicked");
+    }
+
+    public void cancelOnClick(View view)
+    {
+        super.onBackPressed();
     }
 }

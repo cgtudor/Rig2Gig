@@ -208,9 +208,7 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
                 });
                 break;
             case R.id.takeBtn:
-                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@2 take phgot");
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                getActivity().startActivityFromFragment(CreateVenueFragment.this, cameraIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                ImageRequestHandler.getCameraImage(v);
                 break;
             case R.id.uploadBtn:
                 ImageRequestHandler.getGalleryImage(v);
@@ -241,21 +239,9 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        try {
-            if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-                if (resultCode == Activity.RESULT_OK && data != null) {
+        image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
+        chosenPic = image.getDrawable();
 
-                    Bitmap bmp = (Bitmap) data.getExtras().get("data");
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-                    image.setImageBitmap(bmp);
-
-                }
-            }
-        }catch(Exception e){
-           // Toast.makeText(this.getActivity(), e+"Something went wrong", Toast.LENGTH_LONG).show();
-
-        }
                 Log.d(TAG, "get successful with data123213213");
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 if (Build.VERSION.SDK_INT >= 26) {
