@@ -145,14 +145,22 @@ public class ViewCommsFragment extends Fragment
                                         openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
                                         v.getContext().startActivity(openListingIntent);
                                     }*/
-                                    /*@Override
+                                    @Override
                                     public void onPhotoClick(int position) {
-                                        //
+                                        /*String profileType = communications.get(position).getListingRef();
+
+                                        Intent openProfileIntent = new Intent(v.getContext(), VenueListingDetailsActivity.class);
+                                        String profileRef = communications.get(position).getListingRef();
+                                        openListingIntent.putExtra("EXTRA_VENUE_ID", profileRef);
+                                        v.getContext().startActivity(openListingIntent);*/
                                     }
                                     @Override
                                     public void onNameClick(int position) {
-                                        //
-                                    }*/
+                                        /*Intent openListingIntent = new Intent(v.getContext(), VenueListingDetailsActivity.class);
+                                        String listingRef = communications.get(position).getListingRef();
+                                        openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
+                                        v.getContext().startActivity(openListingIntent);*/
+                                    }
                                     @Override
                                     public void onTopButtonClick(int position) {
 

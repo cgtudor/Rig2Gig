@@ -34,6 +34,8 @@ import java.util.List;
 
 public class ViewVenuesFragment extends Fragment
 {
+    private String currentUserType;
+
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
     SwipeRefreshLayout swipeLayout;
@@ -59,6 +61,8 @@ public class ViewVenuesFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         final View v = inflater.inflate(R.layout.fragment_view_venues, container, false);
+
+        currentUserType = this.getArguments().getString("currentUserType");
 
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
@@ -119,6 +123,7 @@ public class ViewVenuesFragment extends Fragment
                                         Intent openListingIntent = new Intent(v.getContext(), VenueListingDetailsActivity.class);
                                         String listingRef = venueListings.get(position).getListingRef();
                                         openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
+                                        openListingIntent.putExtra("CURRENT_USER_TYPE", currentUserType);
                                         startActivityForResult(openListingIntent, 1);
                                     }
                                 });

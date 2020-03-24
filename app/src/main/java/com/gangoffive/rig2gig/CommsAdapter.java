@@ -44,8 +44,8 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
 
     public interface OnItemClickListener {
         /*void onItemClick(int position);*/
-        /*void onPhotoClick(int position);
-        void onNameClick(int position);*/
+        void onPhotoClick(int position);
+        void onNameClick(int position);
         void onTopButtonClick(int position);
         void onBotButtonClick(int position);
     }
@@ -87,7 +87,7 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                 }
             });*/
 
-            /*imageViewPhoto.setOnClickListener(new View.OnClickListener() {
+            imageViewPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
@@ -109,7 +109,7 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                         }
                     }
                 }
-            });*/
+            });
 
             imageViewTopButton.setOnClickListener(new View.OnClickListener() {
                 @Override
