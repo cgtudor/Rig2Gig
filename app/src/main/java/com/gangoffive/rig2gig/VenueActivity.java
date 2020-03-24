@@ -180,7 +180,7 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
 
                             Map<String, Object> venues = new HashMap<>();
                             venues.put("name", venueName);
-                            venues.put("location", venueAddress.getLocality());
+                            venues.put("location", venueAddress.getSubAdminArea());
                             venues.put("description", desc);
                             venues.put("user-ref", userRef);
                             venues.put("venue-type", type);
