@@ -150,6 +150,7 @@
         <activity android:name=".BandConsoleActivity" />
         <activity android:name=".BandAdvertIndexActivity"/>
         <activity android:name=".MusicianAdvertIndexActivity"/>
+        <activity android:name=".PerformerAdvertIndexActivity"/>
     </application>
 
 </manifest>

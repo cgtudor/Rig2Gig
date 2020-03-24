@@ -8,22 +8,24 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.gangoffive.rig2gig.SavedPerformersFragment;
 import com.gangoffive.rig2gig.SavedVenuesFragment;
 import com.gangoffive.rig2gig.TabbedViewReferenceInitialiser;
+import com.gangoffive.rig2gig.ViewPerformersFragment;
 import com.gangoffive.rig2gig.ViewVenuesFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-public class IndexSectionsPagerAdapter extends FragmentPagerAdapter {
+public class PerformerSectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
     private static int[] TAB_TITLES;
     private static Context mContext = null;
     private static int[] fragments;
 
-    public IndexSectionsPagerAdapter(Context context, FragmentManager fm, int[] tabTitles, int[] fragmentArray) {
+    public PerformerSectionsPagerAdapter(Context context, FragmentManager fm, int[] tabTitles, int[] fragmentArray) {
         super(fm);
         mContext = context;
         TAB_TITLES = tabTitles;
@@ -40,10 +42,10 @@ public class IndexSectionsPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new ViewVenuesFragment();
+                fragment = new ViewPerformersFragment();
                 break;
             case 1:
-                fragment = new SavedVenuesFragment();
+                fragment = new SavedPerformersFragment();
                 break;
         }
         return fragment;
