@@ -35,6 +35,7 @@ import java.util.List;
 public class ViewVenuesFragment extends Fragment
 {
     private String currentUserType;
+    private String currentBandId;
 
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
@@ -62,7 +63,14 @@ public class ViewVenuesFragment extends Fragment
     {
         final View v = inflater.inflate(R.layout.fragment_view_venues, container, false);
 
-        currentUserType = this.getArguments().getString("currentUserType");
+        currentUserType = this.getArguments().getString("CURRENT_USER_TYPE");
+
+        Bundle extras = this.getArguments();
+        if(extras != null) {
+            if(extras.containsKey("CURRENT_BAND_ID")) {
+                currentBandId = extras.getString("CURRENT_BAND_ID");
+            }
+        }
 
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
@@ -124,6 +132,9 @@ public class ViewVenuesFragment extends Fragment
                                         String listingRef = venueListings.get(position).getListingRef();
                                         openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
                                         openListingIntent.putExtra("CURRENT_USER_TYPE", currentUserType);
+                                        if(currentBandId != null) {
+                                            openListingIntent.putExtra("CURRENT_BAND_ID", currentBandId);
+                                        }
                                         startActivityForResult(openListingIntent, 1);
                                     }
                                 });
