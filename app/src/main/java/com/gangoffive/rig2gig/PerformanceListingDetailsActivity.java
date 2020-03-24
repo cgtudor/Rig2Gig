@@ -34,12 +34,13 @@ import com.google.firebase.storage.StorageReference;
 
 import java.sql.Time;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 
 public class PerformanceListingDetailsActivity extends AppCompatActivity {
 
     private String pID;
-    private final StringBuilder expiry = new StringBuilder("");
+    private final Date expiry = new Date();
     private final StringBuilder performerRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
     private final StringBuilder performerTypeGlobal = new StringBuilder("");
@@ -147,8 +148,8 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                        //Timestamp expiryDate = (Timestamp) document.get("expiry-date");
-                        //expiry.append(expiryDate.toDate().toString());
+                        Timestamp expiryDate = (Timestamp) document.get("expiry-date");
+                        expiry.setTime(expiryDate.toDate().getTime());
 
                         performerRef.append(document.get("performer-ref").toString());
                         performerTypeGlobal.append(document.get("performer-type").toString());
@@ -374,9 +375,11 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
 
         if(id == R.id.saveButton)
         {
-            HashMap<String, String> listing = new HashMap<>();
+            Timestamp expiryDate = new Timestamp(expiry);
+
+            HashMap<String, Object> listing = new HashMap<>();
             listing.put("distance", distance.getText().toString());
-            listing.put("expiry-date", expiry.toString());
+            listing.put("expiry-date", expiryDate);
             listing.put("performer-ref", performerRef.toString());
             listing.put("performer-type",performerTypeGlobal.toString());
 

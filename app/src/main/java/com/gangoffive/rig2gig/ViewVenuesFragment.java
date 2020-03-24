@@ -22,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -85,7 +86,10 @@ public class ViewVenuesFragment extends Fragment
 
         venueListings = new ArrayList<>();
 
+        Timestamp currentDate = Timestamp.now();
+
         Query first = colRef
+                .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
                 .limit(10);
 
         first.get()
