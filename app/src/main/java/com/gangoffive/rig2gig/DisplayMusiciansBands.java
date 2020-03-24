@@ -81,9 +81,9 @@ public class DisplayMusiciansBands extends Fragment
 
                                 bands = (ArrayList<String>) musician.get("bands");
 
-                                System.out.println(TAG + " band size = " + bands.size());
+                                //System.out.println(TAG + " band size = " + bands.size());
 
-                                if(bands.size() > 0)
+                                if(bands != null && bands.size() > 0)
                                 {
                                     for(String b : bands)
                                     {

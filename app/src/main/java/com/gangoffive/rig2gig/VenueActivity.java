@@ -71,7 +71,6 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
         fStorage = FirebaseStorage.getInstance();
 
         description = findViewById(R.id.distance);
-        //location = findViewById(R.id.location);
         name = findViewById(R.id.name);
         venueType = findViewById(R.id.type);
         submit = findViewById(R.id.submitBtn);
@@ -134,7 +133,6 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
 
     public void submitBtnOnClick(View view) {
         String desc = description.getText().toString();
-        //String loc = location.getText().toString();
         String venueName = name.getText().toString();
         String venueRating = "-1";
         String venueAddressTextView = autoCompleteTextView.getText().toString();
@@ -142,10 +140,6 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
         ImageView defImg = new ImageView(this);
         defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
 
-        /*if (TextUtils.isEmpty(loc)) {
-            location.setError("Please Set A Locaton!");
-            return;
-        }*/
         if (TextUtils.isEmpty(desc)) {
             description.setError("Please Enter A Venue Description!");
             return;

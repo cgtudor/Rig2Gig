@@ -7,12 +7,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,7 +35,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class CreateMusicianAccountActivity extends AppCompatActivity {
@@ -48,6 +54,9 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
 
     private ImageView image;
     private Drawable chosenPic;
+    //Google Places autocomplete textview
+    private AutoCompleteTextView autoCompleteTextView;
+    private Geocoder geocoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +68,6 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
         fStorage = FirebaseStorage.getInstance();
 
         distance = findViewById(R.id.distance);
-        location = findViewById(R.id.location);
         name = findViewById(R.id.name);
         genre = findViewById(R.id.genre);
 
@@ -70,6 +78,9 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
 
         takePhotoBtn = findViewById(R.id.takePhoto);
         uploadPhotoBtn = findViewById(R.id.uploadBtn);
+
+        autoCompleteTextView = findViewById(R.id.location);
+        autoCompleteTextView.setAdapter(new GooglePlacesAutoSuggestAdapter(CreateMusicianAccountActivity.this, android.R.layout.simple_list_item_1));
 
         image = findViewById(R.id.imageView);
 
@@ -89,23 +100,30 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
     }
 
     public void submitBtnOnClick(View view) {
-        String loc = location.getText().toString();
         String musicianName = name.getText().toString();
         String musicianDistance = distance.getText().toString();
+        String musicianAddressTextView = autoCompleteTextView.getText().toString();
+        Address musicianAddress = getAddress();
         String genres = genre.getText().toString();
         ImageView defImg = new ImageView(this);
         defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
 
-        if (TextUtils.isEmpty(loc)) {
-            location.setError("Please Set A Locaton!");
-            return;
-        }
         if (TextUtils.isEmpty(musicianName)) {
             name.setError("Please Enter A Musician Name!");
             return;
         }
         if (TextUtils.isEmpty(musicianDistance)) {
             distance.setError("Please Set A Distance!");
+            return;
+        }
+        if(TextUtils.isEmpty(musicianAddressTextView))
+        {
+            autoCompleteTextView.setError("Please Enter Your Venue Address");
+            return;
+        }
+        if(musicianAddress == null)
+        {
+            autoCompleteTextView.setError("Please Enter A Valid Address");
             return;
         }
 
@@ -122,12 +140,16 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
 
                         Map<String, Object> musicians = new HashMap<>();
                         musicians.put("name", musicianName);
-                        musicians.put("location", loc);
+                        musicians.put("location", musicianAddress.getLocality());
                         musicians.put("user-ref", userRef);
                         musicians.put("email-address", email);
                         musicians.put("phone-number", phoneNumber);
                         musicians.put("genres", genres);
                         musicians.put("distance", musicianDistance);
+                        musicians.put("latitude", musicianAddress.getLatitude());
+                        musicians.put("longitude", musicianAddress.getLongitude());
+                        System.out.println(TAG + musicianAddress.getLatitude());
+                        System.out.println(TAG + musicianAddress.getLongitude());
                         fStore.collection("musicians")
                                 .add(musicians)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -179,6 +201,32 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
     public void uploadBtnOnClick(View view) {
         ImageRequestHandler.getGalleryImage(view);
 
+    }
+
+    private Address getAddress()
+    {
+        String musicianName = autoCompleteTextView.getText().toString();
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try
+        {
+            List<Address> addressList = geocoder.getFromLocationName(musicianName, 1);
+
+            if(addressList.size() > 0)
+            {
+                Address address = addressList.get(0);
+                return address;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch(IOException io)
+        {
+            Log.d(TAG, io.toString());
+            return null;
+        }
     }
 
     public void takeBtnOnClick(View view) {
