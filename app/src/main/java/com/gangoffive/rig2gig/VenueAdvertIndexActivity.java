@@ -2,10 +2,11 @@ package com.gangoffive.rig2gig;
 
 import android.os.Bundle;
 
-import com.gangoffive.rig2gig.ui.TabbedView.VenueSectionsPagerAdapter;
+import com.gangoffive.rig2gig.ui.TabbedView.IndexSectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,7 +21,10 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_advert_index);
         tabTitles = new int[]{R.string.all, R.string.favourites};
-        VenueSectionsPagerAdapter sectionsPagerAdapter = new VenueSectionsPagerAdapter(this, getSupportFragmentManager(), tabTitles, fragments);
+        Fragment[] frags = new Fragment[2];
+        frags[0] = new ViewVenuesFragment();
+        frags[1] = new SavedVenuesFragment();
+        IndexSectionsPagerAdapter sectionsPagerAdapter = new IndexSectionsPagerAdapter(this, getSupportFragmentManager(), tabTitles, fragments, frags);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
