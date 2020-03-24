@@ -36,6 +36,7 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
     private String musicianRef, bandRef, userRef, bandName, inviterName, usersMusicianRef;
     private boolean sendingInvite, checkIfInBand;
     private ListingManager musicManager;
+    private CollectionReference received;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,20 +49,7 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         height = (metrics.heightPixels) /100 * 30;
         width = (metrics.widthPixels) /100 * 80;
         getWindow().setLayout(width,height);
-        Intent intent = getIntent();
-        name = intent.getStringExtra("EXTRA_NAME");
-        position = intent.getIntExtra("EXTRA_POSITION", -1);
-        musicianRef = intent.getStringExtra("EXTRA_MUSICIAN_ID");
-        bandRef = intent.getStringExtra("EXTRA_BAND_ID");
-        userRef = intent.getStringExtra("EXTRA_USER_ID");
-        bandName = getIntent().getStringExtra("EXTRA_BAND_NAME");
-        inviterName = getIntent().getStringExtra("EXTRA_INVITER_NAME");
-        usersMusicianRef = getIntent().getStringExtra("EXTRA_USER_MUSICIAN_REF");
-        musicManager = new ListingManager(usersMusicianRef,"Musician","");
-        confirmationText = findViewById(R.id.confirmationText);
-        confirmationText.setText("Are you sure you want to invite this person to your band?");
-        sendingInvite = false;
-        checkIfInBand = false;
+        initVariables();
         yes = findViewById(R.id.yes);
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +66,24 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         });
     }
 
+    public void initVariables()
+    {
+        Intent intent = getIntent();
+        name = intent.getStringExtra("EXTRA_NAME");
+        position = intent.getIntExtra("EXTRA_POSITION", -1);
+        musicianRef = intent.getStringExtra("EXTRA_MUSICIAN_ID");
+        bandRef = intent.getStringExtra("EXTRA_BAND_ID");
+        userRef = intent.getStringExtra("EXTRA_USER_ID");
+        bandName = intent.getStringExtra("EXTRA_BAND_NAME");
+        inviterName = intent.getStringExtra("EXTRA_INVITER_NAME");
+        usersMusicianRef = intent.getStringExtra("EXTRA_USER_MUSICIAN_REF");
+        musicManager = new ListingManager(usersMusicianRef,"Musician","");
+        confirmationText = findViewById(R.id.confirmationText);
+        confirmationText.setText("Are you sure you want to invite this person to your band?");
+        sendingInvite = false;
+        checkIfInBand = false;
+    }
+
     public void beginSendInvite()
     {
         sendingInvite = true;
@@ -87,7 +93,10 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
     public void checkIfInBand()
     {
         checkIfInBand = true;
-        musicManager.getUserInfo(this);
+        if (musicManager != null)
+        {
+            musicManager.getUserInfo(this);
+        }
     }
 
     @Override
@@ -117,18 +126,28 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         }
     }
 
-    public void sendInvite()
+    public String getUserId()
+    {
+        return FirebaseAuth.getInstance().getUid();
+    }
+
+    public HashMap generateInvite()
     {
         HashMap<String, Object> request = new HashMap<>();
         request.put("type", "join-request");
         request.put("posting-date", Timestamp.now());
-        request.put("sent-from", FirebaseAuth.getInstance().getUid());
+        request.put("sent-from", getUserId());
         request.put("band-ref",bandRef);
         request.put("musician-ref", musicianRef);
         request.put("notification-title","You have been invited to join a band!");
         request.put("notification-message", inviterName + " would like you to join their band " + bandName + ".");
+        return request;
+    }
 
-        CollectionReference received = db.collection("communications")
+    public void sendInvite()
+    {
+        HashMap request = generateInvite();
+        received = db.collection("communications")
                 .document(userRef)
                 .collection("received");
         received.add(request)
@@ -151,7 +170,7 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
                 });
     }
 
-    public void logInvite()
+    public HashMap generateLoggedInvite()
     {
         HashMap<String, Object> request = new HashMap<>();
         request.put("type", "join-request");
@@ -161,8 +180,13 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         request.put("musician-ref", musicianRef);
         request.put("notification-title","You have been invited to join a band!");
         request.put("notification-message", inviterName + " would like you to join their band " + bandName + ".");
+        return request;
+    }
 
-        CollectionReference received = db.collection("communications")
+    public void logInvite()
+    {
+        HashMap<String, Object> request = generateLoggedInvite();
+        received = db.collection("communications")
                 .document(FirebaseAuth.getInstance().getUid())
                 .collection("sent");
         received.add(request)
@@ -191,6 +215,106 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         result.putExtra("EXTRA_POSITION", position);
         setResult(RESULT_OK, result);
         finish();
+    }
+
+    public FirebaseFirestore getDb() {
+        return db;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMusicianRef() {
+        return musicianRef;
+    }
+
+    public String getBandRef() {
+        return bandRef;
+    }
+
+    public String getUserRef() {
+        return userRef;
+    }
+
+    public String getBandName() {
+        return bandName;
+    }
+
+    public String getInviterName() {
+        return inviterName;
+    }
+
+    public String getUsersMusicianRef() {
+        return usersMusicianRef;
+    }
+
+    public boolean isSendingInvite() {
+        return sendingInvite;
+    }
+
+    public boolean isCheckIfInBand() {
+        return checkIfInBand;
+    }
+
+    public ListingManager getMusicManager() {
+        return musicManager;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMusicianRef(String musicianRef) {
+        this.musicianRef = musicianRef;
+    }
+
+    public void setBandRef(String bandRef) {
+        this.bandRef = bandRef;
+    }
+
+    public void setUserRef(String userRef) {
+        this.userRef = userRef;
+    }
+
+    public void setBandName(String bandName) {
+        this.bandName = bandName;
+    }
+
+    public void setInviterName(String inviterName) {
+        this.inviterName = inviterName;
+    }
+
+    public void setUsersMusicianRef(String usersMusicianRef) {
+        this.usersMusicianRef = usersMusicianRef;
+    }
+
+    public void setSendingInvite(boolean sendingInvite) {
+        this.sendingInvite = sendingInvite;
+    }
+
+    public void setCheckIfInBand(boolean checkIfInBand) {
+        this.checkIfInBand = checkIfInBand;
+    }
+
+    public void setMusicManager(ListingManager musicManager) {
+        this.musicManager = musicManager;
+    }
+
+    public void setDb(FirebaseFirestore db) {
+        this.db = db;
+    }
+
+    public void setReceived(CollectionReference received) {
+        this.received = received;
     }
 
     @Override

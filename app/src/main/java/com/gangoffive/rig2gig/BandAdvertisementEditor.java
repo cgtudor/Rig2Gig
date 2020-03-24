@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
@@ -35,7 +34,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     private TextView name, position, description, searchHint;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
-    private String bandRef, type;
+    private String bandRef, type, listingRef;
     private HashMap<String, Object> listing;
     private Map<String, Object> band, previousListing;
     private ListingManager listingManager;
@@ -125,10 +124,15 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         setViewReferences();
-        createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-        createListing.setTextColor(Color.parseColor("#4D4D4E"));
+        setInitialColours();
         band = data;
         listingManager.getImage(this);
+    }
+
+    public void setInitialColours()
+    {
+        createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+        createListing.setTextColor(Color.parseColor("#4D4D4E"));
     }
 
     /**
@@ -147,8 +151,13 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             positions.remove(pos.toString());
         }
         setupGridView();
-        searchHint.setVisibility(View.INVISIBLE);
+        setSearchHintInvisible();
         listingManager.getImage(this);
+    }
+
+    public void setSearchHintInvisible()
+    {
+        searchHint.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -175,7 +184,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             image.setImageDrawable(null);
         }
         position = findViewById(R.id.position);
-        description = findViewById(R.id.distance);
+        description = findViewById(R.id.description);
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);
@@ -203,7 +212,10 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
                 public void onClick(View v) {
 
                     ImageRequestHandler.getGalleryImage(v);
-                    searchBar.clearFocus();
+                    if (searchBar != null)
+                    {
+                        searchBar.clearFocus();
+                    }
                 }
             });
         }
@@ -394,25 +406,39 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Toast.makeText(this,"Advertisement created successfully",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(BandAdvertisementEditor.this,"Advertisement created successfully",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
             Intent intent = new Intent(BandAdvertisementEditor.this, BandListingDetailsActivity.class);
-            intent.putExtra("EXTRA_BAND_LISTING_ID", listingManager.getListingRef());
+            listingRef = listingManager.getListingRef();
+            intent.putExtra("EXTRA_BAND_LISTING_ID", listingRef);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             sectionsPagerAdapter = null;
             viewPager = null;
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(BandAdvertisementEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(BandAdvertisementEditor.this,
+                            "Listing creation failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(BandAdvertisementEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(BandAdvertisementEditor.this,
+                            "Listing creation failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 
@@ -496,4 +522,46 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     {
         finish();
     }
+
+    public Map<String, Object> getBand() {
+        return band;
+    }
+
+    public Map<String, Object> getPreviousListing() {
+        return previousListing;
+    }
+
+    public List getBandPositions() {
+        return bandPositions;
+    }
+
+    public void setListing(HashMap<String, Object> listing) {
+        this.listing = listing;
+    }
+
+    public void setListingManager(ListingManager listingManager) {
+        this.listingManager = listingManager;
+    }
+
+    public void setBandPositions(List bandPositions) {
+        this.bandPositions = bandPositions;
+    }
+
+    public void setTabPreserver(TabStatePreserver tabPreserver) {
+        this.tabPreserver = tabPreserver;
+    }
+
+    public void setBand(Map<String, Object> band) {
+        this.band = band;
+    }
+
+    public void setPreviousListing(Map<String, Object> previousListing) {
+        this.previousListing = previousListing;
+    }
+
+    public void setBandRef(String bandRef) {
+        this.bandRef = bandRef;
+    }
+
+
 }

@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -44,6 +46,7 @@ public class ListingManager
     private boolean needPayment;
 
 
+
     /**
      * Constructor for ListingManager
      * @param userRef reference of user
@@ -51,6 +54,7 @@ public class ListingManager
      */
     ListingManager(String userRef, String type, String adRef)
     {
+        EspressoIdlingResource.increment();
         if (userRef != null)
         {
             if (type.equals("Band Performer") || type.equals("Musician Performer")
@@ -193,6 +197,7 @@ public class ListingManager
                 collectionPath = "users";
             }
         }
+        EspressoIdlingResource.decrement();
     }
 
     /**
@@ -288,23 +293,26 @@ public class ListingManager
      */
     public void getImage(CreateAdvertisement activity)
     {
-        GlideApp.with((Activity)activity)
-                .load(imageRef)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
+        if (imageRef != null)
+        {
+            GlideApp.with((Activity)activity)
+                    .load(imageRef)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        activity.onSuccessfulImageDownload();
-                        return false;
-                    }
-                })
-                .into(activity.getImageView());
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            activity.onSuccessfulImageDownload();
+                            return false;
+                        }
+                    })
+                    .into(activity.getImageView());
+        }
     }
 
     /**
