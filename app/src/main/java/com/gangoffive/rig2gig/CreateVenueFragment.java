@@ -1,10 +1,13 @@
 package com.gangoffive.rig2gig;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,9 +17,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -43,6 +50,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +59,7 @@ import java.util.Map;
 public class CreateVenueFragment extends Fragment implements View.OnClickListener {
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1888;
+    private static final int REQUEST_GALLERY__PHOTO = 1;
 
     SwipeRefreshLayout swipeLayout;
 
@@ -113,17 +122,51 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
         //image = v.findViewById(R.id.imageViewVenue);
 
         submit.setVisibility(View.INVISIBLE);
+
+        String [] values =
+                {"Function Room","Titty Bar", "Club"};
+        Spinner spinner = v.findViewById(R.id.spinner1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, values);
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
+            {
+                switch (position){
+                    case 0:
+                        type = "Function Room";
+                        break;
+                    case 1:
+                        type = "Titty Bar";
+                        break;
+                    case 2:
+                        type = "Club";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
         return v;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
     }
 
     @Override
     public void onClick(View v) {
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + type);
         switch (v.getId()) {
             case R.id.submitBtn:
                 userRef = fAuth.getUid();
@@ -181,8 +224,8 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
                                                     @Override
                                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                                         Log.d("STORAGE SUCCEEDED", taskSnapshot.getMetadata().toString());
-                                                        //startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
-                                                        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@COMPLETED IT MATE");
+                                                        Intent intent = new Intent(getActivity(), NavBarActivity.class);
+                                                        startActivity(intent);
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
@@ -208,10 +251,15 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
                 });
                 break;
             case R.id.takeBtn:
-                ImageRequestHandler.getCameraImage(v);
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent,
+                        CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
                 break;
             case R.id.uploadBtn:
-                ImageRequestHandler.getGalleryImage(v);
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.setType("image/*");
+                startActivityForResult(i, REQUEST_GALLERY__PHOTO);
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@2 " + REQUEST_GALLERY__PHOTO);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
@@ -229,27 +277,42 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
         return stream.toByteArray();
     }
 
-    /**
-     * handles activity results
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
-        chosenPic = image.getDrawable();
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
 
-                Log.d(TAG, "get successful with data123213213");
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                if (Build.VERSION.SDK_INT >= 26) {
-                    ft.setReorderingAllowed(false);
-                }
-                ft.detach(CreateVenueFragment.this).attach(CreateVenueFragment.this).commit();
+                Bitmap bmp = (Bitmap) data.getExtras().get("data");
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                // convert byte array to Bitmap
+
+                Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0,
+                        byteArray.length);
+
+                image.setImageBitmap(bitmap);
             }
         }
+        else
+        {
+            if (requestCode == REQUEST_GALLERY__PHOTO)
+            {
+                    Uri returnUri = data.getData();
+                    Bitmap bitmapImage = null;
+                    try {
+                        bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    image.setImageBitmap(bitmapImage);
+            }
+        }
+    }
+}
+
 
 
 

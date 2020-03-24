@@ -51,7 +51,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#c471ed"
+        android:background="#12c2e9"
         android:backgroundTint="#c471ed"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#c471ed</item>
+        <item name="colorPrimary">#12c2e9</item>
         <item name="colorPrimaryDark">#12c2e9</item>
         <item name="colorAccent">#c471ed</item>
         <item name="android:textSize">@dimen/font_size</item>

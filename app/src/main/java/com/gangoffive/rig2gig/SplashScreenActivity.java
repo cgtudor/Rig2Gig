@@ -30,7 +30,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         System.out.println("@@@@2@@@@@@@@@@@@@@@@@@@@@@2 " + fAuth.getUid());
-        
+
         if (fAuth.getCurrentUser() != null)
         {
             final String getUserId = fAuth.getUid();
