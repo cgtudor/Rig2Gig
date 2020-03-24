@@ -37,6 +37,7 @@ import java.util.HashMap;
 public class MusicianListingDetailsActivity extends AppCompatActivity {
 
     private String mID;
+    private String currentBandId = "";
     private final Date expiry = new Date();
     private final StringBuilder musicianRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
@@ -62,6 +63,8 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
 
         /*Used to get the id of the listing from the previous activity*/
         mID = getIntent().getStringExtra("EXTRA_MUSICIAN_LISTING_ID");
+
+        currentBandId = getIntent().getStringExtra("CURRENT_BAND_ID");
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -167,6 +170,8 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                 request.put("type", "contact-request");
                                 request.put("posting-date", Timestamp.now());
                                 request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                request.put("sent-from-type", "band");
+                                request.put("sent-from-ref", currentBandId);
                                 request.put("notification-title", "Someone is interested in your advert!");
                                 request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
 
@@ -196,6 +201,8 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                 requestSent.put("type", "contact-request");
                                 requestSent.put("posting-date", Timestamp.now());
                                 requestSent.put("sent-to", listingOwner.toString());
+                                requestSent.put("sent-from-type", "band");
+                                requestSent.put("sent-from-ref", currentBandId);
                                 requestSent.put("notification-title", "Someone is interested in your advert!");
                                 requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
 
