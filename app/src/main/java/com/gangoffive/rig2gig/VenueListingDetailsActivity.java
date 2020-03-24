@@ -39,6 +39,8 @@ import java.util.HashMap;
 public class VenueListingDetailsActivity extends AppCompatActivity {
 
     private String vID;
+    private String currentUserType;
+    private String bandId = "";
     private final StringBuilder expiry = new StringBuilder("");
     private final StringBuilder venueRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
@@ -61,6 +63,12 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
 
         /*Used to get the id of the listing from the previous activity*/
         vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");
+
+        currentUserType = getIntent().getStringExtra("CURRENT_USER_TYPE");
+
+        if(currentUserType.equals("bands")) {
+            bandId = getIntent().getStringExtra("CURRENT_BAND_ID");
+        }
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -150,73 +158,141 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.collection("musicians").whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid())
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            QuerySnapshot musicians = task.getResult();
-                            if (!musicians.isEmpty()) {
-                                DocumentSnapshot musician = musicians.getDocuments().get(0);
+                if(currentUserType.equals("musicians")) {
+                    db.collection("musicians").whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid())
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot musicians = task.getResult();
+                                if (!musicians.isEmpty()) {
+                                    DocumentSnapshot musician = musicians.getDocuments().get(0);
 
-                                HashMap<String, Object> request = new HashMap<>();
-                                request.put("type", "contact-request");
-                                request.put("posting-date", Timestamp.now());
-                                request.put("sent-from", FirebaseAuth.getInstance().getUid());
-                                request.put("notification-title", "Someone is interested in your advert!");
-                                request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
+                                    HashMap<String, Object> request = new HashMap<>();
+                                    request.put("type", "contact-request");
+                                    request.put("posting-date", Timestamp.now());
+                                    request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                    request.put("sent-from-type", "musician");
+                                    request.put("sent-from-ref", musician.getId());
+                                    request.put("notification-title", "Someone is interested in your advert!");
+                                    request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
 
-                                CollectionReference received = db.collection("communications")
-                                        .document(listingOwner.toString())
-                                        .collection("received");
-                                received.add(request)
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                if(task.isSuccessful())
-                                                {
-                                                    Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
-                                                    Toast.makeText(VenueListingDetailsActivity.this, "Contact request sent!", Toast.LENGTH_SHORT).show();
-                                                    contact.setAlpha(.5f);
-                                                    contact.setClickable(false);
-                                                    contact.setText("Contact request sent");
+                                    CollectionReference received = db.collection("communications")
+                                            .document(listingOwner.toString())
+                                            .collection("received");
+                                    received.add(request)
+                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
+                                                        Toast.makeText(VenueListingDetailsActivity.this, "Contact request sent!", Toast.LENGTH_SHORT).show();
+                                                        contact.setAlpha(.5f);
+                                                        contact.setClickable(false);
+                                                        contact.setText("Contact request sent");
+                                                    } else {
+                                                        Log.d("FIRESTORE", "Contact request failed with ", task.getException());
+                                                    }
                                                 }
-                                                else
-                                                {
-                                                    Log.d("FIRESTORE", "Contact request failed with ", task.getException());
-                                                }
-                                            }
-                                        });
+                                            });
 
-                                HashMap<String, Object> requestSent = new HashMap<>();
-                                requestSent.put("type", "contact-request");
-                                requestSent.put("posting-date", Timestamp.now());
-                                requestSent.put("sent-to", listingOwner.toString());
-                                requestSent.put("notification-title", "Someone is interested in your advert!");
-                                requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
-                                CollectionReference sent = db.collection("communications")
-                                        .document(FirebaseAuth.getInstance().getUid())
-                                        .collection("sent");
+                                    HashMap<String, Object> requestSent = new HashMap<>();
+                                    requestSent.put("type", "contact-request");
+                                    requestSent.put("posting-date", Timestamp.now());
+                                    requestSent.put("sent-to", listingOwner.toString());
+                                    requestSent.put("sent-from-type", "musician");
+                                    requestSent.put("sent-from-ref", musician.getId());
+                                    requestSent.put("notification-title", "Someone is interested in your advert!");
+                                    requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
+                                    CollectionReference sent = db.collection("communications")
+                                            .document(FirebaseAuth.getInstance().getUid())
+                                            .collection("sent");
 
-                                sent.add(requestSent)
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                if(task.isSuccessful())
-                                                {
-                                                    Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
+                                    sent.add(requestSent)
+                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
+                                                    } else {
+                                                        Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
+                                                    }
                                                 }
-                                                else
-                                                {
-                                                    Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
-                                                }
-                                            }
-                                        });
+                                            });
+                                }
                             }
                         }
-                    }});
-            }
-        });
+                    });
+                }
+                else
+                {
+                    db.collection("musicians").whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid())
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot musicians = task.getResult();
+                                if (!musicians.isEmpty()) {
+                                    DocumentSnapshot musician = musicians.getDocuments().get(0);
+
+                                    HashMap<String, Object> request = new HashMap<>();
+                                    request.put("type", "contact-request");
+                                    request.put("posting-date", Timestamp.now());
+                                    request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                    request.put("sent-from-type", "band");
+                                    request.put("sent-from-ref", bandId);
+                                    request.put("notification-title", "Someone is interested in your advert!");
+                                    request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
+
+                                    CollectionReference received = db.collection("communications")
+                                            .document(listingOwner.toString())
+                                            .collection("received");
+                                    received.add(request)
+                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
+                                                        Toast.makeText(VenueListingDetailsActivity.this, "Contact request sent!", Toast.LENGTH_SHORT).show();
+                                                        contact.setAlpha(.5f);
+                                                        contact.setClickable(false);
+                                                        contact.setText("Contact request sent");
+                                                    } else {
+                                                        Log.d("FIRESTORE", "Contact request failed with ", task.getException());
+                                                    }
+                                                }
+                                            });
+
+                                    HashMap<String, Object> requestSent = new HashMap<>();
+                                    requestSent.put("type", "contact-request");
+                                    requestSent.put("posting-date", Timestamp.now());
+                                    requestSent.put("sent-to", listingOwner.toString());
+                                    requestSent.put("sent-from-type", "band");
+                                    requestSent.put("sent-from-ref", bandId);
+                                    requestSent.put("notification-title", "Someone is interested in your advert!");
+                                    requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
+                                    CollectionReference sent = db.collection("communications")
+                                            .document(FirebaseAuth.getInstance().getUid())
+                                            .collection("sent");
+
+                                    sent.add(requestSent)
+                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
+                                                    } else {
+                                                        Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        }
+                    });
+                }
+                }
+            });
 
         //Temp wait for pic to upload
         try {
