@@ -8,24 +8,23 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.gangoffive.rig2gig.CreateMusicianFragment;
 import com.gangoffive.rig2gig.CreateVenueFragment;
 import com.gangoffive.rig2gig.CredentialFragment;
-import com.gangoffive.rig2gig.SavedVenuesFragment;
 import com.gangoffive.rig2gig.TabbedViewReferenceInitialiser;
-import com.gangoffive.rig2gig.ViewVenuesFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-public class LoginPagerAdapter extends FragmentPagerAdapter {
+public class MusicianPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
     private static int[] TAB_TITLES;
     private static Context mContext = null;
     private static int[] fragments;
 
-    public LoginPagerAdapter(Context context, FragmentManager fm, int[] tabTitles, int[] fragmentArray) {
+    public MusicianPagerAdapter(Context context, FragmentManager fm, int[] tabTitles, int[] fragmentArray) {
         super(fm);
         mContext = context;
         TAB_TITLES = tabTitles;
@@ -45,7 +44,7 @@ public class LoginPagerAdapter extends FragmentPagerAdapter {
                 fragment = new CredentialFragment();
                 break;
             case 1:
-                fragment = new CreateVenueFragment();
+                fragment = new CreateMusicianFragment();
         }
         return fragment;
     }

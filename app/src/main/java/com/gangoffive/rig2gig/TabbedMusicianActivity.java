@@ -7,24 +7,25 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.gangoffive.rig2gig.ui.TabbedView.MusicianPagerAdapter;
 import com.gangoffive.rig2gig.ui.TabbedView.VenuePagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
-public class TabbedVenueActivity extends AppCompatActivity{
+public class TabbedMusicianActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     FirebaseStorage fStorage;
 
-    Button test;
+    Button test, back;
 
     private static final String TAG = "======================";
 
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_credential,
-            R.layout.fragment_create_venue};
+            R.layout.fragment_create_musician};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,26 +35,29 @@ public class TabbedVenueActivity extends AppCompatActivity{
         fStore = FirebaseFirestore.getInstance();
         fStorage = FirebaseStorage.getInstance();
 
-        tabTitles = new int[]{R.string.personalInformation, R.string.venueInformation};
+        tabTitles = new int[]{R.string.personalInformation, R.string.musicianInformation};
 
-        VenuePagerAdapter venuePagerAdapter = new VenuePagerAdapter
+        MusicianPagerAdapter musicianPagerAdapter = new MusicianPagerAdapter
                 (this, getSupportFragmentManager(), tabTitles, fragments);
         ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(venuePagerAdapter);
+        viewPager.setAdapter(musicianPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
         test = findViewById(R.id.submitBtn);
+        back = findViewById(R.id.cancel);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                TabbedMusicianActivity.super.onBackPressed();
+            }
+        });
     }
 
     public void confirmOnClick(View view)
     {
         CredentialFragment.btn.performClick();
         System.out.println("clicked");
-    }
-
-    public void cancelOnClick(View view)
-    {
-        super.onBackPressed();
     }
 }

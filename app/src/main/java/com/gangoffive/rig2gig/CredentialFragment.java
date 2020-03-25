@@ -309,7 +309,15 @@ public class CredentialFragment extends Fragment implements View.OnClickListener
                                                             public void onSuccess(Void aVoid) {
                                                                 //Toast.makeText(CredentialActivity.this, "Information Added", Toast.LENGTH_SHORT).show();
                                                                 System.out.println("Added User@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                                                                CreateVenueFragment.venueBtn.performClick();
+                                                                if (AccountPurposeActivity.userType == "Venue")
+                                                                {
+                                                                    CreateVenueFragment.venueBtn.performClick();
+                                                                }
+                                                                else
+                                                                    {
+                                                                        CreateMusicianFragment.btn.performClick();
+                                                                    }
+
                                                             }
                                                         }).addOnFailureListener(new OnFailureListener() {
                                                             @Override

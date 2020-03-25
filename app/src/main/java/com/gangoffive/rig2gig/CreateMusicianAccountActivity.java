@@ -88,7 +88,8 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
         // TODO - Custom Code
     }
 
-    public void submitBtnOnClick(View view) {
+    public void submitBtnOnClick(View view)
+    {
         String loc = location.getText().toString();
         String musicianName = name.getText().toString();
         String musicianDistance = distance.getText().toString();
