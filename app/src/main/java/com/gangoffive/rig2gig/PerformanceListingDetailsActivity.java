@@ -180,7 +180,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                 request.put("type", "contact-request");
                                 request.put("posting-date", Timestamp.now());
                                 request.put("sent-from", FirebaseAuth.getInstance().getUid());
-                                request.put("sent-from-type", "venue");
+                                request.put("sent-from-type", "venues");
                                 request.put("sent-from-ref", venue.getId());
                                 request.put("notification-title", "Someone is interested in your advert!");
                                 request.put("notification-message", venue.get("name") + " is interested in you! Share contact details?");
@@ -211,7 +211,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                 requestSent.put("type", "contact-request");
                                 requestSent.put("posting-date", Timestamp.now());
                                 requestSent.put("sent-to", listingOwner.toString());
-                                requestSent.put("sent-from-type", "venue");
+                                requestSent.put("sent-from-type", "venues");
                                 requestSent.put("sent-from-ref", venue.getId());
                                 requestSent.put("notification-title", "Someone is interested in your advert!");
                                 requestSent.put("notification-message", venue.get("name") + " is interested in you! Share contact details?");

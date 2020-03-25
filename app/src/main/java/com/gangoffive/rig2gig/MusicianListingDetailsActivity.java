@@ -170,7 +170,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                 request.put("type", "contact-request");
                                 request.put("posting-date", Timestamp.now());
                                 request.put("sent-from", FirebaseAuth.getInstance().getUid());
-                                request.put("sent-from-type", "band");
+                                request.put("sent-from-type", "bands");
                                 request.put("sent-from-ref", currentBandId);
                                 request.put("notification-title", "Someone is interested in your advert!");
                                 request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");

@@ -167,7 +167,6 @@ public class ViewCommsFragment extends Fragment
                                                 openProfileIntent = new Intent(v.getContext(), MusicianProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
                                                 break;
-
                                         }
 
                                         if(openProfileIntent != null) {
@@ -194,7 +193,6 @@ public class ViewCommsFragment extends Fragment
                                                 openProfileIntent = new Intent(v.getContext(), MusicianProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
                                                 break;
-
                                         }
 
                                         if(openProfileIntent != null) {
