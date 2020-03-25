@@ -78,6 +78,8 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
 
     public static Button venueBtn;
 
+    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
+
     /**
      * Upon creation of the ViewVenuesFragment, create the fragment_view_venues layout.
      *
@@ -155,6 +157,11 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
             }
 
         });
+
+        int requestCode = 200;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, requestCode);
+        }
 
         return v;
     }
