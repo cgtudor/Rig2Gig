@@ -33,6 +33,8 @@ import java.util.List;
 
 public class ViewMusiciansFragment extends Fragment
 {
+    private String currentBandId;
+
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
     SwipeRefreshLayout swipeLayout;
@@ -51,6 +53,8 @@ public class ViewMusiciansFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         final View v = inflater.inflate(R.layout.fragment_view_performers, container, false);
+
+        currentBandId = this.getArguments().getString("CURRENT_BAND_ID");
 
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
@@ -112,6 +116,7 @@ public class ViewMusiciansFragment extends Fragment
                                         Intent openListingIntent = new Intent(v.getContext(), MusicianListingDetailsActivity.class);
                                         String listingRef = musicianListings.get(position).getListingRef();
                                         openListingIntent.putExtra("EXTRA_MUSICIAN_LISTING_ID", listingRef);
+                                        openListingIntent.putExtra("CURRENT_BAND_ID", currentBandId);
                                         startActivityForResult(openListingIntent, 1);
                                     }
                                 });

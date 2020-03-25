@@ -117,7 +117,7 @@ public class ViewCommsFragment extends Fragment
                                                 documentSnapshot.getId(),
                                                 documentSnapshot.get("sent-from").toString(),
                                                 documentSnapshot.get("type").toString(),
-                                                documentSnapshot.get("band-ref").toString(),
+                                                documentSnapshot.get("sent-from-ref").toString(),
                                                 documentSnapshot.get("musician-ref").toString());
                                     }
                                     else
@@ -125,7 +125,9 @@ public class ViewCommsFragment extends Fragment
                                         communication = new Communication(
                                                 documentSnapshot.getId(),
                                                 documentSnapshot.get("sent-from").toString(),
-                                                documentSnapshot.get("type").toString());
+                                                documentSnapshot.get("type").toString(),
+                                                documentSnapshot.get("sent-from-type").toString(),
+                                                documentSnapshot.get("sent-from-ref").toString());
                                     }
                                     if (!communication.getCommType().equals("accepted-invite")
                                             && !communication.getCommType().equals("rejected-invite")
@@ -147,19 +149,57 @@ public class ViewCommsFragment extends Fragment
                                     }*/
                                     @Override
                                     public void onPhotoClick(int position) {
-                                        /*String profileType = communications.get(position).getListingRef();
+                                        Intent openProfileIntent = null;
 
-                                        Intent openProfileIntent = new Intent(v.getContext(), VenueListingDetailsActivity.class);
-                                        String profileRef = communications.get(position).getListingRef();
-                                        openListingIntent.putExtra("EXTRA_VENUE_ID", profileRef);
-                                        v.getContext().startActivity(openListingIntent);*/
+                                        String profileType = communications.get(position).getSentFromType();
+                                        String profileRef = communications.get(position).getSentFromRef();
+
+                                        switch(profileType) {
+                                            case "venue":
+                                                openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
+                                                openProfileIntent.putExtra("EXTRA_VENUE_ID", profileRef);
+                                                break;
+                                            case "band":
+                                                openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
+                                                openProfileIntent.putExtra("EXTRA_BAND_ID", profileRef);
+                                                break;
+                                            case "musician":
+                                                openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
+                                                openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
+                                                break;
+
+                                        }
+
+                                        if(openProfileIntent != null) {
+                                            v.getContext().startActivity(openProfileIntent);
+                                        }
                                     }
                                     @Override
                                     public void onNameClick(int position) {
-                                        /*Intent openListingIntent = new Intent(v.getContext(), VenueListingDetailsActivity.class);
-                                        String listingRef = communications.get(position).getListingRef();
-                                        openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
-                                        v.getContext().startActivity(openListingIntent);*/
+                                        Intent openProfileIntent = null;
+
+                                        String profileType = communications.get(position).getSentFromType();
+                                        String profileRef = communications.get(position).getSentFromRef();
+
+                                        switch(profileType) {
+                                            case "venue":
+                                                openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
+                                                openProfileIntent.putExtra("EXTRA_VENUE_ID", profileRef);
+                                                break;
+                                            case "band":
+                                                openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
+                                                openProfileIntent.putExtra("EXTRA_BAND_ID", profileRef);
+                                                break;
+                                            case "musician":
+                                                openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
+                                                openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
+                                                break;
+
+                                        }
+
+                                        if(openProfileIntent != null) {
+                                            v.getContext().startActivity(openProfileIntent);
+                                        }
                                     }
                                     @Override
                                     public void onTopButtonClick(int position) {
@@ -483,7 +523,7 @@ public class ViewCommsFragment extends Fragment
 
     public void handleJoinBand(int position, String uID)
     {
-        String bandRef = communications.get(position).getBandRef();
+        String bandRef = communications.get(position).getSentFromRef();
         String musicianRef = communications.get(position).getMusicianRef();
         DocumentReference receiverCommDoc = db.collection("communications")
                 .document(uID)
@@ -578,7 +618,7 @@ public class ViewCommsFragment extends Fragment
 
     public void handleNotJoinBand(int position, String uID)
     {
-        String bandRef = communications.get(position).getBandRef();
+        String bandRef = communications.get(position).getSentFromRef();
         String musicianRef = communications.get(position).getMusicianRef();
         DocumentReference receiverCommDoc = db.collection("communications")
                 .document(uID)

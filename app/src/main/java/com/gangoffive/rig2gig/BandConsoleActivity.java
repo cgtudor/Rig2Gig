@@ -243,7 +243,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
                                                                                             .putExtra("EXTRA_LISTING_ID", ""), 1);
                 break;
             case "View Musicians":
-                startActivity(new Intent(this, MusicianAdvertIndexActivity.class));
+                startActivity(new Intent(this, MusicianAdvertIndexActivity.class).putExtra("CURRENT_BAND_ID", displayMusicianBandsReference));
                 break;
             case "Edit Band":
                 startActivity(new Intent(this, BandDetailsEditor.class).putExtra("EXTRA_BAND_ID", displayMusicianBandsReference));

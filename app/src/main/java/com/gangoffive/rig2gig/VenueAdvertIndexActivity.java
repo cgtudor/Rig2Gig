@@ -25,10 +25,6 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_advert_index);
 
-
-
-
-
         tabTitles = new int[]{R.string.all, R.string.favourites};
 
         Fragment[] frags = new Fragment[2];

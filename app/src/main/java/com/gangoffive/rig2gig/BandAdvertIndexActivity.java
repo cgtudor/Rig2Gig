@@ -11,6 +11,8 @@ import com.google.android.material.tabs.TabLayout;
 
 public class BandAdvertIndexActivity extends AppCompatActivity {
 
+    private String currentUserType;
+
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_view_bands,
             R.layout.fragment_saved_bands};
