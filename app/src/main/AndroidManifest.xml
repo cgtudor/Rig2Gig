@@ -4,6 +4,16 @@
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
+    <!--For card.io card scanning-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-feature android:name="android.hardware.camera" android:required = "false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+    <!--For most things, including card.io and paypal-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="false" />
@@ -29,6 +39,8 @@
             android:name=".VenueAdvertIndexActivity"
             android:label="@string/title_activity_venue_advert_index"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".PayPalActivity"/>
 
         <service android:name=".NotificationService" />
 
