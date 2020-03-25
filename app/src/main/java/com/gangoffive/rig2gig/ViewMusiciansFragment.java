@@ -22,7 +22,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -47,6 +49,8 @@ public class ViewMusiciansFragment extends Fragment
     private MusicianAdapter adapter;
 
     private ArrayList<MusicianListing> musicianListings;
+
+    private final ArrayList<String> bandMembers = new ArrayList();
 
     @Nullable
     @Override
@@ -77,7 +81,26 @@ public class ViewMusiciansFragment extends Fragment
 
         /*setHasOptionsMenu(true);*/
 
+
         db = FirebaseFirestore.getInstance();
+        DocumentReference bandRef = db.collection("bands").document(currentBandId);
+
+        bandRef.get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                ArrayList<String> members = (ArrayList<String>) document.get("members");
+                                for(String member : members) {
+                                    bandMembers.add(member);
+                                }
+                            }
+                        }
+                    }
+                });
+
         colRef = db.collection("musician-listings");
 
         musicianListings = new ArrayList<>();
@@ -105,7 +128,9 @@ public class ViewMusiciansFragment extends Fragment
                                             documentSnapshot.get("musician-ref").toString(),
                                             positions);
 
-                                    musicianListings.add(musicianListing);
+                                    if (!bandMembers.contains(documentSnapshot.get("musician-ref").toString())) {
+                                        musicianListings.add(musicianListing);
+                                    }
                                 }
 
                                 adapter = new MusicianAdapter(musicianListings, getContext());
