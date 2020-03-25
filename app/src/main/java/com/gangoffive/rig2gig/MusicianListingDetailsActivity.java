@@ -106,7 +106,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                                         musicianName.setText(document.get("name").toString());
-                                        //rating.setText("Rating: " + document.get("rating").toString() + "/5");
+                                        rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
                                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
                                         listingOwner.append(document.get("user-ref").toString());
@@ -154,7 +154,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                         Timestamp expiryDate = (Timestamp) document.get("expiry-date");
                         expiry.append(expiryDate.toDate().toString());
                         musicianRef.append(document.get("musician-ref").toString());
-                        //description.setText(document.get("description").toString());
+                        description.setText(document.get("description").toString());
                         positionArray.addAll((ArrayList<String>) document.get("position"));
                         position.setText(document.get("position").toString().substring(1, document.get("position").toString().length()-1));
                     } else {
@@ -496,7 +496,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                     }
                     else
                     {
-                        Log.d(TAG, "Venue Document does not exist");
+                        Log.d(TAG, "Musician Document does not exist");
                     }
                 }
                 else

@@ -326,8 +326,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
      */
     @Override
     public void cancelAdvertisement() {
-        Intent backToMain = new Intent(MusicianDetailsEditor.this, MainActivity.class);
-        startActivity(backToMain);
+        finish();
     }
 
     /**
