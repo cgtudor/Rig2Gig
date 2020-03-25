@@ -40,8 +40,6 @@
             android:label="@string/title_activity_venue_advert_index"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".PayPalActivity"/>
-
         <service android:name=".NotificationService" />
 
         <activity android:name=".VenueProfileActivity" />

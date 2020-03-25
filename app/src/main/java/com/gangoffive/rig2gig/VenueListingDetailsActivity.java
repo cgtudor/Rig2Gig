@@ -86,7 +86,13 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         /*Used to get the id of the listing from the previous activity*/
         vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");
 
-        currentUserType = getIntent().getStringExtra("CURRENT_USER_TYPE");
+        if(getIntent().getStringExtra("CURRENT_USER_TYPE") != null) {
+            currentUserType = getIntent().getStringExtra("CURRENT_USER_TYPE");
+        }
+        else
+        {
+            currentUserType = "";
+        }
 
         if(currentUserType.equals("bands")) {
             bandId = getIntent().getStringExtra("CURRENT_BAND_ID");
@@ -602,10 +608,15 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
 
                     Calendar currentExpiry = Calendar.getInstance();
                     currentExpiry.setTime(expiry);
-                    currentExpiry.add(Calendar.DAY_OF_MONTH, 30);
+                    currentExpiry.add(Calendar.MONTH, 1);
+                    currentExpiry.add(Calendar.DAY_OF_MONTH, 1);
                     Timestamp newDate = new Timestamp(currentExpiry.getTime());
 
                     venueListing.update("expiry-date", newDate);
+
+                    Toast.makeText(this, "Ad published!", Toast.LENGTH_SHORT);
+
+                    finish();
 
                 } catch (JSONException e) {
                     Log.e("paymentExample", "an extremely unlikely failure occurred: ", e);
@@ -618,6 +629,10 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         }
         else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
             Log.i("paymentExample", "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+        }
+        else
+        {
+            Toast.makeText(this, "Payment process has been cancelled", Toast.LENGTH_SHORT);
         }
     }
 
