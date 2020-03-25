@@ -182,6 +182,8 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                 request.put("sent-from", FirebaseAuth.getInstance().getUid());
                                 request.put("sent-from-type", "venues");
                                 request.put("sent-from-ref", venue.getId());
+                                request.put("sent-to-type", performerTypeGlobal.equals("Band")? "bands" : "musicians");
+                                request.put("sent-to-ref", performerRef.toString());
                                 request.put("notification-title", "Someone is interested in your advert!");
                                 request.put("notification-message", venue.get("name") + " is interested in you! Share contact details?");
 
@@ -213,6 +215,8 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                 requestSent.put("sent-to", listingOwner.toString());
                                 requestSent.put("sent-from-type", "venues");
                                 requestSent.put("sent-from-ref", venue.getId());
+                                requestSent.put("sent-to-type", performerTypeGlobal.equals("Band")? "bands" : "musicians");
+                                requestSent.put("sent-to-ref", performerRef.toString());
                                 requestSent.put("notification-title", "Someone is interested in your advert!");
                                 requestSent.put("notification-message", venue.get("name") + " is interested in you! Share contact details?");
                                 CollectionReference sent = db.collection("communications")

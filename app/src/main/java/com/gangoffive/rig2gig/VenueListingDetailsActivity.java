@@ -174,6 +174,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                     request.put("sent-from", FirebaseAuth.getInstance().getUid());
                                     request.put("sent-from-type", "musicians");
                                     request.put("sent-from-ref", musician.getId());
+                                    request.put("sent-to-type", "venues");
+                                    request.put("sent-to-ref", venueRef.toString());
                                     request.put("notification-title", "Someone is interested in your advert!");
                                     request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
 
@@ -202,6 +204,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                     requestSent.put("sent-to", listingOwner.toString());
                                     requestSent.put("sent-from-type", "musicians");
                                     requestSent.put("sent-from-ref", musician.getId());
+                                    requestSent.put("sent-to-type", "venues");
+                                    requestSent.put("sent-to-ref", venueRef.toString());
                                     requestSent.put("notification-title", "Someone is interested in your advert!");
                                     requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
                                     CollectionReference sent = db.collection("communications")
@@ -241,6 +245,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                     request.put("sent-from", FirebaseAuth.getInstance().getUid());
                                     request.put("sent-from-type", "bands");
                                     request.put("sent-from-ref", bandId);
+                                    request.put("sent-to-type", "venues");
+                                    request.put("sent-to-ref", venueRef.toString());
                                     request.put("notification-title", "Someone is interested in your advert!");
                                     request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
 
@@ -269,6 +275,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                     requestSent.put("sent-to", listingOwner.toString());
                                     requestSent.put("sent-from-type", "bands");
                                     requestSent.put("sent-from-ref", bandId);
+                                    requestSent.put("sent-to-type", "venues");
+                                    requestSent.put("sent-to-ref", venueRef.toString());
                                     requestSent.put("notification-title", "Someone is interested in your advert!");
                                     requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
                                     CollectionReference sent = db.collection("communications")
