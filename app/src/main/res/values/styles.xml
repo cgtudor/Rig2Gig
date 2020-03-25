@@ -21,6 +21,9 @@
     <style name="AppTheme.TranslucentBackground">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="colorPrimary">@color/mainColour</item>
+        <item name="colorPrimaryDark">@color/mainColour</item>
+
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

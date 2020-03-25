@@ -326,14 +326,15 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         scroll.setMinimumHeight(remainingHeight);
         gridView.setMinimumHeight(remainingHeight);
         BandMemberAdderAdapter customAdapter = new BandMemberAdderAdapter(names, gridRefs, userRefs, invitesSent, this);
-        for (int i = 0; i < gridRefs.size();i++)
-        {
-            if (invitesSent.get(i) == true)
-            {
-
-            }
-        }
         gridView.setAdapter(customAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Intent intent =  new Intent(MusicianSearchActivity.this, SearchedMusicianDetails.class);
+                intent.putExtra("EXTRA_MUSICIAN_REF", gridRefs.get(position).toString());
+                startActivity(intent);
+            }
+        });
     }
 
     public void beginConfirmAddMember (String member, int position)

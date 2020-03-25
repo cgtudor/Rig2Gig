@@ -219,7 +219,8 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         switch(v.getTag().toString())
         {
             case "View Venues":
-                startActivity(new Intent(this, VenueAdvertIndexActivity.class));
+                startActivity(new Intent(this, VenueAdvertIndexActivity.class).putExtra("CURRENT_USER_TYPE", "bands")
+                                                                                             .putExtra("CURRENT_BAND_ID", displayMusicianBandsReference));
                 break;
             case "Create Performer Advert":
                 startActivityForResult(new Intent(this, PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", displayMusicianBandsReference)
@@ -242,7 +243,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
                                                                                             .putExtra("EXTRA_LISTING_ID", ""), 1);
                 break;
             case "View Musicians":
-                startActivity(new Intent(this, MusicianAdvertIndexActivity.class));
+                startActivity(new Intent(this, MusicianAdvertIndexActivity.class).putExtra("CURRENT_BAND_ID", displayMusicianBandsReference));
                 break;
             case "Edit Band":
                 startActivity(new Intent(this, BandDetailsEditor.class).putExtra("EXTRA_BAND_ID", displayMusicianBandsReference));

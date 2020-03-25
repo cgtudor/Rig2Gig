@@ -120,4 +120,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionBar" />
 
+    <Button
+        android:id="@+id/publish"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="64dp"
+        android:background="@drawable/button_bg_rounded_corners"
+        android:onClick="onBuyPressed"
+        android:visibility="gone"
+        android:text="Publish!"
+        android:textAllCaps="false"
+        android:textColor="#FFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionBar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

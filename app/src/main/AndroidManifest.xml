@@ -4,6 +4,16 @@
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
+    <!--For card.io card scanning-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-feature android:name="android.hardware.camera" android:required = "false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+    <!--For most things, including card.io and paypal-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="false" />
@@ -19,6 +29,12 @@
         <activity android:name=".TabbedMusicianActivity" />
         <activity android:name=".TabbedVenueActivity" />
         <activity
+            android:name=".SearchedMusicianDetails"
+            android:theme="@style/AppTheme.TranslucentBackground" />
+        <activity
+            android:name=".BandMemberDetails"
+            android:theme="@style/AppTheme.TranslucentBackground" />
+        <activity
             android:name=".MusicianSearchActivity"
             android:label="@string/title_activity_musician_search"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -32,10 +48,16 @@
         <activity android:name=".VenueProfileActivity" />
         <activity android:name=".MusicianProfileActivity" />
         <activity android:name=".BandProfileActivity" />
+
         <activity android:name=".CreateMusicianAccountActivity" />
 
         <service android:name=".NotificationService" />
         <service android:name=".NotificationService" />
+
+        <activity android:name=".LaunchCommsActivity" />
+
+        <service android:name=".NotificationService" />
+
         <service
             android:name=".FirebaseNotificationService"
             android:exported="false">
@@ -57,10 +79,12 @@
  Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.
         -->
+
         <!--
  Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.
         -->
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notifications_active_black_24dp" />
@@ -159,8 +183,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".BandConsoleActivity" />
+
         <activity android:name=".BandAdvertIndexActivity" />
         <activity android:name=".MusicianAdvertIndexActivity" />
+
+        <activity android:name=".PerformerAdvertIndexActivity"/>
     </application>
 
 </manifest>

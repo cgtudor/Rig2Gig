@@ -180,7 +180,7 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
         switch(v.getTag().toString())
         {
             case "View Performers":
-                startActivity(new Intent(getActivity(), VenueAdvertIndexActivity.class));
+                startActivity(new Intent(getActivity(), PerformerAdvertIndexActivity.class));
                 break;
             case "Edit Venue":
                 startActivity(new Intent(getActivity(), VenueDetailsEditor.class).putExtra("EXTRA_VENUE_ID", venueRef));

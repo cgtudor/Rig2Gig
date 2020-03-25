@@ -14,7 +14,7 @@ exports.Notifications = functions.firestore
 
 		const senderUser = snap.get("sent-from");
 		const notificationMessage = snap.get("notification-message");
-    const notificationTitle = snap.get("notification-title");
+		const notificationTitle = snap.get("notification-title");
 
 		const fromUser = admin.firestore().collection("users").doc(senderUser).get();
 		const toUser = admin.firestore().collection("users").doc(uID).get();
@@ -29,12 +29,15 @@ exports.Notifications = functions.firestore
 					title: notificationTitle,
 					body: notificationMessage,
 					icon: "default"
+				},
+				data: {
+					"OPEN_FRAGMENT": "COMMS"
 				}
 			};
 
 			return admin.messaging().sendToDevice(tokenId, notificationContent).then(result => {
 				console.log("Notification sent!");
-        return null;
+				return result;
 				//admin.firestore().collection("notifications").doc(userEmail).collection("userNotifications").doc(notificationId).delete();
 			});
 		});

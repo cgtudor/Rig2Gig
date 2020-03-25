@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,6 +188,14 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         gridView = (GridView) findViewById( R.id.gridView);
         BandMemberRemoverAdapter customAdapter = new BandMemberRemoverAdapter(names, memberRefs, this);
         gridView.setAdapter(customAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Intent intent =  new Intent(ManageBandMembersActivity.this, BandMemberDetails.class);
+                intent.putExtra("EXTRA_MUSICIAN_REF", memberRefs.get(position).toString());
+                startActivity(intent);
+            }
+        });
     }
 
     public void confirmRemoveMember(String member, int position)
