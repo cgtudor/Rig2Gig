@@ -47,7 +47,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             if(getIntent().getStringExtra("OPEN_FRAGMENT") != null && getIntent().getStringExtra("OPEN_FRAGMENT").equals("COMMS")) {
                                 startActivity(new Intent(getApplicationContext(), LaunchCommsActivity.class));
                             } else {
-                                startActivity(new Intent(getApplicationContext(), PayPalActivity.class));
+                                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
                             }
                             finish();
                         }

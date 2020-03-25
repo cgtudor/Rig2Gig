@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,8 +32,18 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import org.json.JSONException;
+
+import java.math.BigDecimal;
+import java.sql.Time;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -45,10 +56,20 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
     private final StringBuilder venueRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
 
+    private static PayPalConfiguration paypalConfig = new PayPalConfiguration()
+            // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
+            // or live (ENVIRONMENT_PRODUCTION)
+            .environment(PayPalConfiguration.ENVIRONMENT_NO_NETWORK)
+            .clientId("AWpRTRqwsxyU-8X9zXOvNMTsgphAh7UzQz2jOt2kSE8S8OwLSsGSWsCVxvTXQq10JWGufT0bg9Dgspy3");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_listing_details);
+
+        Intent intent = new Intent(this, PayPalService.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, paypalConfig);
+        startService(intent);
 
         /*Setting the support action bar to the newly created toolbar*/
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -60,6 +81,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
         final Button contact = findViewById(R.id.contact);
+        final Button publish = findViewById(R.id.publish);
 
         /*Used to get the id of the listing from the previous activity*/
         vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");
@@ -85,6 +107,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+
+                        Timestamp expiryDate = (Timestamp) document.get("expiry-date");
 
                         /*Find the venue reference by looking for the venue ID in the "venues" subfolder*/
                         DocumentReference venue = db.collection("venues").document(document.get("venue-ref").toString());
@@ -124,11 +148,19 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                                     }
                                                 });
                                         Log.d("AUTH CHECK" ,"LISTING OWNER: " + listingOwner.toString() + "\nCURRENT USER: " + FirebaseAuth.getInstance().getUid());
-                                        if(listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()))
+                                        if(listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()) && expiryDate.compareTo(Timestamp.now()) > 0)
                                         {
                                             getSupportActionBar().setTitle("My Advert");
                                             contact.setClickable(false);
                                             contact.setVisibility(View.GONE);
+                                        }
+                                        else if(listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()) && expiryDate.compareTo(Timestamp.now()) < 0)
+                                        {
+                                            getSupportActionBar().setTitle("My Advert Preview");
+                                            contact.setClickable(false);
+                                            contact.setVisibility(View.GONE);
+                                            publish.setVisibility(View.VISIBLE);
+                                            publish.setClickable(true);
                                         }
                                         else
                                         {
@@ -142,7 +174,6 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                        Timestamp expiryDate = (Timestamp) document.get("expiry-date");
                         expiry.setTime(expiryDate.toDate().getTime());
                         venueRef.append(document.get("venue-ref").toString());
                         description.setText(document.get("description").toString());
@@ -530,5 +561,69 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                     });
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onBuyPressed(View pressed) {
+        // PAYMENT_INTENT_SALE will cause the payment to complete immediately.
+        // Change PAYMENT_INTENT_SALE to
+        //   - PAYMENT_INTENT_AUTHORIZE to only authorize payment and capture funds later.
+        //   - PAYMENT_INTENT_ORDER to create a payment for authorization and capture
+        //     later via calls from your server.
+        PayPalPayment payment = new PayPalPayment(new BigDecimal("5"), "GBP", "30-days Advert",
+                PayPalPayment.PAYMENT_INTENT_SALE);
+
+        Intent intent = new Intent(this, PaymentActivity.class);
+
+        // send the same configuration for restart resiliency
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, paypalConfig);
+
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
+
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+            if (confirm != null) {
+                try {
+                    Log.i("paymentExample", confirm.toJSONObject().toString(4));
+
+                    // TODO: send 'confirm' to your server for verification.
+
+                    /*Firestore & Cloud Storage initialization*/
+                    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+                    /*Finding the listing by its ID in the "venue-listings" subfolder*/
+                    DocumentReference venueListing = db.collection("venue-listings").document(vID);
+
+                    Calendar currentExpiry = Calendar.getInstance();
+                    currentExpiry.setTime(expiry);
+                    currentExpiry.add(Calendar.DAY_OF_MONTH, 30);
+                    Timestamp newDate = new Timestamp(currentExpiry.getTime());
+
+                    venueListing.update("expiry-date", newDate);
+
+                } catch (JSONException e) {
+                    Log.e("paymentExample", "an extremely unlikely failure occurred: ", e);
+                }
+            }
+        }
+        else if (resultCode == Activity.RESULT_CANCELED) {
+            Log.i("paymentExample", "The user canceled.");
+            Toast.makeText(this, "Payment process has been cancelled", Toast.LENGTH_SHORT);
+        }
+        else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
+            Log.i("paymentExample", "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        stopService(new Intent(this, PayPalService.class));
+        super.onDestroy();
     }
 }
