@@ -58,7 +58,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
     private static PayPalConfiguration paypalConfig = new PayPalConfiguration()
             // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
             // or live (ENVIRONMENT_PRODUCTION)
-            .environment(PayPalConfiguration.ENVIRONMENT_NO_NETWORK)
+            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
             .clientId("AWpRTRqwsxyU-8X9zXOvNMTsgphAh7UzQz2jOt2kSE8S8OwLSsGSWsCVxvTXQq10JWGufT0bg9Dgspy3");
 
     @Override
@@ -511,8 +511,8 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                     final FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseStorage storage = FirebaseStorage.getInstance();
 
-                    /*Finding the listing by its ID in the "venue-listings" subfolder*/
-                    DocumentReference venueListing = db.collection("venue-listings").document(pID);
+                    /*Finding the listing by its ID in the "performer-listings" subfolder*/
+                    DocumentReference venueListing = db.collection("performer-listings").document(pID);
 
                     Calendar currentExpiry = Calendar.getInstance();
                     currentExpiry.setTime(expiry);

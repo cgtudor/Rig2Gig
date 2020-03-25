@@ -59,7 +59,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
     private static PayPalConfiguration paypalConfig = new PayPalConfiguration()
             // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
             // or live (ENVIRONMENT_PRODUCTION)
-            .environment(PayPalConfiguration.ENVIRONMENT_NO_NETWORK)
+            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
             .clientId("AWpRTRqwsxyU-8X9zXOvNMTsgphAh7UzQz2jOt2kSE8S8OwLSsGSWsCVxvTXQq10JWGufT0bg9Dgspy3");
 
     @Override
