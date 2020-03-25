@@ -160,11 +160,11 @@ public class ViewCommsFragment extends Fragment
                                                 openProfileIntent.putExtra("EXTRA_VENUE_ID", profileRef);
                                                 break;
                                             case "band":
-                                                openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
+                                                openProfileIntent = new Intent(v.getContext(), BandProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_BAND_ID", profileRef);
                                                 break;
                                             case "musician":
-                                                openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
+                                                openProfileIntent = new Intent(v.getContext(), MusicianProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
                                                 break;
 
@@ -187,11 +187,11 @@ public class ViewCommsFragment extends Fragment
                                                 openProfileIntent.putExtra("EXTRA_VENUE_ID", profileRef);
                                                 break;
                                             case "band":
-                                                openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
+                                                openProfileIntent = new Intent(v.getContext(), BandProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_BAND_ID", profileRef);
                                                 break;
                                             case "musician":
-                                                openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
+                                                openProfileIntent = new Intent(v.getContext(), MusicianProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
                                                 break;
 
