@@ -171,6 +171,8 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                 request.put("sent-from", FirebaseAuth.getInstance().getUid());
                                 request.put("sent-from-type", "band");
                                 request.put("sent-from-ref", currentBandId);
+                                request.put("sent-to-type", "musicians");
+                                request.put("sent-to-ref", musicianRef.toString());
                                 request.put("notification-title", "Someone is interested in your advert!");
                                 request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
 
@@ -202,6 +204,8 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                 requestSent.put("sent-to", listingOwner.toString());
                                 requestSent.put("sent-from-type", "band");
                                 requestSent.put("sent-from-ref", currentBandId);
+                                requestSent.put("sent-to-type", "musicians");
+                                requestSent.put("sent-to-ref", musicianRef.toString());
                                 requestSent.put("notification-title", "Someone is interested in your advert!");
                                 requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
 
