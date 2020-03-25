@@ -22,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,6 +34,9 @@ import java.util.List;
 
 public class ViewVenuesFragment extends Fragment
 {
+    private String currentUserType;
+    private String currentBandId;
+
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
     SwipeRefreshLayout swipeLayout;
@@ -58,6 +62,15 @@ public class ViewVenuesFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         final View v = inflater.inflate(R.layout.fragment_view_venues, container, false);
+
+        currentUserType = this.getArguments().getString("CURRENT_USER_TYPE");
+
+        Bundle extras = this.getArguments();
+        if(extras != null) {
+            if(extras.containsKey("CURRENT_BAND_ID")) {
+                currentBandId = extras.getString("CURRENT_BAND_ID");
+            }
+        }
 
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
@@ -85,7 +98,10 @@ public class ViewVenuesFragment extends Fragment
 
         venueListings = new ArrayList<>();
 
+        Timestamp currentDate = Timestamp.now();
+
         Query first = colRef
+                .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
                 .limit(10);
 
         first.get()
@@ -115,6 +131,10 @@ public class ViewVenuesFragment extends Fragment
                                         Intent openListingIntent = new Intent(v.getContext(), VenueListingDetailsActivity.class);
                                         String listingRef = venueListings.get(position).getListingRef();
                                         openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
+                                        openListingIntent.putExtra("CURRENT_USER_TYPE", currentUserType);
+                                        if(currentBandId != null) {
+                                            openListingIntent.putExtra("CURRENT_BAND_ID", currentBandId);
+                                        }
                                         startActivityForResult(openListingIntent, 1);
                                     }
                                 });

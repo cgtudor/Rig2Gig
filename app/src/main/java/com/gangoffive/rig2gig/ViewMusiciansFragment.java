@@ -21,6 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,6 +33,8 @@ import java.util.List;
 
 public class ViewMusiciansFragment extends Fragment
 {
+    private String currentBandId;
+
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
     SwipeRefreshLayout swipeLayout;
@@ -50,6 +53,8 @@ public class ViewMusiciansFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         final View v = inflater.inflate(R.layout.fragment_view_performers, container, false);
+
+        currentBandId = this.getArguments().getString("CURRENT_BAND_ID");
 
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
@@ -77,7 +82,10 @@ public class ViewMusiciansFragment extends Fragment
 
         musicianListings = new ArrayList<>();
 
+        Timestamp currentDate = Timestamp.now();
+
         Query first = colRef
+                .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
                 .limit(10);
 
         first.get()
@@ -108,6 +116,7 @@ public class ViewMusiciansFragment extends Fragment
                                         Intent openListingIntent = new Intent(v.getContext(), MusicianListingDetailsActivity.class);
                                         String listingRef = musicianListings.get(position).getListingRef();
                                         openListingIntent.putExtra("EXTRA_MUSICIAN_LISTING_ID", listingRef);
+                                        openListingIntent.putExtra("CURRENT_BAND_ID", currentBandId);
                                         startActivityForResult(openListingIntent, 1);
                                     }
                                 });

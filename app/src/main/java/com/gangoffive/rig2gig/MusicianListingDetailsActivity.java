@@ -31,13 +31,14 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 
 public class MusicianListingDetailsActivity extends AppCompatActivity {
 
     private String mID;
     private String currentBandId = "";
-    private final StringBuilder expiry = new StringBuilder("");
+    private final Date expiry = new Date();
     private final StringBuilder musicianRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
     private final ArrayList<String> positionArray = new ArrayList<>();
@@ -139,7 +140,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                             }
                         });
                         Timestamp expiryDate = (Timestamp) document.get("expiry-date");
-                        expiry.append(expiryDate.toDate().toString());
+                        expiry.setTime(expiryDate.toDate().getTime());
                         musicianRef.append(document.get("musician-ref").toString());
                         description.setText(document.get("description").toString());
                         positionArray.addAll((ArrayList<String>) document.get("position"));
@@ -169,7 +170,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                 request.put("type", "contact-request");
                                 request.put("posting-date", Timestamp.now());
                                 request.put("sent-from", FirebaseAuth.getInstance().getUid());
-                                request.put("sent-from-type", "band");
+                                request.put("sent-from-type", "bands");
                                 request.put("sent-from-ref", currentBandId);
                                 request.put("sent-to-type", "musicians");
                                 request.put("sent-to-ref", musicianRef.toString());
@@ -366,10 +367,12 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
 
         if(id == R.id.saveButton)
         {
+            Timestamp expiryDate = new Timestamp(expiry);
+
             HashMap<String, Object> listing = new HashMap<>();
             listing.put("position", positionArray);
             listing.put("description", description.getText().toString());
-            listing.put("expiry-date", expiry.toString());
+            listing.put("expiry-date", expiry);
             listing.put("musician-ref", musicianRef.toString());
 
             CollectionReference favMusicians = db.collection("favourite-ads")

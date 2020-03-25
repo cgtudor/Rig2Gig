@@ -29,11 +29,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 
 public class VenueListingDetailsActivity extends AppCompatActivity {
@@ -41,7 +41,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
     private String vID;
     private String currentUserType;
     private String bandId = "";
-    private final StringBuilder expiry = new StringBuilder("");
+    private final Date expiry = new Date();
     private final StringBuilder venueRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
 
@@ -143,7 +143,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                             }
                         });
                         Timestamp expiryDate = (Timestamp) document.get("expiry-date");
-                        expiry.append(expiryDate.toDate().toString());
+                        expiry.setTime(expiryDate.toDate().getTime());
                         venueRef.append(document.get("venue-ref").toString());
                         description.setText(document.get("description").toString());
                     } else {
@@ -172,7 +172,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                     request.put("type", "contact-request");
                                     request.put("posting-date", Timestamp.now());
                                     request.put("sent-from", FirebaseAuth.getInstance().getUid());
-                                    request.put("sent-from-type", "musician");
+                                    request.put("sent-from-type", "musicians");
                                     request.put("sent-from-ref", musician.getId());
                                     request.put("sent-to-type", "venues");
                                     request.put("sent-to-ref", venueRef.toString());
@@ -202,7 +202,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                     requestSent.put("type", "contact-request");
                                     requestSent.put("posting-date", Timestamp.now());
                                     requestSent.put("sent-to", listingOwner.toString());
-                                    requestSent.put("sent-from-type", "musician");
+                                    requestSent.put("sent-from-type", "musicians");
                                     requestSent.put("sent-from-ref", musician.getId());
                                     requestSent.put("sent-to-type", "venues");
                                     requestSent.put("sent-to-ref", venueRef.toString());
@@ -243,7 +243,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                     request.put("type", "contact-request");
                                     request.put("posting-date", Timestamp.now());
                                     request.put("sent-from", FirebaseAuth.getInstance().getUid());
-                                    request.put("sent-from-type", "band");
+                                    request.put("sent-from-type", "bands");
                                     request.put("sent-from-ref", bandId);
                                     request.put("sent-to-type", "venues");
                                     request.put("sent-to-ref", venueRef.toString());
@@ -273,7 +273,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
                                     requestSent.put("type", "contact-request");
                                     requestSent.put("posting-date", Timestamp.now());
                                     requestSent.put("sent-to", listingOwner.toString());
-                                    requestSent.put("sent-from-type", "band");
+                                    requestSent.put("sent-from-type", "bands");
                                     requestSent.put("sent-from-ref", bandId);
                                     requestSent.put("sent-to-type", "venues");
                                     requestSent.put("sent-to-ref", venueRef.toString());
@@ -466,9 +466,11 @@ public class VenueListingDetailsActivity extends AppCompatActivity {
 
         if(id == R.id.saveButton)
         {
-            HashMap<String, String> listing = new HashMap<>();
+            Timestamp expiryDate = new Timestamp(expiry);
+
+            HashMap<String, Object> listing = new HashMap<>();
             listing.put("description", description.getText().toString());
-            listing.put("expiry-date", expiry.toString());
+            listing.put("expiry-date", expiry);
             listing.put("venue-ref", venueRef.toString());
 
             CollectionReference favVenues = db.collection("favourite-ads")
