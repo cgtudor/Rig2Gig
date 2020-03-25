@@ -477,41 +477,16 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                     {
                         Log.d(TAG, "performer Document exists");
 
-                        LatLng performerLocation = new LatLng(Double.parseDouble(document.get("latitude").toString()), Double.parseDouble(document.get("longitude").toString()));
+                        String performerType = document.get("performer-type").toString();
 
-                        final DocumentReference performer = db.collection("bands").document(document.get("performer-ref").toString());
-
-                        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                        if(performerType.equals("Band"))
                         {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-                            {
-                                Log.d(TAG, "Google Map get performer successful");
-
-                                if(task.isSuccessful())
-                                {
-                                    Log.d(TAG, "Google Map get performer completed");
-
-                                    DocumentSnapshot document = task.getResult();
-
-                                    String performerName = document.get("name").toString();
-
-                                    googleMap.addMarker(new MarkerOptions().position(performerLocation).title(performerName));
-                                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(performerLocation, 10));
-                                }
-                                else
-                                {
-                                    Log.d(TAG, "Google Map get performer failed");
-                                }
-                            }
-                        }).addOnFailureListener(new OnFailureListener()
+                            getBandLocation(googleMap, document);
+                        }
+                        else
                         {
-                            @Override
-                            public void onFailure(@NonNull Exception e)
-                            {
-                                Log.d(TAG, "Google Map get performer unsuccessful");
-                            }
-                        });
+                            getMusicianLocation(googleMap, document);
+                        }
                     }
                     else
                     {
@@ -529,6 +504,62 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
             public void onFailure(@NonNull Exception e)
             {
                 Log.d(TAG, "Google Map get location failed.");
+            }
+        });
+    }
+
+    private void getBandLocation(GoogleMap googleMap, DocumentSnapshot document)
+    {
+        final DocumentReference performer = db.collection("bands").document(document.get("performer-ref").toString());
+
+        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+                Log.d(TAG, "Google Map get performer successful");
+
+                if(task.isSuccessful())
+                {
+                    Log.d(TAG, "Google Map get performer completed");
+
+                    DocumentSnapshot document = task.getResult();
+
+                    String performerName = document.get("name").toString();
+                    LatLng performerLocation = new LatLng(Double.parseDouble(document.get("latitude").toString()), Double.parseDouble(document.get("longitude").toString()));
+                    googleMap.addMarker(new MarkerOptions().position(performerLocation).title(performerName));
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(performerLocation, 10));
+                }
+                else
+                {
+                    Log.d(TAG, "Google Map get performer failed");
+                }
+            }
+        });
+    }
+
+    private void getMusicianLocation(GoogleMap googleMap, DocumentSnapshot document)
+    {
+        final DocumentReference performer = db.collection("musicians").document(document.get("performer-ref").toString());
+
+        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+                Log.d(TAG, "Google Map get performer successful");
+
+                if(task.isSuccessful())
+                {
+                    Log.d(TAG, "Google Map get performer completed");
+
+                    DocumentSnapshot document = task.getResult();
+
+                    String performerName = document.get("name").toString();
+                    LatLng performerLocation = new LatLng(Double.parseDouble(document.get("latitude").toString()), Double.parseDouble(document.get("longitude").toString()));
+                    googleMap.addMarker(new MarkerOptions().position(performerLocation).title(performerName));
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(performerLocation, 10));
+                }
             }
         });
     }
