@@ -86,9 +86,12 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
 
     public void setInitialColours()
     {
-        if (description.getText().toString().trim().length() == 0 && createListing != null) {
-            createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-            createListing.setTextColor(Color.parseColor("#4D4D4E"));
+        if (description != null)
+        {
+            if (description.getText().toString().trim().length() == 0 && createListing != null) {
+                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+            }
         }
     }
 
@@ -124,7 +127,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         {
             image.setImageDrawable(null);
         }
-        description = findViewById(R.id.distance);
+        description = findViewById(R.id.description);
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);
@@ -227,13 +230,21 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
             if (listingRef.equals(""))
             {
-                Toast.makeText(this,"Advertisement created successfully",
-                        Toast.LENGTH_LONG).show();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(VenueAdvertisementEditor.this,"Advertisement created successfully",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
             }
             else
             {
-                Toast.makeText(this,"Advertisement edited successfully",
-                        Toast.LENGTH_LONG).show();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(VenueAdvertisementEditor.this,"Advertisement edited successfully",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
             }
             Intent intent = new Intent(VenueAdvertisementEditor.this, VenueListingDetailsActivity.class);
             intent.putExtra("EXTRA_VENUE_LISTING_ID", listingManager.getListingRef());
@@ -241,15 +252,25 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(VenueAdvertisementEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(VenueAdvertisementEditor.this,
+                            "Listing creation failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(VenueAdvertisementEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(VenueAdvertisementEditor.this,
+                            "Listing creation failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
+
         }
     }
 
@@ -261,6 +282,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         Intent backToMain = new Intent(VenueAdvertisementEditor.this,
                 MainActivity.class);
         startActivity(backToMain);
+        finish();
     }
 
     /**
@@ -316,4 +338,15 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         this.listing = listing;
     }
 
+    public void setVenue(Map<String, Object> venue) {
+        this.venue = venue;
+    }
+
+    public void setPreviousListing(Map<String, Object> previousListing) {
+        this.previousListing = previousListing;
+    }
+
+    public void setListingRef(String listingRef) {
+        this.listingRef = listingRef;
+    }
 }
