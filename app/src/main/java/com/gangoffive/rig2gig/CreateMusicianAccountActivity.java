@@ -99,7 +99,9 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
         // TODO - Custom Code
     }
 
-    public void submitBtnOnClick(View view) {
+    public void submitBtnOnClick(View view)
+    {
+        String loc = location.getText().toString();
         String musicianName = name.getText().toString();
         String musicianDistance = distance.getText().toString();
         String musicianAddressTextView = autoCompleteTextView.getText().toString();
@@ -140,7 +142,7 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
 
                         Map<String, Object> musicians = new HashMap<>();
                         musicians.put("name", musicianName);
-                        musicians.put("location", musicianAddress.getLocality());
+                        musicians.put("location", checkLocality(musicianAddress));
                         musicians.put("user-ref", userRef);
                         musicians.put("email-address", email);
                         musicians.put("phone-number", phoneNumber);
@@ -148,8 +150,7 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
                         musicians.put("distance", musicianDistance);
                         musicians.put("latitude", musicianAddress.getLatitude());
                         musicians.put("longitude", musicianAddress.getLongitude());
-                        System.out.println(TAG + musicianAddress.getLatitude());
-                        System.out.println(TAG + musicianAddress.getLongitude());
+
                         fStore.collection("musicians")
                                 .add(musicians)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -190,6 +191,23 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
 
         });
     }
+
+    private String checkLocality(Address musicianAddress)
+    {
+        if(musicianAddress.getLocality() != null)
+        {
+            return musicianAddress.getLocality();
+        }
+        else if(musicianAddress.getSubLocality() != null)
+        {
+            return musicianAddress.getSubLocality();
+        }
+        else
+        {
+            return musicianAddress.getPostalCode();
+        }
+    }
+
     public byte[] imageToByteArray(Drawable image)
     {
         Bitmap bitmap = ((BitmapDrawable) image).getBitmap();

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VenueActivity"
+    tools:context=".CreateVenueFragment"
     android:background="@drawable/gradient">
 
     <TextView
@@ -36,25 +36,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-    <!--<EditText
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:width="280dp"
-        android:background="@android:color/transparent"
-        android:ems="10"
-        android:hint="Location"
-        android:inputType="textPersonName"
-        android:textColor="#FFF"
-        android:textColorHint="#F6F6F6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />-->
-
     <AutoCompleteTextView
-        android:id="@+id/location"
+        android:id="@+id/venue_location"
         android:layout_width="290dp"
         android:layout_height="wrap_content"
         android:hint="Search For Your Venue Location"
@@ -71,7 +54,7 @@
         android:id="@+id/distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:width="280dp"
         android:background="@android:color/transparent"
         android:ems="10"
@@ -82,7 +65,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location" />
+        app:layout_constraintTop_toBottomOf="@+id/venue_location" />
 
     <View
         android:id="@+id/view"
@@ -93,17 +76,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name" />
-
-    <!--<View
-        android:id="@+id/view7"
-        android:layout_width="280dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:background="#FFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location" />-->
 
     <View
         android:id="@+id/view8"
@@ -128,8 +100,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/view8"
-        android:background="#FFFFFF"/>
+        app:layout_constraintTop_toBottomOf="@+id/view8" />
 
 
     <Button
@@ -138,7 +109,6 @@
         android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/transparent_button"
-        android:onClick="submitBtnOnClick"
         android:text="Submit"
         android:textAllCaps="false"
         android:textColor="#FFF"
@@ -154,7 +124,6 @@
         android:layout_height="34dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/transparent_button"
-        android:onClick="uploadBtnOnClick"
         android:text="Upload Photo"
         android:textAllCaps="false"
         android:textColor="#FFF"
@@ -170,7 +139,6 @@
         android:layout_height="34dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/transparent_button"
-        android:onClick="takeBtnOnClick"
         android:text="Take Photo"
         android:textAllCaps="false"
         android:textColor="#FFF"
@@ -184,10 +152,11 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="62dp"
         android:layout_marginTop="12dp"
         android:text="Venue Type"
         android:textColor="#FFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.195"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view8" />
 

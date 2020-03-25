@@ -135,8 +135,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#008577"
-        android:backgroundTint="#008577"
+        android:background="#12c2e9"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -150,7 +149,6 @@
             android:layout_height="fill_parent"
             android:layout_marginStart="50dp"
             android:layout_weight="1.0"
-            android:backgroundTint="#008577"
             android:text="Cancel"
             android:textColor="#FFFFFF"
             style="?android:attr/borderlessButtonStyle" />
@@ -162,7 +160,6 @@
             android:layout_height="fill_parent"
             android:layout_marginEnd="50dp"
             android:layout_weight="1.0"
-            android:background="#008577"
             android:text="Confirm"
             android:textColor="#FFFFFF" />
     </LinearLayout>

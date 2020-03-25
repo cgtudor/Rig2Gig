@@ -40,7 +40,7 @@ public class CredentialActivity extends AppCompatActivity {
     FirebaseFirestore fStore;
 
 
-    EditText cFirstName, cLastName, cUsername, cPhoneNumber, rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword;;
+    EditText cFirstName, cLastName, cUsername, cPhoneNumber, rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword;
 
     RadioButton fan, accFan, accMusician, accVenue;
     RadioGroup userGroup;

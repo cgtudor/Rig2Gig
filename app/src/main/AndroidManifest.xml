@@ -26,6 +26,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".TabbedBandActivity"></activity>
+        <activity android:name=".TabbedMusicianActivity" />
+        <activity android:name=".TabbedVenueActivity" />
         <activity
             android:name=".SearchedMusicianDetails"
             android:theme="@style/AppTheme.TranslucentBackground" />
@@ -46,11 +49,16 @@
         <activity android:name=".VenueProfileActivity" />
         <activity android:name=".MusicianProfileActivity" />
         <activity android:name=".BandProfileActivity" />
-        <activity android:name=".LaunchCommsActivity" />
 
         <activity android:name=".CreateMusicianAccountActivity" />
 
         <service android:name=".NotificationService" />
+        <service android:name=".NotificationService" />
+
+        <activity android:name=".LaunchCommsActivity" />
+
+        <service android:name=".NotificationService" />
+
         <service
             android:name=".FirebaseNotificationService"
             android:exported="false">
@@ -72,6 +80,12 @@
  Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.
         -->
+
+        <!--
+ Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more.
+        -->
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notifications_active_black_24dp" />
@@ -178,6 +192,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB4sMbIQwQaO0qlPHRuRCxB5--Zx54ACTE"/>
+
         <activity android:name=".PerformerAdvertIndexActivity"/>
     </application>
 

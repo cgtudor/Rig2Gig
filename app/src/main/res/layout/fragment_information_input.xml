@@ -11,25 +11,19 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#12c2e9"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:layout_constraintTop_toTopOf="parent" >
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minHeight="?actionBarSize"
-            android:padding="@dimen/appbar_padding"
-            android:text="Advertise yourself to bands"
-            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-            android:textColor="#FFFFFF" />
+        app:layout_constraintTop_toTopOf="parent">
+        android:focusable="true"
+        android:focusableInTouchMode="true"
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary" />
+            android:background="#12c2e9" />
+
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
@@ -46,7 +40,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#12c2e9"
+        android:background="#c471ed"
+        android:backgroundTint="#c471ed"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,13 +51,15 @@
 
         <Button
             android:id="@+id/cancel"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="0.0dip"
             android:layout_height="fill_parent"
             android:layout_marginStart="50dp"
             android:layout_weight="1.0"
+            android:backgroundTint="#008577"
+            android:onClick="cancelOnClick"
             android:text="Cancel"
-            android:textColor="#FFFFFF"
-            style="?android:attr/borderlessButtonStyle"/>
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/createListing"
@@ -71,6 +68,8 @@
             android:layout_height="fill_parent"
             android:layout_marginEnd="50dp"
             android:layout_weight="1.0"
+            android:background="#c471ed"
+            android:onClick="confirmOnClick"
             android:text="Confirm"
             android:textColor="#FFFFFF" />
     </LinearLayout>

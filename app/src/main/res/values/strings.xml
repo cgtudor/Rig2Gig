@@ -36,6 +36,12 @@
     <string name="details">Details</string>
     <string name="description">Description</string>
     <string name="position">Position</string>
+    <string name="personalInformation">Personal Information</string>
+    <string name="venueInformation">Venue Information</string>
+    <string name="musicianInformation">Musician Information</string>
+    <string name="bandInformation">Band Information</string>
+    <string name="bandGenre">Band Genres</string>
+    <string name="bandImage">Band Image</string>
     <string name="title_activity_test_transition">TestTransitionActivity</string>
     <string name="title_activity_create_performer_advertisement">CreatePerformerAdvertisement
     </string>
