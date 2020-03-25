@@ -35,6 +35,7 @@
         <activity android:name=".VenueProfileActivity" />
         <activity android:name=".MusicianProfileActivity" />
         <activity android:name=".BandProfileActivity" />
+        <activity android:name=".LaunchCommsActivity" />
 
         <activity android:name=".CreateMusicianAccountActivity" />
 
