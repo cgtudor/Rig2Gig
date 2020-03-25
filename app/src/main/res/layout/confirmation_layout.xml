@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#009688"
+    android:background="@drawable/border"
     tools:context=".DeleteMemberConfirmation">
 
     <TextView
@@ -17,7 +17,7 @@
         android:layout_marginEnd="20dp"
         android:text=""
         android:textAlignment="center"
-        android:textColor="#FFFFFF" />
+        android:textColor="#111111" />
 
     <Button
         android:id="@+id/yes"
