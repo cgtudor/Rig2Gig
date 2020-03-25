@@ -117,6 +117,7 @@ public class ViewCommsFragment extends Fragment
                                                 documentSnapshot.getId(),
                                                 documentSnapshot.get("sent-from").toString(),
                                                 documentSnapshot.get("type").toString(),
+                                                documentSnapshot.get("sent-from-type").toString(),
                                                 documentSnapshot.get("sent-from-ref").toString(),
                                                 documentSnapshot.get("musician-ref").toString());
                                     }
@@ -155,15 +156,15 @@ public class ViewCommsFragment extends Fragment
                                         String profileRef = communications.get(position).getSentFromRef();
 
                                         switch(profileType) {
-                                            case "venue":
+                                            case "venues":
                                                 openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_VENUE_ID", profileRef);
                                                 break;
-                                            case "band":
+                                            case "bands":
                                                 openProfileIntent = new Intent(v.getContext(), BandProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_BAND_ID", profileRef);
                                                 break;
-                                            case "musician":
+                                            case "musicians":
                                                 openProfileIntent = new Intent(v.getContext(), MusicianProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
                                                 break;
@@ -181,15 +182,15 @@ public class ViewCommsFragment extends Fragment
                                         String profileRef = communications.get(position).getSentFromRef();
 
                                         switch(profileType) {
-                                            case "venue":
+                                            case "venues":
                                                 openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_VENUE_ID", profileRef);
                                                 break;
-                                            case "band":
+                                            case "bands":
                                                 openProfileIntent = new Intent(v.getContext(), BandProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_BAND_ID", profileRef);
                                                 break;
-                                            case "musician":
+                                            case "musicians":
                                                 openProfileIntent = new Intent(v.getContext(), MusicianProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
                                                 break;
@@ -249,6 +250,8 @@ public class ViewCommsFragment extends Fragment
                                                                                         request.put("type", "contact-accept");
                                                                                         request.put("posting-date", Timestamp.now());
                                                                                         request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                                                                        request.put("sent-from-type",);
+                                                                                        request.put("sent-from-ref",);
                                                                                         request.put("notification-title", "Connected!");
                                                                                         request.put("notification-message", result.get("name").toString() + " has accepted your request!");
 
