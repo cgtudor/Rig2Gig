@@ -76,7 +76,7 @@ public class SavedMusiciansFragment extends Fragment
         String uID = FirebaseAuth.getInstance().getUid();
 
         db = FirebaseFirestore.getInstance();
-        colRef = db.collection("favourite-ads").document("uID").collection("musician-listings");
+        colRef = db.collection("favourite-ads").document(uID).collection("musician-listings");
 
         musicianListings = new ArrayList<>();
 
