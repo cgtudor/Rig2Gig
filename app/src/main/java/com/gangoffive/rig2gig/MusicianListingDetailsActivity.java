@@ -15,6 +15,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,7 +40,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
-public class MusicianListingDetailsActivity extends AppCompatActivity {
+public class MusicianListingDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private String mID;
     private String currentBandId = "";
@@ -42,6 +48,12 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
     private final StringBuilder musicianRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
     private final ArrayList<String> positionArray = new ArrayList<>();
+
+    private GoogleMap googleMap;
+    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
+
+    /*Firestore & Cloud Storage initialization*/
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +72,10 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
         final TextView distance = findViewById(R.id.distance);
         final TextView position = findViewById(R.id.position);
         final Button contact = findViewById(R.id.contact);
+
+        //Initialising the Google Map. See onMapReady().
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+        mapFragment.getMapAsync(this);
 
         /*Used to get the id of the listing from the previous activity*/
         mID = getIntent().getStringExtra("EXTRA_MUSICIAN_LISTING_ID");
@@ -432,5 +448,83 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                     });
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap)
+    {
+        this.googleMap = googleMap;
+
+        final DocumentReference musicianLocation = db.collection("musician-listings").document(mID);
+
+        musicianLocation.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+                if(task.isSuccessful())
+                {
+                    Log.d(TAG, "Google Map get location successful");
+
+                    DocumentSnapshot document = task.getResult();
+
+                    if(document.exists())
+                    {
+                        Log.d(TAG, "Musician Document exists");
+
+
+
+                        final DocumentReference musician = db.collection("musicians").document(document.get("musician-ref").toString());
+
+                        musician.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                        {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                            {
+                                Log.d(TAG, "Google Map get musician successful");
+
+                                if(task.isSuccessful())
+                                {
+                                    Log.d(TAG, "Google Map get musician completed");
+
+                                    DocumentSnapshot document = task.getResult();
+
+                                    String musicianName = document.get("name").toString();
+                                    LatLng musicianLocation = new LatLng(Double.parseDouble(document.get("latitude").toString()), Double.parseDouble(document.get("longitude").toString()));
+                                    googleMap.addMarker(new MarkerOptions().position(musicianLocation).title(musicianName));
+                                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(musicianLocation, 10));
+                                }
+                                else
+                                {
+                                    Log.d(TAG, "Google Map get musician failed");
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener()
+                        {
+                            @Override
+                            public void onFailure(@NonNull Exception e)
+                            {
+                                Log.d(TAG, "Google Map get musician unsuccessful");
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Log.d(TAG, "Musician Document does not exist");
+                    }
+                }
+                else
+                {
+                    Log.d(TAG, "Google Map get location unsuccessful");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Log.d(TAG, "Google Map get location failed.");
+            }
+        });
     }
 }

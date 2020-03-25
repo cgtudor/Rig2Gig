@@ -7,7 +7,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -21,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,6 +47,8 @@ import org.identityconnectors.common.security.GuardedString;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -83,6 +89,12 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
 
     private ImageView image;
     private Drawable chosenPic;
+
+    //Google Places autocomplete textview
+    private AutoCompleteTextView autoCompleteTextView;
+    private Geocoder geocoder;
+
+    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
 
     public CreateMusicianFragment() {
         // Required empty public constructor
@@ -146,7 +158,41 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
 
         image = v.findViewById(R.id.imageView);
 
+        autoCompleteTextView = v.findViewById(R.id.location);
+        autoCompleteTextView.setAdapter(new GooglePlacesAutoSuggestAdapter(getActivity(), android.R.layout.simple_list_item_1));
+
+        int requestCode = 200;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, requestCode);
+        }
+
         return v;
+    }
+
+    private Address getAddress()
+    {
+        String musicianName = autoCompleteTextView.getText().toString();
+        geocoder = new Geocoder(getActivity(), Locale.getDefault());
+
+        try
+        {
+            List<Address> addressList = geocoder.getFromLocationName(musicianName, 1);
+
+            if(addressList.size() > 0)
+            {
+                Address address = addressList.get(0);
+                return address;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch(IOException io)
+        {
+            Log.d(TAG, io.toString());
+            return null;
+        }
     }
 
     public void onClick(View v)
@@ -155,14 +201,25 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
             case R.id.submitBtn:
                 userRef = fAuth.getUid();
                 email = fAuth.getCurrentUser().getEmail();
-
                 String loc = location.getText().toString();
                 String musicianName = name.getText().toString();
                 String musicianDistance = distance.getText().toString();
+                String musicianAddressTextView = autoCompleteTextView.getText().toString();
+                Address musicianAddress = getAddress();
                 String genres = genre.getText().toString();
                 ImageView defImg = new ImageView(getActivity());
                 defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
 
+                if(TextUtils.isEmpty(musicianAddressTextView))
+                {
+                    autoCompleteTextView.setError("Please Enter Your Venue Address");
+                    return;
+                }
+                if(musicianAddress == null)
+                {
+                    autoCompleteTextView.setError("Please Enter A Valid Address");
+                    return;
+                }
                 if (TextUtils.isEmpty(loc)) {
                     location.setError("Please Set A Locaton!");
                     return;
@@ -189,12 +246,15 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
 
                                 Map<String, Object> musicians = new HashMap<>();
                                 musicians.put("name", musicianName);
-                                musicians.put("location", loc);
+                                musicians.put("location", checkLocality(musicianAddress));
                                 musicians.put("user-ref", userRef);
                                 musicians.put("email-address", email);
                                 musicians.put("phone-number", phoneNumber);
                                 musicians.put("genres", genres);
                                 musicians.put("distance", musicianDistance);
+                                musicians.put("latitude", musicianAddress.getLatitude());
+                                musicians.put("longitude", musicianAddress.getLongitude());
+
                                 fStore.collection("musicians")
                                         .add(musicians)
                                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -249,6 +309,22 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
+        }
+    }
+
+    private String checkLocality(Address musicianAddress)
+    {
+        if(musicianAddress.getLocality() != null)
+        {
+            return musicianAddress.getLocality();
+        }
+        else if(musicianAddress.getSubLocality() != null)
+        {
+            return musicianAddress.getSubLocality();
+        }
+        else
+        {
+            return musicianAddress.getPostalCode();
         }
     }
 

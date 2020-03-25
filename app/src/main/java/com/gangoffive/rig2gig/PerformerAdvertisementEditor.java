@@ -6,17 +6,28 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PerformerAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement {
@@ -68,6 +79,13 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         public void afterTextChanged(Editable s) {}
     };
 
+    private double performerLatitude;
+    private double performerLongitude;
+    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
+    private final CollectionReference musicianReference = FSTORE.collection("musicians");
+    private final Query getPerformerLocation = musicianReference;
+    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
 
     /**
      * setup view and listing manager, initiating getting performer info from database
@@ -88,6 +106,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
 
         listingManager = new ListingManager(performerRef, performerType + " Performer", listingRef);
         listingManager.getUserInfo(this);
+        getPerformerLocation();
     }
 
     /**
@@ -269,6 +288,9 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             listing.put("listing-owner", FirebaseAuth.getInstance().getUid());
         }
         listing.put("distance", distance.getText().toString());
+
+        listing.put("latitude", performerLatitude);
+        listing.put("longitude", performerLongitude);
     }
 
     /**
@@ -310,6 +332,39 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
      */
     public ImageView getImageView() {
         return image;
+    }
+
+    private void getPerformerLocation()
+    {
+        getPerformerLocation.whereEqualTo("user-ref", fAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots)
+            {
+                Log.d(TAG, "Successfully obtained Venue reference.");
+
+                List<DocumentSnapshot> venues = queryDocumentSnapshots.getDocuments();
+
+                if(!venues.isEmpty())
+                {
+                    Log.d(TAG, "Successful get of venue.");
+                    DocumentSnapshot venue = venues.get(0);
+
+                    performerLatitude = Double.parseDouble(venue.get("latitude").toString());
+                    performerLongitude = Double.parseDouble(venue.get("longitude").toString());
+                }
+                else
+                {
+                    Log.d(TAG, "Unsuccessful get of venue.");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Log.d(TAG, "Failed to get Venue reference.");
+            }
+        });
     }
 }
 

@@ -61,90 +61,89 @@ public class DisplayMusiciansBands extends Fragment
 
         Query first = musiciansRef;
 
-        first.whereEqualTo("user-ref", USERID).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+        first.whereEqualTo("user-ref", USERID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task)
+            {
+                if(task.isSuccessful())
                 {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                    musicians = task.getResult().getDocuments();
+
+                    if(!musicians.isEmpty())
                     {
-                        if(task.isSuccessful())
+                        Log.d(TAG, "get successful with data");
+
+                        DocumentSnapshot musician = musicians.get(0);
+
+                        musicianId = musician.getId();
+
+                        bands = (ArrayList<String>) musician.get("bands");
+
+                        //System.out.println(TAG + " band size = " + bands.size());
+
+                        if(bands != null && bands.size() > 0)
                         {
-                            musicians = task.getResult().getDocuments();
-
-                            if(!musicians.isEmpty())
+                            for(String b : bands)
                             {
-                                Log.d(TAG, "get successful with data");
-
-                                DocumentSnapshot musician = musicians.get(0);
-
-                                musicianId = musician.getId();
-
-                                bands = (ArrayList<String>) musician.get("bands");
-
-                                System.out.println(TAG + " band size = " + bands.size());
-
-                                if(bands.size() > 0)
+                                bandRef.document(b).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                                 {
-                                    for(String b : bands)
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task)
                                     {
-                                        bandRef.document(b).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                                        if(task.isSuccessful())
                                         {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                            DocumentSnapshot bandSnapshot = task.getResult();
+
+                                            System.out.println(TAG + " database document: " + bandSnapshot.getId() + " local document " + b);
+
+                                            MusiciansBands band = new MusiciansBands(bandSnapshot.getId(), bandSnapshot.get("name").toString());
+                                            musiciansBands.add(band);
+
+                                            adapter = new MusiciansBandsAdapter(musiciansBands, getContext());
+
+                                            adapter.setOnItemClickListener(new MusiciansBandsAdapter.OnItemClickListener()
                                             {
-                                                if(task.isSuccessful())
+                                                @Override
+                                                public void onItemClick(int position)
                                                 {
-                                                    DocumentSnapshot bandSnapshot = task.getResult();
-
-                                                    System.out.println(TAG + " database document: " + bandSnapshot.getId() + " local document " + b);
-
-                                                    MusiciansBands band = new MusiciansBands(bandSnapshot.getId(), bandSnapshot.get("name").toString());
-                                                    musiciansBands.add(band);
-
-                                                    adapter = new MusiciansBandsAdapter(musiciansBands, getContext());
-
-                                                    adapter.setOnItemClickListener(new MusiciansBandsAdapter.OnItemClickListener()
-                                                    {
-                                                        @Override
-                                                        public void onItemClick(int position)
-                                                        {
-                                                            //Uncomment following when the fragment/activity to view a band's details has been created.
-                                                            Intent selectedBand = new Intent(view.getContext(), BandConsoleActivity.class);
-                                                            String bandReference = musiciansBands.get(position).getReference();
-                                                            String bandName = musiciansBands.get(position).getBandName();
-                                                            selectedBand.putExtra("EXTRA_SELECTED_BAND_ID", bandReference);
-                                                            selectedBand.putExtra("EXTRA_SELECTED_BAND_NAME", bandName);
-                                                            view.getContext().startActivity(selectedBand);
-                                                        }
-                                                    });
-
-                                                    recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-                                                    recyclerView.setHasFixedSize(true);
-                                                    recyclerView.setAdapter(adapter);
-                                                    LinearLayoutManager llManager = new LinearLayoutManager(getContext());
-                                                    recyclerView.setLayoutManager(llManager);
-
+                                                    //Uncomment following when the fragment/activity to view a band's details has been created.
+                                                    Intent selectedBand = new Intent(view.getContext(), BandConsoleActivity.class);
+                                                    String bandReference = musiciansBands.get(position).getReference();
+                                                    String bandName = musiciansBands.get(position).getBandName();
+                                                    selectedBand.putExtra("EXTRA_SELECTED_BAND_ID", bandReference);
+                                                    selectedBand.putExtra("EXTRA_SELECTED_BAND_NAME", bandName);
+                                                    view.getContext().startActivity(selectedBand);
                                                 }
-                                                else
-                                                {
+                                            });
 
-                                                }
-                                            }
-                                        });
+                                            recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+                                            recyclerView.setHasFixedSize(true);
+                                            recyclerView.setAdapter(adapter);
+                                            LinearLayoutManager llManager = new LinearLayoutManager(getContext());
+                                            recyclerView.setLayoutManager(llManager);
+
+                                        }
+                                        else
+                                        {
+
+                                        }
                                     }
-                                }
+                                });
                             }
-                            else
-                            {
-                                Log.d(TAG, "get successful without data");
-                            }
-                        }
-                        else
-                        {
-                            Log.d(TAG, "get failed with ", task.getException());
                         }
                     }
-                });
+                    else
+                    {
+                        Log.d(TAG, "get successful without data");
+                    }
+                }
+                else
+                {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
 
         return view;
     }

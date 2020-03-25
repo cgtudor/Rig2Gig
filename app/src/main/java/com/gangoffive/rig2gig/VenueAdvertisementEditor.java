@@ -4,18 +4,33 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
+
+import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VenueAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement {
@@ -53,6 +68,13 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         @Override
         public void afterTextChanged(Editable s) {}
     };
+    private double venueLatitude;
+    private double venueLongitude;
+    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
+    private final CollectionReference venueReference = FSTORE.collection("venues");
+    private final Query getVenueLocation = venueReference;
+    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +92,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         type = "Venue";
         listingManager = new ListingManager(venueRef, type, listingRef);
         listingManager.getUserInfo(this);
+        getVenueLocation();
     }
 
     /**
@@ -270,6 +293,10 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         {
             listing.put("description", description.getText().toString());
         }
+
+
+        listing.put("latitude", venueLatitude);
+        listing.put("longitude", venueLongitude);
     }
 
     /**
@@ -295,4 +322,36 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         return image;
     }
 
+    private void getVenueLocation()
+    {
+        getVenueLocation.whereEqualTo("user-ref", fAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots)
+            {
+                Log.d(TAG, "Successfully obtained Venue reference.");
+
+                List<DocumentSnapshot> venues = queryDocumentSnapshots.getDocuments();
+
+                if(!venues.isEmpty())
+                {
+                    Log.d(TAG, "Successful get of venue.");
+                    DocumentSnapshot venue = venues.get(0);
+
+                    venueLatitude = Double.parseDouble(venue.get("latitude").toString());
+                    venueLongitude = Double.parseDouble(venue.get("longitude").toString());
+                }
+                else
+                {
+                    Log.d(TAG, "Unsuccessful get of venue.");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Log.d(TAG, "Failed to get Venue reference.");
+            }
+        });
+    }
 }

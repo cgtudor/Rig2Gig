@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -54,6 +57,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class CreateVenueFragment extends Fragment implements View.OnClickListener {
@@ -61,13 +65,13 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1888;
     private static final int REQUEST_GALLERY__PHOTO = 1;
 
-    SwipeRefreshLayout swipeLayout;
-
-    FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-    FirebaseStorage fStorage = FirebaseStorage.getInstance();
-    EditText description, location, name, venueType;
+    private FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    private FirebaseStorage fStorage = FirebaseStorage.getInstance();
+    private EditText description, name, venueType;
+    private AutoCompleteTextView location;
     public static Button submit, takePhotoBtn, uploadPhotoBtn;
+    private Geocoder geocoder;
 
     String email, userRef, phoneNumber, type;
 
@@ -112,11 +116,13 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
         fStorage = FirebaseStorage.getInstance();
 
         description = v.findViewById(R.id.distance);
-        location = v.findViewById(R.id.location);
+        location = v.findViewById(R.id.venue_location);
         name = v.findViewById(R.id.name);
         venueType = v.findViewById(R.id.type);
         submit = v.findViewById(R.id.submitBtn);
 
+        location = v.findViewById(R.id.venue_location);
+        location.setAdapter(new GooglePlacesAutoSuggestAdapter(getActivity(), android.R.layout.simple_list_item_1));
 
         image = v.findViewById(R.id.imageViewVenue);
         //image.setBackgroundResource(R.drawable.com_facebook_profile_picture_blank_portrait);
@@ -180,14 +186,20 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ + " + userRef);
                 email = fAuth.getCurrentUser().getEmail();
                 String desc = description.getText().toString();
-                String loc = location.getText().toString();
+                String venueAddressTextView = location.getText().toString();
+                Address venueAddress = getAddress();
                 String venueName = name.getText().toString();
                 String venueRating = "-1";
                 ImageView defImg = new ImageView(getActivity());
                 defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
 
-                if (TextUtils.isEmpty(loc)) {
+                if (TextUtils.isEmpty(venueAddressTextView)) {
                     location.setError("Please Set A Locaton!");
+                    return;
+                }
+                if(venueAddress == null)
+                {
+                    location.setError("Please enter a valid location!");
                     return;
                 }
                 if (TextUtils.isEmpty(desc)) {
@@ -211,13 +223,15 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
 
                                 Map<String, Object> venues = new HashMap<>();
                                 venues.put("name", venueName);
-                                venues.put("location", loc);
+                                venues.put("location", checkLocality(venueAddress));
                                 venues.put("description", desc);
                                 venues.put("user-ref", userRef);
                                 venues.put("venue-type", type);
                                 venues.put("email-address", email);
                                 venues.put("phone-number", phoneNumber);
                                 venues.put("rating", venueRating);
+                                venues.put("latitude", venueAddress.getLatitude());
+                                venues.put("longitude", venueAddress.getLongitude());
                                 fStore.collection("venues")
                                         .add(venues)
                                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -273,6 +287,22 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    private String checkLocality(Address venueAddress)
+    {
+        if(venueAddress.getLocality() != null)
+        {
+            return venueAddress.getLocality();
+        }
+        else if(venueAddress.getSubLocality() != null)
+        {
+            return venueAddress.getSubLocality();
+        }
+        else
+        {
+            return venueAddress.getPostalCode();
+        }
+    }
+
     public boolean onBackPressed() {
         return true;
     }
@@ -316,6 +346,32 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
                     }
                     image.setImageBitmap(bitmapImage);
             }
+        }
+    }
+
+    private Address getAddress()
+    {
+        String venueName = location.getText().toString();
+        geocoder = new Geocoder(getActivity(), Locale.getDefault());
+
+        try
+        {
+            List<Address> addressList = geocoder.getFromLocationName(venueName, 1);
+
+            if(addressList.size() > 0)
+            {
+                Address address = addressList.get(0);
+                return address;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch(IOException io)
+        {
+            Log.d(TAG, io.toString());
+            return null;
         }
     }
 }

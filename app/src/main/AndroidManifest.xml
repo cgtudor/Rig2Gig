@@ -3,6 +3,7 @@
     package="com.gangoffive.rig2gig">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!--For card.io card scanning-->
     <uses-permission android:name="android.permission.CAMERA" />
@@ -184,8 +185,13 @@
         </activity>
         <activity android:name=".BandConsoleActivity" />
 
-        <activity android:name=".BandAdvertIndexActivity" />
-        <activity android:name=".MusicianAdvertIndexActivity" />
+        <activity android:name=".BandAdvertIndexActivity"/>
+        <activity android:name=".MusicianAdvertIndexActivity"/>
+		
+        <!--Google Maps meta data-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB4sMbIQwQaO0qlPHRuRCxB5--Zx54ACTE"/>
 
         <activity android:name=".PerformerAdvertIndexActivity"/>
     </application>

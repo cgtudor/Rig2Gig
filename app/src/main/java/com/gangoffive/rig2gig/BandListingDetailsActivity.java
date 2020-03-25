@@ -16,6 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,6 +42,7 @@ import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import org.w3c.dom.Document;
 import org.json.JSONException;
 
 import java.math.BigDecimal;
@@ -44,14 +51,22 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
-public class BandListingDetailsActivity extends AppCompatActivity {
+public class BandListingDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private String bID;
     private final Date expiry = new Date();
     private final StringBuilder bandRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
     private final ArrayList<String> positionArray = new ArrayList<>();
+    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
+    private GoogleMap googleMap;
+    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
+
+    /*Firestore & Cloud Storage initialization*/
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private static PayPalConfiguration paypalConfig = new PayPalConfiguration()
             // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
@@ -81,13 +96,12 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         final Button contact = findViewById(R.id.contact);
         final Button publish = findViewById(R.id.publish);
 
+        //Initialising the Google Map. See onMapReady().
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+        mapFragment.getMapAsync(this);
 
         /*Used to get the id of the listing from the previous activity*/
         bID = getIntent().getStringExtra("EXTRA_BAND_LISTING_ID");
-
-        /*Firestore & Cloud Storage initialization*/
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
 
         /*Finding the listing by its ID in the "band-listings" subfolder*/
         DocumentReference bandListing = db.collection("band-listings").document(bID);
@@ -101,7 +115,7 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
-                        listingOwner.append(document.get("listing-owner").toString());
+                        listingOwner.append(document.get("lisiting-owner").toString());
 
                         /*Find the band reference by looking for the band ID in the "bands" subfolder*/
                         DocumentReference band = db.collection("bands").document(document.get("band-ref").toString());
@@ -484,6 +498,60 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap)
+    {
+        this.googleMap = googleMap;
+
+        final DocumentReference bandLocation = db.collection("band-listings").document(bID);
+
+        final CollectionReference musiciansRef = db.collection("musicians");
+
+        Query getMusiciansBands = musiciansRef;
+
+        getMusiciansBands.whereEqualTo("user-ref", fAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task)
+            {
+                if(task.isSuccessful())
+                {
+                    List<DocumentSnapshot> myMusicianID = task.getResult().getDocuments();
+
+                    DocumentSnapshot musician = myMusicianID.get(0);
+
+                    ArrayList<String> bandsImIn = (ArrayList<String>) musician.get("bands");
+
+                    if(bandsImIn != null && bandsImIn.size() > 0)
+                    {
+                        for(String bands : bandsImIn)
+                        {
+                            final CollectionReference bandRef = db.collection("bands");
+
+                            bandRef.document(bands).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                            {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                {
+                                    if(task.isSuccessful())
+                                    {
+                                        DocumentSnapshot bandSnapshot = task.getResult();
+
+                                        String musicianName = bandSnapshot.get("name").toString();
+
+                                        LatLng bandLocation = new LatLng(Double.parseDouble(bandSnapshot.get("latitude").toString()), Double.parseDouble(bandSnapshot.get("longitude").toString()));
+                                        googleMap.addMarker(new MarkerOptions().position(bandLocation).title(musicianName));
+                                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bandLocation, 10));
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     public void onBuyPressed(View pressed) {
         // PAYMENT_INTENT_SALE will cause the payment to complete immediately.
         // Change PAYMENT_INTENT_SALE to
@@ -556,6 +624,5 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         stopService(new Intent(this, PayPalService.class));
         super.onDestroy();
     }
-
 }
 
