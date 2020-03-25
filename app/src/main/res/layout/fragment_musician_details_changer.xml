@@ -84,12 +84,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView3" />
 
-    <EditText
-        android:id="@+id/location"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Enter musician location"
+    <AutoCompleteTextView
+        android:id="@+id/musician_location"
+        android:layout_width="225dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter your Town/City (Barnsley, UK)"
+        android:layout_marginTop="10dp"
+        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView4" />

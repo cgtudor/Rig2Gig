@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class VenueDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
-    private boolean firstRun = false;
+
     private Geocoder geocoder;
     private TextView name, description, venueType, email, phone;
     private AutoCompleteTextView location;
