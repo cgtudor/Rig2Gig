@@ -112,7 +112,7 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         request.put("type", "join-request");
         request.put("posting-date", Timestamp.now());
         request.put("sent-from", FirebaseAuth.getInstance().getUid());
-        request.put("band-ref",bandRef);
+        request.put("sent-from-ref",bandRef);
         request.put("musician-ref", musicianRef);
         request.put("notification-title","You have been invited to join a band!");
         request.put("notification-message", inviterName + " would like you to join their band " + bandName + ".");
@@ -146,7 +146,7 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         request.put("type", "join-request");
         request.put("posting-date", Timestamp.now());
         request.put("sent-to", userRef);
-        request.put("band-ref",bandRef);
+        request.put("sent-from-ref",bandRef);
         request.put("musician-ref", musicianRef);
         request.put("notification-title","You have been invited to join a band!");
         request.put("notification-message", inviterName + " would like you to join their band " + bandName + ".");

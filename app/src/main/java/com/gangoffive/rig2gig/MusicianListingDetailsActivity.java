@@ -37,12 +37,14 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 
 public class MusicianListingDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private String mID;
-    private final StringBuilder expiry = new StringBuilder("");
+    private String currentBandId = "";
+    private final Date expiry = new Date();
     private final StringBuilder musicianRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
     private final ArrayList<String> positionArray = new ArrayList<>();
@@ -77,6 +79,8 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
 
         /*Used to get the id of the listing from the previous activity*/
         mID = getIntent().getStringExtra("EXTRA_MUSICIAN_LISTING_ID");
+
+        currentBandId = getIntent().getStringExtra("CURRENT_BAND_ID");
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -152,7 +156,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                             }
                         });
                         Timestamp expiryDate = (Timestamp) document.get("expiry-date");
-                        expiry.append(expiryDate.toDate().toString());
+                        expiry.setTime(expiryDate.toDate().getTime());
                         musicianRef.append(document.get("musician-ref").toString());
                         description.setText(document.get("description").toString());
                         positionArray.addAll((ArrayList<String>) document.get("position"));
@@ -182,6 +186,10 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                                 request.put("type", "contact-request");
                                 request.put("posting-date", Timestamp.now());
                                 request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                request.put("sent-from-type", "bands");
+                                request.put("sent-from-ref", currentBandId);
+                                request.put("sent-to-type", "musicians");
+                                request.put("sent-to-ref", musicianRef.toString());
                                 request.put("notification-title", "Someone is interested in your advert!");
                                 request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
 
@@ -211,6 +219,10 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                                 requestSent.put("type", "contact-request");
                                 requestSent.put("posting-date", Timestamp.now());
                                 requestSent.put("sent-to", listingOwner.toString());
+                                requestSent.put("sent-from-type", "band");
+                                requestSent.put("sent-from-ref", currentBandId);
+                                requestSent.put("sent-to-type", "musicians");
+                                requestSent.put("sent-to-ref", musicianRef.toString());
                                 requestSent.put("notification-title", "Someone is interested in your advert!");
                                 requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
 
@@ -371,10 +383,12 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
 
         if(id == R.id.saveButton)
         {
+            Timestamp expiryDate = new Timestamp(expiry);
+
             HashMap<String, Object> listing = new HashMap<>();
             listing.put("position", positionArray);
             listing.put("description", description.getText().toString());
-            listing.put("expiry-date", expiry.toString());
+            listing.put("expiry-date", expiry);
             listing.put("musician-ref", musicianRef.toString());
 
             CollectionReference favMusicians = db.collection("favourite-ads")
@@ -458,7 +472,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                     {
                         Log.d(TAG, "Musician Document exists");
 
-                        LatLng musicianLocation = new LatLng(Double.parseDouble(document.get("latitude").toString()), Double.parseDouble(document.get("longitude").toString()));
+
 
                         final DocumentReference musician = db.collection("musicians").document(document.get("musician-ref").toString());
 
@@ -476,7 +490,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                                     DocumentSnapshot document = task.getResult();
 
                                     String musicianName = document.get("name").toString();
-
+                                    LatLng musicianLocation = new LatLng(Double.parseDouble(document.get("latitude").toString()), Double.parseDouble(document.get("longitude").toString()));
                                     googleMap.addMarker(new MarkerOptions().position(musicianLocation).title(musicianName));
                                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(musicianLocation, 10));
                                 }

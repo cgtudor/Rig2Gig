@@ -44,8 +44,8 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
 
     public interface OnItemClickListener {
         /*void onItemClick(int position);*/
-        /*void onPhotoClick(int position);
-        void onNameClick(int position);*/
+        void onPhotoClick(int position);
+        void onNameClick(int position);
         void onTopButtonClick(int position);
         void onBotButtonClick(int position);
     }
@@ -87,7 +87,7 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                 }
             });*/
 
-            /*imageViewPhoto.setOnClickListener(new View.OnClickListener() {
+            imageViewPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
@@ -109,7 +109,7 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                         }
                     }
                 }
-            });*/
+            });
 
             imageViewTopButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -184,6 +184,9 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                     if (commDoc.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + commDoc.getData());
 
+                        StorageReference venuePic = storage.getReference().child("/images/" + communication.getSentFromType() + "/" + communication.getSentFromRef() + ".jpg");
+                        GlideApp.with(holder.imageViewPhoto.getContext()).load(venuePic).into(holder.imageViewPhoto);
+
                         Timestamp postingDate = (Timestamp) commDoc.get("posting-date");
                         Date pDate = postingDate.toDate();
                         String pattern = "dd/MM/yyyy HH:mm";
@@ -246,8 +249,26 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                                 //
                         }
 
+                        DocumentReference sentFromDocRef = db.collection(communication.getSentFromType()).document(communication.getSentFromRef());
 
-                        String userRef = commDoc.get("sent-from").toString();
+                        sentFromDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d("FIRESTORE", "DocumentSnapshot data:111 " + commDoc.getData());
+                                    DocumentSnapshot sentFromDoc = task.getResult();
+                                    if (sentFromDoc.exists()) {
+                                        Log.d("FIRESTORE", "DocumentSnapshot data:222 " + commDoc.getData());
+
+                                        holder.textViewName.setText(sentFromDoc.get("name").toString());
+                                    }
+                                } else {
+                                    Log.d("FIRESTORE", "DocumentSnapshot data:333 " + commDoc.getData());
+                                }
+                            }
+                        });
+
+                        /*String userRef = commDoc.get("sent-from").toString();
                         DocumentReference userDocRef = db.collection("users").document(userRef);
 
                         userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -302,7 +323,7 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                                     Log.d("FIRESTORE", "DocumentSnapshot data:333 " + commDoc.getData());
                                 }
                             }
-                        });
+                        });*/
                     } else {
                         Log.d("FIRESTORE", "No such document");
                     }

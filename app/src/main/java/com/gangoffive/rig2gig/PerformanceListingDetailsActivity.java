@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,15 +38,25 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import org.json.JSONException;
+
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 public class PerformanceListingDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private String pID;
-    private final StringBuilder expiry = new StringBuilder("");
+    private final Date expiry = new Date();
     private final StringBuilder performerRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
     private final StringBuilder performerTypeGlobal = new StringBuilder("");
@@ -55,11 +66,20 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
 
     /*Firestore & Cloud Storage initialization*/
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static PayPalConfiguration paypalConfig = new PayPalConfiguration()
+            // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
+            // or live (ENVIRONMENT_PRODUCTION)
+            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+            .clientId("AWpRTRqwsxyU-8X9zXOvNMTsgphAh7UzQz2jOt2kSE8S8OwLSsGSWsCVxvTXQq10JWGufT0bg9Dgspy3");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_performance_listing_details);
+
+        Intent intent = new Intent(this, PayPalService.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, paypalConfig);
+        startService(intent);
 
         /*Setting the support action bar to the newly created toolbar*/
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -72,6 +92,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
         final TextView location = findViewById(R.id.location);
         final TextView distance = findViewById(R.id.distance);
         final Button contact = findViewById(R.id.contact);
+        final Button publish = findViewById(R.id.publish);
 
         //Initialising the Google Map. See onMapReady().
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
@@ -97,12 +118,12 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                         String performerType = document.get("performer-type").toString().equals("Band") ? "bands" : "musicians";
+                        Timestamp expiryDate = (Timestamp) document.get("expiry-date");
 
                         /*Find the performer reference by looking for the performer ID in the "performers" subfolder*/
                         DocumentReference performer = db.collection(performerType).document(document.get("performer-ref").toString());
 
-                        if(performerType.equals("bands"))
-                        {
+                        if (performerType.equals("bands")) {
                             listingOwner.append(document.get("listing-owner").toString());
                         }
 
@@ -119,8 +140,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                         location.setText(document.get("location").toString());
                                         genre.setText(document.get("genres").toString());
 
-                                        if(performerType.equals("musicians"))
-                                        {
+                                        if (performerType.equals("musicians")) {
                                             listingOwner.append(document.get("user-ref").toString());
                                         }
 
@@ -129,30 +149,29 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                        if(task.isSuccessful())
-                                                        {
+                                                        if (task.isSuccessful()) {
                                                             QuerySnapshot query = task.getResult();
-                                                            if(!query.isEmpty())
-                                                            {
+                                                            if (!query.isEmpty()) {
                                                                 contact.setAlpha(.5f);
                                                                 contact.setClickable(false);
                                                                 contact.setText("Contact request sent");
                                                             }
-                                                        }
-                                                        else
-                                                        {
+                                                        } else {
                                                             Log.e("FIREBASE", "Sent messages failed with ", task.getException());
                                                         }
                                                     }
                                                 });
-                                        if(listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()))
-                                        {
+                                        if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()) && expiryDate.compareTo(Timestamp.now()) > 0) {
                                             getSupportActionBar().setTitle("My Advert");
                                             contact.setClickable(false);
                                             contact.setVisibility(View.GONE);
-                                        }
-                                        else
-                                        {
+                                        } else if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()) && expiryDate.compareTo(Timestamp.now()) < 0) {
+                                            getSupportActionBar().setTitle("My Advert Preview");
+                                            contact.setClickable(false);
+                                            contact.setVisibility(View.GONE);
+                                            publish.setVisibility(View.VISIBLE);
+                                            publish.setClickable(true);
+                                        } else {
                                             getSupportActionBar().setTitle(performerName.getText().toString());
                                         }
                                     } else {
@@ -163,9 +182,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                 }
                             }
                         });
-                        //Timestamp expiryDate = (Timestamp) document.get("expiry-date");
-                        //expiry.append(expiryDate.toDate().toString());
-
+                        expiry.setTime(expiryDate.toDate().getTime());
                         performerRef.append(document.get("performer-ref").toString());
                         performerTypeGlobal.append(document.get("performer-type").toString());
                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
@@ -185,16 +202,18 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful())
-                        {
+                        if (task.isSuccessful()) {
                             QuerySnapshot venues = task.getResult();
-                            if(!venues.isEmpty())
-                            {
+                            if (!venues.isEmpty()) {
                                 DocumentSnapshot venue = venues.getDocuments().get(0);
                                 HashMap<String, Object> request = new HashMap<>();
                                 request.put("type", "contact-request");
                                 request.put("posting-date", Timestamp.now());
                                 request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                request.put("sent-from-type", "venues");
+                                request.put("sent-from-ref", venue.getId());
+                                request.put("sent-to-type", performerTypeGlobal.equals("Band") ? "bands" : "musicians");
+                                request.put("sent-to-ref", performerRef.toString());
                                 request.put("notification-title", "Someone is interested in your advert!");
                                 request.put("notification-message", venue.get("name") + " is interested in you! Share contact details?");
 
@@ -205,16 +224,13 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                         .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                if(task.isSuccessful())
-                                                {
+                                                if (task.isSuccessful()) {
                                                     Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
                                                     Toast.makeText(PerformanceListingDetailsActivity.this, "Contact request sent!", Toast.LENGTH_SHORT).show();
                                                     contact.setAlpha(.5f);
                                                     contact.setClickable(false);
                                                     contact.setText("Contact request sent");
-                                                }
-                                                else
-                                                {
+                                                } else {
                                                     Log.d("FIRESTORE", "Contact request failed with ", task.getException());
                                                 }
                                             }
@@ -224,6 +240,10 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                 requestSent.put("type", "contact-request");
                                 requestSent.put("posting-date", Timestamp.now());
                                 requestSent.put("sent-to", listingOwner.toString());
+                                requestSent.put("sent-from-type", "venues");
+                                requestSent.put("sent-from-ref", venue.getId());
+                                requestSent.put("sent-to-type", performerTypeGlobal.equals("Band") ? "bands" : "musicians");
+                                requestSent.put("sent-to-ref", performerRef.toString());
                                 requestSent.put("notification-title", "Someone is interested in your advert!");
                                 requestSent.put("notification-message", venue.get("name") + " is interested in you! Share contact details?");
                                 CollectionReference sent = db.collection("communications")
@@ -234,12 +254,9 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                         .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                if(task.isSuccessful())
-                                                {
+                                                if (task.isSuccessful()) {
                                                     Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
-                                                }
-                                                else
-                                                {
+                                                } else {
                                                     Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
                                                 }
                                             }
@@ -272,6 +289,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
 
     /**
      * Overriding the up navigation to call onBackPressed
+     *
      * @return true
      */
     @Override
@@ -284,8 +302,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
      * Checks the user-type. Redirects to console if it is a musician or to the previous activity/fragment if not.
      */
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         super.onBackPressed();
         finish();
     }
@@ -329,19 +346,15 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                     if (document.exists()) {
                                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
-                                        if(listingOwner.toString().equals(""))
-                                        {
+                                        if (listingOwner.toString().equals("")) {
                                             listingOwner.append(document.get("user-ref"));
                                         }
 
-                                        if(listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()))
-                                        {
+                                        if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid())) {
                                             MenuItem star = menu.findItem(R.id.saveButton);
                                             star.setIcon(R.drawable.ic_full_star);
                                             star.setVisible(false);
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                                             CollectionReference favVenues = db.collection("favourite-ads")
                                                     .document(FirebaseAuth.getInstance().getUid())
@@ -350,11 +363,9 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                            if(task.isSuccessful())
-                                                            {
+                                                            if (task.isSuccessful()) {
                                                                 DocumentSnapshot document = task.getResult();
-                                                                if(document.exists())
-                                                                {
+                                                                if (document.exists()) {
                                                                     MenuItem star = menu.findItem(R.id.saveButton);
                                                                     star.setIcon(R.drawable.ic_full_star);
                                                                 }
@@ -388,13 +399,14 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
         TextView distance = findViewById(R.id.distance);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        if(id == R.id.saveButton)
-        {
-            HashMap<String, String> listing = new HashMap<>();
+        if (id == R.id.saveButton) {
+            Timestamp expiryDate = new Timestamp(expiry);
+
+            HashMap<String, Object> listing = new HashMap<>();
             listing.put("distance", distance.getText().toString());
-            listing.put("expiry-date", expiry.toString());
+            listing.put("expiry-date", expiryDate);
             listing.put("performer-ref", performerRef.toString());
-            listing.put("performer-type",performerTypeGlobal.toString());
+            listing.put("performer-type", performerTypeGlobal.toString());
 
             CollectionReference favPerformers = db.collection("favourite-ads")
                     .document(FirebaseAuth.getInstance().getUid())
@@ -403,11 +415,9 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if(task.isSuccessful())
-                            {
+                            if (task.isSuccessful()) {
                                 DocumentSnapshot document = task.getResult();
-                                if(document.exists())
-                                {
+                                if (document.exists()) {
                                     favPerformers.document(pID)
                                             .delete()
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -423,30 +433,23 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                                     Log.w("FIRESTORE", "Error deleting document", e);
                                                 }
                                             });
-                                }
-                                else
-                                {
+                                } else {
                                     favPerformers.document(pID)
                                             .set(listing)
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                    if(task.isSuccessful())
-                                                    {
+                                                    if (task.isSuccessful()) {
                                                         Log.d("FIRESTORE", "Favourite successful");
                                                         Toast.makeText(PerformanceListingDetailsActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
                                                         item.setIcon(R.drawable.ic_full_star);
-                                                    }
-                                                    else
-                                                    {
+                                                    } else {
                                                         Log.d("FIRESTORE", "Task failed with ", task.getException());
                                                     }
                                                 }
                                             });
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 Log.d("FIRESTORE", "Failed with: ", task.getException());
                             }
                         }
@@ -455,72 +458,55 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
-    public void onMapReady(GoogleMap googleMap)
-    {
+    public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
 
         final DocumentReference performerLocation = db.collection("performer-listings").document(pID);
 
-        performerLocation.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-        {
+        performerLocation.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-            {
-                if(task.isSuccessful())
-                {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
                     Log.d(TAG, "Google Map get location successful");
 
                     DocumentSnapshot document = task.getResult();
 
-                    if(document.exists())
-                    {
+                    if (document.exists()) {
                         Log.d(TAG, "performer Document exists");
 
                         String performerType = document.get("performer-type").toString();
 
-                        if(performerType.equals("Band"))
-                        {
+                        if (performerType.equals("Band")) {
                             getBandLocation(googleMap, document);
-                        }
-                        else
-                        {
+                        } else {
                             getMusicianLocation(googleMap, document);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         Log.d(TAG, "performer Document does not exist");
                     }
-                }
-                else
-                {
+                } else {
                     Log.d(TAG, "Google Map get location unsuccessful");
                 }
             }
-        }).addOnFailureListener(new OnFailureListener()
-        {
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e)
-            {
+            public void onFailure(@NonNull Exception e) {
                 Log.d(TAG, "Google Map get location failed.");
             }
         });
     }
 
-    private void getBandLocation(GoogleMap googleMap, DocumentSnapshot document)
-    {
+    private void getBandLocation(GoogleMap googleMap, DocumentSnapshot document) {
         final DocumentReference performer = db.collection("bands").document(document.get("performer-ref").toString());
 
-        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-        {
+        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-            {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 Log.d(TAG, "Google Map get performer successful");
 
-                if(task.isSuccessful())
-                {
+                if (task.isSuccessful()) {
                     Log.d(TAG, "Google Map get performer completed");
 
                     DocumentSnapshot document = task.getResult();
@@ -529,9 +515,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                     LatLng performerLocation = new LatLng(Double.parseDouble(document.get("latitude").toString()), Double.parseDouble(document.get("longitude").toString()));
                     googleMap.addMarker(new MarkerOptions().position(performerLocation).title(performerName));
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(performerLocation, 10));
-                }
-                else
-                {
+                } else {
                     Log.d(TAG, "Google Map get performer failed");
                 }
             }
@@ -542,15 +526,12 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
     {
         final DocumentReference performer = db.collection("musicians").document(document.get("performer-ref").toString());
 
-        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-        {
+        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-            {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 Log.d(TAG, "Google Map get performer successful");
 
-                if(task.isSuccessful())
-                {
+                if (task.isSuccessful()) {
                     Log.d(TAG, "Google Map get performer completed");
 
                     DocumentSnapshot document = task.getResult();
@@ -562,5 +543,74 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                 }
             }
         });
+    }
+
+    public void onBuyPressed (View pressed){
+        // PAYMENT_INTENT_SALE will cause the payment to complete immediately.
+        // Change PAYMENT_INTENT_SALE to
+        //   - PAYMENT_INTENT_AUTHORIZE to only authorize payment and capture funds later.
+        //   - PAYMENT_INTENT_ORDER to create a payment for authorization and capture
+        //     later via calls from your server.
+        PayPalPayment payment = new PayPalPayment(new BigDecimal("5"), "GBP", "30-days Advert",
+                PayPalPayment.PAYMENT_INTENT_SALE);
+
+        Intent intent = new Intent(this, PaymentActivity.class);
+
+        // send the same configuration for restart resiliency
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, paypalConfig);
+
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
+
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    protected void onActivityResult ( int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+            if (confirm != null) {
+                try {
+                    Log.i("paymentExample", confirm.toJSONObject().toString(4));
+
+                    // TODO: send 'confirm' to your server for verification.
+
+                    /*Firestore & Cloud Storage initialization*/
+                    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+                    /*Finding the listing by its ID in the "performer-listings" subfolder*/
+                    DocumentReference venueListing = db.collection("performer-listings").document(pID);
+
+                    Calendar currentExpiry = Calendar.getInstance();
+                    currentExpiry.setTime(expiry);
+                    currentExpiry.add(Calendar.MONTH, 1);
+                    currentExpiry.add(Calendar.DAY_OF_MONTH, 1);
+                    Timestamp newDate = new Timestamp(currentExpiry.getTime());
+
+                    venueListing.update("expiry-date", newDate);
+
+                    Toast.makeText(this, "Ad published!", Toast.LENGTH_SHORT);
+
+                    finish();
+
+                } catch (JSONException e) {
+                    Log.e("paymentExample", "an extremely unlikely failure occurred: ", e);
+                }
+            }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            Log.i("paymentExample", "The user canceled.");
+            Toast.makeText(this, "Payment process has been cancelled", Toast.LENGTH_SHORT);
+        } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
+            Log.i("paymentExample", "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+        } else {
+            Toast.makeText(this, "Payment process has been cancelled", Toast.LENGTH_SHORT);
+        }
+    }
+
+    @Override
+    public void onDestroy () {
+        stopService(new Intent(this, PayPalService.class));
+        super.onDestroy();
     }
 }
