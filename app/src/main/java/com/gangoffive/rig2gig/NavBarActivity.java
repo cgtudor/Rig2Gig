@@ -23,8 +23,8 @@ public class NavBarActivity extends AppCompatActivity
 
         if(getIntent().getStringExtra("TARGET_FRAGMENT") != null)
         {
-            String extra = savedInstanceState.getString("TARGET_FRAGMENT");
-            fragIntent.putExtra("TARGET_FRAGMENT", extra);
+            String extra = getIntent().getStringExtra("TARGET_FRAGMENT");
+            fragIntent.putExtra("OPEN_FRAGMENT", extra);
         }
 
         //Decide which navbar to display.

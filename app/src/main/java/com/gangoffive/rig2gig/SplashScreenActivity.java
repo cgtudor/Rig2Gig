@@ -44,7 +44,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                         {
                             Log.d(TAG, "Document exists!");
                             AccountPurposeActivity.userType = document.get("user-type").toString();
-                            startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                            if(getIntent().getStringExtra("OPEN_FRAGMENT") != null && getIntent().getStringExtra("OPEN_FRAGMENT").equals("COMMS")) {
+                                startActivity(new Intent(getApplicationContext(), LaunchCommsActivity.class));
+                            } else {
+                                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                            }
                             finish();
                         }
                         else
