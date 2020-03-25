@@ -12,28 +12,23 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class BandAdvertisementEditorTest {
+import static org.junit.Assert.*;
 
-    private BandAdvertisementEditor confirmationClass, mockClass;
-    private HashMap<String, Object> bandData, adData;
+public class MusicianAdvertisementEditorTest {
 
+    private MusicianAdvertisementEditor confirmationClass, mockClass;
+    private HashMap<String, Object> musicianData, adData;
 
     @Before
     public void setUp()
     {
-        confirmationClass = new BandAdvertisementEditor()
+        confirmationClass = new MusicianAdvertisementEditor()
         {
             @Override
             public void setViewReferences() {}
 
             @Override
-            public void setInitialColours() {}
-
-            @Override
             public void setupGridView() {}
-
-            @Override
-            public void setSearchHintInvisible() {}
 
             @Override
             public void initialiseSearchBar() {}
@@ -44,23 +39,19 @@ public class BandAdvertisementEditorTest {
             @Override
             public void saveTabs() {}
         };
-        mockClass = mock(BandAdvertisementEditor.class);
-        bandData = new HashMap();
-        bandData.put("availability","test availability");
-        bandData.put("charge","test charge");
-        bandData.put("description","test description");
-        bandData.put("distance","test distance");
-        bandData.put("email","test@email.com");
-        bandData.put("genres","test genres");
-        bandData.put("location","test location");
-        ArrayList<String> members = new ArrayList<>();
-        members.add("test member");
-        bandData.put("members",members);
-        bandData.put("name","test name");
-        bandData.put("phone-number","123");
-        bandData.put("rating","test rating");
+        mockClass = mock(MusicianAdvertisementEditor.class);
+        musicianData = new HashMap();
+        musicianData.put("genres","test genres");
+        musicianData.put("location","test location");
+        ArrayList<String> bands = new ArrayList<>();
+        bands.add("test band");
+        musicianData.put("bands",bands);
+        musicianData.put("name","test name");
+        musicianData.put("phone-number","123");
+        musicianData.put("rating","test rating");
+        musicianData.put("user-ref","test id");
         adData = new HashMap();
-        adData.put("band-ref","test ref");
+        adData.put("musician-ref","test ref");
         adData.put("description","test description");
         adData.put("expiry-date","test date");
         ArrayList<String> positions = new ArrayList<>();
@@ -69,14 +60,13 @@ public class BandAdvertisementEditorTest {
         adData.put("position",positions);
     }
 
-
     @Test
     public void testOnSuccessFromDatabaseNoAdvert()
     {
         ListingManager manager = mock(ListingManager.class);
         confirmationClass.setListingManager(manager);
-        confirmationClass.onSuccessFromDatabase(bandData);
-        assertThat(confirmationClass.getBand(),is(equalTo(bandData)));
+        confirmationClass.onSuccessFromDatabase(musicianData);
+        assertThat(confirmationClass.getMusician(),is(equalTo(musicianData)));
         verify(manager,times(1)).getImage(any());
     }
 
@@ -85,8 +75,8 @@ public class BandAdvertisementEditorTest {
     {
         ListingManager manager = mock(ListingManager.class);
         confirmationClass.setListingManager(manager);
-        confirmationClass.onSuccessFromDatabase(bandData, adData);
-        assertThat(confirmationClass.getBand(),is(equalTo(bandData)));
+        confirmationClass.onSuccessFromDatabase(musicianData, adData);
+        assertThat(confirmationClass.getMusician(),is(equalTo(musicianData)));
         assertThat(confirmationClass.getPreviousListing(),is(equalTo(adData)));
         verify(manager,times(1)).getImage(any());
     }

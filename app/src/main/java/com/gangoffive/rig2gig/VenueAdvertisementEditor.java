@@ -79,12 +79,17 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         setViewReferences();
+        setInitialColours();
+        venue = data;
+        listingManager.getImage(this);
+    }
+
+    public void setInitialColours()
+    {
         if (description.getText().toString().trim().length() == 0 && createListing != null) {
             createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
             createListing.setTextColor(Color.parseColor("#4D4D4E"));
         }
-        venue = data;
-        listingManager.getImage(this);
     }
 
     /**
@@ -293,6 +298,22 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     public ImageView getImageView() {
         return image;
+    }
+
+    public Map<String, Object> getVenue() {
+        return venue;
+    }
+
+    public Map<String, Object> getPreviousListing() {
+        return previousListing;
+    }
+
+    public void setListingManager(ListingManager listingManager) {
+        this.listingManager = listingManager;
+    }
+
+    public void setListing(HashMap<String, Object> listing) {
+        this.listing = listing;
     }
 
 }

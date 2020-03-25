@@ -98,10 +98,18 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         setViewReferences();
-        createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-        createListing.setTextColor(Color.parseColor("#4D4D4E"));
+        if (createListing != null)
+        {
+            setInitialColours();
+        }
         musician = data;
         listingManager.getImage(this);
+    }
+
+    public void setInitialColours()
+    {
+        createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
+        createListing.setTextColor(Color.parseColor("#4D4D4E"));
     }
 
     /**
@@ -120,7 +128,10 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             positions.remove(pos.toString());
         }
         setupGridView();
-        searchHint.setVisibility(View.INVISIBLE);
+        if (searchHint != null)
+        {
+            searchHint.setVisibility(View.INVISIBLE);
+        }
         listingManager.getImage(this);
     }
 
@@ -147,7 +158,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             image.setImageDrawable(null);
         }
         position = findViewById(R.id.position);
-        description = findViewById(R.id.distance);
+        description = findViewById(R.id.description);
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);
@@ -408,8 +419,12 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Toast.makeText(this,"Advertisement created successfully",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(MusicianAdvertisementEditor.this,"Advertisement created successfully",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
             Intent intent = new Intent(MusicianAdvertisementEditor.this,
                     MusicianListingDetailsActivity.class);
             intent.putExtra("EXTRA_MUSICIAN_LISTING_ID", listingManager.getListingRef());
@@ -419,15 +434,25 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(MusicianAdvertisementEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(MusicianAdvertisementEditor.this,
+                            "Listing creation failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(MusicianAdvertisementEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(MusicianAdvertisementEditor.this,
+                            "Listing creation failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
         }
     }
 
@@ -439,6 +464,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         Intent backToMain = new Intent(MusicianAdvertisementEditor.this,
                 MainActivity.class);
         startActivity(backToMain);
+        finish();
     }
 
     /**
@@ -484,4 +510,35 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         return image;
     }
 
+    public Map<String, Object> getMusician() {
+        return musician;
+    }
+
+    public Map<String, Object> getPreviousListing() {
+        return previousListing;
+    }
+
+    public void setListingManager(ListingManager listingManager) {
+        this.listingManager = listingManager;
+    }
+
+    public void setListing(HashMap<String, Object> listing) {
+        this.listing = listing;
+    }
+
+    public void setBandPositions(List bandPositions) {
+        this.bandPositions = bandPositions;
+    }
+
+    public void setTabPreserver(TabStatePreserver tabPreserver) {
+        this.tabPreserver = tabPreserver;
+    }
+
+    public void setMusician(Map<String, Object> musician) {
+        this.musician = musician;
+    }
+
+    public void setPreviousListing(Map<String, Object> previousListing) {
+        this.previousListing = previousListing;
+    }
 }

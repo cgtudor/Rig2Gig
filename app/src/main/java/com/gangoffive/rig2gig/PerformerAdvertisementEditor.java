@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PerformerAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement {
@@ -224,22 +225,35 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Toast.makeText(this,"Advertisement created successfully",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(PerformerAdvertisementEditor.this,"Advertisement created successfully",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
             Intent intent = new Intent(this, PerformanceListingDetailsActivity.class);
             intent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingManager.getListingRef());
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(PerformerAdvertisementEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(PerformerAdvertisementEditor.this,
+                            "Listing creation failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(PerformerAdvertisementEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(PerformerAdvertisementEditor.this,
+                            "Listing creation failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 
@@ -284,22 +298,25 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             }
         }
         int leadingZeros = 0;
-        String distanceValue = distance.getText().toString();
-        while (true)
+        if (distance != null)
         {
-            if (distanceValue.length() != 0 && distanceValue.length() > leadingZeros && distanceValue.charAt(leadingZeros) == '0')
+            String distanceValue = distance.getText().toString();
+            while (true)
             {
-                leadingZeros++;
+                if (distanceValue.length() != 0 && distanceValue.length() > leadingZeros && distanceValue.charAt(leadingZeros) == '0')
+                {
+                    leadingZeros++;
+                }
+                else
+                {
+                    break;
+                }
             }
-            else
+            String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
+            if (actualNumber.length() == 0)
             {
-                break;
+                return false;
             }
-        }
-        String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
-        if (actualNumber.length() == 0)
-        {
-            return false;
         }
         return true;
     }
@@ -310,6 +327,30 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
      */
     public ImageView getImageView() {
         return image;
+    }
+
+    public Map<String, Object> getPerformer() {
+        return band;
+    }
+
+    public Map<String, Object> getPreviousListing() {
+        return previousListing;
+    }
+
+    public void setListingManager(ListingManager listingManager) {
+        this.listingManager = listingManager;
+    }
+
+    public void setListing(HashMap<String, Object> listing) {
+        this.listing = listing;
+    }
+
+    public void setPerformer(Map<String, Object> band) {
+        this.band = band;
+    }
+
+    public void setPreviousListing(Map<String, Object> previousListing) {
+        this.previousListing = previousListing;
     }
 }
 

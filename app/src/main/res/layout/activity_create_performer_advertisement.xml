@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/constraintLayout"
+    android:id="@+id/editPerformerAdMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".CreatePerformerAdvertisement">
+    tools:context=".PerformerAdvertisementEditor">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@+id/app_bar" />
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/imageView"
         android:layout_width="364dp"
         android:layout_height="2dp"
         android:layout_marginTop="8dp"
