@@ -7,4 +7,5 @@
     <color name="lightGrey">#ededed</color>
     <color name="darkGrey">#808080</color>
     <color name="mainColour">#12c2e9</color>
+    <color name="colour">#FFFFFF</color>
 </resources>
