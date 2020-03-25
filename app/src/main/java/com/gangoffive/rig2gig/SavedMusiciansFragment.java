@@ -50,7 +50,7 @@ public class SavedMusiciansFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        final View v = inflater.inflate(R.layout.fragment_saved_performers, container, false);
+        final View v = inflater.inflate(R.layout.fragment_saved_musicians, container, false);
 
         currentBandId = this.getArguments().getString("CURRENT_BAND_ID");
 
