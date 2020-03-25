@@ -435,7 +435,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         }
 
         listing.put("position", bandPositions);
-        listing.put("lisiting-owner", FirebaseAuth.getInstance().getUid());
+        listing.put("listing-owner", FirebaseAuth.getInstance().getUid());
         if(description != null)
         {
             listing.put("description", description.getText().toString());

@@ -23,6 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -81,8 +82,11 @@ public class ViewPerformersFragment extends Fragment
 
         performerListings = new ArrayList<>();
 
+        Timestamp currentDate = Timestamp.now();
+
         Query first = colRef
-            .limit(10);
+                .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
+                .limit(10);
 
         first.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

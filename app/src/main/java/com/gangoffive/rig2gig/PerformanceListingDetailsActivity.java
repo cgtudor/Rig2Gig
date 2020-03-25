@@ -34,12 +34,13 @@ import com.google.firebase.storage.StorageReference;
 
 import java.sql.Time;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 
 public class PerformanceListingDetailsActivity extends AppCompatActivity {
 
     private String pID;
-    private final StringBuilder expiry = new StringBuilder("");
+    private final Date expiry = new Date();
     private final StringBuilder performerRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
     private final StringBuilder performerTypeGlobal = new StringBuilder("");
@@ -147,8 +148,8 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                        //Timestamp expiryDate = (Timestamp) document.get("expiry-date");
-                        //expiry.append(expiryDate.toDate().toString());
+                        Timestamp expiryDate = (Timestamp) document.get("expiry-date");
+                        expiry.setTime(expiryDate.toDate().getTime());
 
                         performerRef.append(document.get("performer-ref").toString());
                         performerTypeGlobal.append(document.get("performer-type").toString());
@@ -179,6 +180,10 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                 request.put("type", "contact-request");
                                 request.put("posting-date", Timestamp.now());
                                 request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                request.put("sent-from-type", "venues");
+                                request.put("sent-from-ref", venue.getId());
+                                request.put("sent-to-type", performerTypeGlobal.equals("Band")? "bands" : "musicians");
+                                request.put("sent-to-ref", performerRef.toString());
                                 request.put("notification-title", "Someone is interested in your advert!");
                                 request.put("notification-message", venue.get("name") + " is interested in you! Share contact details?");
 
@@ -208,6 +213,10 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
                                 requestSent.put("type", "contact-request");
                                 requestSent.put("posting-date", Timestamp.now());
                                 requestSent.put("sent-to", listingOwner.toString());
+                                requestSent.put("sent-from-type", "venues");
+                                requestSent.put("sent-from-ref", venue.getId());
+                                requestSent.put("sent-to-type", performerTypeGlobal.equals("Band")? "bands" : "musicians");
+                                requestSent.put("sent-to-ref", performerRef.toString());
                                 requestSent.put("notification-title", "Someone is interested in your advert!");
                                 requestSent.put("notification-message", venue.get("name") + " is interested in you! Share contact details?");
                                 CollectionReference sent = db.collection("communications")
@@ -374,9 +383,11 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity {
 
         if(id == R.id.saveButton)
         {
-            HashMap<String, String> listing = new HashMap<>();
+            Timestamp expiryDate = new Timestamp(expiry);
+
+            HashMap<String, Object> listing = new HashMap<>();
             listing.put("distance", distance.getText().toString());
-            listing.put("expiry-date", expiry.toString());
+            listing.put("expiry-date", expiryDate);
             listing.put("performer-ref", performerRef.toString());
             listing.put("performer-type",performerTypeGlobal.toString());
 
