@@ -479,7 +479,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
 
                         LatLng performerLocation = new LatLng(Double.parseDouble(document.get("latitude").toString()), Double.parseDouble(document.get("longitude").toString()));
 
-                        final DocumentReference performer = db.collection("musicians").document(document.get("performer-ref").toString());
+                        final DocumentReference performer = db.collection("bands").document(document.get("performer-ref").toString());
 
                         performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                         {
