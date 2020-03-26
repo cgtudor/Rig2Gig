@@ -131,36 +131,36 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                 final String bandPhoneNumber = cBandPhoneNumber.getText().toString().trim();
                 newBand.add(TabbedBandActivity.musicianID);
 
-                if (TextUtils.isEmpty(bandName)){
-                    cBandName.setError("Band Name Is Required!");
-                    return;
-                }
-                if(bandAddress == null)
-                {
-                    location.setError("Please Enter A Valid Address");
-                    return;
-                }
-                if(TextUtils.isEmpty(bandLocation))
-                {
-                    location.setError("Please Enter An Address");
-                    return;
-                }
-                if (TextUtils.isEmpty(bandDistance)){
-                    cBandDistance.setError("Distance Is Required!");
-                    return;
-                }
-                if (TextUtils.isEmpty(bandGenres)){
-                    cBandGenres.setError("Genres Is Required!");
-                    return;
-                }
-                if (TextUtils.isEmpty(bandEmail)){
-                    cBandEmail.setError("Band Email Is Required!");
-                    return;
-                }
-                if (TextUtils.isEmpty(bandPhoneNumber)){
-                    cBandPhoneNumber.setError("Band Phone Number Is Required!");
-                    return;
-                }
+//                if (TextUtils.isEmpty(bandName)){
+//                    cBandName.setError("Band Name Is Required!");
+//                    return;
+//                }
+//                if(bandAddress == null)
+//                {
+//                    location.setError("Please Enter A Valid Address");
+//                    return;
+//                }
+//                if(TextUtils.isEmpty(bandLocation))
+//                {
+//                    location.setError("Please Enter An Address");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(bandDistance)){
+//                    cBandDistance.setError("Distance Is Required!");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(bandGenres)){
+//                    cBandGenres.setError("Genres Is Required!");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(bandEmail)){
+//                    cBandEmail.setError("Band Email Is Required!");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(bandPhoneNumber)){
+//                    cBandPhoneNumber.setError("Band Phone Number Is Required!");
+//                    return;
+//                }
 
                 DocumentReference docRef = fStore.collection("users").document(fAuth.getUid());
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

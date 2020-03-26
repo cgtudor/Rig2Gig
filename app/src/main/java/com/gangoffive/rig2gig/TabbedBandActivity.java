@@ -117,7 +117,7 @@ public class TabbedBandActivity extends AppCompatActivity {
             return;
         }
 
-//        CreateBandFragment.btn.performClick();
+        CreateBandFragment.btn.performClick();
         System.out.println("clicked");
     }
 }

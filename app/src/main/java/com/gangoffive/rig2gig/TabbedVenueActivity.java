@@ -136,7 +136,7 @@ public class TabbedVenueActivity extends AppCompatActivity {
             return;
         }
 
-        image = findViewById(R.id.imageView);
+        image = findViewById(R.id.imageViewVenue);
         if (image.getDrawable() == null)
         {
             Toast.makeText(getApplicationContext(),"Please choose and image!", Toast.LENGTH_SHORT).show();
