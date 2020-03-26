@@ -42,6 +42,7 @@
                 android:gravity="center_vertical"
                 android:paddingRight="10dp"
                 android:text="Invite"
+                android:textSize="14sp"
                 android:textAlignment="center" />
 
         </RelativeLayout>

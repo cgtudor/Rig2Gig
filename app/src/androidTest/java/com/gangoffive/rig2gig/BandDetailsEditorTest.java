@@ -525,6 +525,7 @@ public class BandDetailsEditorTest {
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-11711154, intColour);
+
     }
 }
 

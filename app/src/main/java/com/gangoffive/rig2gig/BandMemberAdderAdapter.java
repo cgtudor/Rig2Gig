@@ -55,15 +55,6 @@ public class BandMemberAdderAdapter  extends BaseAdapter
         {
             images.add(null);
         }
-
-
-
-
-
-
-
-
-
     }
 
 
