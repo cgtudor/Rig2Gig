@@ -19,40 +19,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/firstName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:width="280dp"
-        android:background="@android:color/transparent"
-        android:ems="10"
-        android:hint="Musician Name"
-        android:inputType="textPersonName"
-        android:textColor="#FFF"
-        android:textColorHint="#F6F6F6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <EditText
-        android:id="@+id/genre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:width="280dp"
-        android:background="@android:color/transparent"
-        android:ems="10"
-        android:hint="Genres"
-        android:inputType="textPersonName"
-        android:textColor="#FFF"
-        android:textColorHint="#F6F6F6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view8" />
-
     <!--<EditText
         android:id="@+id/location"
         android:layout_width="wrap_content"
@@ -70,46 +36,53 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />-->
 
-    <AutoCompleteTextView
-        android:id="@+id/location"
-        android:layout_width="290dp"
-        android:layout_height="wrap_content"
-        android:hint="Town/City (Barnsley, UK)"
-        android:textColor="#FFF"
-        android:textColorHint="#F6F6F6"
-        android:theme="@style/AutoComplete"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
-
     <EditText
-        android:id="@+id/venue_description_final"
+        android:id="@+id/firstName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:width="280dp"
         android:background="@android:color/transparent"
         android:ems="10"
-        android:hint="Distance"
+        android:hint="Musician Name"
         android:inputType="textPersonName"
         android:textColor="#FFF"
         android:textColorHint="#F6F6F6"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="280dp"
-        android:layout_height="1dp"
+    <EditText
+        android:id="@+id/genre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="#FFF"
+        android:width="280dp"
+        android:background="@android:color/transparent"
+        android:ems="10"
+        android:hint="Genres"
+        android:inputType="textPersonName"
+        android:textColor="#FFF"
+        android:textColorHint="#F6F6F6"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/venue_name_final" />
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <AutoCompleteTextView
+        android:id="@+id/location"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Town/City (Barnsley, UK)"
+        android:textColor="#FFF"
+        android:textColorHint="#F6F6F6"
+        android:theme="@style/AutoComplete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.446"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view8" />
 
     <!--<View
         android:id="@+id/view7"
@@ -124,15 +97,25 @@
 
 
     <View
+        android:id="@+id/view"
+        android:layout_width="280dp"
+        android:layout_height="1dp"
+        android:background="#FFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="215dp" />
+
+    <View
         android:id="@+id/view8"
         android:layout_width="280dp"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:background="#FFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/venue_description_final" />
+        app:layout_constraintTop_toBottomOf="@+id/firstName" />
 
     <View
         android:id="@+id/view19"
@@ -141,7 +124,7 @@
         android:layout_marginTop="8dp"
         android:background="#FFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/genre" />
 

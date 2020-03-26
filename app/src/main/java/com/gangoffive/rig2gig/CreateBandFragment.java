@@ -200,8 +200,15 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                                                             Map<String, Object> musicians = new HashMap<>();
                                                             musicians = document.getData();
                                                             ArrayList bands = (ArrayList) musicians.get("bands");
-                                                            bands.add(bandRef);
-                                                            //musicians.put("bands", Arrays.asList(bandRef));
+                                                            if (bands == null)
+                                                            {
+                                                                musicians.put("bands", Arrays.asList(bandRef));
+                                                            }else
+                                                                {
+                                                                    bands.add(bandRef);
+                                                                }
+
+                                                            //
                                                             doc.update(musicians);
                                                             BandImageFragment.submitBtn.performClick();
                                                             Toast.makeText(getActivity(), "Band Created!", Toast.LENGTH_SHORT).show();

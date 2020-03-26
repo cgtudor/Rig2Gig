@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.gangoffive.rig2gig.ui.TabbedView.MusicianPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
@@ -25,7 +26,8 @@ public class TabbedMusicianActivity extends AppCompatActivity {
 
     private static final String TAG = "======================";
 
-    EditText cFirstName, cLastName, cUsername, cPhoneNumber, rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword, username;
+    EditText cFirstName, cLastName, cUsername, cPhoneNumber, rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword, username, musicianName, musicianLocation, musicianDistance, musicianGenre, invis;
+    ImageView image;
 
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_credential,
@@ -87,7 +89,7 @@ public class TabbedMusicianActivity extends AppCompatActivity {
             username.setError("Username is required!");
             return;
         }
-        cFirstName = findViewById(R.id.venue_name_final);
+        cFirstName = findViewById(R.id.nameFirst);
         String firstName = cFirstName.getText().toString();
         if (TextUtils.isEmpty(firstName)) {
             cFirstName.setError("First name is required!");
@@ -105,8 +107,41 @@ public class TabbedMusicianActivity extends AppCompatActivity {
             cPhoneNumber.setError("Phone number is required!");
             return;
         }
+
+        musicianName = findViewById(R.id.firstName);
+        String name = musicianName.getText().toString();
+        if (TextUtils.isEmpty(name)){
+            musicianName.setError("Musician name is required!");
+            return;
+        }
+        musicianLocation = findViewById(R.id.location2);
+        String loc = musicianLocation.getText().toString();
+        if (TextUtils.isEmpty(loc)) {
+            musicianLocation.setError("Please set a location!");
+            return;
+        }
+        musicianDistance = findViewById(R.id.firstName3);
+        String dist = musicianDistance.getText().toString();
+        if (TextUtils.isEmpty(dist)){
+            musicianDistance.setError("Distance is required!");
+            return;
+        }
+        musicianGenre = findViewById(R.id.firstName5);
+        String genre = musicianGenre.getText().toString();
+        if (TextUtils.isEmpty(genre)) {
+            musicianGenre.setError("Genre is required!");
+            return;
+        }
+
+        image = findViewById(R.id.imageView);
+        invis = findViewById(R.id.invis);
+        if (image.getDrawable() == null)
+        {
+            invis.setError("Please select an image");
+            return;
+        }
+
         CredentialFragment.btn.performClick();
-        finish();
         System.out.println("clicked");
     }
 

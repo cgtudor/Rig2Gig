@@ -146,13 +146,13 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         fStore = FirebaseFirestore.getInstance();
         fStorage = FirebaseStorage.getInstance();
 
-        distance = v.findViewById(R.id.venue_description_final);
-        name = v.findViewById(R.id.venue_name_final);
-        genre = v.findViewById(R.id.genre);
+        distance = v.findViewById(R.id.firstName3);
+        name = v.findViewById(R.id.firstName);
+        genre = v.findViewById(R.id.firstName5);
 
         image = v.findViewById(R.id.imageView);
 
-        autoCompleteTextView = v.findViewById(R.id.location);
+        autoCompleteTextView = v.findViewById(R.id.location2);
         autoCompleteTextView.setAdapter(new GooglePlacesAutoSuggestAdapter(getActivity(), android.R.layout.simple_list_item_1));
 
         int requestCode = 200;
@@ -204,24 +204,24 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                 defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
                 rating = "-1";
 
-                if(TextUtils.isEmpty(musicianAddressTextView))
-                {
-                    autoCompleteTextView.setError("Please Enter Your Venue Address");
-                    return;
-                }
-                if(musicianAddress == null)
-                {
-                    autoCompleteTextView.setError("Please Enter A Valid Address");
-                    return;
-                }
-                if (TextUtils.isEmpty(musicianName)) {
-                    name.setError("Please Enter A Musician Name!");
-                    return;
-                }
-                if (TextUtils.isEmpty(musicianDistance)) {
-                    distance.setError("Please Set A Distance!");
-                    return;
-                }
+//                if(TextUtils.isEmpty(musicianAddressTextView))
+//                {
+//                    autoCompleteTextView.setError("Please Enter Your Venue Address");
+//                    return;
+//                }
+//                if(musicianAddress == null)
+//                {
+//                    autoCompleteTextView.setError("Please Enter A Valid Address");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(musicianName)) {
+//                    name.setError("Please Enter A Musician Name!");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(musicianDistance)) {
+//                    distance.setError("Please Set A Distance!");
+//                    return;
+//                }
 
                 fStore.collection("users").document(userRef).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
