@@ -157,7 +157,7 @@ public class TabbedVenueActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         Intent backToMain = new Intent(this,
-                AccountPurposeActivity.class);
+                LoginActivity.class);
         startActivity(backToMain);
     }
 }
