@@ -7,20 +7,32 @@
     tools:context=".BandImageFragment">
 
 
+    <TextView
+        android:id="@+id/createBandTxt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Band Image"
+        android:textColor="#000000"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/uploadBtn"
         android:layout_width="133dp"
         android:layout_height="34dp"
         android:layout_marginTop="32dp"
-        android:text="Upload Photo"
         android:background="@drawable/transparent_button_dark_outline"
+        android:text="Upload Photo"
         android:textAllCaps="false"
         android:textColor="#000000"
         android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.241"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/createBandTxt2" />
 
     <Button
         android:id="@+id/takeBtn"
@@ -35,7 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.758"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/createBandTxt2" />
 
     <ImageView
         android:id="@+id/imageView"

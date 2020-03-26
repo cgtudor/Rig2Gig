@@ -79,7 +79,7 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
         btn.setVisibility(View.INVISIBLE);
 
         cBandName = v.findViewById(R.id.BandName);
-        location = v.findViewById(R.id.location);
+        location = v.findViewById(R.id.location3);
         location.setAdapter(new GooglePlacesAutoSuggestAdapter(getActivity(), android.R.layout.simple_list_item_1));
         cBandDistance = v.findViewById(R.id.bandDistance);
         cBandGenres = v.findViewById(R.id.bandGenres);

@@ -90,7 +90,6 @@ public class CredentialFragment extends Fragment implements View.OnClickListener
         rConfirmEmail = v.findViewById(R.id.registerConfirmEmail);
         rPassword = v.findViewById(R.id.registerPassword);
         rConfirmPassword = v.findViewById(R.id.registerConfirmPassword);
-        invis = v.findViewById(R.id.invis);
 
         return v;
     }

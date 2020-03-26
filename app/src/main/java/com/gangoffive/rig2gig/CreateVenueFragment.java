@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -246,6 +247,7 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
                                                         Log.d("STORAGE SUCCEEDED", taskSnapshot.getMetadata().toString());
                                                         Intent intent = new Intent(getActivity(), NavBarActivity.class);
                                                         startActivity(intent);
+                                                        Toast.makeText(getActivity(), "Venue Account Created!", Toast.LENGTH_SHORT).show();
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override

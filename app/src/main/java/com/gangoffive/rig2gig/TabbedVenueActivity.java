@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gangoffive.rig2gig.ui.TabbedView.VenuePagerAdapter;
 import com.google.android.material.tabs.TabLayout;
@@ -135,11 +136,10 @@ public class TabbedVenueActivity extends AppCompatActivity {
             return;
         }
 
-        image = findViewById(R.id.imageViewVenue);
-        invis = findViewById(R.id.invis);
+        image = findViewById(R.id.imageView);
         if (image.getDrawable() == null)
         {
-            invis.setError("Please select an image");
+            Toast.makeText(getApplicationContext(),"Please choose and image!", Toast.LENGTH_SHORT).show();
             return;
         }
 

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.gangoffive.rig2gig.ui.TabbedView.MusicianPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
@@ -134,10 +135,9 @@ public class TabbedMusicianActivity extends AppCompatActivity {
         }
 
         image = findViewById(R.id.imageView);
-        invis = findViewById(R.id.invis);
         if (image.getDrawable() == null)
         {
-            invis.setError("Please select an image");
+            Toast.makeText(getApplicationContext(),"Please choose and image!", Toast.LENGTH_SHORT).show();
             return;
         }
 

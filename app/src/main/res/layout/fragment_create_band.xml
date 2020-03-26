@@ -11,12 +11,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Create A Band"
+        android:text="Band"
+        android:textColor="#000000"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColor="#000000"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/createBandBtn"
@@ -39,14 +39,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:background="@android:color/transparent"
         android:ems="10"
         android:hint="Band Name"
         android:inputType="textPersonName"
-        android:text="Example Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createBandTxt"
-        android:background="@android:color/transparent"/>
+        app:layout_constraintTop_toBottomOf="@+id/createBandTxt" />
 
     <View
         android:id="@+id/view14"
@@ -99,13 +98,14 @@
         app:layout_constraintTop_toBottomOf="@+id/bandPhoneNumber" />
 
     <AutoCompleteTextView
-        android:id="@+id/location"
-        android:layout_width="205dp"
+        android:id="@+id/location3"
+        android:layout_width="198dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
         android:hint="Town/City (Barnsley, UK)"
-        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view14" />
 
@@ -118,10 +118,9 @@
         android:ems="10"
         android:hint="Distance To Travel"
         android:inputType="textPersonName"
-        android:text="10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location" />
+        app:layout_constraintTop_toTopOf="@+id/view13" />
 
     <EditText
         android:id="@+id/bandGenres"
@@ -133,7 +132,6 @@
         android:gravity="start|top"
         android:hint="Genres"
         android:inputType="textMultiLine"
-        android:text="Rock, Pop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -148,7 +146,6 @@
         android:ems="10"
         android:hint="Contact Email"
         android:inputType="textEmailAddress"
-        android:text="Contact@Email.com"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view3" />
@@ -162,9 +159,19 @@
         android:ems="10"
         android:hint="Contact Phone Number"
         android:inputType="phone"
-        android:text="11111111111"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view4" />
+
+    <View
+        android:id="@+id/view13"
+        android:layout_width="198dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:background="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

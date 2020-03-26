@@ -3,10 +3,15 @@ package com.gangoffive.rig2gig;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.gangoffive.rig2gig.ui.TabbedView.BandPagerAdapter;
 import com.gangoffive.rig2gig.ui.TabbedView.MusicianPagerAdapter;
@@ -21,6 +26,9 @@ public class TabbedBandActivity extends AppCompatActivity {
     FirebaseStorage fStorage;
 
     Button test, back;
+
+    EditText name, location, distance, genre, email, number, invis;
+    ImageView image;
 
     private static final String TAG = "======================";
     static String musicianID;
@@ -61,9 +69,55 @@ public class TabbedBandActivity extends AppCompatActivity {
         });
     }
 
+
+
     public void confirmOnClick(View view)
     {
-        CreateBandFragment.btn.performClick();
+        name = findViewById(R.id.BandName);
+        String bandName = name.getText().toString();
+        if (TextUtils.isEmpty(bandName)) {
+            name.setError("Band name is required!");
+            return;
+        }
+        location = findViewById(R.id.location3);
+        String bandLocation = location.getText().toString();
+        if (TextUtils.isEmpty(bandLocation)) {
+            location.setError("Band location is required!");
+            return;
+        }
+        distance = findViewById(R.id.bandDistance);
+        String bandDistance = distance.getText().toString();
+        if (TextUtils.isEmpty(bandDistance)) {
+            distance.setError("Distance to travel is required!");
+            return;
+        }
+        genre = findViewById(R.id.bandGenres);
+        String bandGenre = genre.getText().toString();
+        if (TextUtils.isEmpty(bandGenre)) {
+            genre.setError("Distance to travel is required!");
+            return;
+        }
+        email = findViewById(R.id.bandEmail);
+        String bandEmail = email.getText().toString();
+        if (TextUtils.isEmpty(bandEmail)) {
+            email.setError("Band email is required!");
+            return;
+        }
+        number = findViewById(R.id.bandPhoneNumber);
+        String bandPhonenumber = number.getText().toString();
+        if (TextUtils.isEmpty(bandPhonenumber)) {
+            number.setError("Band email is required!");
+            return;
+        }
+
+        image = findViewById(R.id.imageView);
+        if (image.getDrawable() == null)
+        {
+            Toast.makeText(getApplicationContext(),"Please choose and image!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+//        CreateBandFragment.btn.performClick();
         System.out.println("clicked");
     }
 }

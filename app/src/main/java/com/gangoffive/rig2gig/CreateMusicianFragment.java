@@ -27,6 +27,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -261,6 +262,7 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                                                         Log.d("STORAGE SUCCEEDED", taskSnapshot.getMetadata().toString());
                                                         Intent intent = new Intent(getActivity(), NavBarActivity.class);
                                                         startActivity(intent);
+                                                        Toast.makeText(getActivity(), "Musician Account Created!", Toast.LENGTH_SHORT).show();
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override

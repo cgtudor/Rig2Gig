@@ -204,20 +204,4 @@
         app:layout_constraintTop_toBottomOf="@+id/uploadBtn"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <EditText
-        android:id="@+id/invis"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:width="280dp"
-        android:background="@android:color/transparent"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:textColor="#FFF"
-        android:textColorHint="#F6F6F6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uploadBtn"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
