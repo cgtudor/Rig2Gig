@@ -46,9 +46,6 @@ public class BandPagerAdapter extends FragmentPagerAdapter {
                 fragment = new CreateBandFragment();
                 break;
             case 1:
-                fragment = new BandGenreFragment();
-                break;
-            case 2:
                 fragment = new BandImageFragment();
                 break;
         }
@@ -74,7 +71,7 @@ public class BandPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
 
-        if (TAB_TITLES.length > 3)
+        if (TAB_TITLES.length > 2)
         {
             ((TabbedViewReferenceInitialiser) mContext).beginTabPreservation();
         }

@@ -5,6 +5,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.gangoffive.rig2gig.ui.TabbedView.BandPagerAdapter;
@@ -25,7 +26,7 @@ public class TabbedBandActivity extends AppCompatActivity {
     static String musicianID;
 
     private int[] tabTitles;
-    private int[] fragments = {R.layout.activity_create_band, R.layout.fragment_band_genre,
+    private int[] fragments = {R.layout.activity_create_band,
             R.layout.fragment_band_image};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +37,11 @@ public class TabbedBandActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         fStorage = FirebaseStorage.getInstance();
 
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         musicianID = getIntent().getStringExtra("EXTRA_MUSICIAN_ID");
 
-        tabTitles = new int[]{R.string.bandInformation, R.string.bandGenre,R.string.bandImage};
+        tabTitles = new int[]{R.string.bandInformation, R.string.bandImage};
 
         BandPagerAdapter bandPagerAdapter = new BandPagerAdapter
                 (this, getSupportFragmentManager(), tabTitles, fragments);

@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -45,19 +46,22 @@ public class TabbedMusicianActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
 
         test = findViewById(R.id.submitBtn);
-        back = findViewById(R.id.cancel);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                TabbedMusicianActivity.super.onBackPressed();
-            }
-        });
     }
 
     public void confirmOnClick(View view)
     {
         CredentialFragment.btn.performClick();
         System.out.println("clicked");
+    }
+
+    public void cancelOnClick(View view)
+    {
+        onBackPressed();
+    }
+
+    public void onBackPressed() {
+        Intent backToMain = new Intent(this,
+                LoginActivity.class);
+        startActivity(backToMain);
     }
 }

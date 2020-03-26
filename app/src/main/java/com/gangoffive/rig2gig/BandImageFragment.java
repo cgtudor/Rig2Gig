@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -54,6 +55,8 @@ public class BandImageFragment extends Fragment implements View.OnClickListener 
     public static Button submitBtn;
     String musicianRef;
 
+    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
+
     /**
      * Upon creation of the CreateBandFragment, create the fragment_create_band layout.
      * @param inflater The inflater is used to read the passed xml file.
@@ -79,6 +82,11 @@ public class BandImageFragment extends Fragment implements View.OnClickListener 
 
         image = v.findViewById(R.id.imageView);
 
+        int requestCode = 200;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, requestCode);
+        }
+
         return v;
     }
 
@@ -87,6 +95,9 @@ public class BandImageFragment extends Fragment implements View.OnClickListener 
         switch (v.getId())
         {
             case R.id.submitBtn:
+                ImageView defImg = new ImageView(getActivity());
+                defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
+
                 DocumentReference docRef = fStore.collection("bands").document(CreateBandFragment.bandRef);
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override

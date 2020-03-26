@@ -36,6 +36,7 @@ import org.w3c.dom.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -43,6 +44,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.google.firebase.firestore.FieldValue.arrayUnion;
 
 public class CreateBandFragment extends Fragment implements View.OnClickListener {
 
@@ -177,6 +179,7 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                                 band.put("latitude", bandAddress.getLatitude());
                                 band.put("longitude", bandAddress.getLongitude());
                                 band.put("rating", "-1");
+                                band.put("members", Arrays.asList(TabbedBandActivity.musicianID));
 
                                 fStore.collection("bands")
                                         .add(band)
@@ -184,24 +187,27 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                                             @Override
                                             public void onSuccess(DocumentReference documentReference) {
                                                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ going to band image");
-                                                String newBandID = documentReference.getId();
-                                                bandRef = documentReference.toString();
+                                                bandRef = documentReference.getId();
 
 
-                                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(newBandID).child("members");
-                                                databaseReference.setValue(newBand).addOnCompleteListener(new OnCompleteListener<Void>()
-                                                {
+                                                DocumentReference doc = fStore.collection("musicians").document(TabbedBandActivity.musicianID);
+                                                doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                     @Override
-                                                    public void onComplete(@NonNull Task<Void> task)
-                                                    {
-                                                        if(task.isSuccessful())
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful())
                                                         {
+                                                            DocumentSnapshot document = task.getResult();
+                                                            Map<String, Object> musicians = new HashMap<>();
+                                                            musicians = document.getData();
+                                                            ArrayList bands = (ArrayList) musicians.get("bands");
+                                                            bands.add(bandRef);
+                                                            //musicians.put("bands", Arrays.asList(bandRef));
+                                                            doc.update(musicians);
                                                             BandImageFragment.submitBtn.performClick();
                                                             Toast.makeText(getActivity(), "Band Created!", Toast.LENGTH_SHORT).show();
                                                         }
                                                     }
                                                 });
-
 
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {

@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,12 +14,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
-public class TabbedVenueActivity extends AppCompatActivity{
+public class TabbedVenueActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     FirebaseStorage fStorage;
 
-    Button test;
+    Button confirm, back, submit;
 
     private static final String TAG = "======================";
 
@@ -43,7 +44,9 @@ public class TabbedVenueActivity extends AppCompatActivity{
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        test = findViewById(R.id.submitBtn);
+        submit = findViewById(R.id.submitBtn);
+        submit = findViewById(R.id.createListing);
+
     }
 
     public void confirmOnClick(View view)
@@ -54,6 +57,12 @@ public class TabbedVenueActivity extends AppCompatActivity{
 
     public void cancelOnClick(View view)
     {
-        super.onBackPressed();
+        onBackPressed();
+    }
+
+    public void onBackPressed() {
+        Intent backToMain = new Intent(this,
+                LoginActivity.class);
+        startActivity(backToMain);
     }
 }
