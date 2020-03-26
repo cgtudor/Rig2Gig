@@ -1,12 +1,15 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,6 +23,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,22 +32,31 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.Document;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class CreateBandFragment extends Fragment implements View.OnClickListener {
+
+    private Geocoder geocoder;
+    private AutoCompleteTextView location;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     FirebaseStorage fStorage = FirebaseStorage.getInstance();
+    private final List<String> newBand = new ArrayList<>();
 
     public static Button btn;
 
     EditText cBandName, cBandLocation, cBandDistance, cBandGenres, cBandEmail, cBandPhoneNumber;
 
-    String musicianRef;
     public static String bandRef;
     /**
      * Upon creation of the CreateBandFragment, create the fragment_create_band layout.
@@ -63,13 +77,42 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
         btn.setVisibility(View.INVISIBLE);
 
         cBandName = v.findViewById(R.id.BandName);
-        cBandLocation = v.findViewById(R.id.bandLocation);
+        location = v.findViewById(R.id.location);
+        location.setAdapter(new GooglePlacesAutoSuggestAdapter(getActivity(), android.R.layout.simple_list_item_1));
         cBandDistance = v.findViewById(R.id.bandDistance);
         cBandGenres = v.findViewById(R.id.bandGenres);
         cBandEmail = v.findViewById(R.id.bandEmail);
         cBandPhoneNumber = v.findViewById(R.id.bandPhoneNumber);
 
+        geocoder = new Geocoder(getActivity(), Locale.getDefault());
+
         return v;
+    }
+
+    private Address getAddress()
+    {
+        String bandName = location.getText().toString();
+        geocoder = new Geocoder(getActivity(), Locale.getDefault());
+
+        try
+        {
+            List<Address> addressList = geocoder.getFromLocationName(bandName, 1);
+
+            if(addressList.size() > 0)
+            {
+                Address address = addressList.get(0);
+                return address;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch(IOException io)
+        {
+            System.out.println(io.getMessage());
+            return null;
+        }
     }
 
     @Override
@@ -78,29 +121,43 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
         {
             case R.id.createBandBtn:
                 final String bandName = cBandName.getText().toString();
-                final String bandLocation = cBandLocation.getText().toString().trim();
+                final String bandLocation = location.getText().toString().trim();
+                final Address bandAddress = getAddress();
                 final String bandDistance = cBandDistance.getText().toString().trim();
                 final String bandGenres = cBandGenres.getText().toString().trim();
                 final String bandEmail = cBandEmail.getText().toString().trim();
                 final String bandPhoneNumber = cBandPhoneNumber.getText().toString().trim();
+                newBand.add(TabbedBandActivity.musicianID);
 
                 if (TextUtils.isEmpty(bandName)){
                     cBandName.setError("Band Name Is Required!");
+                    return;
                 }
-                if (TextUtils.isEmpty(bandLocation)){
-                    cBandLocation.setError("Band Location Is Required!");
+                if(bandAddress == null)
+                {
+                    location.setError("Please Enter A Valid Address");
+                    return;
+                }
+                if(TextUtils.isEmpty(bandLocation))
+                {
+                    location.setError("Please Enter An Address");
+                    return;
                 }
                 if (TextUtils.isEmpty(bandDistance)){
                     cBandDistance.setError("Distance Is Required!");
+                    return;
                 }
                 if (TextUtils.isEmpty(bandGenres)){
                     cBandGenres.setError("Genres Is Required!");
+                    return;
                 }
                 if (TextUtils.isEmpty(bandEmail)){
                     cBandEmail.setError("Band Email Is Required!");
+                    return;
                 }
                 if (TextUtils.isEmpty(bandPhoneNumber)){
                     cBandPhoneNumber.setError("Band Phone Number Is Required!");
+                    return;
                 }
 
                 DocumentReference docRef = fStore.collection("users").document(fAuth.getUid());
@@ -110,16 +167,16 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document != null) {
-                                musicianRef = document.getString("musicianRef");
-                                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + musicianRef);
                                 Map<String, Object> band = new HashMap<>();
                                 band.put("name", bandName);
-                                band.put("location", bandLocation);
+                                band.put("location", checkLocality(bandAddress));
                                 band.put("distance", bandDistance);
                                 band.put("genres", bandGenres);
                                 band.put("email", bandEmail);
                                 band.put("phone-number", bandPhoneNumber);
-                                band.put("musicianRef", musicianRef);
+                                band.put("latitude", bandAddress.getLatitude());
+                                band.put("longitude", bandAddress.getLongitude());
+                                band.put("rating", "-1");
 
                                 fStore.collection("bands")
                                         .add(band)
@@ -127,8 +184,25 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                                             @Override
                                             public void onSuccess(DocumentReference documentReference) {
                                                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ going to band image");
+                                                String newBandID = documentReference.getId();
                                                 bandRef = documentReference.toString();
-                                                BandImageFragment.submitBtn.performClick();
+
+
+                                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(newBandID).child("members");
+                                                databaseReference.setValue(newBand).addOnCompleteListener(new OnCompleteListener<Void>()
+                                                {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task)
+                                                    {
+                                                        if(task.isSuccessful())
+                                                        {
+                                                            BandImageFragment.submitBtn.performClick();
+                                                            Toast.makeText(getActivity(), "Band Created!", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
+
+
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -148,6 +222,22 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
+        }
+    }
+
+    private String checkLocality(Address bandAddress)
+    {
+        if(bandAddress.getLocality() != null)
+        {
+            return bandAddress.getLocality();
+        }
+        else if(bandAddress.getSubLocality() != null)
+        {
+            return bandAddress.getSubLocality();
+        }
+        else
+        {
+            return bandAddress.getPostalCode();
         }
     }
 }

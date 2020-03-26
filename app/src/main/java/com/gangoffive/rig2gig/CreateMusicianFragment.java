@@ -82,7 +82,7 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     FirebaseStorage fStorage;
-    EditText distance, location, name, genre;
+    EditText distance, name, genre;
     Button takePhotoBtn, uploadPhotoBtn;
 
     String email, userRef, phoneNumber, type, rating;
@@ -152,7 +152,6 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         fStorage = FirebaseStorage.getInstance();
 
         distance = v.findViewById(R.id.distance);
-        location = v.findViewById(R.id.location);
         name = v.findViewById(R.id.name);
         genre = v.findViewById(R.id.genre);
 
@@ -201,7 +200,6 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
             case R.id.submitBtn:
                 userRef = fAuth.getUid();
                 email = fAuth.getCurrentUser().getEmail();
-                String loc = location.getText().toString();
                 String musicianName = name.getText().toString();
                 String musicianDistance = distance.getText().toString();
                 String musicianAddressTextView = autoCompleteTextView.getText().toString();
@@ -219,10 +217,6 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                 if(musicianAddress == null)
                 {
                     autoCompleteTextView.setError("Please Enter A Valid Address");
-                    return;
-                }
-                if (TextUtils.isEmpty(loc)) {
-                    location.setError("Please Set A Locaton!");
                     return;
                 }
                 if (TextUtils.isEmpty(musicianName)) {
