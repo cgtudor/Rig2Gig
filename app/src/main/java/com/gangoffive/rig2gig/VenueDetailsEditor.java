@@ -393,4 +393,19 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         return image;
     }
 
+    public Map<String, Object> getVenue() {
+        return venue;
+    }
+
+    public void setVenue(Map<String, Object> venue) {
+        this.venue = venue;
+    }
+
+    public void setTabPreserver(TabStatePreserver tabPreserver) {
+        this.tabPreserver = tabPreserver;
+    }
+
+    public void setListingManager(ListingManager listingManager) {
+        this.listingManager = listingManager;
+    }
 }

@@ -368,23 +368,26 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                 }
             }
         }
-        int leadingZeros = 0;
-        String distanceValue = distance.getText().toString();
-        while (true)
+        if (distance != null)
         {
-            if (distanceValue.length() != 0 && distanceValue.length() > leadingZeros && distanceValue.charAt(leadingZeros) == '0')
+            int leadingZeros = 0;
+            String distanceValue = distance.getText().toString();
+            while (true)
             {
-                leadingZeros++;
+                if (distanceValue.length() != 0 && distanceValue.length() > leadingZeros && distanceValue.charAt(leadingZeros) == '0')
+                {
+                    leadingZeros++;
+                }
+                else
+                {
+                    break;
+                }
             }
-            else
+            String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
+            if (actualNumber.length() == 0)
             {
-                break;
+                return false;
             }
-        }
-        String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
-        if (actualNumber.length() == 0)
-        {
-            return false;
         }
         return true;
     }
@@ -395,5 +398,21 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
      */
     public ImageView getImageView() {
         return image;
+    }
+
+    public void setListingManager(ListingManager listingManager) {
+        this.listingManager = listingManager;
+    }
+
+    public Map<String, Object> getMusician() {
+        return musician;
+    }
+
+    public void setMusician(Map<String, Object> musician) {
+        this.musician = musician;
+    }
+
+    public void setTabPreserver(TabStatePreserver tabPreserver) {
+        this.tabPreserver = tabPreserver;
     }
 }
