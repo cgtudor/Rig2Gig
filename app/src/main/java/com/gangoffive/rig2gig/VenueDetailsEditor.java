@@ -56,8 +56,8 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (s.toString().trim().length() == 0 && createListing != null) {
-                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+                createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
             else if (before == 0 && count == 1 && createListing != null
                     && name.getText().toString().trim().length() > 0
@@ -67,7 +67,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                     && phone.getText().toString().trim().length() > 0
                     && description.getText().toString().trim().length() > 0)
             {
-                createListing.setBackgroundColor(Color.parseColor("#008577"));
+                createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
         }

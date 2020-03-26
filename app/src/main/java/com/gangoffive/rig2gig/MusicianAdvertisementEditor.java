@@ -120,8 +120,8 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         setViewReferences();
-        createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-        createListing.setTextColor(Color.parseColor("#4D4D4E"));
+        createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
+        createListing.setTextColor(Color.parseColor("#FFFFFF"));
         musician = data;
         listingManager.getImage(this);
     }
@@ -315,14 +315,14 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         if (createListing != null && description!= null
                 &&  (bandPositions.size() == 0
                 || description.getText().toString().trim().length() == 0)) {
-            createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-            createListing.setTextColor(Color.parseColor("#4D4D4E"));
+            createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+            createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
         else if (createListing != null && description!= null
                 && description.getText().toString().trim().length() > 0
                 && bandPositions.size() > 0)
         {
-            createListing.setBackgroundColor(Color.parseColor("#008577"));
+            createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
             createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
     }
