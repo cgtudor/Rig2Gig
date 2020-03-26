@@ -28,7 +28,7 @@
 
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/firstName"
         android:layout_width="362dp"
         android:layout_height="42dp"
         android:layout_marginTop="24dp"
@@ -47,7 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintTop_toBottomOf="@+id/venue_name_final" />
 
         <ImageView
             android:id="@+id/image"
@@ -56,12 +56,12 @@
             android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintTop_toBottomOf="@+id/venue_name_final"
             app:srcCompat="@android:color/background_light" />
 
 
         <EditText
-            android:id="@+id/distance"
+            android:id="@+id/venue_description_final"
             android:layout_width="144dp"
             android:layout_height="43dp"
             android:ems="10"
@@ -92,9 +92,9 @@
             android:layout_marginEnd="16dp"
             android:text="miles"
             android:textSize="18sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/distance"
+            app:layout_constraintBaseline_toBaselineOf="@+id/venue_description_final"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/distance"
+            app:layout_constraintStart_toEndOf="@+id/venue_description_final"
             android:textColor="#000000"/>
 
         <LinearLayout

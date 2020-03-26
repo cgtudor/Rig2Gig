@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -136,13 +135,13 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public void setViewReferences() {
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         image = findViewById(R.id.image);
         if (image != null)
         {
             image.setImageDrawable(null);
         }
-        description = findViewById(R.id.distance);
+        description = findViewById(R.id.venue_description_final);
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);

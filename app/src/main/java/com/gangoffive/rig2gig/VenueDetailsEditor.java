@@ -8,7 +8,6 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -137,7 +136,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         {
             image.setImageDrawable(null);
         }
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         if (name != null)
         {
             name.setOnFocusChangeListener(editTextFocusListener);
@@ -173,7 +172,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
             phone.setOnFocusChangeListener(editTextFocusListener);
             phone.addTextChangedListener(textWatcher);
         }
-        description = findViewById(R.id.distance);
+        description = findViewById(R.id.venue_description_final);
         if (description != null)
         {
             description.setOnFocusChangeListener(editTextFocusListener);

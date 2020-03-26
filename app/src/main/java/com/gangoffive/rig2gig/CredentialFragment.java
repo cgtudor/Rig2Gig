@@ -3,22 +3,18 @@ package com.gangoffive.rig2gig;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -32,8 +28,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import org.identityconnectors.common.security.GuardedString;
 
@@ -62,7 +56,7 @@ public class CredentialFragment extends Fragment implements View.OnClickListener
     public static Button btn;
     String userId;
 
-    EditText cFirstName, cLastName, cUsername, cPhoneNumber, rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword;
+    EditText cFirstName, cLastName, cUsername, cPhoneNumber, rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword, invis;
     /**
      * Upon creation of the ViewVenuesFragment, create the fragment_view_venues layout.
      * @param inflater The inflater is used to read the passed xml file.
@@ -87,15 +81,17 @@ public class CredentialFragment extends Fragment implements View.OnClickListener
         btn.setOnClickListener(this);
 
         btn.setVisibility(View.INVISIBLE);
-        cFirstName = v.findViewById(R.id.name);
+        cFirstName = v.findViewById(R.id.nameFirst);
         cLastName = v.findViewById(R.id.location);
-        cUsername = v.findViewById(R.id.distance);
+        cUsername = v.findViewById(R.id.venue_description_final);
         cPhoneNumber = v.findViewById(R.id.cPhoneNumber);
 
         rEmailAddress = v.findViewById(R.id.emailReset);
         rConfirmEmail = v.findViewById(R.id.registerConfirmEmail);
         rPassword = v.findViewById(R.id.registerPassword);
         rConfirmPassword = v.findViewById(R.id.registerConfirmPassword);
+        invis = v.findViewById(R.id.invis);
+
         return v;
     }
 
@@ -117,34 +113,34 @@ public class CredentialFragment extends Fragment implements View.OnClickListener
                 String confirmEmail = rConfirmEmail.getText().toString().trim();
                 String password = rPassword.getText().toString().trim();
 
-                if (TextUtils.isEmpty(email)) {
-                    rEmailAddress.setError("Email is required!");
-                    return;
-                }
-                if (TextUtils.isEmpty(confirmEmail)) {
-                    rConfirmEmail.setError("Confirm email is required!");
-                    return;
-                }
-                if (!confirmEmail.matches(email)) {
-                    rConfirmEmail.setError("Email doesn't match!");
-                    return;
-                }
-                if (TextUtils.isEmpty(firstName)) {
-                    cFirstName.setError("Please enter a first name");
-                    return;
-                }
-                if (TextUtils.isEmpty(lastName)) {
-                    cLastName.setError("Please enter a last name");
-                    return;
-                }
-                if (TextUtils.isEmpty(username)) {
-                    cUsername.setError("Please enter a username name");
-                    return;
-                }
-                if (TextUtils.isEmpty(phoneNumber)) {
-                    cPhoneNumber.setError("Please enter a phone number");
-                    return;
-                }
+//                if (TextUtils.isEmpty(email)) {
+//                    rEmailAddress.setError("Email is required!");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(confirmEmail)) {
+//                    rConfirmEmail.setError("Confirm email is required!");
+//                    return;
+//                }
+//                if (!confirmEmail.matches(email)) {
+//                    rConfirmEmail.setError("Email doesn't match!");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(firstName)) {
+//                    cFirstName.setError("Please enter a first name");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(lastName)) {
+//                    cLastName.setError("Please enter a last name");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(username)) {
+//                    cUsername.setError("Please enter a username name");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(phoneNumber)) {
+//                    cPhoneNumber.setError("Please enter a phone number");
+//                    return;
+//                }
 
                 AtomicBoolean validPass = new AtomicBoolean();
                 validPass.set(true);

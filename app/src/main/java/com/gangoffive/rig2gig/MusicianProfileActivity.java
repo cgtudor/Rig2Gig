@@ -4,32 +4,23 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MusicianProfileActivity extends AppCompatActivity {
 
@@ -49,7 +40,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
         final TextView musicianName = findViewById(R.id.musicianName);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
-        final TextView distance = findViewById(R.id.distance);
+        final TextView distance = findViewById(R.id.venue_description_final);
         final TextView bands = findViewById(R.id.bands);
 
         /*Used to get the id of the musician from the previous activity*/

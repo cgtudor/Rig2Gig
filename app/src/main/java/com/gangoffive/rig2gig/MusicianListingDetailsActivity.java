@@ -3,7 +3,6 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -36,7 +35,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -69,7 +67,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
         final TextView description = findViewById(R.id.description);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
-        final TextView distance = findViewById(R.id.distance);
+        final TextView distance = findViewById(R.id.venue_description_final);
         final TextView position = findViewById(R.id.position);
         final Button contact = findViewById(R.id.contact);
 

@@ -8,7 +8,6 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -148,7 +147,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         {
             image.setImageDrawable(null);
         }
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         if (name != null)
         {
             name.setOnFocusChangeListener(editTextFocusListener);
@@ -166,7 +165,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             location.setOnFocusChangeListener(editTextFocusListener);
             location.addTextChangedListener(textWatcher);
         }
-        distance = findViewById(R.id.distance);
+        distance = findViewById(R.id.venue_description_final);
         if (distance != null)
         {
             distance.setOnFocusChangeListener(editTextFocusListener);

@@ -162,14 +162,14 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     @Override
     public void setViewReferences() {
         searchHint = findViewById(R.id.searchHint);
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         image = findViewById(R.id.image);
         if (image != null)
         {
             image.setImageDrawable(null);
         }
         position = findViewById(R.id.position);
-        description = findViewById(R.id.distance);
+        description = findViewById(R.id.venue_description_final);
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);

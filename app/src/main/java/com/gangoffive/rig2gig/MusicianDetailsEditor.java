@@ -149,7 +149,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         {
             image.setImageDrawable(null);
         }
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         if (name != null)
         {
             name.setOnFocusChangeListener(editTextFocusListener);
@@ -167,7 +167,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             location.setOnFocusChangeListener(editTextFocusListener);
             location.addTextChangedListener(textWatcher);
         }
-        distance = findViewById(R.id.distance);
+        distance = findViewById(R.id.venue_description_final);
         if (distance != null)
         {
             distance.setOnFocusChangeListener(editTextFocusListener);

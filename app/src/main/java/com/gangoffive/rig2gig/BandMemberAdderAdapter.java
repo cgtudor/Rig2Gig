@@ -2,7 +2,6 @@ package com.gangoffive.rig2gig;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
@@ -121,7 +113,7 @@ public class BandMemberAdderAdapter  extends BaseAdapter
                     .skipMemoryCache(true)
                     .into(image);
         }
-        TextView name = (TextView)convertView.findViewById(R.id.name);
+        TextView name = (TextView)convertView.findViewById(R.id.venue_name_final);
         name.setText(names.get(position).toString());
         TextView invite = (TextView)convertView.findViewById(R.id.invite);
 

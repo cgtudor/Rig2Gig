@@ -1,7 +1,6 @@
 package com.gangoffive.rig2gig;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,7 +32,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -42,15 +40,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.identityconnectors.common.security.GuardedString;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -151,8 +146,8 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         fStore = FirebaseFirestore.getInstance();
         fStorage = FirebaseStorage.getInstance();
 
-        distance = v.findViewById(R.id.distance);
-        name = v.findViewById(R.id.name);
+        distance = v.findViewById(R.id.venue_description_final);
+        name = v.findViewById(R.id.venue_name_final);
         genre = v.findViewById(R.id.genre);
 
         image = v.findViewById(R.id.imageView);

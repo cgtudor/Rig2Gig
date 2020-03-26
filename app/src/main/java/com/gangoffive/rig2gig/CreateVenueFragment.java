@@ -1,7 +1,6 @@
 package com.gangoffive.rig2gig;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,10 +12,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,28 +23,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -115,26 +104,26 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
         fStore = FirebaseFirestore.getInstance();
         fStorage = FirebaseStorage.getInstance();
 
-        description = v.findViewById(R.id.distance);
+        description = v.findViewById(R.id.venue_description);
         location = v.findViewById(R.id.venue_location);
-        name = v.findViewById(R.id.name);
+        name = v.findViewById(R.id.venue_name);
         venueType = v.findViewById(R.id.type);
         submit = v.findViewById(R.id.submitBtn);
 
         location = v.findViewById(R.id.venue_location);
         location.setAdapter(new GooglePlacesAutoSuggestAdapter(getActivity(), android.R.layout.simple_list_item_1));
 
-        image = v.findViewById(R.id.imageViewVenue);
-        //image.setBackgroundResource(R.drawable.com_facebook_profile_picture_blank_portrait);
+//        image = v.findViewById(R.id.imageViewVenue);
+//        image.setBackgroundResource(R.drawable.com_facebook_profile_picture_blank_portrait);
 
-        //image = v.findViewById(R.id.imageViewVenue);
+        image = v.findViewById(R.id.imageViewVenue);
 
         submit.setVisibility(View.INVISIBLE);
 
         String [] values =
-                {"Function Room","Titty Bar", "Club"};
+                {"Function Room","Bar", "Club", "Pub", "Hotel"};
         Spinner spinner = v.findViewById(R.id.spinner1);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, values);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner, values);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner.setAdapter(adapter);
 
@@ -148,10 +137,16 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
                         type = "Function Room";
                         break;
                     case 1:
-                        type = "Titty Bar";
+                        type = "Bar";
                         break;
                     case 2:
                         type = "Club";
+                        break;
+                    case 3:
+                        type = "Pub";
+                        break;
+                    case 4:
+                        type = "Hotel";
                         break;
                     default:
                         break;
@@ -190,26 +185,30 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
                 Address venueAddress = getAddress();
                 String venueName = name.getText().toString();
                 String venueRating = "-1";
-                ImageView defImg = new ImageView(getActivity());
-                defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
 
-                if (TextUtils.isEmpty(venueAddressTextView)) {
-                    location.setError("Please Set A Locaton!");
-                    return;
-                }
-                if(venueAddress == null)
-                {
-                    location.setError("Please enter a valid location!");
-                    return;
-                }
-                if (TextUtils.isEmpty(desc)) {
-                    description.setError("Please Enter A Venue Description!");
-                    return;
-                }
-                if (TextUtils.isEmpty(venueName)) {
-                    name.setError("Please Enter A Venue Name!");
-                    return;
-                }
+//                if (image.getDrawable() == null)
+//                {
+//                    location.setError("Please select an image");
+//                    return;
+//                }
+
+//                if (TextUtils.isEmpty(venueAddressTextView)) {
+//                    location.setError("Please Set A Locaton!");
+//                    return;
+//                }
+//                if(venueAddress == null)
+//                {
+//                    location.setError("Please enter a valid location!");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(desc)) {
+//                    description.setError("Please Enter A Venue Description!");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(venueName)) {
+//                    name.setError("Please Enter A Venue Name!");
+//                    return;
+//                }
 
 
                 fStore.collection("users").document(fAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -38,7 +36,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -70,8 +67,8 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
         fStore = FirebaseFirestore.getInstance();
         fStorage = FirebaseStorage.getInstance();
 
-        description = findViewById(R.id.distance);
-        name = findViewById(R.id.name);
+        description = findViewById(R.id.venue_description_final);
+        name = findViewById(R.id.venue_name_final);
         venueType = findViewById(R.id.type);
         submit = findViewById(R.id.submitBtn);
 

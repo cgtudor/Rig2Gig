@@ -145,13 +145,13 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
      */
     @Override
     public void setViewReferences() {
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         image = findViewById(R.id.image);
         if (image != null)
         {
             image.setImageDrawable(null);
         }
-        distance = findViewById(R.id.distance);
+        distance = findViewById(R.id.venue_description_final);
         if (distance != null)
         {
             distance.addTextChangedListener(textWatcher);
