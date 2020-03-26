@@ -96,7 +96,7 @@ public class BandImageFragment extends Fragment implements View.OnClickListener 
                             if (document != null) {
                                 DocumentReference documentReference = fStore.collection("bands").document(CreateBandFragment.bandRef);
                                 StorageReference sRef = fStorage.getReference()
-                                        .child("/images/bands/" + documentReference.getId() + ".jpg");
+                                        .child("/images/bands/" + CreateBandFragment.bandRef + ".jpg");
                                 UploadTask uploadTask = sRef.putBytes(imageToByteArray(image.getDrawable()));
                                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
                                 {

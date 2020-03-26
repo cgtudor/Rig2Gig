@@ -57,7 +57,7 @@ public class TabbedBandActivity extends AppCompatActivity {
 
     public void confirmOnClick(View view)
     {
-        CredentialFragment.btn.performClick();
+        CreateBandFragment.btn.performClick();
         System.out.println("clicked");
     }
 }

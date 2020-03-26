@@ -62,6 +62,13 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
         btn.setOnClickListener(this);
         btn.setVisibility(View.INVISIBLE);
 
+        cBandName = v.findViewById(R.id.BandName);
+        cBandLocation = v.findViewById(R.id.bandLocation);
+        cBandDistance = v.findViewById(R.id.bandDistance);
+        cBandGenres = v.findViewById(R.id.bandGenres);
+        cBandEmail = v.findViewById(R.id.bandEmail);
+        cBandPhoneNumber = v.findViewById(R.id.bandPhoneNumber);
+
         return v;
     }
 
@@ -76,7 +83,6 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                 final String bandGenres = cBandGenres.getText().toString().trim();
                 final String bandEmail = cBandEmail.getText().toString().trim();
                 final String bandPhoneNumber = cBandPhoneNumber.getText().toString().trim();
-                final String userID = fAuth.getUid();
 
                 if (TextUtils.isEmpty(bandName)){
                     cBandName.setError("Band Name Is Required!");
@@ -105,6 +111,7 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                             DocumentSnapshot document = task.getResult();
                             if (document != null) {
                                 musicianRef = document.getString("musicianRef");
+                                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + musicianRef);
                                 Map<String, Object> band = new HashMap<>();
                                 band.put("name", bandName);
                                 band.put("location", bandLocation);
@@ -119,6 +126,7 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                             @Override
                                             public void onSuccess(DocumentReference documentReference) {
+                                                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ going to band image");
                                                 bandRef = documentReference.toString();
                                                 BandImageFragment.submitBtn.performClick();
                                             }
@@ -137,6 +145,7 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                         }
                     }
                 });
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
         }
