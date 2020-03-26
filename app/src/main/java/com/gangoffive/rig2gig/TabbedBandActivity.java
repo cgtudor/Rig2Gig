@@ -22,6 +22,7 @@ public class TabbedBandActivity extends AppCompatActivity {
     Button test, back;
 
     private static final String TAG = "======================";
+    static String musicianID;
 
     private int[] tabTitles;
     private int[] fragments = {R.layout.activity_create_band, R.layout.fragment_band_genre,
@@ -34,6 +35,8 @@ public class TabbedBandActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         fStorage = FirebaseStorage.getInstance();
+
+        musicianID = getIntent().getStringExtra("EXTRA_MUSICIAN_ID");
 
         tabTitles = new int[]{R.string.bandInformation, R.string.bandGenre,R.string.bandImage};
 

@@ -253,7 +253,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                 startActivity(new Intent(getActivity(), MusicianDetailsEditor.class).putExtra("EXTRA_MUSICIAN_ID", musicianRef));
                 break;
             case "Create Band":
-                startActivity(new Intent(getActivity(), TabbedBandActivity.class));
+                startActivity(new Intent(getActivity(), TabbedBandActivity.class).putExtra("EXTRA_MUSICIAN_ID", musicianRef));
                 break;
             case "Create Performer Advert":
                 startActivityForResult(new Intent(getActivity(), PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", musicianRef)

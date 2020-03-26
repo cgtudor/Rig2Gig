@@ -25,7 +25,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="288dp"
         android:background="@drawable/transparent_button_dark_outline"
-        android:onClick="createBandBtnOnClick"
         android:padding="10dp"
         android:text="Create Band"
         android:textAllCaps="false"
@@ -58,16 +57,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/BandName" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="198dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="8dp"
-        android:background="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bandLocation" />
 
     <View
         android:id="@+id/view2"
@@ -109,17 +98,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bandPhoneNumber" />
 
-    <EditText
-        android:id="@+id/bandLocation"
-        android:layout_width="wrap_content"
+    <AutoCompleteTextView
+        android:id="@+id/location"
+        android:layout_width="205dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/transparent"
-        android:ems="10"
-        android:hint="Band Location"
-        android:inputType="textPersonName"
-        android:text="Middlesbrough"
+        android:hint="Town/City (Barnsley, UK)"
+        android:textColor="#FFF"
+        android:textColorHint="#F6F6F6"
+        android:theme="@style/AutoComplete"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view14" />
 
@@ -135,7 +124,7 @@
         android:text="10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintTop_toBottomOf="@+id/location" />
 
     <EditText
         android:id="@+id/bandGenres"
