@@ -67,6 +67,8 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                     && name.getText().toString().trim().length() > 0
                     && location.getText().toString().trim().length() > 0
                     && genres.getText().toString().trim().length() > 0
+                    && email.getText().toString().trim().length() > 0
+                    && phone.getText().toString().trim().length() > 0
             )
             {
                 createListing.setBackgroundColor(Color.parseColor("#008577"));
@@ -318,22 +320,31 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Toast.makeText(this,"Details updated successfully",
-                    Toast.LENGTH_LONG).show();
-            Toast.makeText(BandDetailsEditor.this,
-                    "Details successfully updated",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(BandDetailsEditor.this,"Details updated successfully",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(BandDetailsEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(BandDetailsEditor.this,
+                            "Updating details failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(BandDetailsEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(BandDetailsEditor.this,
+                            "Updating details failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 

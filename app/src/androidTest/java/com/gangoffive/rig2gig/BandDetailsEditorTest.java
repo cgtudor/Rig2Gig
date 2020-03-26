@@ -7,9 +7,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.widget.Button;
 
 import androidx.test.annotation.UiThreadTest;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
@@ -22,10 +24,14 @@ import java.util.HashMap;
 
 import static android.content.Intent.ACTION_MAIN;
 import static androidx.core.content.ContextCompat.startActivity;
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.pressKey;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.swipeRight;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
@@ -59,9 +65,68 @@ public class BandDetailsEditorTest {
             bandData.put("name", "test name");
             bandData.put("phone-number", "123");
             bandData.put("rating", "test rating");
-            testRule.getActivity().onSuccessFromDatabase(bandData);
-            testRule.getActivity().saveTabs();
+
         }
+
+        public void enterTestData()
+        {
+            onView(withId(R.id.name)).perform(typeText("test name edit"));
+            closeSoftKeyboard();
+            onView(withId(R.id.location)).perform(typeText("test location edit"));
+            closeSoftKeyboard();
+            onView(withId(R.id.distance)).perform(typeText("test distance edit"));
+            closeSoftKeyboard();
+            onView(withId(R.id.genres)).perform(typeText("test genres edit"));
+            closeSoftKeyboard();
+            onView(withId(R.id.email)).perform(typeText("test email edit"));
+            closeSoftKeyboard();
+            onView(withId(R.id.phone)).perform(typeText("test phone edit"));
+            closeSoftKeyboard();
+        }
+
+        public void deleteAllFields()
+        {
+            onView(withId(R.id.name)).perform(replaceText(""));
+            onView(withId(R.id.location)).perform(replaceText(""));
+            onView(withId(R.id.distance)).perform(replaceText(""));
+            onView(withId(R.id.genres)).perform(replaceText(""));
+            onView(withId(R.id.email)).perform(replaceText(""));
+            onView(withId(R.id.phone)).perform(replaceText(""));
+        }
+
+
+
+    public void deleteOneCharFields()
+    {
+        onView(withId(R.id.name)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
+        closeSoftKeyboard();
+        onView(withId(R.id.location)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
+        closeSoftKeyboard();
+        onView(withId(R.id.distance)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
+        closeSoftKeyboard();
+        onView(withId(R.id.genres)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
+        closeSoftKeyboard();
+        onView(withId(R.id.email)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
+        closeSoftKeyboard();
+        onView(withId(R.id.phone)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
+        closeSoftKeyboard();
+    }
+
+    public void enterOneCharAllFields()
+    {
+        onView(withId(R.id.name)).perform(typeText("a"));
+        closeSoftKeyboard();
+        onView(withId(R.id.location)).perform(typeText("a"));
+        closeSoftKeyboard();
+        onView(withId(R.id.distance)).perform(typeText("a"));
+        closeSoftKeyboard();
+        onView(withId(R.id.genres)).perform(typeText("a"));
+        closeSoftKeyboard();
+        onView(withId(R.id.email)).perform(typeText("a"));
+        closeSoftKeyboard();
+        onView(withId(R.id.phone)).perform(typeText("a"));
+        closeSoftKeyboard();
+    }
 
         @Test
         public void testActivityInView() {
@@ -233,106 +298,63 @@ public class BandDetailsEditorTest {
             Button confirm = testRule.getActivity().findViewById(R.id.createListing);
             ColorDrawable colour = (ColorDrawable) confirm.getBackground();
             int intColour = colour.getColor();
-            assertEquals(-5062987, intColour);
+            assertEquals(-16743049, intColour);
             ColorStateList textcolour = confirm.getTextColors();
             intColour = textcolour.getDefaultColor();
-            assertEquals(-11711154, intColour);
+            assertEquals(-1, intColour);
         }
 
 
         @Test
-        public void testPopulateInitialFieldsNoAd() throws InterruptedException {
-
+        public void testPopulateInitialFields() throws InterruptedException {
+            testRule.getActivity().setViewReferences();
             testRule.getActivity().setBand(bandData);
             testRule.getActivity().saveTabs();
             testRule.getActivity().setViewReferences();
             testRule.getActivity().populateInitialFields();
-            onView(withId(R.id.name)).check(matches(withText(bandData.get("name").toString())));
-            onView(withId(R.id.location)).check(matches(withText(bandData.get("location").toString())));
-            onView(withId(R.id.distance)).check(matches(withText(bandData.get("distance").toString())));
-            onView(withId(R.id.genres)).check(matches(withText(bandData.get("genres").toString())));
-            onView(withId(R.id.email)).check(matches(withText(bandData.get("email").toString())));
-            onView(withId(R.id.phone)).check(matches(withText(bandData.get("phone-number").toString())));
+            onView(withId(R.id.name)).check(matches(withText("")));
+            onView(withId(R.id.location)).check(matches(withText("")));
+            onView(withId(R.id.distance)).check(matches(withText("")));
+            onView(withId(R.id.genres)).check(matches(withText("")));
+            onView(withId(R.id.email)).check(matches(withText("")));
+            onView(withId(R.id.phone)).check(matches(withText("")));
         }
 
         @Test
-        public void testReinitialiseTabsNoAd() {
+        public void testReinitialiseTabs() throws InterruptedException {
 
-
+            testRule.getActivity().setViewReferences();
             testRule.getActivity().setBand(bandData);
+            testRule.getActivity().onSuccessFromDatabase(bandData);
             testRule.getActivity().saveTabs();
             testRule.getActivity().setViewReferences();
             testRule.getActivity().populateInitialFields();
             testRule.getActivity().reinitialiseTabs();
-            onView(withId(R.id.name)).check(matches(withText(bandData.get("name").toString())));
-            onView(withId(R.id.location)).check(matches(withText(bandData.get("location").toString())));
-            onView(withId(R.id.distance)).check(matches(withText(bandData.get("distance").toString())));
-            onView(withId(R.id.genres)).check(matches(withText(bandData.get("genres").toString())));
-            onView(withId(R.id.email)).check(matches(withText(bandData.get("email").toString())));
-            onView(withId(R.id.phone)).check(matches(withText(bandData.get("phone-number").toString())));
+            onView(withId(R.id.name)).check(matches(withText("")));
+            onView(withId(R.id.location)).check(matches(withText("")));
+            onView(withId(R.id.distance)).check(matches(withText("")));
+            onView(withId(R.id.genres)).check(matches(withText("")));
+            onView(withId(R.id.email)).check(matches(withText("")));
+            onView(withId(R.id.phone)).check(matches(withText("")));
             onView(withId(R.id.view_pager)).perform(swipeLeft());
             testRule.getActivity().saveTabs();
             testRule.getActivity().setViewReferences();
             testRule.getActivity().populateInitialFields();
             testRule.getActivity().reinitialiseTabs();
-            onView(withId(R.id.name)).check(matches(withText(bandData.get("name").toString())));
-            onView(withId(R.id.location)).check(matches(withText(bandData.get("location").toString())));
-            onView(withId(R.id.distance)).check(matches(withText(bandData.get("distance").toString())));
-            onView(withId(R.id.genres)).check(matches(withText(bandData.get("genres").toString())));
-            onView(withId(R.id.email)).check(matches(withText(bandData.get("email").toString())));
-            onView(withId(R.id.phone)).check(matches(withText(bandData.get("phone-number").toString())));
+            onView(withId(R.id.name)).check(matches(withText("")));
+            onView(withId(R.id.location)).check(matches(withText("")));
+            onView(withId(R.id.distance)).check(matches(withText("")));
+            onView(withId(R.id.genres)).check(matches(withText("")));
+            onView(withId(R.id.email)).check(matches(withText("")));
+            onView(withId(R.id.phone)).check(matches(withText("")));
 
         }
-
-    @Test
-    public void testPopulateInitialFieldsExistingAd() throws InterruptedException {
-
-        testRule.getActivity().setBand(bandData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        onView(withId(R.id.name)).check(matches(withText(bandData.get("name").toString())));
-        onView(withId(R.id.location)).check(matches(withText(bandData.get("location").toString())));
-        onView(withId(R.id.distance)).check(matches(withText(bandData.get("distance").toString())));
-        onView(withId(R.id.genres)).check(matches(withText(bandData.get("genres").toString())));
-        onView(withId(R.id.email)).check(matches(withText(bandData.get("email").toString())));
-        onView(withId(R.id.phone)).check(matches(withText(bandData.get("phone-number").toString())));
-    }
-
-    @Test
-    public void testReinitialiseTabsExistingAd() {
-
-
-        testRule.getActivity().setBand(bandData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
-        onView(withId(R.id.name)).check(matches(withText(bandData.get("name").toString())));
-        onView(withId(R.id.location)).check(matches(withText(bandData.get("location").toString())));
-        onView(withId(R.id.distance)).check(matches(withText(bandData.get("distance").toString())));
-        onView(withId(R.id.genres)).check(matches(withText(bandData.get("genres").toString())));
-        onView(withId(R.id.email)).check(matches(withText(bandData.get("email").toString())));
-        onView(withId(R.id.phone)).check(matches(withText(bandData.get("phone-number").toString())));
-        onView(withId(R.id.view_pager)).perform(swipeLeft());
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
-        onView(withId(R.id.name)).check(matches(withText(bandData.get("name").toString())));
-        onView(withId(R.id.location)).check(matches(withText(bandData.get("location").toString())));
-        onView(withId(R.id.distance)).check(matches(withText(bandData.get("distance").toString())));
-        onView(withId(R.id.genres)).check(matches(withText(bandData.get("genres").toString())));
-        onView(withId(R.id.email)).check(matches(withText(bandData.get("email").toString())));
-        onView(withId(R.id.phone)).check(matches(withText(bandData.get("phone-number").toString())));
-
-    }
 
         @Test
         public void testOnDataBaseResultListingFailure() {
             Enum result = ListingManager.CreationResult.LISTING_FAILURE;
             testRule.getActivity().handleDatabaseResponse(result);
-            onView(withText("Listing creation failed.  Check your connection and try again"))
+            onView(withText("Updating details failed.  Check your connection and try again"))
                     .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
         }
 
@@ -340,28 +362,170 @@ public class BandDetailsEditorTest {
         public void testOnDataBaseResultImageFailure() {
             Enum result = ListingManager.CreationResult.IMAGE_FAILURE;
             testRule.getActivity().handleDatabaseResponse(result);
-            onView(withText("Listing creation failed.  Check your connection and try again"))
+            onView(withText("Updating details failed.  Check your connection and try again"))
                     .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
         }
 
         @Test
         public void testOnDataBaseResultSuccess() {
-            ListingManager manager = mock(ListingManager.class);
-            testRule.getActivity().setListingManager(manager);
-            when(manager.getListingRef()).thenReturn("testRef");
             Enum result = ListingManager.CreationResult.SUCCESS;
             testRule.getActivity().handleDatabaseResponse(result);
-            onView(withText("Advertisement created successfully"))
-                    .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+            //unable to test toast due to activity running in isolation and finishing
             assertTrue(testRule.getActivity().isFinishing());
-            onView(withId(R.id.bandListingDetailsMain)).check(matches(isDisplayed()));
         }
 
         @Test
         public void testCancelAdvertisement() {
+            testRule.getActivity().saveTabs();
+            testRule.getActivity().setViewReferences();
+            testRule.getActivity().populateInitialFields();
+            testRule.getActivity().reinitialiseTabs();
             onView(withId(R.id.cancel)).perform(click());
             assertTrue(testRule.getActivity().isFinishing());
         }
+
+        @Test
+        public void testDataInput()
+        {
+            testRule.getActivity().saveTabs();
+            testRule.getActivity().setViewReferences();
+            testRule.getActivity().setBand(bandData);
+            testRule.getActivity().onSuccessFromDatabase(bandData);
+            testRule.getActivity().saveTabs();
+            testRule.getActivity().setViewReferences();
+            testRule.getActivity().populateInitialFields();
+            testRule.getActivity().reinitialiseTabs();
+            onView(withId(R.id.view_pager)).perform(swipeLeft());
+            enterTestData();
+            onView(withId(R.id.name)).check(matches(withText("test name edit")));
+            onView(withId(R.id.location)).check(matches(withText("test location edit")));
+            onView(withId(R.id.distance)).check(matches(withText("test distance edit")));
+            onView(withId(R.id.genres)).check(matches(withText("test genres edit")));
+            onView(withId(R.id.email)).check(matches(withText("test email edit")));
+            onView(withId(R.id.phone)).check(matches(withText("test phone edit")));
+        }
+
+    @Test
+    public void testDataInputSwipeAwaySwipeBack()
+    {
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().setBand(bandData);
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().saveTabs();
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().populateInitialFields();
+        testRule.getActivity().reinitialiseTabs();
+        onView(withId(R.id.view_pager)).perform(swipeLeft());
+        enterTestData();
+        onView(withId(R.id.view_pager)).perform(swipeRight());
+        onView(withId(R.id.view_pager)).perform(swipeLeft());
+        onView(withId(R.id.name)).check(matches(withText("test name edit")));
+        onView(withId(R.id.location)).check(matches(withText("test location edit")));
+        onView(withId(R.id.distance)).check(matches(withText("test distance edit")));
+        onView(withId(R.id.genres)).check(matches(withText("test genres edit")));
+        onView(withId(R.id.email)).check(matches(withText("test email edit")));
+        onView(withId(R.id.phone)).check(matches(withText("test phone edit")));
+    }
+
+    @Test
+    public void testButtonColourChangeOnValidData()
+    {
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().setBand(bandData);
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().saveTabs();
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().populateInitialFields();
+        testRule.getActivity().reinitialiseTabs();
+        onView(withId(R.id.view_pager)).perform(swipeLeft());
+        enterTestData();
+        Button confirm = testRule.getActivity().findViewById(R.id.createListing);
+        ColorDrawable colour = (ColorDrawable) confirm.getBackground();
+        int intColour = colour.getColor();
+        assertEquals(-16743049, intColour);
+        ColorStateList textcolour = confirm.getTextColors();
+        intColour = textcolour.getDefaultColor();
+        assertEquals(-1, intColour);
+    }
+
+    @Test
+    public void testButtonColourChangeOnInValidData()
+    {
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().setBand(bandData);
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().saveTabs();
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().populateInitialFields();
+        testRule.getActivity().reinitialiseTabs();
+        onView(withId(R.id.view_pager)).perform(swipeLeft());
+        enterTestData();
+        deleteAllFields();
+        Button confirm = testRule.getActivity().findViewById(R.id.createListing);
+        ColorDrawable colour = (ColorDrawable) confirm.getBackground();
+        int intColour = colour.getColor();
+        assertEquals(-5062987, intColour);
+        ColorStateList textcolour = confirm.getTextColors();
+        intColour = textcolour.getDefaultColor();
+        assertEquals(-11711154, intColour);
+    }
+
+    @Test
+    public void testDataInputTwiceThenDeleteOneChar()
+    {
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().setBand(bandData);
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().saveTabs();
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().populateInitialFields();
+        testRule.getActivity().reinitialiseTabs();
+        onView(withId(R.id.view_pager)).perform(swipeLeft());
+        enterOneCharAllFields();
+        enterOneCharAllFields();
+        deleteOneCharFields();
+        onView(withId(R.id.name)).check(matches(withText("a")));
+        onView(withId(R.id.location)).check(matches(withText("a")));
+        onView(withId(R.id.distance)).check(matches(withText("a")));
+        onView(withId(R.id.genres)).check(matches(withText("a")));
+        onView(withId(R.id.email)).check(matches(withText("a")));
+        onView(withId(R.id.phone)).check(matches(withText("a")));
+        Button confirm = testRule.getActivity().findViewById(R.id.createListing);
+        ColorDrawable colour = (ColorDrawable) confirm.getBackground();
+        int intColour = colour.getColor();
+        assertEquals(-16743049, intColour);
+        ColorStateList textcolour = confirm.getTextColors();
+        intColour = textcolour.getDefaultColor();
+        assertEquals(-1, intColour);
+    }
+
+    @Test
+    public void testDataInputOnceThenDeleteOneChar()
+    {
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().setBand(bandData);
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().saveTabs();
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().populateInitialFields();
+        testRule.getActivity().reinitialiseTabs();
+        onView(withId(R.id.view_pager)).perform(swipeLeft());
+        enterOneCharAllFields();
+        deleteOneCharFields();
+        onView(withId(R.id.name)).check(matches(withText("")));
+        onView(withId(R.id.location)).check(matches(withText("")));
+        onView(withId(R.id.distance)).check(matches(withText("")));
+        onView(withId(R.id.genres)).check(matches(withText("")));
+        onView(withId(R.id.email)).check(matches(withText("")));
+        onView(withId(R.id.phone)).check(matches(withText("")));
+        Button confirm = testRule.getActivity().findViewById(R.id.createListing);
+        ColorDrawable colour = (ColorDrawable) confirm.getBackground();
+        int intColour = colour.getColor();
+        assertEquals(-5062987, intColour);
+        ColorStateList textcolour = confirm.getTextColors();
+        intColour = textcolour.getDefaultColor();
+        assertEquals(-11711154, intColour);
+    }
 }
 
 
