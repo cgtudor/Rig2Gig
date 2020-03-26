@@ -85,7 +85,7 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
     EditText distance, location, name, genre;
     Button takePhotoBtn, uploadPhotoBtn;
 
-    String email, userRef, phoneNumber, type;
+    String email, userRef, phoneNumber, type, rating;
 
     private ImageView image;
     private Drawable chosenPic;
@@ -209,6 +209,7 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                 String genres = genre.getText().toString();
                 ImageView defImg = new ImageView(getActivity());
                 defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
+                rating = "-1";
 
                 if(TextUtils.isEmpty(musicianAddressTextView))
                 {
@@ -254,6 +255,7 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                                 musicians.put("distance", musicianDistance);
                                 musicians.put("latitude", musicianAddress.getLatitude());
                                 musicians.put("longitude", musicianAddress.getLongitude());
+                                musicians.put("rating", rating);
 
                                 fStore.collection("musicians")
                                         .add(musicians)
