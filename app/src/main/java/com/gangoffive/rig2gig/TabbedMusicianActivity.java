@@ -152,7 +152,7 @@ public class TabbedMusicianActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         Intent backToMain = new Intent(this,
-                LoginActivity.class);
+                AccountPurposeActivity.class);
         startActivity(backToMain);
     }
 }
