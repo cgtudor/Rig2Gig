@@ -292,6 +292,7 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         intent.putExtra("EXTRA_USER_NAME",userName);
         intent.putExtra("EXTRA_USERS_MUSICIAN_ID", usersMusicianRef);
         startActivity(intent);
+        finish();
     }
 
     public void checkIfInBand()

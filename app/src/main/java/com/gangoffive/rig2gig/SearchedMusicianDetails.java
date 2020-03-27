@@ -58,7 +58,7 @@ public class SearchedMusicianDetails extends AppCompatActivity implements Create
     @Override
     public void setViewReferences()
     {
-        name = findViewById(R.id.venue_name_final);
+        name = findViewById(R.id.name);
         userName = findViewById(R.id.userName);
         location = findViewById(R.id.location);
         rating = findViewById(R.id.rating);
