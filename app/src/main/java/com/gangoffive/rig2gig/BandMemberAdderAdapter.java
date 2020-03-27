@@ -113,7 +113,7 @@ public class BandMemberAdderAdapter  extends BaseAdapter
                     .skipMemoryCache(true)
                     .into(image);
         }
-        TextView name = (TextView)convertView.findViewById(R.id.venue_name_final);
+        TextView name = (TextView)convertView.findViewById(R.id.firstName);
         name.setText(names.get(position).toString());
         TextView invite = (TextView)convertView.findViewById(R.id.invite);
 

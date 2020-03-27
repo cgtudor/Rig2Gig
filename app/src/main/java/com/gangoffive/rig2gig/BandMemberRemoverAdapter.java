@@ -115,7 +115,7 @@ public class BandMemberRemoverAdapter extends BaseAdapter {
         {
             image.setImageDrawable(images.get(position));
         }*/
-        TextView name = (TextView)convertView.findViewById(R.id.venue_name_final);
+        TextView name = (TextView)convertView.findViewById(R.id.firstName);
         name.setText(names.get(position).toString());
         TextView remove = (TextView)convertView.findViewById(R.id.remove);
         remove.setOnClickListener(new View.OnClickListener() {
