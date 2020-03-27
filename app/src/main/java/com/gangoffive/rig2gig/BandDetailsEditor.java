@@ -147,7 +147,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         {
             image.setImageDrawable(null);
         }
-        name = findViewById(R.id.venue_name_final);
+        name = findViewById(R.id.name);
         if (name != null)
         {
             name.setOnFocusChangeListener(editTextFocusListener);

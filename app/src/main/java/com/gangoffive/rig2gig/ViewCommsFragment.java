@@ -117,10 +117,10 @@ public class ViewCommsFragment extends Fragment
                                                 documentSnapshot.getId(),
                                                 documentSnapshot.get("sent-from").toString(),
                                                 documentSnapshot.get("type").toString(),
-                                                documentSnapshot.get("sent-from-type").toString(),
+                                                "bands",
                                                 documentSnapshot.get("sent-from-ref").toString(),
-                                                documentSnapshot.get("sent-to-type").toString(),
-                                                documentSnapshot.get("sent-to-ref").toString(),
+                                                "musicians",
+                                                documentSnapshot.get("musician-ref").toString(),
                                                 documentSnapshot.get("musician-ref").toString());
                                     }
                                     else

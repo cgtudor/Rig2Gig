@@ -220,7 +220,7 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                                 holder.imageViewBotButton.setVisibility(View.GONE);
                                 break;
                             case "join-request":
-                                DocumentReference bandDocRef = db.collection("bands").document(commDoc.get("band-ref").toString());
+                                DocumentReference bandDocRef = db.collection("bands").document(commDoc.get("sent-from-ref").toString());
                                 bandDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
                                     /**
