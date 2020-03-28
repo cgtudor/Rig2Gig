@@ -77,7 +77,7 @@
             android:layout_marginEnd="50dp"
             android:layout_weight="1.0"
             android:text="Confirm"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
 

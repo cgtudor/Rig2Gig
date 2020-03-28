@@ -74,7 +74,7 @@ public class BandAdvertisementEditorUITest {
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.bandAdImageMain)).check(matches(isDisplayed()));
-        onView(withId(R.id.name)).check(matches(isDisplayed()));
+        onView(withId(R.id.firstName)).check(matches(isDisplayed()));
         onView(withId(R.id.imageView)).check(matches(isDisplayed()));
         onView(withId(R.id.image)).check(matches(isDisplayed()));
         onView(withId(R.id.imageButtonLayout)).check(matches(isDisplayed()));
@@ -111,7 +111,7 @@ public class BandAdvertisementEditorUITest {
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.bandAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.name)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.firstName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.image)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageButtonLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -127,7 +127,7 @@ public class BandAdvertisementEditorUITest {
         onView(withId(R.id.bandAdDetailsMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.descriptionLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.detailView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.description)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.venue_description_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test
@@ -151,7 +151,7 @@ public class BandAdvertisementEditorUITest {
         onView(withId(R.id.bandAdDetailsMain)).check(matches(isDisplayed()));
         onView(withId(R.id.descriptionLabel)).check(matches(isDisplayed()));
         onView(withId(R.id.detailView)).check(matches(isDisplayed()));
-        onView(withId(R.id.description)).check(matches(isDisplayed()));
+        onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -165,7 +165,7 @@ public class BandAdvertisementEditorUITest {
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.bandAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.name)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.firstName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.image)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageButtonLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -181,7 +181,7 @@ public class BandAdvertisementEditorUITest {
         onView(withId(R.id.bandAdDetailsMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.descriptionLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.detailView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.description)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.venue_description_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test
@@ -190,10 +190,10 @@ public class BandAdvertisementEditorUITest {
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable)confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-5062987, intColour);
+        assertEquals(-15547671, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
-        assertEquals(-11711154, intColour);
+        assertEquals(-1, intColour);
     }
 
     @Test
@@ -202,21 +202,21 @@ public class BandAdvertisementEditorUITest {
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable)confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-5062987, intColour);
+        assertEquals(-15547671, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
-        assertEquals(-11711154, intColour);
+        assertEquals(-1, intColour);
     }
 
     @Test
     public void testPopulateInitialFieldsNoAd(){
         testRule.getActivity().setBand(bandData);
         testRule.getActivity().populateInitialFields();
-        onView(withId(R.id.name)).check(matches(withText(bandData.get("name").toString())));
+        onView(withId(R.id.firstName)).check(matches(withText(bandData.get("name").toString())));
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         testRule.getActivity().setViewReferences();
-        onView(withId(R.id.description)).check(matches(withText("")));
+        onView(withId(R.id.venue_description_final)).check(matches(withText("")));
     }
 
     @Test
@@ -224,22 +224,22 @@ public class BandAdvertisementEditorUITest {
         testRule.getActivity().setBand(bandData);
         testRule.getActivity().setPreviousListing(adData);
         testRule.getActivity().populateInitialFields();
-        onView(withId(R.id.name)).check(matches(withText(bandData.get("name").toString())));
+        onView(withId(R.id.firstName)).check(matches(withText(bandData.get("name").toString())));
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         testRule.getActivity().setViewReferences();
-        onView(withId(R.id.description)).check(matches(withText(bandData.get("description").toString())));
+        onView(withId(R.id.venue_description_final)).check(matches(withText(bandData.get("description").toString())));
     }
 
     @Test
     public void testReinitialiseTabsNoAd(){
         testRule.getActivity().setBand(bandData);
         testRule.getActivity().reinitialiseTabs();
-        onView(withId(R.id.name)).check(matches(withText(bandData.get("name").toString())));
+        onView(withId(R.id.firstName)).check(matches(withText(bandData.get("name").toString())));
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         testRule.getActivity().setViewReferences();
-        onView(withId(R.id.description)).check(matches(withText("")));
+        onView(withId(R.id.venue_description_final)).check(matches(withText("")));
     }
 
     @Test
@@ -247,16 +247,16 @@ public class BandAdvertisementEditorUITest {
         testRule.getActivity().setBand(bandData);
         testRule.getActivity().setPreviousListing(adData);
         testRule.getActivity().reinitialiseTabs();
-        onView(withId(R.id.name)).check(matches(withText(bandData.get("name").toString())));
+        onView(withId(R.id.firstName)).check(matches(withText(bandData.get("name").toString())));
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         testRule.getActivity().setViewReferences();
-        onView(withId(R.id.description)).check(matches(withText(bandData.get("description").toString())));
+        onView(withId(R.id.venue_description_final)).check(matches(withText(bandData.get("description").toString())));
     }
 
     @Test
-    public void testOnDataBaseResultListingFailure()
-    {
+    public void testOnDataBaseResultListingFailure() throws InterruptedException {
+        Thread.sleep(1000);
         Enum result = ListingManager.CreationResult.LISTING_FAILURE;
         testRule.getActivity().handleDatabaseResponse(result);
         onView(withText("Listing creation failed.  Check your connection and try again"))

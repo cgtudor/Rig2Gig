@@ -69,10 +69,10 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     };
     private double venueLatitude;
     private double venueLongitude;
-    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private final CollectionReference venueReference = FSTORE.collection("venues");
-    private final Query getVenueLocation = venueReference;
+    private FirebaseAuth fAuth;
+    private FirebaseFirestore FSTORE;
+    private CollectionReference venueReference;
+    private Query getVenueLocation;
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
 
     @Override
@@ -91,7 +91,12 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         type = "Venue";
         listingManager = new ListingManager(venueRef, type, listingRef);
         listingManager.getUserInfo(this);
+        fAuth = FirebaseAuth.getInstance();
+        FSTORE = FirebaseFirestore.getInstance();
+        venueReference = FSTORE.collection("venues");
+        getVenueLocation = venueReference;
         getVenueLocation();
+
     }
 
     /**
@@ -143,7 +148,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public void setViewReferences() {
-        name = findViewById(R.id.venue_name_final);
+        name = findViewById(R.id.firstName);
         image = findViewById(R.id.image);
         if (image != null)
         {
@@ -205,7 +210,17 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         }
         if(description != null && previousListing !=null)
         {
-            description.setText(previousListing.get("description").toString());
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    description.setText(previousListing.get("description").toString());
+
+                }
+            });
+
+
         }
     }
 

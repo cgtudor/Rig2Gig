@@ -81,10 +81,10 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
 
     private double performerLatitude;
     private double performerLongitude;
-    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private final CollectionReference musicianReference = FSTORE.collection("musicians");
-    private final Query getPerformerLocation = musicianReference;
+    private FirebaseAuth fAuth;
+    private FirebaseFirestore FSTORE;
+    private CollectionReference musicianReference;
+    private Query getPerformerLocation;
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
 
     /**
@@ -106,6 +106,10 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
 
         listingManager = new ListingManager(performerRef, performerType + " Performer", listingRef);
         listingManager.getUserInfo(this);
+        fAuth = FirebaseAuth.getInstance();
+        FSTORE = FirebaseFirestore.getInstance();
+        musicianReference = FSTORE.collection("musicians");
+        getPerformerLocation = musicianReference;
         getPerformerLocation();
     }
 

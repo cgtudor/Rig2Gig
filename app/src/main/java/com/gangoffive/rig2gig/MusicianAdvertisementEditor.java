@@ -27,6 +27,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -88,15 +89,19 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
 
     private double musicianLatitude;
     private double musicianLongitude;
-    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private final CollectionReference musicianReference = FSTORE.collection("musicians");
-    private final Query getMusicianLocation = musicianReference;
+    private FirebaseAuth fAuth;
+    private FirebaseFirestore FSTORE;
+    private CollectionReference musicianReference;
+    private Query getMusicianLocation;
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fAuth = FirebaseAuth.getInstance();
+        FSTORE = FirebaseFirestore.getInstance();
+        musicianReference = FSTORE.collection("musicians");
+        getMusicianLocation = musicianReference;
         setContentView(R.layout.activity_create_musician_advertisement);
         Collections.sort(positions);
         viewPager = findViewById(R.id.view_pager);
@@ -110,6 +115,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
 
         listingManager = new ListingManager(musicianRef, type, listingRef);
         listingManager.getUserInfo(this);
+
         getMusicianLocation();
     }
 
@@ -173,7 +179,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     @Override
     public void setViewReferences() {
         searchHint = findViewById(R.id.searchHint);
-        name = findViewById(R.id.venue_name_final);
+        name = findViewById(R.id.firstName);
         image = findViewById(R.id.image);
         if (image != null)
         {
@@ -299,23 +305,30 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     public void setupGridView()
     {
         DeleteInstrumentAdapter customAdapter = new DeleteInstrumentAdapter(bandPositions, this);
-        gridView.setAdapter(customAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                positions.add(bandPositions.get(position).toString());
-                Collections.sort(positions);
-                bandPositions.remove(position);
-                Collections.sort(bandPositions);
-                if (bandPositions.size() == 0)
-                {
-                    searchHint.setVisibility(View.VISIBLE);
-                }
-                initialiseSearchBar();
-                setupGridView();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                gridView.setAdapter(customAdapter);
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View v,
+                                            int position, long id) {
+                        positions.add(bandPositions.get(position).toString());
+                        Collections.sort(positions);
+                        bandPositions.remove(position);
+                        Collections.sort(bandPositions);
+                        if (bandPositions.size() == 0)
+                        {
+                            searchHint.setVisibility(View.VISIBLE);
+                        }
+                        initialiseSearchBar();
+                        setupGridView();
+                    }
+                });
+                validateButton();
             }
         });
-        validateButton();
+
+
     }
 
     /**
@@ -565,6 +578,18 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
 
     public void setPreviousListing(Map<String, Object> previousListing) {
         this.previousListing = previousListing;
+    }
+
+    public void setfAuth(FirebaseAuth fAuth) {
+        this.fAuth = fAuth;
+    }
+
+    public void setFSTORE(FirebaseFirestore FSTORE) {
+        this.FSTORE = FSTORE;
+    }
+
+    public void setMusicianReference(CollectionReference musicianReference) {
+        this.musicianReference = musicianReference;
     }
 
     private void getMusicianLocation()

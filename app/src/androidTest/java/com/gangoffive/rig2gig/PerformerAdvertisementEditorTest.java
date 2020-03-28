@@ -171,8 +171,8 @@ public class PerformerAdvertisementEditorTest {
 
 
     @Test
-    public void testOnDataBaseResultListingFailure()
-    {
+    public void testOnDataBaseResultListingFailure() throws InterruptedException {
+        Thread.sleep(2000);
         Enum result = ListingManager.CreationResult.LISTING_FAILURE;
         testRule.getActivity().handleDatabaseResponse(result);
         onView(withText("Listing creation failed.  Check your connection and try again"))

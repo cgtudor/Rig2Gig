@@ -2,6 +2,7 @@ package com.gangoffive.rig2gig;
 
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -9,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.*;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,10 +39,10 @@ public class AddMemberConfirmationTest {
     {
         confirmationClass = new AddMemberConfirmation()
         {    @Override
-            public String getUserId()
-            {
-                return("testUserId");
-            }};
+        public String getUserId()
+        {
+            return("testUserId");
+        }};
         received = mock(CollectionReference.class);
         task = mock(Task.class);
         firebaseAuth = mock(FirebaseAuth.class);
@@ -137,8 +139,8 @@ public class AddMemberConfirmationTest {
         confirmationClass.setBandName("testBandName");
         HashMap actual = confirmationClass.generateLoggedInvite();
         assertThat(actual.get("type"),is(equalTo("join-request")));
-        assertThat(actual.get("band-ref"),is(equalTo("testBandRef")));
-        assertThat(actual.get("musician-ref"),is(equalTo("testMusicianRef")));
+        assertThat(actual.get("sent-from-ref"),is(equalTo("testBandRef")));
+        assertThat(actual.get("sent-to-ref"),is(equalTo("testMusicianRef")));
         assertThat(actual.get("notification-title"),is(equalTo("You have been invited to join a band!")));
         assertThat(actual.get("notification-message"),
                 is(equalTo(confirmationClass.getInviterName() +

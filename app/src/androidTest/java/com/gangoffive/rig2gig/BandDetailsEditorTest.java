@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -43,12 +44,17 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.*;
 import static org.mockito.AdditionalMatchers.not;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.validateMockitoUsage;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class BandDetailsEditorTest {
     private HashMap<String, Object> bandData;
     private Activity activty;
+    private ListingManager manager;
 
         @Rule
         public ActivityTestRule<BandDetailsEditor> testRule = new ActivityTestRule(BandDetailsEditor.class);
@@ -76,6 +82,9 @@ public class BandDetailsEditorTest {
             bandData.put("name", "test name");
             bandData.put("phone-number", "123");
             bandData.put("rating", "test rating");
+            manager = mock(ListingManager.class);
+            //when(manager.postDataToDatabase(any(),any(Drawable.class),any(CreateAdvertisement.class)))
+            testRule.getActivity().setListingManager(manager);
         }
 
         public void enterTestData()
@@ -452,11 +461,12 @@ public class BandDetailsEditorTest {
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
+        onView(withId(R.id.createListing)).perform(click());
+        verify(manager,times(1)).postDataToDatabase(any(),any(),any());
     }
 
     @Test
-    public void testButtonColourChangeOnInValidData()
-    {
+    public void testButtonColourChangeOnInvalidData() throws InterruptedException {
         testRule.getActivity().setViewReferences();
         testRule.getActivity().setBand(bandData);
         testRule.getActivity().onSuccessFromDatabase(bandData);
@@ -474,6 +484,10 @@ public class BandDetailsEditorTest {
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
+        onView(withId(R.id.createListing)).perform(click());
+        verify(manager,times(0)).postDataToDatabase(any(),any(),any());
+        onView(withText("Listing not created.  Ensure all fields are complete and try again"))
+                .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 
     @Test
@@ -503,11 +517,12 @@ public class BandDetailsEditorTest {
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
+        onView(withId(R.id.createListing)).perform(click());
+        verify(manager,times(1)).postDataToDatabase(any(),any(),any());
     }
 
     @Test
-    public void testDataInputOnceThenDeleteOneChar()
-    {
+    public void testDataInputOnceThenDeleteOneChar() throws InterruptedException {
         testRule.getActivity().setViewReferences();
         testRule.getActivity().setBand(bandData);
         testRule.getActivity().onSuccessFromDatabase(bandData);
@@ -530,7 +545,10 @@ public class BandDetailsEditorTest {
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
-
+        onView(withId(R.id.createListing)).perform(click());
+        verify(manager,times(0)).postDataToDatabase(any(),any(),any());
+        onView(withText("Listing not created.  Ensure all fields are complete and try again"))
+                .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 }
 

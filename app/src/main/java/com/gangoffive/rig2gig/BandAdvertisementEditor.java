@@ -176,7 +176,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     @Override
     public void setViewReferences() {
         searchHint = findViewById(R.id.searchHint);
-        name = findViewById(R.id.venue_name_final);
+        name = findViewById(R.id.firstName);
         image = findViewById(R.id.image);
 
         if (image != null)
@@ -308,23 +308,37 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     public void setupGridView()
     {
         DeleteInstrumentAdapter customAdapter = new DeleteInstrumentAdapter(bandPositions, this);
-        gridView.setAdapter(customAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                positions.add(bandPositions.get(position).toString());
-                Collections.sort(positions);
-                bandPositions.remove(position);
-                Collections.sort(bandPositions);
-                if (bandPositions.size() == 0)
-                {
-                    searchHint.setVisibility(View.VISIBLE);
-                }
-                initialiseSearchBar();
-                setupGridView();
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                gridView.setAdapter(customAdapter);
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View v,
+                                            int position, long id) {
+                        positions.add(bandPositions.get(position).toString());
+                        Collections.sort(positions);
+                        bandPositions.remove(position);
+                        Collections.sort(bandPositions);
+                        if (bandPositions.size() == 0)
+                        {
+                            searchHint.setVisibility(View.VISIBLE);
+                        }
+                        initialiseSearchBar();
+                        setupGridView();
+                    }
+                });
+                validateButton();
+
+
             }
         });
-        validateButton();
+
+
+
+
+
     }
 
     /**

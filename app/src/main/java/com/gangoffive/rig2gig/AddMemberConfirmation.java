@@ -137,7 +137,7 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         request.put("type", "join-request");
         request.put("posting-date", Timestamp.now());
         request.put("band-ref",bandRef);
-        request.put("sent-from", FirebaseAuth.getInstance().getUid());
+        request.put("sent-from", getUserId());
         request.put("sent-from-type", "bands");
         request.put("sent-from-ref",bandRef);
         request.put("sent-from-type", "musicians");
