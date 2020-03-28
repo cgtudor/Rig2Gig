@@ -292,6 +292,7 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         intent.putExtra("EXTRA_USER_NAME",userName);
         intent.putExtra("EXTRA_USERS_MUSICIAN_ID", usersMusicianRef);
         startActivity(intent);
+        finish();
     }
 
     public void checkIfInBand()
@@ -316,10 +317,6 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
 
     public void goBack()
     {
-        // need to change to go to band console
-        Intent intent = new Intent(this, NavBarActivity.class);
-        intent.putExtra("EXTRA_BAND_ID",bandRef);
-        startActivity(intent);
         finish();
     }
 

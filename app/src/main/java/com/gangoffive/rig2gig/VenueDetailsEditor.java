@@ -8,7 +8,6 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -57,8 +56,8 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (s.toString().trim().length() == 0 && createListing != null) {
-                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+                createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
             else if (before == 0 && count == 1 && createListing != null
                     && name.getText().toString().trim().length() > 0
@@ -68,7 +67,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                     && phone.getText().toString().trim().length() > 0
                     && description.getText().toString().trim().length() > 0)
             {
-                createListing.setBackgroundColor(Color.parseColor("#008577"));
+                createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
         }
@@ -137,7 +136,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         {
             image.setImageDrawable(null);
         }
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         if (name != null)
         {
             name.setOnFocusChangeListener(editTextFocusListener);
@@ -173,7 +172,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
             phone.setOnFocusChangeListener(editTextFocusListener);
             phone.addTextChangedListener(textWatcher);
         }
-        description = findViewById(R.id.distance);
+        description = findViewById(R.id.venue_description_final);
         if (description != null)
         {
             description.setOnFocusChangeListener(editTextFocusListener);

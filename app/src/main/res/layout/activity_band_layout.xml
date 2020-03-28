@@ -17,6 +17,17 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
 
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="?actionBarSize"
+            android:padding="@dimen/appbar_padding"
+            android:text="@string/app_name"
+            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
@@ -55,9 +66,9 @@
             android:layout_height="fill_parent"
             android:layout_marginStart="50dp"
             android:layout_weight="1.0"
-            android:onClick="cancelOnClick"
             android:text="Cancel"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:onClick="cancelOnClick"/>
 
         <Button
             android:id="@+id/createListing"
@@ -66,9 +77,9 @@
             android:layout_height="fill_parent"
             android:layout_marginEnd="50dp"
             android:layout_weight="1.0"
-            android:onClick="confirmOnClick"
             android:text="Confirm"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:onClick="confirmOnClick"/>
     </LinearLayout>
 
 

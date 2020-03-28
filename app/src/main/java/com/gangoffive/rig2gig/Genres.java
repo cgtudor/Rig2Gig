@@ -15,8 +15,7 @@ public class Genres {
             "Folk",
             "Rap",
             "Indie",
-            "Reggae",
-            "K-Pop",
+            "Reggae"
     };
 
     static public String [] getGenres()

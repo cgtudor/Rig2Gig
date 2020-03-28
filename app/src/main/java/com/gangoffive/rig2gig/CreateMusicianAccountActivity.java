@@ -14,12 +14,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -67,8 +65,8 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         fStorage = FirebaseStorage.getInstance();
 
-        distance = findViewById(R.id.distance);
-        name = findViewById(R.id.name);
+        distance = findViewById(R.id.venue_description_final);
+        name = findViewById(R.id.venue_name_final);
         genre = findViewById(R.id.genre);
 
         submit = findViewById(R.id.submitBtn);

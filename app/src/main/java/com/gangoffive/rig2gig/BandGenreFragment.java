@@ -84,7 +84,7 @@ public class BandGenreFragment extends Fragment implements SearchView.OnQueryTex
             searchBar.setIconifiedByDefault(false);
             searchBar.setOnQueryTextListener(this);
             searchBar.setSubmitButtonEnabled(false);
-            searchBar.setQueryHint("Enter band position");
+            searchBar.setQueryHint("Enter band genres");
         if (searchBar != null)
         {
             query = searchBar.getQuery();

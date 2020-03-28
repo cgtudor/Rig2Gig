@@ -86,7 +86,7 @@
         android:textColor="#000000"/>
 
     <EditText
-        android:id="@+id/name"
+        android:id="@+id/venue_name_final"
         android:layout_width="220dp"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"

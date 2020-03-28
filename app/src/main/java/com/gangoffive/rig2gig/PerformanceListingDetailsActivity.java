@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -47,8 +46,6 @@ import com.paypal.android.sdk.payments.PaymentConfirmation;
 import org.json.JSONException;
 
 import java.math.BigDecimal;
-import java.sql.Time;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -90,7 +87,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
         final TextView genre = findViewById(R.id.genre);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
-        final TextView distance = findViewById(R.id.distance);
+        final TextView distance = findViewById(R.id.venue_description_final);
         final Button contact = findViewById(R.id.contact);
         final Button publish = findViewById(R.id.publish);
 
@@ -396,7 +393,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        TextView distance = findViewById(R.id.distance);
+        TextView distance = findViewById(R.id.venue_description_final);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (id == R.id.saveButton) {

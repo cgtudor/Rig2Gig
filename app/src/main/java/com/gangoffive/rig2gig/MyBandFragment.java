@@ -16,12 +16,9 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Text;
 
 public class MyBandFragment extends Fragment
 {
@@ -39,7 +36,7 @@ public class MyBandFragment extends Fragment
 
     public void setInputReferences(View view){
         bandLocationTxt = view.findViewById(R.id.bandLocation);
-        bandDistanceTxt = view.findViewById(R.id.distance);
+        bandDistanceTxt = view.findViewById(R.id.venue_description_final);
         bandGenresTxt = view.findViewById(R.id.Genres);
         bandEmailTxt = view.findViewById(R.id.Email);
         bandPhoneNoTxt = view.findViewById(R.id.phoneNo);

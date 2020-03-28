@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -54,13 +53,13 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (s.toString().trim().length() == 0 && createListing != null) {
-                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+                createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
             else if (before == 0 && count == 1 && createListing != null
                     && description.getText().toString().trim().length() > 0)
             {
-                createListing.setBackgroundColor(Color.parseColor("#008577"));
+                createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
         }
@@ -103,8 +102,8 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     public void onSuccessFromDatabase(Map<String, Object> data) {
         setViewReferences();
         if (description.getText().toString().trim().length() == 0 && createListing != null) {
-            createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-            createListing.setTextColor(Color.parseColor("#4D4D4E"));
+            createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
+            createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
         venue = data;
         listingManager.getImage(this);
@@ -136,13 +135,13 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public void setViewReferences() {
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         image = findViewById(R.id.image);
         if (image != null)
         {
             image.setImageDrawable(null);
         }
-        description = findViewById(R.id.distance);
+        description = findViewById(R.id.venue_description_final);
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);

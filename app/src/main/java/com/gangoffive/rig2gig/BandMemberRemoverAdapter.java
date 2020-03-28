@@ -9,13 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -121,7 +115,7 @@ public class BandMemberRemoverAdapter extends BaseAdapter {
         {
             image.setImageDrawable(images.get(position));
         }*/
-        TextView name = (TextView)convertView.findViewById(R.id.name);
+        TextView name = (TextView)convertView.findViewById(R.id.firstName);
         name.setText(names.get(position).toString());
         TextView remove = (TextView)convertView.findViewById(R.id.remove);
         remove.setOnClickListener(new View.OnClickListener() {

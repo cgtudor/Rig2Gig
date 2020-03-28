@@ -3,27 +3,19 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.media.CamcorderProfile;
 import android.os.Bundle;
-import android.renderscript.ScriptIntrinsicYuvToRGB;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.List;
 
@@ -53,7 +45,7 @@ public class MyBandActivity extends AppCompatActivity {
         //String UUID = "11111";
 
         bandLocationTxt = findViewById(R.id.bandLocation);
-        bandDistanceTxt = findViewById(R.id.distance);
+        bandDistanceTxt = findViewById(R.id.venue_description_final);
         bandGenresTxt = findViewById(R.id.Genres);
         bandEmailTxt = findViewById(R.id.Email);
         bandPhoneNoTxt = findViewById(R.id.phoneNo);

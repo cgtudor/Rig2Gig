@@ -1,7 +1,6 @@
 package com.gangoffive.rig2gig;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,12 +27,12 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -42,15 +41,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.identityconnectors.common.security.GuardedString;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -82,10 +78,10 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     FirebaseStorage fStorage;
-    EditText distance, location, name, genre;
+    EditText distance, name, genre;
     Button takePhotoBtn, uploadPhotoBtn;
 
-    String email, userRef, phoneNumber, type;
+    String email, userRef, phoneNumber, type, rating;
 
     private ImageView image;
     private Drawable chosenPic;
@@ -151,14 +147,13 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         fStore = FirebaseFirestore.getInstance();
         fStorage = FirebaseStorage.getInstance();
 
-        distance = v.findViewById(R.id.distance);
-        location = v.findViewById(R.id.location);
-        name = v.findViewById(R.id.name);
-        genre = v.findViewById(R.id.genre);
+        distance = v.findViewById(R.id.firstName3);
+        name = v.findViewById(R.id.firstName);
+        genre = v.findViewById(R.id.firstName5);
 
         image = v.findViewById(R.id.imageView);
 
-        autoCompleteTextView = v.findViewById(R.id.location);
+        autoCompleteTextView = v.findViewById(R.id.location2);
         autoCompleteTextView.setAdapter(new GooglePlacesAutoSuggestAdapter(getActivity(), android.R.layout.simple_list_item_1));
 
         int requestCode = 200;
@@ -201,7 +196,6 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
             case R.id.submitBtn:
                 userRef = fAuth.getUid();
                 email = fAuth.getCurrentUser().getEmail();
-                String loc = location.getText().toString();
                 String musicianName = name.getText().toString();
                 String musicianDistance = distance.getText().toString();
                 String musicianAddressTextView = autoCompleteTextView.getText().toString();
@@ -209,29 +203,26 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                 String genres = genre.getText().toString();
                 ImageView defImg = new ImageView(getActivity());
                 defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
+                rating = "-1";
 
-                if(TextUtils.isEmpty(musicianAddressTextView))
-                {
-                    autoCompleteTextView.setError("Please Enter Your Venue Address");
-                    return;
-                }
-                if(musicianAddress == null)
-                {
-                    autoCompleteTextView.setError("Please Enter A Valid Address");
-                    return;
-                }
-                if (TextUtils.isEmpty(loc)) {
-                    location.setError("Please Set A Locaton!");
-                    return;
-                }
-                if (TextUtils.isEmpty(musicianName)) {
-                    name.setError("Please Enter A Musician Name!");
-                    return;
-                }
-                if (TextUtils.isEmpty(musicianDistance)) {
-                    distance.setError("Please Set A Distance!");
-                    return;
-                }
+//                if(TextUtils.isEmpty(musicianAddressTextView))
+//                {
+//                    autoCompleteTextView.setError("Please Enter Your Venue Address");
+//                    return;
+//                }
+//                if(musicianAddress == null)
+//                {
+//                    autoCompleteTextView.setError("Please Enter A Valid Address");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(musicianName)) {
+//                    name.setError("Please Enter A Musician Name!");
+//                    return;
+//                }
+//                if (TextUtils.isEmpty(musicianDistance)) {
+//                    distance.setError("Please Set A Distance!");
+//                    return;
+//                }
 
                 fStore.collection("users").document(userRef).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -254,6 +245,7 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                                 musicians.put("distance", musicianDistance);
                                 musicians.put("latitude", musicianAddress.getLatitude());
                                 musicians.put("longitude", musicianAddress.getLongitude());
+                                musicians.put("rating", rating);
 
                                 fStore.collection("musicians")
                                         .add(musicians)
@@ -270,6 +262,7 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                                                         Log.d("STORAGE SUCCEEDED", taskSnapshot.getMetadata().toString());
                                                         Intent intent = new Intent(getActivity(), NavBarActivity.class);
                                                         startActivity(intent);
+                                                        Toast.makeText(getActivity(), "Musician Account Created!", Toast.LENGTH_SHORT).show();
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override

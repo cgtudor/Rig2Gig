@@ -106,14 +106,14 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             &&  (bandPositions.size() == 0
             || description.getText().toString().trim().length() == 0))
         {
-            createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-            createListing.setTextColor(Color.parseColor("#4D4D4E"));
+            createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+            createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
         else if (createListing != null && description!= null
             && description.getText().toString().trim().length() > 0
             && bandPositions.size() > 0)
         {
-            createListing.setBackgroundColor(Color.parseColor("#008577"));
+            createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
             createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
     }
@@ -125,8 +125,8 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         setViewReferences();
-        createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-        createListing.setTextColor(Color.parseColor("#4D4D4E"));
+        createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
+        createListing.setTextColor(Color.parseColor("#FFFFFF"));
         band = data;
         listingManager.getImage(this);
     }
@@ -167,7 +167,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     @Override
     public void setViewReferences() {
         searchHint = findViewById(R.id.searchHint);
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         image = findViewById(R.id.image);
 
         if (image != null)
@@ -175,7 +175,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             image.setImageDrawable(null);
         }
         position = findViewById(R.id.position);
-        description = findViewById(R.id.distance);
+        description = findViewById(R.id.venue_description_final);
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);

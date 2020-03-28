@@ -69,8 +69,8 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             if (createListing != null && (s.toString().trim().length() == 0 ||
                     actualNumber.length() == 0))
             {
-                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+                createListing.setTextColor(Color.parseColor("#ffffff"));
             }
             else if (before == 0 && count == 1 && createListing != null
                     && name.getText().toString().trim().length() > 0
@@ -78,8 +78,8 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                     && genres.getText().toString().trim().length() > 0
             )
             {
-                createListing.setBackgroundColor(Color.parseColor("#008577"));
-                createListing.setTextColor(Color.parseColor("#FFFFFF"));
+                createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
+                createListing.setTextColor(Color.parseColor("#ffffff"));
             }
         }
 
@@ -149,7 +149,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         {
             image.setImageDrawable(null);
         }
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         if (name != null)
         {
             name.setOnFocusChangeListener(editTextFocusListener);
@@ -167,7 +167,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             location.setOnFocusChangeListener(editTextFocusListener);
             location.addTextChangedListener(textWatcher);
         }
-        distance = findViewById(R.id.distance);
+        distance = findViewById(R.id.venue_description_final);
         if (distance != null)
         {
             distance.setOnFocusChangeListener(editTextFocusListener);
@@ -180,7 +180,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             genres.addTextChangedListener(textWatcher);
         }
         createListing = findViewById(R.id.createListing);
-        createListing.setBackgroundColor(Color.parseColor("#008577"));
+        createListing.setBackgroundColor(Color.parseColor("#129ee9"));
         createListing.setTextColor(Color.parseColor("#FFFFFF"));
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override

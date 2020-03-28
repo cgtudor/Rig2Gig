@@ -52,7 +52,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#12c2e9"
-        android:backgroundTint="#c471ed"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +66,6 @@
             android:layout_height="fill_parent"
             android:layout_marginStart="50dp"
             android:layout_weight="1.0"
-            android:backgroundTint="#008577"
             android:onClick="cancelOnClick"
             android:text="Cancel"
             android:textColor="#FFFFFF" />
@@ -79,7 +77,6 @@
             android:layout_height="fill_parent"
             android:layout_marginEnd="50dp"
             android:layout_weight="1.0"
-            android:background="#c471ed"
             android:onClick="confirmOnClick"
             android:text="Confirm"
             android:textColor="#FFFFFF" />
