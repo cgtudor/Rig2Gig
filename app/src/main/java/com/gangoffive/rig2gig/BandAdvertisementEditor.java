@@ -106,7 +106,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             &&  (bandPositions.size() == 0
             || description.getText().toString().trim().length() == 0))
         {
-            createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+            createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
             createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
         else if (createListing != null && description!= null

@@ -69,7 +69,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             if (createListing != null && (s.toString().trim().length() == 0 ||
                     actualNumber.length() == 0))
             {
-                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+                createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
                 createListing.setTextColor(Color.parseColor("#ffffff"));
             }
             else if (before == 0 && count == 1 && createListing != null
@@ -180,7 +180,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             genres.addTextChangedListener(textWatcher);
         }
         createListing = findViewById(R.id.createListing);
-        createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+        createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
         createListing.setTextColor(Color.parseColor("#FFFFFF"));
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override

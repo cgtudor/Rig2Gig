@@ -53,7 +53,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (s.toString().trim().length() == 0 && createListing != null) {
-                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+                createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
             else if (before == 0 && count == 1 && createListing != null
