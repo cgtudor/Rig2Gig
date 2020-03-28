@@ -131,7 +131,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
      */
     @Override
     public void setViewReferences() {
-        image = findViewById(R.id.image);
+        image = findViewById(R.id.venueAdImageMain);
         if (image != null)
         {
             image.setImageDrawable(null);
@@ -160,7 +160,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
             venueType.setOnFocusChangeListener(editTextFocusListener);
             venueType.addTextChangedListener(textWatcher);
         }
-        email = findViewById(R.id.textView7);
+        email = findViewById(R.id.email);
         if (email != null)
         {
             email.setOnFocusChangeListener(editTextFocusListener);
@@ -229,7 +229,13 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         }
         if(description != null && venue !=null)
         {
-            description.setText(venue.get("description").toString());
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    description.setText(venue.get("description").toString());
+                }
+            });
         }
         if(location != null && venue !=null)
         {
@@ -240,7 +246,13 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                 if(getVenueAddress != null && getVenueAddress.size() > 0)
                 {
                     String street = getVenueAddress.get(0).getAddressLine(0);
-                    location.setText(street);
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            location.setText(street);
+                        }
+                    });
                 }
             }
             catch(IOException io)
@@ -317,7 +329,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     @Override
     public void createAdvertisement() {
         saveTabs();
-        if (chosenPic == null)
+        if (chosenPic == null && image != null)
         {
             chosenPic = image.getDrawable();
         }
@@ -338,19 +350,36 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Toast.makeText(this,"Details updated successfully",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    Toast.makeText(VenueDetailsEditor.this,"Details updated successfully",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(VenueDetailsEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(VenueDetailsEditor.this,
+                            "Updating details failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(VenueDetailsEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    Toast.makeText(VenueDetailsEditor.this,
+                            "Updating details failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 
@@ -361,6 +390,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     public void cancelAdvertisement() {
         Intent backToMain = new Intent(VenueDetailsEditor.this, NavBarActivity.class);
         startActivity(backToMain);
+        finish();
     }
 
     /**

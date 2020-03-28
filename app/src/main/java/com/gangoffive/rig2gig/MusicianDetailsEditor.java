@@ -144,7 +144,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
      */
     @Override
     public void setViewReferences() {
-        image = findViewById(R.id.image);
+        image = findViewById(R.id.venueAdImageMain);
         if (image != null)
         {
             image.setImageDrawable(null);
@@ -247,7 +247,16 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                         }
                         else if(adr.getLocality() != null)
                         {
-                            location.setText(adr.getLocality() + ", " + adr.getCountryCode());
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    location.setText(adr.getLocality() + ", " + adr.getCountryCode());
+
+
+                                }
+                            });
                             break;
                         }
                     }
@@ -337,26 +346,41 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            Toast.makeText(this,"Details updated successfully",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    Toast.makeText(MusicianDetailsEditor.this,"Details updated successfully",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
             Intent intent = new Intent(MusicianDetailsEditor.this, NavBarActivity.class);
-            Toast.makeText(MusicianDetailsEditor.this,
-                    "Details successfully updated",
-                    Toast.LENGTH_LONG).show();
             intent.putExtra("EXTRA_VENUE_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
-            Toast.makeText(MusicianDetailsEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    Toast.makeText(MusicianDetailsEditor.this,
+                            "Updating details failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
-            Toast.makeText(MusicianDetailsEditor.this,
-                    "Listing creation failed.  Check your connection " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    Toast.makeText(MusicianDetailsEditor.this,
+                            "Updating details failed.  Check your connection " +
+                                    "and try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 

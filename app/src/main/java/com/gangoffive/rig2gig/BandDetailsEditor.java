@@ -144,7 +144,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
      */
     @Override
     public void setViewReferences() {
-        image = findViewById(R.id.image);
+        image = findViewById(R.id.venueAdImageMain);
         if (image != null)
         {
             image.setImageDrawable(null);
