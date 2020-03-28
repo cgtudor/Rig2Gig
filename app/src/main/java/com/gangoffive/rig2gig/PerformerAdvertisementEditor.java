@@ -145,7 +145,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
      */
     @Override
     public void setViewReferences() {
-        name = findViewById(R.id.venue_name_final);
+        name = findViewById(R.id.firstName);
         image = findViewById(R.id.image);
         if (image != null)
         {

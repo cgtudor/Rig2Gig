@@ -91,7 +91,7 @@
         android:hint="Enter your Town/City (Barnsley, UK)"
         android:layout_marginTop="10dp"
         app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
+        app:layout_constraintBaseline_toBaselineOf="@+id/locationLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/locationLabel" />
 

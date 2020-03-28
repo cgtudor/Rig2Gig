@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -16,6 +17,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -38,7 +40,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.*;
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +53,12 @@ public class BandDetailsEditorTest {
         @Rule
         public ActivityTestRule<BandDetailsEditor> testRule = new ActivityTestRule(BandDetailsEditor.class);
 
-        @Before
+    @BeforeClass
+    public static void setup() {
+        Looper.prepare();
+    }
+
+    @Before
         public void setUp() throws Exception {
             bandData = new HashMap();
             bandData.put("availability", "test availability");
@@ -57,6 +66,8 @@ public class BandDetailsEditorTest {
             bandData.put("description", "test description");
             bandData.put("distance", "test distance");
             bandData.put("email", "test@email.com");
+            bandData.put("latitude","10");
+            bandData.put("longitude","6");
             bandData.put("genres", "test genres");
             bandData.put("location", "test location");
             ArrayList<String> members = new ArrayList<>();
@@ -65,16 +76,15 @@ public class BandDetailsEditorTest {
             bandData.put("name", "test name");
             bandData.put("phone-number", "123");
             bandData.put("rating", "test rating");
-
         }
 
         public void enterTestData()
         {
             onView(withId(R.id.name)).perform(typeText("test name edit"));
             closeSoftKeyboard();
-            onView(withId(R.id.location)).perform(typeText("test location edit"));
+            onView(withId(R.id.band_location)).perform(typeText("test location edit"));
             closeSoftKeyboard();
-            onView(withId(R.id.distance)).perform(typeText("test distance edit"));
+            onView(withId(R.id.venue_description_final)).perform(typeText("test distance edit"));
             closeSoftKeyboard();
             onView(withId(R.id.genres)).perform(typeText("test genres edit"));
             closeSoftKeyboard();
@@ -87,8 +97,7 @@ public class BandDetailsEditorTest {
         public void deleteAllFields()
         {
             onView(withId(R.id.name)).perform(replaceText(""));
-            onView(withId(R.id.location)).perform(replaceText(""));
-            onView(withId(R.id.distance)).perform(replaceText(""));
+            onView(withId(R.id.venue_description_final)).perform(replaceText(""));
             onView(withId(R.id.genres)).perform(replaceText(""));
             onView(withId(R.id.email)).perform(replaceText(""));
             onView(withId(R.id.phone)).perform(replaceText(""));
@@ -100,9 +109,9 @@ public class BandDetailsEditorTest {
     {
         onView(withId(R.id.name)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
         closeSoftKeyboard();
-        onView(withId(R.id.location)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
+        onView(withId(R.id.band_location)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
         closeSoftKeyboard();
-        onView(withId(R.id.distance)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
+        onView(withId(R.id.venue_description_final)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
         closeSoftKeyboard();
         onView(withId(R.id.genres)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
         closeSoftKeyboard();
@@ -116,9 +125,9 @@ public class BandDetailsEditorTest {
     {
         onView(withId(R.id.name)).perform(typeText("a"));
         closeSoftKeyboard();
-        onView(withId(R.id.location)).perform(typeText("a"));
+        onView(withId(R.id.band_location)).perform(typeText("a"));
         closeSoftKeyboard();
-        onView(withId(R.id.distance)).perform(typeText("a"));
+        onView(withId(R.id.venue_description_final)).perform(typeText("a"));
         closeSoftKeyboard();
         onView(withId(R.id.genres)).perform(typeText("a"));
         closeSoftKeyboard();
@@ -155,9 +164,9 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.nameLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.name)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.locationLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-            onView(withId(R.id.location)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            onView(withId(R.id.band_location)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.distanceLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-            onView(withId(R.id.distance)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            onView(withId(R.id.venue_description_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.genresLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.genres)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.emailLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -177,9 +186,9 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.nameLabel)).check(matches(withText("Band Name:")));
             onView(withId(R.id.name)).check(matches(withText("")));
             onView(withId(R.id.locationLabel)).check(matches(withText("Band Location:")));
-            onView(withId(R.id.location)).check(matches(withText("")));
+            onView(withId(R.id.band_location)).check(matches(withText("")));
             onView(withId(R.id.distanceLabel)).check(matches(withText("Distance:")));
-            onView(withId(R.id.distance)).check(matches(withText("")));
+            onView(withId(R.id.venue_description_final)).check(matches(withText("")));
             onView(withId(R.id.genresLabel)).check(matches(withText("Genres:")));
             onView(withId(R.id.genres)).check(matches(withText("")));
             onView(withId(R.id.emailLabel)).check(matches(withText("Email:")));
@@ -211,9 +220,9 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.nameLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.name)).check(matches(isDisplayed()));
             onView(withId(R.id.locationLabel)).check(matches(isDisplayed()));
-            onView(withId(R.id.location)).check(matches(isDisplayed()));
+            onView(withId(R.id.band_location)).check(matches(isDisplayed()));
             onView(withId(R.id.distanceLabel)).check(matches(isDisplayed()));
-            onView(withId(R.id.distance)).check(matches(isDisplayed()));
+            onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
             onView(withId(R.id.genresLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.genres)).check(matches(isDisplayed()));
             onView(withId(R.id.emailLabel)).check(matches(isDisplayed()));
@@ -246,9 +255,9 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.nameLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.name)).check(matches(isDisplayed()));
             onView(withId(R.id.locationLabel)).check(matches(isDisplayed()));
-            onView(withId(R.id.location)).check(matches(isDisplayed()));
+            onView(withId(R.id.band_location)).check(matches(isDisplayed()));
             onView(withId(R.id.distanceLabel)).check(matches(isDisplayed()));
-            onView(withId(R.id.distance)).check(matches(isDisplayed()));
+            onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
             onView(withId(R.id.genresLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.genres)).check(matches(isDisplayed()));
             onView(withId(R.id.emailLabel)).check(matches(isDisplayed()));
@@ -281,9 +290,9 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.nameLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.name)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.locationLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-            onView(withId(R.id.location)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            onView(withId(R.id.band_location)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.distanceLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-            onView(withId(R.id.distance)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            onView(withId(R.id.venue_description_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.genresLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.genres)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.emailLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -298,7 +307,7 @@ public class BandDetailsEditorTest {
             Button confirm = testRule.getActivity().findViewById(R.id.createListing);
             ColorDrawable colour = (ColorDrawable) confirm.getBackground();
             int intColour = colour.getColor();
-            assertEquals(-16743049, intColour);
+            assertEquals(-15547671, intColour);
             ColorStateList textcolour = confirm.getTextColors();
             intColour = textcolour.getDefaultColor();
             assertEquals(-1, intColour);
@@ -313,8 +322,7 @@ public class BandDetailsEditorTest {
             testRule.getActivity().setViewReferences();
             testRule.getActivity().populateInitialFields();
             onView(withId(R.id.name)).check(matches(withText("")));
-            onView(withId(R.id.location)).check(matches(withText("")));
-            onView(withId(R.id.distance)).check(matches(withText("")));
+            onView(withId(R.id.venue_description_final)).check(matches(withText("")));
             onView(withId(R.id.genres)).check(matches(withText("")));
             onView(withId(R.id.email)).check(matches(withText("")));
             onView(withId(R.id.phone)).check(matches(withText("")));
@@ -331,8 +339,7 @@ public class BandDetailsEditorTest {
             testRule.getActivity().populateInitialFields();
             testRule.getActivity().reinitialiseTabs();
             onView(withId(R.id.name)).check(matches(withText("")));
-            onView(withId(R.id.location)).check(matches(withText("")));
-            onView(withId(R.id.distance)).check(matches(withText("")));
+            onView(withId(R.id.venue_description_final)).check(matches(withText("")));
             onView(withId(R.id.genres)).check(matches(withText("")));
             onView(withId(R.id.email)).check(matches(withText("")));
             onView(withId(R.id.phone)).check(matches(withText("")));
@@ -342,8 +349,7 @@ public class BandDetailsEditorTest {
             testRule.getActivity().populateInitialFields();
             testRule.getActivity().reinitialiseTabs();
             onView(withId(R.id.name)).check(matches(withText("")));
-            onView(withId(R.id.location)).check(matches(withText("")));
-            onView(withId(R.id.distance)).check(matches(withText("")));
+            onView(withId(R.id.venue_description_final)).check(matches(withText("")));
             onView(withId(R.id.genres)).check(matches(withText("")));
             onView(withId(R.id.email)).check(matches(withText("")));
             onView(withId(R.id.phone)).check(matches(withText("")));
@@ -398,8 +404,8 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.view_pager)).perform(swipeLeft());
             enterTestData();
             onView(withId(R.id.name)).check(matches(withText("test name edit")));
-            onView(withId(R.id.location)).check(matches(withText("test location edit")));
-            onView(withId(R.id.distance)).check(matches(withText("test distance edit")));
+            onView(withId(R.id.band_location)).check(matches(withText(endsWith("test location edit"))));
+            onView(withId(R.id.venue_description_final)).check(matches(withText("test distance edit")));
             onView(withId(R.id.genres)).check(matches(withText("test genres edit")));
             onView(withId(R.id.email)).check(matches(withText("test email edit")));
             onView(withId(R.id.phone)).check(matches(withText("test phone edit")));
@@ -420,8 +426,8 @@ public class BandDetailsEditorTest {
         onView(withId(R.id.view_pager)).perform(swipeRight());
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.name)).check(matches(withText("test name edit")));
-        onView(withId(R.id.location)).check(matches(withText("test location edit")));
-        onView(withId(R.id.distance)).check(matches(withText("test distance edit")));
+        onView(withId(R.id.band_location)).check(matches(withText(endsWith("test location edit"))));
+        onView(withId(R.id.venue_description_final)).check(matches(withText("test distance edit")));
         onView(withId(R.id.genres)).check(matches(withText("test genres edit")));
         onView(withId(R.id.email)).check(matches(withText("test email edit")));
         onView(withId(R.id.phone)).check(matches(withText("test phone edit")));
@@ -442,7 +448,7 @@ public class BandDetailsEditorTest {
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable) confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-16743049, intColour);
+        assertEquals(-15547671, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
@@ -464,10 +470,10 @@ public class BandDetailsEditorTest {
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable) confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-5062987, intColour);
+        assertEquals(-15556887, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
-        assertEquals(-11711154, intColour);
+        assertEquals(-1, intColour);
     }
 
     @Test
@@ -485,15 +491,15 @@ public class BandDetailsEditorTest {
         enterOneCharAllFields();
         deleteOneCharFields();
         onView(withId(R.id.name)).check(matches(withText("a")));
-        onView(withId(R.id.location)).check(matches(withText("a")));
-        onView(withId(R.id.distance)).check(matches(withText("a")));
+        onView(withId(R.id.band_location)).check(matches(withText(endsWith("a"))));
+        onView(withId(R.id.venue_description_final)).check(matches(withText("a")));
         onView(withId(R.id.genres)).check(matches(withText("a")));
         onView(withId(R.id.email)).check(matches(withText("a")));
         onView(withId(R.id.phone)).check(matches(withText("a")));
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable) confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-16743049, intColour);
+        assertEquals(-15547671, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
@@ -513,18 +519,17 @@ public class BandDetailsEditorTest {
         enterOneCharAllFields();
         deleteOneCharFields();
         onView(withId(R.id.name)).check(matches(withText("")));
-        onView(withId(R.id.location)).check(matches(withText("")));
-        onView(withId(R.id.distance)).check(matches(withText("")));
+        onView(withId(R.id.venue_description_final)).check(matches(withText("")));
         onView(withId(R.id.genres)).check(matches(withText("")));
         onView(withId(R.id.email)).check(matches(withText("")));
         onView(withId(R.id.phone)).check(matches(withText("")));
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable) confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-5062987, intColour);
+        assertEquals(-15556887, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
-        assertEquals(-11711154, intColour);
+        assertEquals(-1, intColour);
 
     }
 }

@@ -68,13 +68,13 @@ public class PerformerAdvertisementEditorTest {
         onView(withId(R.id.button_holder)).check(matches(isDisplayed()));
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
-        onView(withId(R.id.name)).check(matches(isDisplayed()));
+        onView(withId(R.id.firstName)).check(matches(isDisplayed()));
         onView(withId(R.id.imageView)).check(matches(isDisplayed()));
         onView(withId(R.id.image)).check(matches(isDisplayed()));
         onView(withId(R.id.imageLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
         onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
-        onView(withId(R.id.distance)).check(matches(isDisplayed()));
+        onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
         onView(withId(R.id.distanceLabel)).check(matches(isDisplayed()));
         onView(withId(R.id.distanceLabel2)).check(matches(isDisplayed()));
     }
@@ -97,13 +97,13 @@ public class PerformerAdvertisementEditorTest {
         onView(withId(R.id.button_holder)).check(matches(isDisplayed()));
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
-        onView(withId(R.id.name)).check(matches(isDisplayed()));
+        onView(withId(R.id.firstName)).check(matches(isDisplayed()));
         onView(withId(R.id.imageView)).check(matches(isDisplayed()));
         onView(withId(R.id.image)).check(matches(isDisplayed()));
         onView(withId(R.id.imageLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
         onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
-        onView(withId(R.id.distance)).check(matches(isDisplayed()));
+        onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
         onView(withId(R.id.distanceLabel)).check(matches(isDisplayed()));
         onView(withId(R.id.distanceLabel2)).check(matches(isDisplayed()));
     }
@@ -117,13 +117,13 @@ public class PerformerAdvertisementEditorTest {
         onView(withId(R.id.button_holder)).check(matches(isDisplayed()));
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
-        onView(withId(R.id.name)).check(matches(isDisplayed()));
+        onView(withId(R.id.firstName)).check(matches(isDisplayed()));
         onView(withId(R.id.imageView)).check(matches(isDisplayed()));
         onView(withId(R.id.image)).check(matches(isDisplayed()));
         onView(withId(R.id.imageLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
         onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
-        onView(withId(R.id.distance)).check(matches(isDisplayed()));
+        onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
         onView(withId(R.id.distanceLabel)).check(matches(isDisplayed()));
         onView(withId(R.id.distanceLabel2)).check(matches(isDisplayed()));
     }
@@ -134,7 +134,7 @@ public class PerformerAdvertisementEditorTest {
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable)confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-16743049, intColour);
+        assertEquals(-15547671, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
@@ -146,7 +146,7 @@ public class PerformerAdvertisementEditorTest {
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable)confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-16743049, intColour);
+        assertEquals(-15547671, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
@@ -156,8 +156,8 @@ public class PerformerAdvertisementEditorTest {
     public void testPopulateInitialFieldsNoAd(){
         testRule.getActivity().setPerformer(performerData);
         testRule.getActivity().populateInitialFields();
-        onView(withId(R.id.name)).check(matches(withText(performerData.get("name").toString())));
-        onView(withId(R.id.distance)).check(matches(withText(performerData.get("distance").toString())));
+        onView(withId(R.id.firstName)).check(matches(withText(performerData.get("name").toString())));
+        onView(withId(R.id.venue_description_final)).check(matches(withText(performerData.get("distance").toString())));
     }
 
     @Test
@@ -165,8 +165,8 @@ public class PerformerAdvertisementEditorTest {
         testRule.getActivity().setPerformer(performerData);
         testRule.getActivity().setPreviousListing(adData);
         testRule.getActivity().populateInitialFields();
-        onView(withId(R.id.name)).check(matches(withText(performerData.get("name").toString())));
-        onView(withId(R.id.distance)).check(matches(withText(adData.get("distance").toString())));
+        onView(withId(R.id.firstName)).check(matches(withText(performerData.get("name").toString())));
+        onView(withId(R.id.venue_description_final)).check(matches(withText(adData.get("distance").toString())));
     }
 
 

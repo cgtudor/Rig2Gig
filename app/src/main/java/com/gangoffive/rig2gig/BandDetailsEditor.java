@@ -254,8 +254,18 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                     {
                         if (adr.getLocality() != null)
                         {
-                            location.setText(adr.getLocality() + ", " + adr.getCountryCode());
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    location.setText(adr.getLocality() + ", " + adr.getCountryCode());
+
+
+                                }
+                            });
                             break;
+
                         }
                         else if (adr.getSubLocality() != null)
                         {
