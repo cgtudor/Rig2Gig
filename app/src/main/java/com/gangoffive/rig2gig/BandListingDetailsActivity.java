@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,18 +36,43 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import org.w3c.dom.Document;
+import org.json.JSONException;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
-public class BandListingDetailsActivity extends AppCompatActivity {
+public class BandListingDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private String bID;
-    private final StringBuilder expiry = new StringBuilder("");
+    private final Date expiry = new Date();
     private final StringBuilder bandRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
     private final ArrayList<String> positionArray = new ArrayList<>();
+    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
+    private GoogleMap googleMap;
+    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
+
+    /*Firestore & Cloud Storage initialization*/
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    private static PayPalConfiguration paypalConfig = new PayPalConfiguration()
+            // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
+            // or live (ENVIRONMENT_PRODUCTION)
+            .environment(PayPalConfiguration.ENVIRONMENT_NO_NETWORK)
+            .clientId("AWpRTRqwsxyU-8X9zXOvNMTsgphAh7UzQz2jOt2kSE8S8OwLSsGSWsCVxvTXQq10JWGufT0bg9Dgspy3");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +83,10 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Intent intent = new Intent(this, PayPalService.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, paypalConfig);
+        startService(intent);
+
         final ImageView bandPhoto = findViewById(R.id.bandPhoto);
         final TextView bandName = findViewById(R.id.bandName);
         final TextView rating = findViewById(R.id.rating);
@@ -58,13 +94,14 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         final TextView position = findViewById(R.id.position);
         final TextView description = findViewById(R.id.description);
         final Button contact = findViewById(R.id.contact);
+        final Button publish = findViewById(R.id.publish);
+
+        //Initialising the Google Map. See onMapReady().
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+        mapFragment.getMapAsync(this);
 
         /*Used to get the id of the listing from the previous activity*/
         bID = getIntent().getStringExtra("EXTRA_BAND_LISTING_ID");
-
-        /*Firestore & Cloud Storage initialization*/
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
 
         /*Finding the listing by its ID in the "band-listings" subfolder*/
         DocumentReference bandListing = db.collection("band-listings").document(bID);
@@ -77,6 +114,8 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+
+                        listingOwner.append(document.get("lisiting-owner").toString());
 
                         /*Find the band reference by looking for the band ID in the "bands" subfolder*/
                         DocumentReference band = db.collection("bands").document(document.get("band-ref").toString());
@@ -93,7 +132,6 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                                         rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
                                         ArrayList<String> members = (ArrayList<String>) document.get("members");
-                                        listingOwner.append(members.get(0));
 
                                         CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
                                         sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get()
@@ -117,38 +155,6 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                                                     }
                                                 });
                                         Log.d("AUTH CHECK" ,"LISTING OWNER: " + listingOwner.toString() + "\nCURRENT USER: " + FirebaseAuth.getInstance().getUid());
-                                        Query musiciansInBand = db.collection("musicians").whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid());
-                                        musiciansInBand.get()
-                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                        if(task.isSuccessful())
-                                                        {
-                                                            QuerySnapshot docs = task.getResult();
-                                                            if(!docs.isEmpty())
-                                                            {
-                                                                if(members.contains(docs.getDocuments().get(0).getId()))
-                                                                {
-                                                                    getSupportActionBar().setTitle("My Advert");
-                                                                    contact.setClickable(false);
-                                                                    contact.setVisibility(View.GONE);
-                                                                }
-                                                                else
-                                                                {
-                                                                    getSupportActionBar().setTitle(bandName.getText().toString());
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                Log.d("FIRESTORE", "User not a musician!");
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            Log.d("FIRESTORE", "query failed with" , task.getException());
-                                                        }
-                                                    }
-                                                });
                                     } else {
                                         Log.d("FIRESTORE", "No such document");
                                     }
@@ -158,7 +164,7 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                             }
                         });
                         Timestamp expiryDate = (Timestamp) document.get("expiry-date");
-                        expiry.append(expiryDate.toDate().toString());
+                        expiry.setTime(expiryDate.toDate().getTime());
                         bandRef.append(document.get("band-ref").toString());
                         description.setText(document.get("description").toString());
                         positionArray.addAll((ArrayList<String>) document.get("position"));
@@ -188,6 +194,10 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                                 request.put("type", "contact-request");
                                 request.put("posting-date", Timestamp.now());
                                 request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                request.put("sent-from-type", "musicians");
+                                request.put("sent-from-ref", musician.getId());
+                                request.put("sent-to-type", "bands");
+                                request.put("sent-to-ref", bandRef.toString());
                                 request.put("notification-title", "Someone is interested in your advert!");
                                 request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
 
@@ -217,6 +227,10 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                                 requestSent.put("type", "contact-request");
                                 requestSent.put("posting-date", Timestamp.now());
                                 requestSent.put("sent-to", listingOwner.toString());
+                                requestSent.put("sent-from-type", "musicians");
+                                requestSent.put("sent-from-ref", musician.getId());
+                                requestSent.put("sent-to-type", "bands");
+                                requestSent.put("sent-to-ref", bandRef.toString());
                                 requestSent.put("notification-title", "Someone is interested in your advert!");
                                 requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
                                 CollectionReference sent = db.collection("communications")
@@ -307,6 +321,8 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
+                        Timestamp expiryDate = (Timestamp) document.get("expiry-date");
+
                         /*Find the performer reference by looking for the performer ID in the "performers" subfolder*/
                         DocumentReference performer = db.collection("bands").document(document.get("band-ref").toString());
 
@@ -330,11 +346,28 @@ public class BandListingDetailsActivity extends AppCompatActivity {
                                                             QuerySnapshot docs = task.getResult();
                                                             if(!docs.isEmpty())
                                                             {
-                                                                if(members.contains(docs.getDocuments().get(0).getId()))
+                                                                if(members.contains(docs.getDocuments().get(0).getId()) && expiryDate.compareTo(Timestamp.now()) > 0)
                                                                 {
                                                                     MenuItem star = menu.findItem(R.id.saveButton);
                                                                     star.setIcon(R.drawable.ic_full_star);
                                                                     star.setVisible(false);
+                                                                    getSupportActionBar().setTitle("My Advert");
+                                                                    Button contact = findViewById(R.id.contact);
+                                                                    contact.setClickable(false);
+                                                                    contact.setVisibility(View.GONE);
+                                                                }
+                                                                else if(members.contains(docs.getDocuments().get(0).getId()) && expiryDate.compareTo(Timestamp.now()) < 0)
+                                                                {
+                                                                    MenuItem star = menu.findItem(R.id.saveButton);
+                                                                    star.setIcon(R.drawable.ic_full_star);
+                                                                    star.setVisible(false);
+                                                                    getSupportActionBar().setTitle("My Advert Preview");
+                                                                    Button contact = findViewById(R.id.contact);
+                                                                    contact.setClickable(false);
+                                                                    contact.setVisibility(View.GONE);
+                                                                    Button publish = findViewById(R.id.publish);
+                                                                    publish.setClickable(true);
+                                                                    publish.setVisibility(View.VISIBLE);
                                                                 }
                                                                 else
                                                                 {
@@ -398,10 +431,12 @@ public class BandListingDetailsActivity extends AppCompatActivity {
 
         if(id == R.id.saveButton)
         {
+            Timestamp expiryDate = new Timestamp(expiry);
+
             HashMap<String, Object> listing = new HashMap<>();
             listing.put("position", positionArray);
             listing.put("description", description.getText().toString());
-            listing.put("expiry-date", expiry.toString());
+            listing.put("expiry-date", expiry);
             listing.put("band-ref", bandRef.toString());
 
             CollectionReference favBands = db.collection("favourite-ads")
@@ -462,4 +497,132 @@ public class BandListingDetailsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap)
+    {
+        this.googleMap = googleMap;
+
+        final DocumentReference bandLocation = db.collection("band-listings").document(bID);
+
+        final CollectionReference musiciansRef = db.collection("musicians");
+
+        Query getMusiciansBands = musiciansRef;
+
+        getMusiciansBands.whereEqualTo("user-ref", fAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task)
+            {
+                if(task.isSuccessful())
+                {
+                    List<DocumentSnapshot> myMusicianID = task.getResult().getDocuments();
+
+                    DocumentSnapshot musician = myMusicianID.get(0);
+
+                    ArrayList<String> bandsImIn = (ArrayList<String>) musician.get("bands");
+
+                    if(bandsImIn != null && bandsImIn.size() > 0)
+                    {
+                        for(String bands : bandsImIn)
+                        {
+                            final CollectionReference bandRef = db.collection("bands");
+
+                            bandRef.document(bands).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                            {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                {
+                                    if(task.isSuccessful())
+                                    {
+                                        DocumentSnapshot bandSnapshot = task.getResult();
+
+                                        String musicianName = bandSnapshot.get("name").toString();
+
+                                        LatLng bandLocation = new LatLng(Double.parseDouble(bandSnapshot.get("latitude").toString()), Double.parseDouble(bandSnapshot.get("longitude").toString()));
+                                        googleMap.addMarker(new MarkerOptions().position(bandLocation).title(musicianName));
+                                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bandLocation, 10));
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public void onBuyPressed(View pressed) {
+        // PAYMENT_INTENT_SALE will cause the payment to complete immediately.
+        // Change PAYMENT_INTENT_SALE to
+        //   - PAYMENT_INTENT_AUTHORIZE to only authorize payment and capture funds later.
+        //   - PAYMENT_INTENT_ORDER to create a payment for authorization and capture
+        //     later via calls from your server.
+        PayPalPayment payment = new PayPalPayment(new BigDecimal("5"), "GBP", "30-days Advert",
+                PayPalPayment.PAYMENT_INTENT_SALE);
+
+        Intent intent = new Intent(this, PaymentActivity.class);
+
+        // send the same configuration for restart resiliency
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, paypalConfig);
+
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
+
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+            if (confirm != null) {
+                try {
+                    Log.i("paymentExample", confirm.toJSONObject().toString(4));
+
+                    // TODO: send 'confirm' to your server for verification.
+
+                    /*Firestore & Cloud Storage initialization*/
+                    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+                    /*Finding the listing by its ID in the "venue-listings" subfolder*/
+                    DocumentReference bandListing = db.collection("band-listings").document(bID);
+
+                    Calendar currentExpiry = Calendar.getInstance();
+                    currentExpiry.setTime(expiry);
+                    currentExpiry.add(Calendar.MONTH, 1);
+                    currentExpiry.add(Calendar.DAY_OF_MONTH, 1);
+                    Timestamp newDate = new Timestamp(currentExpiry.getTime());
+
+                    bandListing.update("expiry-date", newDate);
+
+                    Toast.makeText(this, "Ad published!", Toast.LENGTH_SHORT);
+
+                    finish();
+
+                } catch (JSONException e) {
+                    Log.e("paymentExample", "an extremely unlikely failure occurred: ", e);
+                }
+            }
+        }
+        else if (resultCode == Activity.RESULT_CANCELED) {
+            Log.i("paymentExample", "The user canceled.");
+            Toast.makeText(this, "Payment process has been cancelled", Toast.LENGTH_SHORT);
+        }
+        else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
+            Log.i("paymentExample", "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+        }
+        else
+        {
+            Toast.makeText(this, "Payment process has been cancelled", Toast.LENGTH_SHORT);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        stopService(new Intent(this, PayPalService.class));
+        super.onDestroy();
+    }
 }
+

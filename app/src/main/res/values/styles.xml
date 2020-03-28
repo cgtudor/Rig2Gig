@@ -3,23 +3,19 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/mainColour</item>
-        <item name="colorPrimaryDark">@color/mainColour</item>
-        <item name="colorAccent">@color/mainColour</item>
+        <item name="colorPrimary">#12c2e9</item>
+        <item name="colorPrimaryDark">#12c2e9</item>
+        <item name="colorAccent">#c471ed</item>
         <item name="android:textSize">@dimen/font_size</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/mainColour</item>
-        <item name="colorPrimaryDark">@color/mainColour</item>
     </style>
     <style name="AppTheme.ActionBar">
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/mainColour</item>
-        <item name="colorPrimaryDark">@color/mainColour</item>
     </style>
 
     <style name="AppTheme.TranslucentBackground">
@@ -34,4 +30,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AutoComplete">
+        <item name="android:colorControlNormal">@color/tw__solid_white</item>
+        <item name="colorControlActivated">@color/tw__solid_white</item>
+    </style>
 </resources>

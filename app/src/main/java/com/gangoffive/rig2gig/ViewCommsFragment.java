@@ -117,7 +117,10 @@ public class ViewCommsFragment extends Fragment
                                                 documentSnapshot.getId(),
                                                 documentSnapshot.get("sent-from").toString(),
                                                 documentSnapshot.get("type").toString(),
-                                                documentSnapshot.get("band-ref").toString(),
+                                                "bands",
+                                                documentSnapshot.get("sent-from-ref").toString(),
+                                                "musicians",
+                                                documentSnapshot.get("musician-ref").toString(),
                                                 documentSnapshot.get("musician-ref").toString());
                                     }
                                     else
@@ -125,7 +128,11 @@ public class ViewCommsFragment extends Fragment
                                         communication = new Communication(
                                                 documentSnapshot.getId(),
                                                 documentSnapshot.get("sent-from").toString(),
-                                                documentSnapshot.get("type").toString());
+                                                documentSnapshot.get("type").toString(),
+                                                documentSnapshot.get("sent-from-type").toString(),
+                                                documentSnapshot.get("sent-from-ref").toString(),
+                                                documentSnapshot.get("sent-to-type").toString(),
+                                                documentSnapshot.get("sent-to-ref").toString());
                                     }
                                     if (!communication.getCommType().equals("accepted-invite")
                                             && !communication.getCommType().equals("rejected-invite")
@@ -145,14 +152,58 @@ public class ViewCommsFragment extends Fragment
                                         openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
                                         v.getContext().startActivity(openListingIntent);
                                     }*/
-                                    /*@Override
+                                    @Override
                                     public void onPhotoClick(int position) {
-                                        //
+                                        Intent openProfileIntent = null;
+
+                                        String profileType = communications.get(position).getSentFromType();
+                                        String profileRef = communications.get(position).getSentFromRef();
+
+                                        switch(profileType) {
+                                            case "venues":
+                                                openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
+                                                openProfileIntent.putExtra("EXTRA_VENUE_ID", profileRef);
+                                                break;
+                                            case "bands":
+                                                openProfileIntent = new Intent(v.getContext(), BandProfileActivity.class);
+                                                openProfileIntent.putExtra("EXTRA_BAND_ID", profileRef);
+                                                break;
+                                            case "musicians":
+                                                openProfileIntent = new Intent(v.getContext(), MusicianProfileActivity.class);
+                                                openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
+                                                break;
+                                        }
+
+                                        if(openProfileIntent != null) {
+                                            v.getContext().startActivity(openProfileIntent);
+                                        }
                                     }
                                     @Override
                                     public void onNameClick(int position) {
-                                        //
-                                    }*/
+                                        Intent openProfileIntent = null;
+
+                                        String profileType = communications.get(position).getSentFromType();
+                                        String profileRef = communications.get(position).getSentFromRef();
+
+                                        switch(profileType) {
+                                            case "venues":
+                                                openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
+                                                openProfileIntent.putExtra("EXTRA_VENUE_ID", profileRef);
+                                                break;
+                                            case "bands":
+                                                openProfileIntent = new Intent(v.getContext(), BandProfileActivity.class);
+                                                openProfileIntent.putExtra("EXTRA_BAND_ID", profileRef);
+                                                break;
+                                            case "musicians":
+                                                openProfileIntent = new Intent(v.getContext(), MusicianProfileActivity.class);
+                                                openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
+                                                break;
+                                        }
+
+                                        if(openProfileIntent != null) {
+                                            v.getContext().startActivity(openProfileIntent);
+                                        }
+                                    }
                                     @Override
                                     public void onTopButtonClick(int position) {
 
@@ -176,13 +227,15 @@ public class ViewCommsFragment extends Fragment
                                                                             if(!results.isEmpty())
                                                                             {
                                                                                 DocumentSnapshot result = results.getDocuments().get(0);
-                                                                                switch (communications.get(position).getCommType())
+                                                                                Communication communication = communications.get(position);
+
+                                                                                switch (communication.getCommType())
                                                                                 {
                                                                                     case "contact-request":
                                                                                         DocumentReference updateRef = db.collection("communications")
                                                                                                 .document(uID)
                                                                                                 .collection("received")
-                                                                                                .document(communications.get(position).getCommRef());
+                                                                                                .document(communication.getCommRef());
 
                                                                                         updateRef.update("type" , "contact-send")
                                                                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -203,11 +256,15 @@ public class ViewCommsFragment extends Fragment
                                                                                         request.put("type", "contact-accept");
                                                                                         request.put("posting-date", Timestamp.now());
                                                                                         request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                                                                        request.put("sent-from-type", communication.getSentToType());
+                                                                                        request.put("sent-from-ref", communication.getSentToRef());
+                                                                                        request.put("sent-to-type", communication.getSentFromType());
+                                                                                        request.put("sent-to-ref", communication.getSentFromRef());
                                                                                         request.put("notification-title", "Connected!");
                                                                                         request.put("notification-message", result.get("name").toString() + " has accepted your request!");
 
                                                                                         CollectionReference received = db.collection("communications")
-                                                                                                .document(communications.get(position).getUserRef())
+                                                                                                .document(communication.getUserRef())
                                                                                                 .collection("received");
 
                                                                                         received.add(request)
@@ -219,7 +276,7 @@ public class ViewCommsFragment extends Fragment
                                                                                                             Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
                                                                                                             Toast.makeText(getActivity(), "Contact request accepted!", Toast.LENGTH_SHORT).show();
 
-                                                                                                            communications.get(position).setCommType("contact-send");
+                                                                                                            communication.setCommType("contact-send");
                                                                                                             adapter.notifyItemChanged(position);
                                                                                                         }
                                                                                                         else
@@ -232,7 +289,11 @@ public class ViewCommsFragment extends Fragment
                                                                                         HashMap<String, Object> requestSent = new HashMap<>();
                                                                                         requestSent.put("type", "contact-send");
                                                                                         requestSent.put("posting-date", Timestamp.now());
-                                                                                        requestSent.put("sent-to", communications.get(position).getUserRef());
+                                                                                        requestSent.put("sent-to", communication.getUserRef());
+                                                                                        requestSent.put("sent-from-type", communication.getSentToType());
+                                                                                        requestSent.put("sent-from-ref", communication.getSentToRef());
+                                                                                        requestSent.put("sent-to-type", communication.getSentFromType());
+                                                                                        requestSent.put("sent-to-ref", communication.getSentFromRef());
                                                                                         requestSent.put("notification-title", "Connected!");
                                                                                         requestSent.put("notification-message", result.get("name").toString() + " has accepted your request!");
                                                                                         CollectionReference sent = db.collection("communications")
@@ -258,7 +319,7 @@ public class ViewCommsFragment extends Fragment
                                                                                     case "contact-send":
 
                                                                                         DocumentReference userDetails = db.collection("users")
-                                                                                                .document(communications.get(position).getUserRef());
+                                                                                                .document(communication.getUserRef());
 
                                                                                         userDetails.get()
                                                                                                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -326,13 +387,15 @@ public class ViewCommsFragment extends Fragment
                                                                             if(!results.isEmpty())
                                                                             {
                                                                                 DocumentSnapshot result = results.getDocuments().get(0);
-                                                                                switch (communications.get(position).getCommType())
+                                                                                Communication communication = communications.get(position);
+
+                                                                                switch (communication.getCommType())
                                                                                 {
                                                                                     case "contact-request":
                                                                                         DocumentReference updateRef = db.collection("communications")
                                                                                                 .document(uID)
                                                                                                 .collection("received")
-                                                                                                .document(communications.get(position).getCommRef());
+                                                                                                .document(communication.getCommRef());
 
                                                                                         updateRef.update("type" , "contact-retain")
                                                                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -353,11 +416,15 @@ public class ViewCommsFragment extends Fragment
                                                                                         request.put("type", "contact-decline");
                                                                                         request.put("posting-date", Timestamp.now());
                                                                                         request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                                                                        request.put("sent-from-type", communication.getSentToType());
+                                                                                        request.put("sent-from-ref", communication.getSentToRef());
+                                                                                        request.put("sent-to-type", communication.getSentFromType());
+                                                                                        request.put("sent-to-ref", communication.getSentFromRef());
                                                                                         request.put("notification-title", "Sad news...");
                                                                                         request.put("notification-message", result.get("name") + " has declined your contact request. Don't worry, there's plenty more!");
 
                                                                                         CollectionReference received = db.collection("communications")
-                                                                                                .document(communications.get(position).getUserRef())
+                                                                                                .document(communication.getUserRef())
                                                                                                 .collection("received");
 
                                                                                         received.add(request)
@@ -369,7 +436,7 @@ public class ViewCommsFragment extends Fragment
                                                                                                             Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
                                                                                                             Toast.makeText(getActivity(), "Contact request denied!", Toast.LENGTH_SHORT).show();
 
-                                                                                                            communications.get(position).setCommType("contact-retain");
+                                                                                                            communication.setCommType("contact-retain");
                                                                                                             adapter.notifyItemChanged(position);
                                                                                                         }
                                                                                                         else
@@ -381,6 +448,11 @@ public class ViewCommsFragment extends Fragment
 
                                                                                         HashMap<String, Object> requestSent = new HashMap<>();
                                                                                         requestSent.put("type", "contact-retain");
+                                                                                        requestSent.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                                                                        requestSent.put("sent-from-type", communication.getSentToType());
+                                                                                        requestSent.put("sent-from-ref", communication.getSentToRef());
+                                                                                        requestSent.put("sent-to-type", communication.getSentFromType());
+                                                                                        requestSent.put("sent-to-ref", communication.getSentFromRef());
                                                                                         requestSent.put("notification-title", "Sad news...");
                                                                                         requestSent.put("notification-message", result.get("name") + " has declined your contact request. Don't worry, there's plenty more!");
                                                                                         CollectionReference sent = db.collection("communications")
@@ -406,7 +478,7 @@ public class ViewCommsFragment extends Fragment
                                                                                     case "contact-send":
 
                                                                                         DocumentReference userDetails = db.collection("users")
-                                                                                                .document(communications.get(position).getUserRef());
+                                                                                                .document(communication.getUserRef());
 
                                                                                         userDetails.get()
                                                                                                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -475,7 +547,7 @@ public class ViewCommsFragment extends Fragment
 
     public void handleJoinBand(int position, String uID)
     {
-        String bandRef = communications.get(position).getBandRef();
+        String bandRef = communications.get(position).getSentFromRef();
         String musicianRef = communications.get(position).getMusicianRef();
         DocumentReference receiverCommDoc = db.collection("communications")
                 .document(uID)
@@ -570,7 +642,7 @@ public class ViewCommsFragment extends Fragment
 
     public void handleNotJoinBand(int position, String uID)
     {
-        String bandRef = communications.get(position).getBandRef();
+        String bandRef = communications.get(position).getSentFromRef();
         String musicianRef = communications.get(position).getMusicianRef();
         DocumentReference receiverCommDoc = db.collection("communications")
                 .document(uID)

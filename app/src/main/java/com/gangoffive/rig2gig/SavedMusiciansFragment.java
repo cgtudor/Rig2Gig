@@ -18,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,6 +31,8 @@ import java.util.List;
 
 public class SavedMusiciansFragment extends Fragment
 {
+    private String currentBandId;
+
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
     SwipeRefreshLayout swipeLayout;
@@ -47,7 +50,9 @@ public class SavedMusiciansFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        final View v = inflater.inflate(R.layout.fragment_saved_performers, container, false);
+        final View v = inflater.inflate(R.layout.fragment_saved_musicians, container, false);
+
+        currentBandId = this.getArguments().getString("CURRENT_BAND_ID");
 
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
@@ -71,11 +76,14 @@ public class SavedMusiciansFragment extends Fragment
         String uID = FirebaseAuth.getInstance().getUid();
 
         db = FirebaseFirestore.getInstance();
-        colRef = db.collection("favourite-ads").document("uID").collection("musician-listings");
+        colRef = db.collection("favourite-ads").document(uID).collection("musician-listings");
 
         musicianListings = new ArrayList<>();
 
+        Timestamp currentDate = Timestamp.now();
+
         Query first = colRef
+                .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
                 .limit(10);
 
         first.get()
@@ -106,6 +114,7 @@ public class SavedMusiciansFragment extends Fragment
                                         Intent openListingIntent = new Intent(v.getContext(), MusicianListingDetailsActivity.class);
                                         String listingRef = musicianListings.get(position).getListingRef();
                                         openListingIntent.putExtra("EXTRA_MUSICIAN_LISTING_ID", listingRef);
+                                        openListingIntent.putExtra("CURRENT_BAND_ID", currentBandId);
                                         startActivityForResult(openListingIntent, 1);
                                     }
                                 });

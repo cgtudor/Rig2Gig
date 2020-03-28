@@ -4,11 +4,17 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
+
+import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +27,13 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -73,6 +86,14 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         public void afterTextChanged(Editable s) {}
     };
 
+    private double musicianLatitude;
+    private double musicianLongitude;
+    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
+    private final CollectionReference musicianReference = FSTORE.collection("musicians");
+    private final Query getMusicianLocation = musicianReference;
+    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +110,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
 
         listingManager = new ListingManager(musicianRef, type, listingRef);
         listingManager.getUserInfo(this);
+        getMusicianLocation();
     }
 
     /**
@@ -108,8 +130,8 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
 
     public void setInitialColours()
     {
-        createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-        createListing.setTextColor(Color.parseColor("#4D4D4E"));
+        createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
+        createListing.setTextColor(Color.parseColor("#FFFFFF"));
     }
 
     /**
@@ -151,14 +173,14 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     @Override
     public void setViewReferences() {
         searchHint = findViewById(R.id.searchHint);
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         image = findViewById(R.id.image);
         if (image != null)
         {
             image.setImageDrawable(null);
         }
         position = findViewById(R.id.position);
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.venue_description_final);
         if (description != null)
         {
             description.addTextChangedListener(textWatcher);
@@ -304,14 +326,14 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         if (createListing != null && description!= null
                 &&  (bandPositions.size() == 0
                 || description.getText().toString().trim().length() == 0)) {
-            createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-            createListing.setTextColor(Color.parseColor("#4D4D4E"));
+            createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+            createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
         else if (createListing != null && description!= null
                 && description.getText().toString().trim().length() > 0
                 && bandPositions.size() > 0)
         {
-            createListing.setBackgroundColor(Color.parseColor("#008577"));
+            createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
             createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
     }
@@ -481,6 +503,9 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         {
             listing.put("description", description.getText().toString());
         }
+
+        listing.put("latitude", musicianLatitude);
+        listing.put("longitude", musicianLongitude);
     }
 
     /**
@@ -541,4 +566,38 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     public void setPreviousListing(Map<String, Object> previousListing) {
         this.previousListing = previousListing;
     }
+
+    private void getMusicianLocation()
+    {
+        getMusicianLocation.whereEqualTo("user-ref", fAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots)
+            {
+                Log.d(TAG, "Successfully obtained Venue reference.");
+
+                List<DocumentSnapshot> venues = queryDocumentSnapshots.getDocuments();
+
+                if(!venues.isEmpty())
+                {
+                    Log.d(TAG, "Successful get of venue.");
+                    DocumentSnapshot venue = venues.get(0);
+
+                    musicianLatitude = Double.parseDouble(venue.get("latitude").toString());
+                    musicianLongitude = Double.parseDouble(venue.get("longitude").toString());
+                }
+                else
+                {
+                    Log.d(TAG, "Unsuccessful get of venue.");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Log.d(TAG, "Failed to get Venue reference.");
+            }
+        });
+    }
+
 }

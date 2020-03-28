@@ -23,6 +23,7 @@ public class ImageRequestHandler
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         ((Activity)v.getContext()).startActivityForResult(intent, REQUEST_GALLERY__PHOTO);
+
     }
 
     /**

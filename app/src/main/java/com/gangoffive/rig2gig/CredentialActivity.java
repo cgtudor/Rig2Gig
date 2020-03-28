@@ -40,7 +40,7 @@ public class CredentialActivity extends AppCompatActivity {
     FirebaseFirestore fStore;
 
 
-    EditText cFirstName, cLastName, cUsername, cPhoneNumber, rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword;;
+    EditText cFirstName, cLastName, cUsername, cPhoneNumber, rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword;
 
     RadioButton fan, accFan, accMusician, accVenue;
     RadioGroup userGroup;
@@ -63,9 +63,9 @@ public class CredentialActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        cFirstName = findViewById(R.id.name);
+        cFirstName = findViewById(R.id.venue_name_final);
         cLastName = findViewById(R.id.location);
-        cUsername = findViewById(R.id.distance);
+        cUsername = findViewById(R.id.venue_description_final);
         cPhoneNumber = findViewById(R.id.cPhoneNumber);
 
         rEmailAddress = findViewById(R.id.emailReset);

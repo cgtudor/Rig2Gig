@@ -3,10 +3,13 @@ package com.gangoffive.rig2gig;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,12 +18,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
+
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class BandDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
-    private TextView name, location, distance, genres, email, phone;
+    private Geocoder geocoder;
+    private TextView name, distance, genres, email, phone;
+    private AutoCompleteTextView location;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
     private String bandRef, type;
@@ -60,8 +69,8 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             if (createListing != null && (s.toString().trim().length() == 0 ||
                     actualNumber.length() == 0))
             {
-                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+                createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
             else if (before == 0 && count == 1 && createListing != null
                     && name.getText().toString().trim().length() > 0
@@ -71,7 +80,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                     && phone.getText().toString().trim().length() > 0
             )
             {
-                createListing.setBackgroundColor(Color.parseColor("#008577"));
+                createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
         }
@@ -96,6 +105,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         type = "Band";
         listingManager = new ListingManager(bandRef, type, listingRef);
         listingManager.getUserInfo(this);
+        geocoder = new Geocoder(this, Locale.getDefault());
     }
 
     /**
@@ -146,13 +156,18 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             name.addTextChangedListener(textWatcher);
 
         }
-        location = findViewById(R.id.location);
+        location = findViewById(R.id.band_location);
         if (location != null)
         {
+            if(location.getAdapter() == null)
+            {
+                location.setAdapter(new GooglePlacesAutoSuggestAdapter(BandDetailsEditor.this, android.R.layout.simple_list_item_1));
+            }
+
             location.setOnFocusChangeListener(editTextFocusListener);
             location.addTextChangedListener(textWatcher);
         }
-        distance = findViewById(R.id.distance);
+        distance = findViewById(R.id.venue_description_final);
         if (distance != null)
         {
             distance.setOnFocusChangeListener(editTextFocusListener);
@@ -177,7 +192,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             phone.addTextChangedListener(textWatcher);
         }
         createListing = findViewById(R.id.createListing);
-        createListing.setBackgroundColor(Color.parseColor("#008577"));
+        createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
         createListing.setTextColor(Color.parseColor("#FFFFFF"));
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,7 +244,32 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         }
         if(location != null && band !=null)
         {
-            location.setText(band.get("location").toString());
+            try
+            {
+                List<Address> getBandCity = geocoder.getFromLocation(Double.parseDouble(band.get("latitude").toString()), Double.parseDouble(band.get("longitude").toString()), 20);
+
+                if (getBandCity != null && getBandCity.size() > 0)
+                {
+                    for (Address adr : getBandCity)
+                    {
+                        if (adr.getLocality() != null)
+                        {
+                            location.setText(adr.getLocality() + ", " + adr.getCountryCode());
+                            break;
+                        }
+                        else if (adr.getSubLocality() != null)
+                        {
+                            location.setText(adr.getSubLocality() + ", " + adr.getCountryCode());
+                            break;
+                        }
+
+                    }
+                }
+            }
+            catch(IOException io)
+            {
+                System.out.println(io.getMessage());
+            }
         }
         if(distance != null && band !=null)
         {
@@ -368,7 +408,31 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         }
         if(location != null && location.getText() != null && band != null)
         {
-            band.put("location",location.getText().toString());
+            try
+            {
+                String bandName = location.getText().toString();
+                List<Address> postBandAddress = geocoder.getFromLocationName(bandName, 1);
+
+                if(postBandAddress.size() > 0)
+                {
+                    Address address = postBandAddress.get(0);
+                    band.put("latitude", address.getLatitude());
+                    band.put("longitude", address.getLongitude());
+
+                    if(postBandAddress.get(0).getLocality() != null)
+                    {
+                        band.put("location", address.getLocality());
+                    }
+                    else if(postBandAddress.get(0).getSubLocality() != null)
+                    {
+                        band.put("location", address.getSubLocality());
+                    }
+                }
+            }
+            catch(IOException io)
+            {
+                System.out.println(io.getMessage());
+            }
         }
         if(distance != null && distance.getText() != null && band != null)
         {

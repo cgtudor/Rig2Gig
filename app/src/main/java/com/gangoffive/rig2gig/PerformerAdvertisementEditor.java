@@ -6,15 +6,25 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,14 +63,14 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             if (createListing != null && (s.toString().trim().length() == 0 ||
                     actualNumber.length() == 0))
             {
-                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+                createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
             else if (before == 0 && count == 1 && createListing != null
                     && name.getText().toString().trim().length() > 0
             )
             {
-                createListing.setBackgroundColor(Color.parseColor("#008577"));
+                createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
         }
@@ -69,6 +79,13 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         public void afterTextChanged(Editable s) {}
     };
 
+    private double performerLatitude;
+    private double performerLongitude;
+    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
+    private final CollectionReference musicianReference = FSTORE.collection("musicians");
+    private final Query getPerformerLocation = musicianReference;
+    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
 
     /**
      * setup view and listing manager, initiating getting performer info from database
@@ -89,6 +106,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
 
         listingManager = new ListingManager(performerRef, performerType + " Performer", listingRef);
         listingManager.getUserInfo(this);
+        getPerformerLocation();
     }
 
     /**
@@ -127,19 +145,19 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
      */
     @Override
     public void setViewReferences() {
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         image = findViewById(R.id.image);
         if (image != null)
         {
             image.setImageDrawable(null);
         }
-        distance = findViewById(R.id.distance);
+        distance = findViewById(R.id.venue_description_final);
         if (distance != null)
         {
             distance.addTextChangedListener(textWatcher);
         }
         createListing = findViewById(R.id.createListing);
-        createListing.setBackgroundColor(Color.parseColor("#008577"));
+        createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
         createListing.setTextColor(Color.parseColor("#FFFFFF"));
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -283,6 +301,9 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             listing.put("listing-owner", FirebaseAuth.getInstance().getUid());
         }
         listing.put("distance", distance.getText().toString());
+
+        listing.put("latitude", performerLatitude);
+        listing.put("longitude", performerLongitude);
     }
 
     /**
@@ -351,6 +372,39 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
 
     public void setPreviousListing(Map<String, Object> previousListing) {
         this.previousListing = previousListing;
+    }
+
+    private void getPerformerLocation()
+    {
+        getPerformerLocation.whereEqualTo("user-ref", fAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots)
+            {
+                Log.d(TAG, "Successfully obtained Venue reference.");
+
+                List<DocumentSnapshot> venues = queryDocumentSnapshots.getDocuments();
+
+                if(!venues.isEmpty())
+                {
+                    Log.d(TAG, "Successful get of venue.");
+                    DocumentSnapshot venue = venues.get(0);
+
+                    performerLatitude = Double.parseDouble(venue.get("latitude").toString());
+                    performerLongitude = Double.parseDouble(venue.get("longitude").toString());
+                }
+                else
+                {
+                    Log.d(TAG, "Unsuccessful get of venue.");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Log.d(TAG, "Failed to get Venue reference.");
+            }
+        });
     }
 }
 

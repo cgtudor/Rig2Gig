@@ -70,30 +70,37 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(bandName);
 
+        //General Section
+        final CardView card_view_view_venues = findViewById(R.id.card_view_view_Venues);
+        final CardView card_view_view_musicians = findViewById(R.id.card_view_view_musicians);
+        final CardView card_view_edit_band = findViewById(R.id.card_view_edit_band);
+        final CardView card_view_manage_members = findViewById(R.id.card_view_manage_members);
+
+        card_view_view_venues.setOnClickListener(this);
+        card_view_edit_band.setOnClickListener(this);
+        card_view_view_musicians.setOnClickListener(this);
+        card_view_manage_members.setOnClickListener(this);
 
         //Performer Advert Section
-        final CardView card_view_view_venues = findViewById(R.id.card_view_view_Venues);
-        final CardView card_view_edit_band = findViewById(R.id.card_view_edit_band);
         final CardView card_view_create_advert = findViewById(R.id.card_view_create_performer_advert);
         final CardView card_view_edit_advert = findViewById(R.id.card_view_edit_performer_advert);
         final CardView card_view_view_advert = findViewById(R.id.card_view_view_performer_advert);
         final CardView card_view_delete_advert = findViewById(R.id.card_view_delete_performer_advert);
 
-        card_view_view_venues.setOnClickListener(this);
-        card_view_edit_band.setOnClickListener(this);
+
         card_view_create_advert.setOnClickListener(this);
         card_view_edit_advert.setOnClickListener(this);
         card_view_view_advert.setOnClickListener(this);
         card_view_delete_advert.setOnClickListener(this);
 
         //Band Advert Section
-        final CardView card_view_view_musicians = findViewById(R.id.card_view_view_musicians);
+
         final CardView card_view_create_band_advert = findViewById(R.id.card_view_create_band_advert);
         final CardView card_view_view_band_advert = findViewById(R.id.card_view_view_band_advert);
         final CardView card_view_edit_band_band_advert = findViewById(R.id.card_view_edit_band_band_advert);
         final CardView card_view_delete_band_advert = findViewById(R.id.card_view_delete_band_advert);
 
-        card_view_view_musicians.setOnClickListener(this);
+
         card_view_create_band_advert.setOnClickListener(this);
         card_view_view_band_advert.setOnClickListener(this);
         card_view_edit_band_band_advert.setOnClickListener(this);
@@ -122,6 +129,9 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         editProfileLayout.setVisibility(View.VISIBLE);
 
         editProfileLayout = findViewById(R.id.card_view_edit_band);
+        editProfileLayout.setVisibility(View.VISIBLE);
+
+        editProfileLayout = findViewById(R.id.card_view_manage_members);
         editProfileLayout.setVisibility(View.VISIBLE);
 
         getPerformerAdverts.whereEqualTo("performer-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
@@ -219,12 +229,16 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         switch(v.getTag().toString())
         {
             case "View Venues":
-                startActivity(new Intent(this, VenueAdvertIndexActivity.class));
+                startActivity(new Intent(this, VenueAdvertIndexActivity.class).putExtra("CURRENT_USER_TYPE", "bands")
+                                                                                             .putExtra("CURRENT_BAND_ID", displayMusicianBandsReference));
                 break;
             case "Create Performer Advert":
                 startActivityForResult(new Intent(this, PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", displayMusicianBandsReference)
-                                                                                                 .putExtra("EXTRA_LISTING_ID", "")
-                                                                                                 .putExtra("EXTRA_PERFORMER_TYPE", "Band"), 1);
+                                                                                                          .putExtra("EXTRA_LISTING_ID", "")
+                                                                                                          .putExtra("EXTRA_PERFORMER_TYPE", "Band"), 1);
+                break;
+            case "Manage Members":
+                startActivity(new Intent(this, ManageBandMembersActivity.class).putExtra("EXTRA_BAND_ID", displayMusicianBandsReference));
                 break;
             case "Edit Performer Advert":
                 startActivity(new Intent(this, PerformerAdvertisementEditor.class).putExtra("EXTRA_PERFORMER_ID", displayMusicianBandsReference)
@@ -239,10 +253,10 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
                 break;
             case "Create Band Advert":
                 startActivityForResult(new Intent(this, BandAdvertisementEditor.class).putExtra("EXTRA_BAND_ID", displayMusicianBandsReference)
-                                                                                            .putExtra("EXTRA_LISTING_ID", ""), 1);
+                                                                                                     .putExtra("EXTRA_LISTING_ID", ""), 1);
                 break;
             case "View Musicians":
-                startActivity(new Intent(this, MusicianAdvertIndexActivity.class));
+                startActivity(new Intent(this, MusicianAdvertIndexActivity.class).putExtra("CURRENT_BAND_ID", displayMusicianBandsReference));
                 break;
             case "Edit Band":
                 startActivity(new Intent(this, BandDetailsEditor.class).putExtra("EXTRA_BAND_ID", displayMusicianBandsReference));

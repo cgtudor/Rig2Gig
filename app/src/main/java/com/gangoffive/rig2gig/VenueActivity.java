@@ -5,16 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,7 +35,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class VenueActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
@@ -50,6 +54,9 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private ImageView image;
     private Drawable chosenPic;
+    //Google Places autocomplete textview
+    private AutoCompleteTextView autoCompleteTextView;
+    private Geocoder geocoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +67,8 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
         fStore = FirebaseFirestore.getInstance();
         fStorage = FirebaseStorage.getInstance();
 
-        description = findViewById(R.id.distance);
-        location = findViewById(R.id.location);
-        name = findViewById(R.id.name);
+        description = findViewById(R.id.venue_description_final);
+        name = findViewById(R.id.venue_name_final);
         venueType = findViewById(R.id.type);
         submit = findViewById(R.id.submitBtn);
 
@@ -71,6 +77,10 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
 
         takePhotoBtn = findViewById(R.id.takePhoto);
         uploadPhotoBtn = findViewById(R.id.uploadBtn);
+
+
+        autoCompleteTextView = findViewById(R.id.location);
+        autoCompleteTextView.setAdapter(new GooglePlacesAutoSuggestAdapter(VenueActivity.this, android.R.layout.simple_list_item_1));
 
         image = findViewById(R.id.imageView);
 
@@ -120,16 +130,13 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
 
     public void submitBtnOnClick(View view) {
         String desc = description.getText().toString();
-        String loc = location.getText().toString();
         String venueName = name.getText().toString();
         String venueRating = "-1";
+        String venueAddressTextView = autoCompleteTextView.getText().toString();
+        Address venueAddress = getAddress();
         ImageView defImg = new ImageView(this);
         defImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_portrait);
 
-        if (TextUtils.isEmpty(loc)) {
-            location.setError("Please Set A Locaton!");
-            return;
-        }
         if (TextUtils.isEmpty(desc)) {
             description.setError("Please Enter A Venue Description!");
             return;
@@ -138,6 +145,17 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
             name.setError("Please Enter A Venue Name!");
             return;
         }
+        if(TextUtils.isEmpty(venueAddressTextView))
+        {
+            autoCompleteTextView.setError("Please Enter Your Venue Address");
+            return;
+        }
+        if(venueAddress == null)
+        {
+            autoCompleteTextView.setError("Please Enter A Valid Address");
+            return;
+        }
+
 
 
         fStore.collection("users").document(userRef).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -153,13 +171,15 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
 
                             Map<String, Object> venues = new HashMap<>();
                             venues.put("name", venueName);
-                            venues.put("location", loc);
+                            venues.put("location", venueAddress.getSubAdminArea());
                             venues.put("description", desc);
                             venues.put("user-ref", userRef);
                             venues.put("venue-type", type);
                             venues.put("email-address", email);
                             venues.put("phone-number", phoneNumber);
                             venues.put("rating", venueRating);
+                            venues.put("latitude", venueAddress.getLatitude());
+                            venues.put("longitude", venueAddress.getLongitude());
                             fStore.collection("venues")
                                     .add(venues)
                                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -212,6 +232,32 @@ public class VenueActivity extends AppCompatActivity implements AdapterView.OnIt
     public void uploadBtnOnClick(View view) {
         ImageRequestHandler.getGalleryImage(view);
 
+    }
+
+    private Address getAddress()
+    {
+        String venueName = autoCompleteTextView.getText().toString();
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try
+        {
+            List<Address> addressList = geocoder.getFromLocationName(venueName, 1);
+
+            if(addressList.size() > 0)
+            {
+                Address address = addressList.get(0);
+                return address;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch(IOException io)
+        {
+            Log.d(TAG, io.toString());
+            return null;
+        }
     }
 
     public void takeBtnOnClick(View view) {

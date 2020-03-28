@@ -38,7 +38,7 @@
                 android:id="@+id/remove"
                 android:layout_width="wrap_content"
                 android:layout_height="64dp"
-                android:layout_toEndOf="@+id/name"
+                android:layout_toEndOf="@+id/firstName"
                 android:gravity="center_vertical"
                 android:text="Remove"
                 android:textSize="14sp"

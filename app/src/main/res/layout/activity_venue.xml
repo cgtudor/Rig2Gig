@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/name"
+        android:id="@+id/firstName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-    <EditText
+    <!--<EditText
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,13 +51,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />-->
+
+    <AutoCompleteTextView
+        android:id="@+id/location"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:hint="Search For Your Venue Location"
+        android:textColor="#FFF"
+        android:textColorHint="#F6F6F6"
+        android:theme="@style/AutoComplete"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <EditText
-        android:id="@+id/distance"
+        android:id="@+id/venue_description_final"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:width="280dp"
         android:background="@android:color/transparent"
         android:ems="10"
@@ -68,7 +82,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view7" />
+        app:layout_constraintTop_toBottomOf="@+id/location" />
 
     <View
         android:id="@+id/view"
@@ -78,9 +92,9 @@
         android:background="#FFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintTop_toBottomOf="@+id/venue_name_final" />
 
-    <View
+    <!--<View
         android:id="@+id/view7"
         android:layout_width="280dp"
         android:layout_height="1dp"
@@ -89,7 +103,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location" />
+        app:layout_constraintTop_toBottomOf="@+id/location" />-->
 
     <View
         android:id="@+id/view8"
@@ -100,7 +114,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/distance" />
+        app:layout_constraintTop_toBottomOf="@+id/venue_description_final" />
 
 
     <Spinner
@@ -114,7 +128,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/view8" />
+        app:layout_constraintTop_toBottomOf="@+id/view8"
+        android:background="#FFFFFF"/>
 
 
     <Button
@@ -177,7 +192,7 @@
         app:layout_constraintTop_toBottomOf="@+id/view8" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageViewVenue"
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_marginTop="32dp"

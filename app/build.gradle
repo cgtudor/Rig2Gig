@@ -86,6 +86,9 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     implementation 'androidx.work:work-runtime:2.3.3'
 
+    /*Google Maps Dependency*/
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

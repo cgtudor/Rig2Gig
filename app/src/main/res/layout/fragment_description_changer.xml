@@ -9,7 +9,7 @@
 
 
     <EditText
-        android:id="@+id/distance"
+        android:id="@+id/venue_description_final"
         android:layout_width="364dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"

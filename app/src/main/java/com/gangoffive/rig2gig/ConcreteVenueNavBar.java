@@ -33,7 +33,17 @@ public class ConcreteVenueNavBar extends NavBarCompatActivity implements Navigat
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        if (savedInstanceState == null)
+        if(getIntent().getStringExtra("OPEN_FRAGMENT") != null && getIntent().getStringExtra("OPEN_FRAGMENT").equals("COMMS"))
+        {
+            ViewCommsFragment startFragment = new ViewCommsFragment();
+            visibleFragmentName = startFragment.getClass().getSimpleName();
+            //Following line determines the first fragment shown to the user.
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, startFragment, visibleFragmentName).addToBackStack(visibleFragmentName).commit();
+            getSupportFragmentManager().executePendingTransactions();
+            visibleFragment = getSupportFragmentManager().findFragmentByTag(visibleFragmentName);
+            navigationView.setCheckedItem(R.id.nav_notifications);
+        }
+        else if (savedInstanceState == null)
         {
             Intent intent = getIntent();
             if(intent != null && intent.getStringExtra("OPEN") != null && intent.getStringExtra("OPEN").equals("NOTIFICATION"))

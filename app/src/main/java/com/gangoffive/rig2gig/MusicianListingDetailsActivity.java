@@ -3,7 +3,6 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,6 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,16 +35,23 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 
-public class MusicianListingDetailsActivity extends AppCompatActivity {
+public class MusicianListingDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private String mID;
-    private final StringBuilder expiry = new StringBuilder("");
+    private String currentBandId = "";
+    private final Date expiry = new Date();
     private final StringBuilder musicianRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
     private final ArrayList<String> positionArray = new ArrayList<>();
+
+    private GoogleMap googleMap;
+    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
+
+    /*Firestore & Cloud Storage initialization*/
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +67,18 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
         final TextView description = findViewById(R.id.description);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
-        final TextView distance = findViewById(R.id.distance);
+        final TextView distance = findViewById(R.id.venue_description_final);
         final TextView position = findViewById(R.id.position);
         final Button contact = findViewById(R.id.contact);
 
+        //Initialising the Google Map. See onMapReady().
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+        mapFragment.getMapAsync(this);
+
         /*Used to get the id of the listing from the previous activity*/
         mID = getIntent().getStringExtra("EXTRA_MUSICIAN_LISTING_ID");
+
+        currentBandId = getIntent().getStringExtra("CURRENT_BAND_ID");
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -136,7 +154,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                             }
                         });
                         Timestamp expiryDate = (Timestamp) document.get("expiry-date");
-                        expiry.append(expiryDate.toDate().toString());
+                        expiry.setTime(expiryDate.toDate().getTime());
                         musicianRef.append(document.get("musician-ref").toString());
                         description.setText(document.get("description").toString());
                         positionArray.addAll((ArrayList<String>) document.get("position"));
@@ -166,6 +184,10 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                 request.put("type", "contact-request");
                                 request.put("posting-date", Timestamp.now());
                                 request.put("sent-from", FirebaseAuth.getInstance().getUid());
+                                request.put("sent-from-type", "bands");
+                                request.put("sent-from-ref", currentBandId);
+                                request.put("sent-to-type", "musicians");
+                                request.put("sent-to-ref", musicianRef.toString());
                                 request.put("notification-title", "Someone is interested in your advert!");
                                 request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
 
@@ -195,6 +217,10 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                                 requestSent.put("type", "contact-request");
                                 requestSent.put("posting-date", Timestamp.now());
                                 requestSent.put("sent-to", listingOwner.toString());
+                                requestSent.put("sent-from-type", "band");
+                                requestSent.put("sent-from-ref", currentBandId);
+                                requestSent.put("sent-to-type", "musicians");
+                                requestSent.put("sent-to-ref", musicianRef.toString());
                                 requestSent.put("notification-title", "Someone is interested in your advert!");
                                 requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
 
@@ -355,10 +381,12 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
 
         if(id == R.id.saveButton)
         {
+            Timestamp expiryDate = new Timestamp(expiry);
+
             HashMap<String, Object> listing = new HashMap<>();
             listing.put("position", positionArray);
             listing.put("description", description.getText().toString());
-            listing.put("expiry-date", expiry.toString());
+            listing.put("expiry-date", expiry);
             listing.put("musician-ref", musicianRef.toString());
 
             CollectionReference favMusicians = db.collection("favourite-ads")
@@ -418,5 +446,83 @@ public class MusicianListingDetailsActivity extends AppCompatActivity {
                     });
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap)
+    {
+        this.googleMap = googleMap;
+
+        final DocumentReference musicianLocation = db.collection("musician-listings").document(mID);
+
+        musicianLocation.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+                if(task.isSuccessful())
+                {
+                    Log.d(TAG, "Google Map get location successful");
+
+                    DocumentSnapshot document = task.getResult();
+
+                    if(document.exists())
+                    {
+                        Log.d(TAG, "Musician Document exists");
+
+
+
+                        final DocumentReference musician = db.collection("musicians").document(document.get("musician-ref").toString());
+
+                        musician.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                        {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                            {
+                                Log.d(TAG, "Google Map get musician successful");
+
+                                if(task.isSuccessful())
+                                {
+                                    Log.d(TAG, "Google Map get musician completed");
+
+                                    DocumentSnapshot document = task.getResult();
+
+                                    String musicianName = document.get("name").toString();
+                                    LatLng musicianLocation = new LatLng(Double.parseDouble(document.get("latitude").toString()), Double.parseDouble(document.get("longitude").toString()));
+                                    googleMap.addMarker(new MarkerOptions().position(musicianLocation).title(musicianName));
+                                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(musicianLocation, 10));
+                                }
+                                else
+                                {
+                                    Log.d(TAG, "Google Map get musician failed");
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener()
+                        {
+                            @Override
+                            public void onFailure(@NonNull Exception e)
+                            {
+                                Log.d(TAG, "Google Map get musician unsuccessful");
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Log.d(TAG, "Musician Document does not exist");
+                    }
+                }
+                else
+                {
+                    Log.d(TAG, "Google Map get location unsuccessful");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Log.d(TAG, "Google Map get location failed.");
+            }
+        });
     }
 }

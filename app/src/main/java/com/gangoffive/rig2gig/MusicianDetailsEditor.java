@@ -3,10 +3,13 @@ package com.gangoffive.rig2gig;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,12 +18,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
+
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MusicianDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
-    private TextView name, location, distance, genres;
+    private Geocoder geocoder;
+    private TextView name, distance, genres;
+    private AutoCompleteTextView location;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
     private String musicianRef, type;
@@ -60,8 +69,8 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             if (createListing != null && (s.toString().trim().length() == 0 ||
                     actualNumber.length() == 0))
             {
-                createListing.setBackgroundColor(Color.parseColor("#B2BEB5"));
-                createListing.setTextColor(Color.parseColor("#4D4D4E"));
+                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+                createListing.setTextColor(Color.parseColor("#ffffff"));
             }
             else if (before == 0 && count == 1 && createListing != null
                     && name.getText().toString().trim().length() > 0
@@ -69,8 +78,8 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                     && genres.getText().toString().trim().length() > 0
             )
             {
-                createListing.setBackgroundColor(Color.parseColor("#008577"));
-                createListing.setTextColor(Color.parseColor("#FFFFFF"));
+                createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
+                createListing.setTextColor(Color.parseColor("#ffffff"));
             }
         }
 
@@ -96,6 +105,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         type = "Musician";
         listingManager = new ListingManager(musicianRef, type, listingRef);
         listingManager.getUserInfo(this);
+        geocoder = new Geocoder(this, Locale.getDefault());
     }
 
     /**
@@ -139,20 +149,25 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         {
             image.setImageDrawable(null);
         }
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.venue_name_final);
         if (name != null)
         {
             name.setOnFocusChangeListener(editTextFocusListener);
             name.addTextChangedListener(textWatcher);
 
         }
-        location = findViewById(R.id.location);
+        location = findViewById(R.id.musician_location);
         if (location != null)
         {
+            if(location.getAdapter() == null)
+            {
+                location.setAdapter(new GooglePlacesAutoSuggestAdapter(MusicianDetailsEditor.this, android.R.layout.simple_list_item_1));
+            }
+
             location.setOnFocusChangeListener(editTextFocusListener);
             location.addTextChangedListener(textWatcher);
         }
-        distance = findViewById(R.id.distance);
+        distance = findViewById(R.id.venue_description_final);
         if (distance != null)
         {
             distance.setOnFocusChangeListener(editTextFocusListener);
@@ -165,7 +180,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             genres.addTextChangedListener(textWatcher);
         }
         createListing = findViewById(R.id.createListing);
-        createListing.setBackgroundColor(Color.parseColor("#008577"));
+        createListing.setBackgroundColor(Color.parseColor("#129ee9"));
         createListing.setTextColor(Color.parseColor("#FFFFFF"));
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,7 +232,31 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
         if(location != null && musician !=null)
         {
-            location.setText(musician.get("location").toString());
+            try
+            {
+                List<Address> getMusicianCity = geocoder.getFromLocation(Double.parseDouble(musician.get("latitude").toString()), Double.parseDouble(musician.get("longitude").toString()), 20);
+
+                if(getMusicianCity != null && getMusicianCity.size() > 0)
+                {
+                    for(Address adr : getMusicianCity)
+                    {
+                        if(adr.getSubLocality() != null)
+                        {
+                            location.setText(adr.getSubLocality() + ", " + adr.getCountryCode());
+                            break;
+                        }
+                        else if(adr.getLocality() != null)
+                        {
+                            location.setText(adr.getLocality() + ", " + adr.getCountryCode());
+                            break;
+                        }
+                    }
+                }
+            }
+            catch(IOException io)
+            {
+                System.out.println(io.getMessage());
+            }
         }
         if(distance != null && musician !=null)
         {
@@ -326,8 +365,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
      */
     @Override
     public void cancelAdvertisement() {
-        Intent backToMain = new Intent(MusicianDetailsEditor.this, MainActivity.class);
-        startActivity(backToMain);
+        finish();
     }
 
     /**
@@ -341,7 +379,31 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
         if(location != null && location.getText() != null && musician != null)
         {
-            musician.put("location",location.getText().toString());
+            try
+            {
+                String musicianName = location.getText().toString();
+                List<Address> postMusicianAddress = geocoder.getFromLocationName(musicianName, 1);
+
+                if(postMusicianAddress.size() > 0)
+                {
+                    Address address = postMusicianAddress.get(0);
+                    musician.put("latitude", address.getLatitude());
+                    musician.put("longitude", address.getLongitude());
+
+                    if(postMusicianAddress.get(0).getLocality() != null)
+                    {
+                        musician.put("location", address.getLocality());
+                    }
+                    else if(postMusicianAddress.get(0).getSubLocality() != null)
+                    {
+                        musician.put("location", address.getSubLocality());
+                    }
+                }
+            }
+            catch(IOException io)
+            {
+                System.out.println(io.getMessage());
+            }
         }
         if(distance != null && distance.getText() != null && musician != null)
         {

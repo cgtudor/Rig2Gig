@@ -50,7 +50,7 @@
         android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_below="@+id/name"
+        android:layout_below="@+id/venue_name_final"
         android:layout_alignBottom="@+id/userNameLabel"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="20dp"

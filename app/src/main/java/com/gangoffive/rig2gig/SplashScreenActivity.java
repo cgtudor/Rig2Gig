@@ -15,6 +15,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import org.identityconnectors.framework.impl.api.local.operations.SpiOperationLoggingUtil;
+
 public class SplashScreenActivity extends AppCompatActivity {
 
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
@@ -27,7 +29,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        //Uncomment this for login testing
+        System.out.println("@@@@2@@@@@@@@@@@@@@@@@@@@@@2 " + fAuth.getUid());
+
         if (fAuth.getCurrentUser() != null)
         {
             final String getUserId = fAuth.getUid();
@@ -44,7 +47,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                         {
                             Log.d(TAG, "Document exists!");
                             AccountPurposeActivity.userType = document.get("user-type").toString();
-                            startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                            if(getIntent().getStringExtra("OPEN_FRAGMENT") != null && getIntent().getStringExtra("OPEN_FRAGMENT").equals("COMMS")) {
+                                startActivity(new Intent(getApplicationContext(), LaunchCommsActivity.class));
+                            } else {
+                                startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
+                            }
                             finish();
                         }
                         else
