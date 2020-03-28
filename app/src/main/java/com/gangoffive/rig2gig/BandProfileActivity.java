@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,9 +30,11 @@ public class BandProfileActivity extends AppCompatActivity {
 
     private String mID;
     private final ArrayList<String> memberArray = new ArrayList<>();
+    private Button rateMeButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_band_profile);
 
@@ -109,6 +113,37 @@ public class BandProfileActivity extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(bandPhoto);
+
+        rateMeButton = findViewById(R.id.ratingBtn);
+
+        //setupRatingDialog();
+        //checkAlreadyRated();
+    }
+
+    /**
+     * This method is used to set up the rating dialog for users if they have not rated a Musician yet.
+     */
+    private void setupRatingDialog()
+    {
+        rateMeButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
+    }
+
+    /**
+     * This method is used to check whether or not the user viewing the Musician has already submitted a rating.
+     */
+    private void checkAlreadyRated()
+    {
+        //Use mID global variable to get the correct Musician Document from the Musician Collection in Firebase
+        //Then create check the "Already Rated" String[] to see if the logged in user has already submitted a rating.
+        //If they have, do not call setupRatingDialog() and replace the rating button on layout with appropriate text.
+        //Else if they haven't, call setupRatingDialog() to create the necessary steps for the user to rate this Musician.
     }
 
     /**

@@ -123,4 +123,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/location" />
 
+    <TextView
+        android:id="@+id/my_musician_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Musician Rating"
+        android:layout_margin="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/locationBar"/>
+
+    <RatingBar
+        android:id="@+id/rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_musician_rating"
+        android:numStars="0"
+        android:clickable="false"
+        android:max="5"
+        android:stepSize="0.5"/>
+
+    <Button
+        android:id="@+id/ratingBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rating_bar"
+        android:text="Rate Me!"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

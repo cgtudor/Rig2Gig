@@ -61,7 +61,7 @@ public class ChangePasswordDialog extends DialogFragment
     }
 
     /**
-     * This method is used to grab the logged in user's email form the database and send a reset password email to them.
+     * This method is used to grab the logged in user's email from the database and send a reset password email to them.
      * @param dialog This parameter represents the context.
      */
     private void sendEmail(DialogInterface dialog)

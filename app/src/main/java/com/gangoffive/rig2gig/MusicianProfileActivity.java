@@ -35,6 +35,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
 
     private String mID;
     private final ArrayList<String> bandArray = new ArrayList<>();
+    private Button rateMeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +97,37 @@ public class MusicianProfileActivity extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(musicianPhoto);
+
+        rateMeButton = findViewById(R.id.ratingBtn);
+
+        //setupRatingDialog();
+        //checkAlreadyRated();
+    }
+
+    /**
+     * This method is used to set up the rating dialog for users if they have not rated a Musician yet.
+     */
+    private void setupRatingDialog()
+    {
+        rateMeButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
+    }
+
+    /**
+     * This method is used to check whether or not the user viewing the Musician has already submitted a rating.
+     */
+    private void checkAlreadyRated()
+    {
+        //Use mID global variable to get the correct Musician Document from the Musician Collection in Firebase
+        //Then create check the "Already Rated" String[] to see if the logged in user has already submitted a rating.
+        //If they have, do not call setupRatingDialog() and replace the rating button on layout with appropriate text.
+        //Else if they haven't, call setupRatingDialog() to create the necessary steps for the user to rate this Musician.
     }
 
     /**
