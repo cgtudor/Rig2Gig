@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -70,6 +71,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
         final TextView distance = findViewById(R.id.venue_description_final);
         final TextView position = findViewById(R.id.position);
         final Button contact = findViewById(R.id.contact);
+        final Button profile = findViewById(R.id.profile);
 
         //Initialising the Google Map. See onMapReady().
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
@@ -95,6 +97,13 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+
+                        profile.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(MusicianListingDetailsActivity.this, MusicianProfileActivity.class).putExtra("EXTRA_MUSICIAN_ID", document.get("musician-ref").toString()));
+                            }
+                        });
 
                         /*Find the musician reference by looking for the musician ID in the "musicians" subfolder*/
                         DocumentReference musician = db.collection("musicians").document(document.get("musician-ref").toString());

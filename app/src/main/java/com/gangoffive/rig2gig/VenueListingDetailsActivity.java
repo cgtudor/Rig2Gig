@@ -99,6 +99,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         final TextView location = findViewById(R.id.location);
         final Button contact = findViewById(R.id.contact);
         final Button publish = findViewById(R.id.publish);
+        final Button profile = findViewById(R.id.profile);
 
         //Initialising the Google Map. See onMapReady().
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
@@ -134,6 +135,13 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                         Timestamp expiryDate = (Timestamp) document.get("expiry-date");
+
+                        profile.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(VenueListingDetailsActivity.this, VenueProfileActivity.class).putExtra("EXTRA_VENUE_ID", document.get("venue-ref").toString()));
+                            }
+                        });
 
                         /*Find the venue reference by looking for the venue ID in the "venues" subfolder*/
                         DocumentReference venue = db.collection("venues").document(document.get("venue-ref").toString());
