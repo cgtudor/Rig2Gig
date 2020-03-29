@@ -1,6 +1,7 @@
 package com.gangoffive.rig2gig;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -19,6 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -44,6 +46,8 @@ public class ListingManager
     private Map<String, Object> userInfo,listingInfo;
     private String collectionPath, imagePath, listingRef;
     private boolean needPayment;
+    private CreateAdvertisement activity;
+    private Drawable image;
 
 
 
@@ -54,7 +58,6 @@ public class ListingManager
      */
     ListingManager(String userRef, String type, String adRef)
     {
-        EspressoIdlingResource.increment();
         if (userRef != null)
         {
             if (type.equals("Band Performer") || type.equals("Musician Performer")
@@ -67,8 +70,7 @@ public class ListingManager
                 needPayment = false;
             }
             listingRef = adRef;
-            db = FirebaseFirestore.getInstance();
-            storage = FirebaseStorage.getInstance();
+            getFirebaseInstances();
             storageRef = storage.getReference();
             if (type.equals("Band Performer"))
             {
@@ -92,17 +94,14 @@ public class ListingManager
                 docRef = db.collection("musicians").document(userRef);
                 collectionPath = "performer-listings";
                 imagePath = "performance-listings";
-                if (listingRef.equals(""))
-                {
-                    imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");
-                }
+                if (listingRef.equals("")){
+                    imageRef = storageRef.child("/images/musicians/" + userRef + ".jpg");}
                 else
                 {
                     imageRef = storageRef.child("/images/"+ imagePath +"/" + listingRef + ".jpg");
                     listRef = db.collection(collectionPath).document(listingRef);
                     listingImage = storageRef.child("/images/" + imagePath +
-                            "/" + listingRef + ".jpg");
-                }
+                            "/" + listingRef + ".jpg");}
             }
             else if (type.equals("Band"))
             {
@@ -189,15 +188,17 @@ public class ListingManager
                         listingImage = storageRef.child("/images/" + imagePath +
                                 "/" + listingRef + ".jpg");
                     }
-                }
-            }
+                }            }
             else if (type.equals("User"))
             {
                 docRef = db.collection("users").document(userRef);
-                collectionPath = "users";
-            }
-        }
-        EspressoIdlingResource.decrement();
+                collectionPath = "users";}}
+    }
+
+    public void getFirebaseInstances()
+    {
+        db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     /**
@@ -208,51 +209,58 @@ public class ListingManager
         SUCCESS, IMAGE_FAILURE, LISTING_FAILURE
     };
 
+
     /**
      * download user details from database
      * @param activity interface of activity calling this method
      */
     public void getUserInfo(CreateAdvertisement activity)
     {
-        if (docRef != null)
-        {
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                /**
-                 * on successful database query, return data and image to calling activity
-                 */
-                public void onComplete(@NonNull Task<DocumentSnapshot> task)
-                {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            userInfo = document.getData();
-                            if (listingRef.equals("") || listingRef.equals("profileEdit"))
-                            {
-                                activity.onSuccessFromDatabase(userInfo);
-                            }
-                            else
-                            {
-                                getListing(activity);
-                            }
-                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-
-                        } else {
-                            Log.d(TAG, "No such document");
-                        }
-                    }
-                    else
-                    {
-                        Log.d(TAG, "get failed with ", task.getException());
-                    }
-                }
-            });
+        this.activity = activity;
+        if (docRef != null) {
+            docRef.get().addOnCompleteListener(getInfoListener);
         }
         else
         {
             activity.onSuccessFromDatabase(userInfo);
         }
+    }
 
+    private OnCompleteListener getInfoListener = new OnCompleteListener<DocumentSnapshot>() {
+        @Override
+        /**
+         * on successful database query, return data and image to calling activity
+         */
+        public void onComplete(@NonNull Task<DocumentSnapshot> task)
+        {
+            getUserInfoOnComplete(task);
+        }
+    };
+
+    public void getUserInfoOnComplete(@NonNull Task<DocumentSnapshot> task)
+    {
+        if (task.isSuccessful()) {
+            DocumentSnapshot document = task.getResult();
+            if (document.exists()) {
+                userInfo = document.getData();
+                if (listingRef.equals("") || listingRef.equals("profileEdit"))
+                {
+                    activity.onSuccessFromDatabase(userInfo);
+                }
+                else
+                {
+                    getListing(activity);
+                }
+                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+            } else {
+                Log.d(TAG, "No such document");
+            }
+        }
+        else
+        {
+            Log.d(TAG, "get failed with ", task.getException());
+        }
     }
 
     /**
@@ -261,31 +269,52 @@ public class ListingManager
      */
     public void getListing(CreateAdvertisement activity)
     {
-        listRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            /**
-             * on successful database query, return data and image to calling activity
-             */
-            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-            {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        listingInfo = document.getData();
-                        activity.onSuccessFromDatabase(userInfo,listingInfo);
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                }
-                else
-                {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
+        this.activity = activity;
+        listRef.get().addOnCompleteListener(getListingListener);
     }
+
+    private OnCompleteListener getListingListener = new OnCompleteListener<DocumentSnapshot>() {
+        @Override
+        /**
+         * on successful database query, return data and image to calling activity
+         */
+        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            getListingOnComplete(task);
+        }
+    };
+
+    public void getListingOnComplete(@NonNull Task<DocumentSnapshot> task)
+    {
+        if (task.isSuccessful()) {
+            DocumentSnapshot document = task.getResult();
+            if (document.exists()) {
+                listingInfo = document.getData();
+                activity.onSuccessFromDatabase(userInfo,listingInfo);
+                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+            }
+            else {
+                Log.d(TAG, "No such document");
+            }
+        }
+        else
+        {
+            Log.d(TAG, "get failed with ", task.getException());
+        }
+    }
+
+    private RequestListener imageListener = new RequestListener<Drawable>() {
+        @Override
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+            activity.onSuccessfulImageDownload();
+            return false;
+        }
+    };
 
     /**
      * Download image from database and set to image view
@@ -295,22 +324,12 @@ public class ListingManager
     {
         if (imageRef != null)
         {
-            GlideApp.with((Activity)activity)
+            GlideApp.get((Context)activity)
+                    .with((Activity)activity)
                     .load(imageRef)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            activity.onSuccessfulImageDownload();
-                            return false;
-                        }
-                    })
+                    .listener(imageListener)
                     .into(activity.getImageView());
         }
     }
@@ -333,6 +352,29 @@ public class ListingManager
         }
     }
 
+    private OnSuccessListener createAdListener = new OnSuccessListener<DocumentReference>() {
+        /**
+         * After successful creation of advertisement, attempt image upload
+         * @param documentReference database reference of created advertisement
+         */
+        @Override
+        public void onSuccess(DocumentReference documentReference) {
+            createAdvertisementOnComplete(documentReference);
+        }
+    };
+
+    private OnFailureListener failureListener = new OnFailureListener() {
+        /**
+         * After failed advertisement creation, send image failure message to the calling activity
+         * @param e exception
+         */
+        @Override
+        public void onFailure(@NonNull Exception e)
+        {
+            activity.handleDatabaseResponse(CreationResult.LISTING_FAILURE);
+        }
+    };
+
     /**
      * Create new record in database
      * @param listing map of data to be created as document
@@ -341,34 +383,21 @@ public class ListingManager
      */
     public void createAdvertisement (HashMap<String, Object> listing, Drawable image, CreateAdvertisement activity)
     {
+        this.image = image;
         listing.put("expiry-date", new Timestamp(getExpiryDate()));
         db.collection(collectionPath)
                 .add(listing)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    /**
-                     * After successful creation of advertisement, attempt image upload
-                     * @param documentReference database reference of created advertisement
-                     */
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        listingRef = documentReference.getId();
-                        listingImage = storageRef.child("/images/" + imagePath +
-                                "/" + listingRef + ".jpg");
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + listingRef);
-                        uploadImage(image, activity);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    /**
-                     * After failed advertisement creation, send image failure message to the calling activity
-                     * @param e exception
-                     */
-                    @Override
-                    public void onFailure(@NonNull Exception e)
-                    {
-                        activity.handleDatabaseResponse(CreationResult.LISTING_FAILURE);
-                    }
-                });
+                .addOnSuccessListener(createAdListener)
+                .addOnFailureListener(failureListener);
+    }
+
+    public void createAdvertisementOnComplete(DocumentReference documentReference)
+    {
+        listingRef = documentReference.getId();
+        listingImage = storageRef.child("/images/" + imagePath +
+                "/" + listingRef + ".jpg");
+        Log.d(TAG, "DocumentSnapshot written with ID: " + listingRef);
+        uploadImage(image, activity);
     }
 
     /**
@@ -420,28 +449,31 @@ public class ListingManager
      */
     public void uploadImage(Drawable image, CreateAdvertisement activity)
     {
-        UploadTask uploadTask = listingImage.putBytes(imageToByteArray(image));
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            /**
-             * After successful image upload, send success message to the calling activity
-             * @param taskSnapshot snapshot of image upload attempt
-             */
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                activity.handleDatabaseResponse(CreationResult.SUCCESS);
-            }
-        });
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            /**
-             * After failed image upload, send image failure message to the calling activity
-             * @param exception exception
-             */
-            @Override
-            public void onFailure(@NonNull Exception exception)
-            {
-                activity.handleDatabaseResponse(CreationResult.IMAGE_FAILURE);
-            }
-        });
+        if(image !=null)
+        {
+            UploadTask uploadTask = listingImage.putBytes(imageToByteArray(image));
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                /**
+                 * After successful image upload, send success message to the calling activity
+                 * @param taskSnapshot snapshot of image upload attempt
+                 */
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    activity.handleDatabaseResponse(CreationResult.SUCCESS);
+                }
+            });
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                /**
+                 * After failed image upload, send image failure message to the calling activity
+                 * @param exception exception
+                 */
+                @Override
+                public void onFailure(@NonNull Exception exception)
+                {
+                    activity.handleDatabaseResponse(CreationResult.IMAGE_FAILURE);
+                }
+            });
+        }
     }
 
     /**
@@ -488,5 +520,89 @@ public class ListingManager
             calendar.set(Calendar.MILLISECOND, 0);
         }
         return calendar.getTime();
+    }
+
+    public void setDb(FirebaseFirestore db) {
+        this.db = db;
+    }
+
+    public void setStorage(FirebaseStorage storage) {
+        this.storage = storage;
+    }
+
+    public void setDocRef(DocumentReference docRef) {
+        this.docRef = docRef;
+    }
+
+    public void setListRef(DocumentReference listRef) {
+        this.listRef = listRef;
+    }
+
+    public void setStorageRef(StorageReference storageRef) {
+        this.storageRef = storageRef;
+    }
+
+    public void setImageRef(StorageReference imageRef) {
+        this.imageRef = imageRef;
+    }
+
+    public void setListingImage(StorageReference listingImage) {
+        this.listingImage = listingImage;
+    }
+
+    public void setUserInfo(Map<String, Object> userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public void setListingInfo(Map<String, Object> listingInfo) {
+        this.listingInfo = listingInfo;
+    }
+
+    public Map<String, Object> getUserInfo() {
+        return userInfo;
+    }
+
+    public Map<String, Object> getListingInfo() {
+        return listingInfo;
+    }
+
+    public String getCollectionPath() {
+        return collectionPath;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public boolean isNeedPayment() {
+        return needPayment;
+    }
+
+    public FirebaseFirestore getDb() {
+        return db;
+    }
+
+    public FirebaseStorage getStorage() {
+        return storage;
+    }
+
+    public OnCompleteListener getGetInfoListener() {
+        return getInfoListener;
+    }
+
+    public void setGetInfoListener(OnCompleteListener getInfoListener) {
+        this.getInfoListener = getInfoListener;
+    }
+
+    public void setActivity(CreateAdvertisement activity) {
+        this.activity = activity;
+    }
+
+    public StorageReference getListingImage() {
+        return listingImage;
+    }
+
+    public void setImage(Drawable image) {
+        this.image = image;
     }
 }
