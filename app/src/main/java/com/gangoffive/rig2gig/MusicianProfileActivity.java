@@ -16,9 +16,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -29,6 +31,12 @@ public class MusicianProfileActivity extends AppCompatActivity {
     private String mID;
     private final ArrayList<String> bandArray = new ArrayList<>();
     private Button rateMeButton;
+    private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
+    private final CollectionReference musicianReference = FSTORE.collection("musicians");
+    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private final String USERID = fAuth.getUid();
+    private final CollectionReference userReference = FSTORE.collection("users");
+    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +115,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                
+
             }
         });
     }
@@ -118,9 +126,37 @@ public class MusicianProfileActivity extends AppCompatActivity {
     private void checkAlreadyRated()
     {
         //Use mID global variable to get the correct Musician Document from the Musician Collection in Firebase
-        //Then create check the "Already Rated" String[] to see if the logged in user has already submitted a rating.
+        //Then create and check the "Already Rated" String[] to see if the logged in user has already submitted a rating.
         //If they have, do not call setupRatingDialog() and replace the rating button on layout with appropriate text.
         //Else if they haven't, call setupRatingDialog() to create the necessary steps for the user to rate this Musician.
+
+        userReference.document(USERID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+                //Determine whether the logged in user viewing the profile is a Band or Venue.
+                if(task.getResult().get("user-type").equals("Musician"))
+                {
+                    musicianReference.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                        {
+                            String abc = task.getResult().get("").toString();
+                        }
+                    });
+                }
+                else if(task.getResult().get("user-type").equals("Venue"))
+                {
+
+                }
+                else
+                {
+                    System.out.println(TAG + " ERROR! user-type neither Musician or Venue");
+                }
+            }
+        });
     }
 
     /**
