@@ -50,8 +50,7 @@ public class ListingManager
     private Drawable image;
     private UploadTask uploadTask;
     private Bitmap bitmap;
-
-
+    private Calendar calendar;
 
     /**
      * Constructor for ListingManager
@@ -387,7 +386,9 @@ public class ListingManager
     public void createAdvertisement (HashMap<String, Object> listing, Drawable image, CreateAdvertisement activity)
     {
         this.image = image;
-        listing.put("expiry-date", new Timestamp(getExpiryDate()));
+        calendar = Calendar.getInstance();
+        getExpiryDate();
+        listing.put("expiry-date", new Timestamp(calendar.getTime()));
         db.collection(collectionPath)
                 .add(listing)
                 .addOnSuccessListener(createAdListener)
@@ -402,7 +403,6 @@ public class ListingManager
         Log.d(TAG, "DocumentSnapshot written with ID: " + listingRef);
         uploadImage(image, activity);
     }
-
 
     private OnSuccessListener editAdListener = new OnSuccessListener<Void>() {
         @Override
@@ -495,16 +495,15 @@ public class ListingManager
     {
         if(image != null)
         {
-            try
-            {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            try            {
                 bitmap = ((BitmapDrawable) image).getBitmap();
             }
-            catch (Exception e)
-            {
-                return new byte[] {};
+            catch (Exception e){ }
+            try {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             }
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            catch (Exception e) { }
             return stream.toByteArray();
         }
         else
@@ -525,25 +524,31 @@ public class ListingManager
     /**
      * calculate expiry date of listing (31 days, rounded up to midnight)
      */
-    public Date getExpiryDate() {
-        Calendar calendar = Calendar.getInstance();
-        if (needPayment)
+    public void getExpiryDate()
+    {
+        if (needPayment == true)
         {
             calendar.add(Calendar.DATE, -1);
         }
-        else if (Calendar.HOUR_OF_DAY == 0
-                && Calendar.MINUTE == 0
-                && Calendar.SECOND == 0
-                && Calendar.MILLISECOND == 0) {
+        else if (calendar.get(Calendar.HOUR_OF_DAY) == 0
+                && calendar.get(Calendar.MINUTE) == 0
+                && calendar.get(Calendar.SECOND) == 0
+                && calendar.get(Calendar.MILLISECOND) == 0)
+        {
             calendar.add(Calendar.DAY_OF_YEAR, 31);
-        } else {
+        }
+        else
+            {
             calendar.add(Calendar.DAY_OF_YEAR, 32);
             calendar.set(Calendar.HOUR_OF_DAY, 0);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
         }
-        return calendar.getTime();
+    }
+
+    public StorageReference getStorageRef() {
+        return storageRef;
     }
 
     public void setDb(FirebaseFirestore db) {
@@ -566,6 +571,8 @@ public class ListingManager
         this.storageRef = storageRef;
     }
 
+    public StorageReference getImageRef() {return imageRef;}
+
     public void setImageRef(StorageReference imageRef) {
         this.imageRef = imageRef;
     }
@@ -582,59 +589,39 @@ public class ListingManager
         this.listingInfo = listingInfo;
     }
 
-    public Map<String, Object> getUserInfo() {
-        return userInfo;
-    }
+    public Map<String, Object> getUserInfo() {return userInfo;}
 
-    public Map<String, Object> getListingInfo() {
-        return listingInfo;
-    }
+    public Map<String, Object> getListingInfo() {return listingInfo;}
 
-    public String getCollectionPath() {
-        return collectionPath;
-    }
+    public String getCollectionPath() {return collectionPath;}
 
-    public String getImagePath() {
-        return imagePath;
-    }
+    public String getImagePath() {return imagePath;}
 
-    public boolean isNeedPayment() {
-        return needPayment;
-    }
+    public boolean isNeedPayment() {return needPayment;}
 
-    public FirebaseFirestore getDb() {
-        return db;
-    }
+    public FirebaseFirestore getDb() {return db;}
 
-    public FirebaseStorage getStorage() {
-        return storage;
-    }
-
-    public OnCompleteListener getGetInfoListener() {
-        return getInfoListener;
-    }
-
-    public void setGetInfoListener(OnCompleteListener getInfoListener) {
-        this.getInfoListener = getInfoListener;
-    }
+    public FirebaseStorage getStorage() {return storage;}
 
     public void setActivity(CreateAdvertisement activity) {
         this.activity = activity;
     }
 
-    public StorageReference getListingImage() {
-        return listingImage;
-    }
+    public StorageReference getListingImage() {return listingImage;}
 
     public void setImage(Drawable image) {
         this.image = image;
     }
 
-    public DocumentReference getListRef() {
-        return listRef;
-    }
+    public DocumentReference getListRef() {return listRef;}
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
     }
+
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
+    }
+
+    public Calendar getCalendar() {return calendar;}
 }

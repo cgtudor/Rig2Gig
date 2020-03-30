@@ -29,14 +29,18 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Array;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyByte;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doCallRealMethod;
@@ -448,7 +452,128 @@ public class ListingManagerTest{
         ListingManager manager = dummyConstructor("testRef", "Venue", "testRef");
         Drawable mockImage = mock(Drawable.class);
         Bitmap mockBitmap = mock(Bitmap.class);
-        //when(mockBitmap.compress(any(),any(),any())).thenReturn(true);
+        when(mockBitmap.compress(any(),anyInt(),any())).thenReturn(true);
         manager.setBitmap(mockBitmap);
+        manager.imageToByteArray(mockImage);
+        verify(mockBitmap,times(1)).compress(any(),anyInt(),any());
+    }
+
+    @Test
+    public void testImageToByteArrayNullImage()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Venue", "testRef");
+        Bitmap mockBitmap = mock(Bitmap.class);
+        when(mockBitmap.compress(any(),anyInt(),any())).thenReturn(true);
+        manager.setBitmap(mockBitmap);
+        manager.imageToByteArray(null);
+        verify(mockBitmap,times(0)).compress(any(),anyInt(),any());
+    }
+
+    @Test
+    public void testGetExpiryDatePaymentNeeded()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Venue", "testRef");
+        Calendar testCalendar = Calendar.getInstance();
+        manager.setCalendar(testCalendar);
+        int expectedNumber = 2;
+        manager.getCalendar().set(Calendar.DATE,expectedNumber);
+        manager.getCalendar().set(Calendar.HOUR_OF_DAY,expectedNumber);
+        manager.getCalendar().set(Calendar.MINUTE,expectedNumber);
+        manager.getCalendar().set(Calendar.SECOND,expectedNumber);
+        manager.getCalendar().set(Calendar.MILLISECOND,expectedNumber);
+        manager.getExpiryDate();
+        testCalendar = manager.getCalendar();
+        assertThat(testCalendar.get(Calendar.HOUR_OF_DAY),is(equalTo(expectedNumber)));
+        assertThat(testCalendar.get(Calendar.MINUTE),is(equalTo(expectedNumber)));
+        assertThat(testCalendar.get(Calendar.SECOND),is(equalTo(expectedNumber)));
+        assertThat(testCalendar.get(Calendar.MILLISECOND),is(equalTo(expectedNumber)));
+        assertThat(testCalendar.get(Calendar.DATE),is(equalTo(expectedNumber - 1)));
+    }
+
+    @Test
+    public void testGetExpiryNotMidnight()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Band", "testRef");
+        Calendar testCalendar = Calendar.getInstance();
+        manager.setCalendar(testCalendar);
+        int notMidnightNumber = 2;
+        int expectedNumber = 0;
+        manager.getCalendar().set(Calendar.HOUR_OF_DAY,notMidnightNumber);
+        manager.getCalendar().set(Calendar.MINUTE,notMidnightNumber);
+        manager.getCalendar().set(Calendar.SECOND,notMidnightNumber);
+        manager.getCalendar().set(Calendar.MILLISECOND,notMidnightNumber);
+        int expectedDate = manager.getCalendar().get(Calendar.DAY_OF_YEAR) + 32;
+        manager.getExpiryDate();
+        testCalendar = manager.getCalendar();
+        assertThat(testCalendar.get(Calendar.HOUR_OF_DAY),is(equalTo(expectedNumber)));
+        assertThat(testCalendar.get(Calendar.MINUTE),is(equalTo(expectedNumber)));
+        assertThat(testCalendar.get(Calendar.SECOND),is(equalTo(expectedNumber)));
+        assertThat(testCalendar.get(Calendar.MILLISECOND),is(equalTo(expectedNumber)));
+        assertThat(testCalendar.get(Calendar.DAY_OF_YEAR),is(equalTo(expectedDate)));
+    }
+
+    @Test
+    public void testGetExpiryIsMidnight()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Band", "testRef");
+        Calendar testCalendar = Calendar.getInstance();
+        manager.setCalendar(testCalendar);
+        int expectedNumber = 0;
+
+        manager.getCalendar().set(Calendar.HOUR_OF_DAY,expectedNumber);
+        manager.getCalendar().set(Calendar.MINUTE,expectedNumber);
+        manager.getCalendar().set(Calendar.SECOND,expectedNumber);
+        manager.getCalendar().set(Calendar.MILLISECOND,expectedNumber);
+        int expectedDate = manager.getCalendar().get(Calendar.DAY_OF_YEAR) + 31;
+        manager.getExpiryDate();
+        testCalendar = manager.getCalendar();
+        assertThat(testCalendar.get(Calendar.HOUR_OF_DAY),is(equalTo(expectedNumber)));
+        assertThat(testCalendar.get(Calendar.MINUTE),is(equalTo(expectedNumber)));
+        assertThat(testCalendar.get(Calendar.SECOND),is(equalTo(expectedNumber)));
+        assertThat(testCalendar.get(Calendar.MILLISECOND),is(equalTo(expectedNumber)));
+        assertThat(testCalendar.get(Calendar.DAY_OF_YEAR),is(equalTo(expectedDate)));
+    }
+
+    @Test
+    public void testSetStorageRef()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Band", "testRef");
+        StorageReference mock = mock(StorageReference.class);
+        manager.setStorageRef(mock);
+        assertThat(manager.getStorageRef(),is(equalTo(mock)));
+    }
+
+    @Test
+    public void testSetListRef()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Band", "testRef");
+        DocumentReference mock = mock(DocumentReference.class);
+        manager.setListRef(mock);
+        assertThat(manager.getListRef(),is(equalTo(mock)));
+    }
+
+    @Test
+    public void testSetListingInfo()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Band", "testRef");
+        Map mock = mock(Map.class);
+        manager.setListingInfo(mock);
+        assertThat(manager.getListingInfo(),is(equalTo(mock)));
+    }
+
+    @Test
+    public void testSetImageRef()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Band", "testRef");
+        StorageReference mock = mock(StorageReference.class);
+        manager.setImageRef(mock);
+        assertThat(manager.getImageRef(),is(equalTo(mock)));
+    }
+
+    @Test
+    public void testIsNeedPayment()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Band", "testRef");
+        assertThat(manager.isNeedPayment(),is(equalTo(false)));
     }
 }
