@@ -101,6 +101,10 @@ public class ViewMusiciansFragment extends Fragment
                     }
                 });
 
+        while(bandMembers.isEmpty()) {
+
+        }
+
         colRef = db.collection("musician-listings");
 
         musicianListings = new ArrayList<>();
@@ -127,7 +131,6 @@ public class ViewMusiciansFragment extends Fragment
                                             documentSnapshot.getId(),
                                             documentSnapshot.get("musician-ref").toString(),
                                             positions);
-
                                     if (!bandMembers.contains(documentSnapshot.get("musician-ref").toString())) {
                                         musicianListings.add(musicianListing);
                                     }
