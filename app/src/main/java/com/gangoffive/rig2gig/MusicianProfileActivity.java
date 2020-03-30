@@ -78,7 +78,27 @@ public class MusicianProfileActivity extends AppCompatActivity {
                         location.setText(document.get("location").toString());
                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
                         bandArray.addAll((ArrayList<String>) document.get("bands"));
-                        bands.setText("Bands: " + bandArray.toString().substring(1, bandArray.toString().length()-1));
+                        bands.setText("Bands: ");
+                        for(String band : bandArray)
+                        {
+                            db.collection("bands").document(band)
+                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if(task.isSuccessful())
+                                    {
+                                        DocumentSnapshot bandDoc = task.getResult();
+                                        if(bandDoc.exists())
+                                        {
+                                            String bandName = bandDoc.get("name").toString();
+                                            bands.setText(bands.getText().equals("Bands: ") ?
+                                                    "Bands: " + bandName :
+                                                    bands.getText() + ", " + bandName);
+                                        }
+                                    }
+                                }
+                            });
+                        }
                     } else {
                         Log.d("FIRESTORE", "No such document");
                     }

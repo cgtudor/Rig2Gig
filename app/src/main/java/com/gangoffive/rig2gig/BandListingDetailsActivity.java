@@ -95,6 +95,7 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
         final TextView description = findViewById(R.id.description);
         final Button contact = findViewById(R.id.contact);
         final Button publish = findViewById(R.id.publish);
+        final Button profile = findViewById(R.id.profile);
 
         //Initialising the Google Map. See onMapReady().
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
@@ -115,7 +116,14 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
-                        listingOwner.append(document.get("lisiting-owner").toString());
+                        listingOwner.append(document.get("listing-owner").toString());
+
+                        profile.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(BandListingDetailsActivity.this, BandProfileActivity.class).putExtra("EXTRA_BAND_ID", document.get("band-ref").toString()));
+                            }
+                        });
 
                         /*Find the band reference by looking for the band ID in the "bands" subfolder*/
                         DocumentReference band = db.collection("bands").document(document.get("band-ref").toString());

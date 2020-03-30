@@ -90,6 +90,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
         final TextView distance = findViewById(R.id.venue_description_final);
         final Button contact = findViewById(R.id.contact);
         final Button publish = findViewById(R.id.publish);
+        final Button profile = findViewById(R.id.profile);
 
         //Initialising the Google Map. See onMapReady().
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
@@ -116,6 +117,17 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
 
                         String performerType = document.get("performer-type").toString().equals("Band") ? "bands" : "musicians";
                         Timestamp expiryDate = (Timestamp) document.get("expiry-date");
+
+                        profile.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(performerType.equals("bands")) {
+                                    startActivity(new Intent(PerformanceListingDetailsActivity.this, BandProfileActivity.class).putExtra("EXTRA_BAND_ID", document.get("performer-ref").toString()));
+                                } else {
+                                    startActivity(new Intent(PerformanceListingDetailsActivity.this, MusicianProfileActivity.class).putExtra("EXTRA_MUSICIAN_ID", document.get("performer-ref").toString()));
+                                }
+                            }
+                        });
 
                         /*Find the performer reference by looking for the performer ID in the "performers" subfolder*/
                         DocumentReference performer = db.collection(performerType).document(document.get("performer-ref").toString());
