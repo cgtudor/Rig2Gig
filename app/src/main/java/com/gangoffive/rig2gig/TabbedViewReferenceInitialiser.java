@@ -18,4 +18,6 @@ public interface TabbedViewReferenceInitialiser {
      * commence tab preservation process where required
      */
     public void beginTabPreservation();
+
+    public void setMapping(boolean isMapping);
 }

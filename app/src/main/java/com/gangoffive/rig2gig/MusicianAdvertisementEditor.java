@@ -418,6 +418,11 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         tabPreserver.preserveTabState();
     }
 
+    @Override
+    public void setMapping(boolean isMapping) {
+
+    }
+
     /**
      * handles activity results
      * @param requestCode

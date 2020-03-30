@@ -52,11 +52,16 @@ public class TabStatePreserver {
      * Determine if sufficient loops have occurred to ensure tabs are preserved
      */
     public void breakOut() {
+        if (saveLoopCount == 15)
+        {
+            tabView.setMapping(true);
+        }
         saveLoopCount++;
         if (saveLoopCount > 15)
         {
             breakout = true;
             saveLoopCount = 0;
+            tabView.setMapping(false);
         }
     }
 

@@ -2,6 +2,8 @@ package com.gangoffive.rig2gig;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import com.google.android.gms.tasks.Continuation;
@@ -11,6 +13,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -18,7 +22,9 @@ import com.google.firebase.storage.UploadTask;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -31,12 +37,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyByte;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 public class ListingManagerTest{
 
@@ -52,7 +60,8 @@ public class ListingManagerTest{
         userData = new HashMap<>();
         userData.put("name","testName");
         listingData = new HashMap<>();
-        listingData.put("data","testData");
+        listingData.put("data1","testData1");
+        listingData.put("data2","testData2");
     }
 
 
@@ -364,19 +373,82 @@ public class ListingManagerTest{
     @Test
     public void testcreateAdvertisementOnCompleteListingRef()
     {
-        Drawable mockImage = mock(Drawable.class);
         ListingManager manager = dummyConstructor("testRef", "Venue", "");
         DocumentReference mockDoc = mock(DocumentReference.class);
         when(mockDoc.getId()).thenReturn("testRef");
         StorageReference parentRef = mock(StorageReference.class);
         
         manager.setListingImage(parentRef);
-        manager.setImage(mockImage);
+        manager.setImage(null);
         manager.createAdvertisementOnComplete(mockDoc);
         assertThat(manager.getListingRef(),is(equalTo("testRef")));
         verify(mockDoc,times(1)).getId();
-        verify(parentRef,times(1)).putBytes(any());
     }
 
+    @Test
+    public void testEditAdvertInDatabase()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Venue", "testRef");
+        FirebaseFirestore mockDb = mock(FirebaseFirestore.class);
+        CollectionReference mockColl = mock(CollectionReference.class);
+        Task mockTask = mock(Task.class);
+        when(mockDb.runTransaction(any())).thenReturn(mockTask);
+        when(mockTask.addOnSuccessListener(any())).thenReturn(mock(Task.class));
+        when(mockTask.addOnFailureListener(any())).thenReturn(mock(Task.class));
+        manager.setDb(mockDb);
+        Drawable mockDrawable = mock(Drawable.class);
+        CreateAdvertisement mockActivity = mock(CreateAdvertisement.class);
+        manager.postDataToDatabase(listingData,mockDrawable,mockActivity);
+        verify(mockDb,times(1)).runTransaction(any());
+        assertThat(manager.getListingInfo(),is(equalTo(listingData)));
+    }
 
+    @Test
+    public void testApplyEdit() throws FirebaseFirestoreException {
+        ListingManager manager = dummyConstructor("testRef", "Venue", "testRef");
+        manager.setListingInfo(listingData);
+        Transaction mockTransaction = mock(Transaction.class);
+        when(mockTransaction.update(any(),any())).thenReturn(mockTransaction);
+        manager.applyEdit(mockTransaction);
+        verify(mockTransaction,times(1)).get(any());
+        verify(mockTransaction,times(listingData.size())).update(any(),anyString(),any());
+    }
+
+    @Test
+    public void testEditAdvertisementOnCompleteNullImage()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Venue", "testRef");
+        CreateAdvertisement mockActivity = mock(CreateAdvertisement.class);
+        manager.setActivity(mockActivity);
+        manager.editAdvertisementOnComplete();
+        verify(mockActivity,times(1)).handleDatabaseResponse(any());
+    }
+
+    @Test
+    public void testEditAdvertisementOnCompleteValidImage()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Venue", "testRef");
+        Drawable mockImage = mock(Drawable.class);
+        manager.setImage(mockImage);
+        CreateAdvertisement mockActivity = mock(CreateAdvertisement.class);
+        manager.setActivity(mockActivity);
+        StorageReference mockListImage = mock(StorageReference.class);
+        UploadTask mockUp = mock(UploadTask.class);
+        when(mockListImage.putBytes(any())).thenReturn(mockUp);
+        manager.setListingImage(mockListImage);
+        manager.editAdvertisementOnComplete();
+        verify(mockListImage,times(1)).putBytes(any());
+        verify(mockUp,times(1)).addOnSuccessListener(any());
+        verify(mockUp,times(1)).addOnFailureListener(any());
+    }
+
+    @Test
+    public void testImageToByteArray()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Venue", "testRef");
+        Drawable mockImage = mock(Drawable.class);
+        Bitmap mockBitmap = mock(Bitmap.class);
+        //when(mockBitmap.compress(any(),any(),any())).thenReturn(true);
+        manager.setBitmap(mockBitmap);
+    }
 }

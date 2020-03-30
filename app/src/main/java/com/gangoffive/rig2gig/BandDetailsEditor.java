@@ -330,6 +330,11 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         tabPreserver.preserveTabState();
     }
 
+    @Override
+    public void setMapping(boolean isMapping) {
+
+    }
+
     /**
      * handles activity results
      * @param requestCode

@@ -27,6 +27,7 @@ import java.util.Map;
 
 public class MusicianDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
+    private GooglePlacesAutoSuggestAdapter googleAdapter;
     private Geocoder geocoder;
     private TextView name, distance, genres;
     private AutoCompleteTextView location;
@@ -40,6 +41,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             R.layout.fragment_musician_details_changer};
     private Drawable chosenPic;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
+    private boolean mapping;
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
@@ -105,7 +107,9 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         type = "Musician";
         listingManager = new ListingManager(musicianRef, type, listingRef);
         listingManager.getUserInfo(this);
+        mapping = false;
         geocoder = new Geocoder(this, Locale.getDefault());
+        googleAdapter = new GooglePlacesAutoSuggestAdapter(MusicianDetailsEditor.this, android.R.layout.simple_list_item_1);
     }
 
     /**
@@ -161,7 +165,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         {
             if(location.getAdapter() == null)
             {
-                location.setAdapter(new GooglePlacesAutoSuggestAdapter(MusicianDetailsEditor.this, android.R.layout.simple_list_item_1));
+                location.setAdapter(googleAdapter);
             }
 
             location.setOnFocusChangeListener(editTextFocusListener);
@@ -401,8 +405,9 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         {
             musician.put("name",name.getText().toString());
         }
-        if(location != null && location.getText() != null && musician != null)
+        if(location != null && location.getText() != null && musician != null && mapping == true)
         {
+            mapping = false;
             try
             {
                 String musicianName = location.getText().toString();
@@ -500,5 +505,9 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
 
     public void setTabPreserver(TabStatePreserver tabPreserver) {
         this.tabPreserver = tabPreserver;
+    }
+
+    public void setMapping(boolean isMapping) {
+        mapping = isMapping;
     }
 }

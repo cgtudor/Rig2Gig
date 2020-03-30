@@ -514,6 +514,11 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         tabPreserver.preserveTabState();
     }
 
+    @Override
+    public void setMapping(boolean isMapping) {
+
+    }
+
     /**
      * Save values of tabs that may be destroyed
      */

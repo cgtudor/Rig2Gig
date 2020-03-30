@@ -309,6 +309,11 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         tabPreserver.preserveTabState();
     }
 
+    @Override
+    public void setMapping(boolean isMapping) {
+
+    }
+
     /**
      * handles activity results
      * @param requestCode

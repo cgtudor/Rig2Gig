@@ -48,6 +48,8 @@ public class ListingManager
     private boolean needPayment;
     private CreateAdvertisement activity;
     private Drawable image;
+    private UploadTask uploadTask;
+    private Bitmap bitmap;
 
 
 
@@ -372,6 +374,7 @@ public class ListingManager
         public void onFailure(@NonNull Exception e)
         {
             activity.handleDatabaseResponse(CreationResult.LISTING_FAILURE);
+            Log.w(TAG, "Transaction failure.", e);
         }
     };
 
@@ -400,6 +403,13 @@ public class ListingManager
         uploadImage(image, activity);
     }
 
+
+    private OnSuccessListener editAdListener = new OnSuccessListener<Void>() {
+        @Override
+        public void onSuccess(Void aVoid) {
+            editAdvertisementOnComplete();}
+    };
+
     /**
      * Edit record in database
      * @param listing map of data to be edited
@@ -408,38 +418,38 @@ public class ListingManager
      */
     public void editAdvertisement (HashMap<String, Object> listing, Drawable image, CreateAdvertisement activity)
     {
+        setListingInfo(listing);
         db.runTransaction(new Transaction.Function<Void>() {
             @Override
             public Void apply(Transaction transaction) throws FirebaseFirestoreException {
-                DocumentSnapshot snapshot = transaction.get(listRef);
-                for (String key : listing.keySet())
-                {
-                    transaction.update(listRef, key, listing.get(key));
-                }
+                applyEdit(transaction);
                 return null;
             }
         })
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                if (image != null)
-                {
-                    uploadImage(image, activity);
-                }
-                else
-                {
-                    activity.handleDatabaseResponse(CreationResult.SUCCESS);
-                }
-                Log.d(TAG, "Transaction success!");
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        activity.handleDatabaseResponse(CreationResult.LISTING_FAILURE);
-                        Log.w(TAG, "Transaction failure.", e);
-                    }
-                });
+                .addOnSuccessListener(editAdListener)
+                .addOnFailureListener(failureListener);
+    }
+
+    public void applyEdit (Transaction transaction) throws FirebaseFirestoreException
+    {
+        DocumentSnapshot snapshot = transaction.get(listRef);
+        for (String key : listingInfo.keySet())
+        {
+            transaction.update(listRef, key, listingInfo.get(key));
+        }
+    }
+
+    public void editAdvertisementOnComplete ()
+    {
+        if (image != null)
+        {
+            uploadImage(image, activity);
+        }
+        else
+        {
+            activity.handleDatabaseResponse(CreationResult.SUCCESS);
+        }
+        Log.d(TAG, "Transaction success!");
     }
 
     /**
@@ -451,7 +461,7 @@ public class ListingManager
     {
         if(image !=null)
         {
-            UploadTask uploadTask = listingImage.putBytes(imageToByteArray(image));
+            uploadTask = listingImage.putBytes(imageToByteArray(image));
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 /**
                  * After successful image upload, send success message to the calling activity
@@ -483,10 +493,24 @@ public class ListingManager
      */
     public byte[] imageToByteArray(Drawable image)
     {
-        Bitmap bitmap = ((BitmapDrawable) image).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        return stream.toByteArray();
+        if(image != null)
+        {
+            try
+            {
+                bitmap = ((BitmapDrawable) image).getBitmap();
+            }
+            catch (Exception e)
+            {
+                return new byte[] {};
+            }
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            return stream.toByteArray();
+        }
+        else
+        {
+            return new byte[] {};
+        }
     }
 
     /**
@@ -604,5 +628,13 @@ public class ListingManager
 
     public void setImage(Drawable image) {
         this.image = image;
+    }
+
+    public DocumentReference getListRef() {
+        return listRef;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 }
