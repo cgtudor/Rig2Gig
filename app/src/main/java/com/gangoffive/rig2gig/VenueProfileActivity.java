@@ -224,178 +224,38 @@ public class VenueProfileActivity extends AppCompatActivity {
 
          */
 
-        viewerRatingsReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType);
+        ratingDocReference = FSTORE.collection("ratings").document(viewerRef);
+                //.collection(viewerType);
 
         //FSTORE.collection("ratings").document(vID).collection(viewerType).document(viewerRef);
 
-        viewerRatingsReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+        ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task)
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
             {
-                List venueRatingInDB = task.getResult().getDocuments();
+                HashMap<String, String> ratedMap = (HashMap<String, String>) task.getResult().get("rated");
 
-                venueRatingInDB.isEmpty();
-                //venueRatingInDB.get(0);
-
-
-
-                if(!venueRatingInDB.isEmpty()) //Its not the very first review in the viewer type collection.
+                if (ratedMap != null && ratedMap.containsKey(vID))//Our map isn't null and we have reviewed this Venue before.
                 {
-                    System.out.println(TAG + " venueRatingInDB list is not empty!");
+                    System.out.println(TAG + " viewerRef found in ratedMap");
 
-                    if(venueRatingInDB.contains(viewerRef))
-                    {
-                        System.out.println(TAG + " viewerRef found in viewerType collection");
-                        //A rating has already been submitted by the viewer. Display their rating.
-                        viewerRatingsReference.document(viewerRef).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-                        {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-                            {
-                                System.out.println(TAG + " getting venue-rating from ");
+                    String viewerRating = ratedMap.get(vID);
 
-                                String viewerRating = task.getResult().get("venue-rating").toString();
+                    System.out.println(TAG + " Setting viewer rating on profile.");
 
-                                TextView viewer_rating_xml = findViewById(R.id.viewer_rating);
-                                viewer_rating_xml.setText("You rated " + venueName + " " + viewerRating + " stars!");
-                            }
-                        });
-                    }
-                    else
-                    {
-                        Button rating_button_xml = findViewById(R.id.rating_button);
-                        rating_button_xml.setVisibility(View.VISIBLE);
-                    }
+                    TextView viewer_rating_xml = findViewById(R.id.viewer_rating);
+                    viewer_rating_xml.setText("You rated " + venueName.getText().toString() + " " + viewerRating + " stars!");
+                    viewer_rating_xml.setVisibility(View.VISIBLE);
                 }
                 else
                 {
-                    System.out.println(TAG + " venueRatingInDB list is empty!");
+                    //We haven't reviewed this Venue before.
+                    Button rating_button_xml = findViewById(R.id.rating_button);
+                    rating_button_xml.setVisibility(View.VISIBLE);
                 }
-
-
-                System.out.println(TAG + " " + venueRatingInDB);
-
-                //If null then viewer as not rated this Venue.
-                /*if(venueRatingInDB == null) //No ratings currently in DB for this venue.
-                {
-
-
-                    //Following comment is to be used once the user submits a review.
-                    //HashMap<String, Object> venueRatings = new HashMap<>();
-
-                    venueRatings.put("rated-as", "unrated");
-
-                    ratingDocReference.set(venueRatings).addOnSuccessListener(new OnSuccessListener<Void>()
-                    {
-                        @Override
-                        public void onSuccess(Void aVoid)
-                        {
-                            System.out.println(TAG + " Venue hasn't been rated before, creating new fields.");
-
-                            venueRating = task.getResult().get("venue-rating").toString();
-                            numOfVenueRatings = Integer.parseInt(task.getResult().get("venue-rating-count").toString());
-                            totaledVenueRatings = Integer.parseInt(task.getResult().get("venue-rating-total").toString());
-                            venueRatingBar.setVisibility(View.VISIBLE);
-                        }
-                    }).addOnFailureListener(new OnFailureListener()
-                    {
-                        @Override
-                        public void onFailure(@NonNull Exception e)
-                        {
-                            System.out.println(TAG + " Venue hasn't been rated before, unable to create new fields.");
-                            System.out.println(e.getMessage().toString());
-                        }
-                    });
-                }
-                else
-                {
-                    venueRating = task.getResult().get("venue-rating").toString();
-                    numOfVenueRatings = Integer.parseInt(task.getResult().get("venue-rating-count").toString());
-                    totaledVenueRatings = Integer.parseInt(task.getResult().get("venue-rating-total").toString());
-                    venueRatingBar.setVisibility(View.VISIBLE);
-                }
-
-                if(numOfVenueRatings >= 3)
-                {
-                    venueRatingBar.setRating(Float.parseFloat(venueRating));
-                }
-                else
-                {
-                    //Don't show rating in stars. Show "Not enough ratings gathered yet".
-                    TextView notEnoughRatings = findViewById(R.id.unrated);
-                    notEnoughRatings.setVisibility(View.VISIBLE);
-                }*/
             }
         });
-            /*@Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-            {
-
-
-        /*userReference.document(USERID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-            {
-                //Determine whether the logged in user viewing the profile is a Band or Venue.
-                if(task.getResult().get("user-type").equals("Musician"))
-                {
-                    venueReference.document(vID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-                    {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task)
-                        {
-                            //We ignore the casting exception here because we know "venue-rated-by" is a Map in Firebase.
-                            @SuppressWarnings("unchecked")
-                            HashMap<String, String> alreadyRatedByList = (HashMap<String, String>) task.getResult().get("venue-rated-by");
-
-                            if(alreadyRatedByList != null && !alreadyRatedByList.isEmpty())
-                            {
-                                if(alreadyRatedByList.containsKey(USERID))
-                                {
-                                    System.out.println(TAG + " User " + USERID + " has ALREADY submitted a rating for Venue profile: " + vID);
-                                }
-                                else
-                                {
-                                    System.out.println(TAG + " User " + USERID + " has NOT YET submitted a rating for Venue profile: " + vID);
-                                    setupRatingDialog();
-                                }
-                            }
-                            else
-                            {
-                                System.out.println(TAG + " alreadyRatedByList is either null or empty.");
-                            }
-
-                        }
-                    });
-                }
-                else if(task.getResult().get("user-type").equals("Venue"))
-                {
-
-                }
-                else
-                {
-                    System.out.println(TAG + " ERROR! user-type neither Musician or Venue");
-                }
-            }
-        });*/
-    }
-
-    /**
-     * This method is used to decide which rating to show based upon the user type of the viewer.
-     * @param viewerUserType This user type is either a Musician Performer or a Band Performer.
-     */
-    private void setupRatingLayout(String viewerUserType)
-    {
-        if(viewerUserType.equals("Musician Performer"))
-        {
-
-        }
-        else if(viewerUserType.equals("Band Performer"))
-        {
-
-        }
     }
 
     /**
