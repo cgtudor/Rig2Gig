@@ -67,7 +67,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
                         location.setText(document.get("location").toString());
                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
                         bandArray.addAll((ArrayList<String>) document.get("bands"));
-                        ArrayList<String> bandNames = new ArrayList<>();
+                        bands.setText("Bands: ");
                         for(String band : bandArray)
                         {
                             db.collection("bands").document(band)
@@ -79,13 +79,15 @@ public class MusicianProfileActivity extends AppCompatActivity {
                                         DocumentSnapshot bandDoc = task.getResult();
                                         if(bandDoc.exists())
                                         {
-                                            bandNames.add(bandDoc.get("name").toString());
+                                            String bandName = bandDoc.get("name").toString();
+                                            bands.setText(bands.getText().equals("Bands: ") ?
+                                                    "Bands: " + bandName :
+                                                    bands.getText() + ", " + bandName);
                                         }
                                     }
                                 }
                             });
                         }
-                        bands.setText("Bands: " + bandNames.toString().substring(1, bandNames.toString().length()-1));
                     } else {
                         Log.d("FIRESTORE", "No such document");
                     }
