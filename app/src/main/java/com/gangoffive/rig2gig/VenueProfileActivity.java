@@ -1,8 +1,12 @@
 package com.gangoffive.rig2gig;
 
+import android.animation.LayoutTransition;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -30,11 +35,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.w3c.dom.Document;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class VenueProfileActivity extends AppCompatActivity {
-    private String vID;
+    private String vID; //Venue ID for  profile
+    private String viewerType; //Can be null if viewer did not open the profile from communications.
+    private String viewerRef;
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
     private final CollectionReference venueReference = FSTORE.collection("venues");
     private Button rateMeButton;
@@ -43,9 +53,12 @@ public class VenueProfileActivity extends AppCompatActivity {
     private final String USERID = fAuth.getUid();
     private final CollectionReference userReference = FSTORE.collection("users");
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
+    private DocumentReference ratingDocReference;
+    private CollectionReference viewerRatingsReference;
     private String venueRating;
     private int numOfVenueRatings;
     private int totaledVenueRatings;
+    private TextView venueName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +70,7 @@ public class VenueProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final ImageView venuePhoto = findViewById(R.id.venuePhoto);
-        final TextView venueName = findViewById(R.id.venueName);
+        venueName = findViewById(R.id.venueName);
         final TextView description = findViewById(R.id.description);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
@@ -65,6 +78,9 @@ public class VenueProfileActivity extends AppCompatActivity {
 
         /*Used to get the id of the venue from the previous activity*/
         vID = getIntent().getStringExtra("EXTRA_VENUE_ID");
+        /*If a user is opening the profile from communications*/
+        viewerType = getIntent().getStringExtra("EXTRA_VIEWER_TYPE"); //venues / musicians / bands
+        viewerRef = getIntent().getStringExtra("EXTRA_VIEWER_REF"); //The ID of the viewer
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -112,7 +128,7 @@ public class VenueProfileActivity extends AppCompatActivity {
 
         getRatingFromFirebase();
         //setupRatingDialog();
-        //checkAlreadyRated();
+        checkAlreadyRated();
     }
 
     /**
@@ -120,28 +136,7 @@ public class VenueProfileActivity extends AppCompatActivity {
      */
     private void getRatingFromFirebase()
     {
-        venueReference.document(vID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-            {
-                venueRating = task.getResult().get("venue-rating").toString();
-                numOfVenueRatings = Integer.parseInt(task.getResult().get("venue-rating-count").toString());
-                totaledVenueRatings = Integer.parseInt(task.getResult().get("venue-rating-total").toString());
-                venueRatingBar.setVisibility(View.VISIBLE);
 
-                if(numOfVenueRatings >= 3)
-                {
-                    venueRatingBar.setRating(Float.parseFloat(venueRating));
-                }
-                else
-                {
-                    //Don't show rating in stars. Show "Not enough ratings gathered yet".
-                    TextView notEnoughRatings = findViewById(R.id.unrated);
-                    notEnoughRatings.setVisibility(View.VISIBLE);
-                }
-            }
-        });
     }
 
     /**
@@ -154,13 +149,57 @@ public class VenueProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
+                AlertDialog.Builder builder = new AlertDialog.Builder(VenueProfileActivity.this);
 
+                View layout = null;
+
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                layout = inflater.inflate(R.layout.rating, null);
+
+                RatingBar alertDialogRatingBar = layout.findViewById(R.id.rating_bar);
+
+                builder.setTitle("Rate Us!");
+                builder.setMessage("Thank you for rating us. It will help us improve in the future.");
+
+                builder.setPositiveButton("Rate!", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        float venueRating = alertDialogRatingBar.getRating();
+
+                        venueReference.document(vID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                        {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                            {
+                                //Here, calculate the new rating and store in Firebase.
+                            }
+                        });
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                        Toast.makeText(VenueProfileActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                builder.setCancelable(false);
+                builder.setView(layout);
+                builder.show();
             }
         });
     }
 
     /**
      * This method is used to check whether or not the user viewing the Musician has already submitted a rating.
+     * Here we decide whether we will show the Rate Me button or an appropriate message.
      */
     private void checkAlreadyRated()
     {
@@ -185,7 +224,116 @@ public class VenueProfileActivity extends AppCompatActivity {
 
          */
 
-        userReference.document(USERID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        viewerRatingsReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType);
+
+        //FSTORE.collection("ratings").document(vID).collection(viewerType).document(viewerRef);
+
+        viewerRatingsReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task)
+            {
+                List venueRatingInDB = task.getResult().getDocuments();
+
+                venueRatingInDB.isEmpty();
+                //venueRatingInDB.get(0);
+
+
+
+                if(!venueRatingInDB.isEmpty()) //Its not the very first review in the viewer type collection.
+                {
+                    System.out.println(TAG + " venueRatingInDB list is not empty!");
+
+                    if(venueRatingInDB.contains(viewerRef))
+                    {
+                        System.out.println(TAG + " viewerRef found in viewerType collection");
+                        //A rating has already been submitted by the viewer. Display their rating.
+                        viewerRatingsReference.document(viewerRef).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                        {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                            {
+                                System.out.println(TAG + " getting venue-rating from ");
+
+                                String viewerRating = task.getResult().get("venue-rating").toString();
+
+                                TextView viewer_rating_xml = findViewById(R.id.viewer_rating);
+                                viewer_rating_xml.setText("You rated " + venueName + " " + viewerRating + " stars!");
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Button rating_button_xml = findViewById(R.id.rating_button);
+                        rating_button_xml.setVisibility(View.VISIBLE);
+                    }
+                }
+                else
+                {
+                    System.out.println(TAG + " venueRatingInDB list is empty!");
+                }
+
+
+                System.out.println(TAG + " " + venueRatingInDB);
+
+                //If null then viewer as not rated this Venue.
+                /*if(venueRatingInDB == null) //No ratings currently in DB for this venue.
+                {
+
+
+                    //Following comment is to be used once the user submits a review.
+                    //HashMap<String, Object> venueRatings = new HashMap<>();
+
+                    venueRatings.put("rated-as", "unrated");
+
+                    ratingDocReference.set(venueRatings).addOnSuccessListener(new OnSuccessListener<Void>()
+                    {
+                        @Override
+                        public void onSuccess(Void aVoid)
+                        {
+                            System.out.println(TAG + " Venue hasn't been rated before, creating new fields.");
+
+                            venueRating = task.getResult().get("venue-rating").toString();
+                            numOfVenueRatings = Integer.parseInt(task.getResult().get("venue-rating-count").toString());
+                            totaledVenueRatings = Integer.parseInt(task.getResult().get("venue-rating-total").toString());
+                            venueRatingBar.setVisibility(View.VISIBLE);
+                        }
+                    }).addOnFailureListener(new OnFailureListener()
+                    {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            System.out.println(TAG + " Venue hasn't been rated before, unable to create new fields.");
+                            System.out.println(e.getMessage().toString());
+                        }
+                    });
+                }
+                else
+                {
+                    venueRating = task.getResult().get("venue-rating").toString();
+                    numOfVenueRatings = Integer.parseInt(task.getResult().get("venue-rating-count").toString());
+                    totaledVenueRatings = Integer.parseInt(task.getResult().get("venue-rating-total").toString());
+                    venueRatingBar.setVisibility(View.VISIBLE);
+                }
+
+                if(numOfVenueRatings >= 3)
+                {
+                    venueRatingBar.setRating(Float.parseFloat(venueRating));
+                }
+                else
+                {
+                    //Don't show rating in stars. Show "Not enough ratings gathered yet".
+                    TextView notEnoughRatings = findViewById(R.id.unrated);
+                    notEnoughRatings.setVisibility(View.VISIBLE);
+                }*/
+            }
+        });
+            /*@Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+
+
+        /*userReference.document(USERID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
@@ -231,7 +379,7 @@ public class VenueProfileActivity extends AppCompatActivity {
                     System.out.println(TAG + " ERROR! user-type neither Musician or Venue");
                 }
             }
-        });
+        });*/
     }
 
     /**

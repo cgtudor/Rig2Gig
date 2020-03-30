@@ -158,19 +158,27 @@ public class ViewCommsFragment extends Fragment
 
                                         String profileType = communications.get(position).getSentFromType();
                                         String profileRef = communications.get(position).getSentFromRef();
+                                        String viewerType = communications.get(position).getSentToType();
+                                        String viewerRef = communications.get(position).getSentToRef();
 
                                         switch(profileType) {
                                             case "venues":
                                                 openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_VENUE_ID", profileRef);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_REF", viewerRef);
                                                 break;
                                             case "bands":
                                                 openProfileIntent = new Intent(v.getContext(), BandProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_BAND_ID", profileRef);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_REF", viewerRef);
                                                 break;
                                             case "musicians":
                                                 openProfileIntent = new Intent(v.getContext(), MusicianProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_REF", viewerRef);
                                                 break;
                                         }
 
@@ -184,19 +192,27 @@ public class ViewCommsFragment extends Fragment
 
                                         String profileType = communications.get(position).getSentFromType();
                                         String profileRef = communications.get(position).getSentFromRef();
+                                        String viewerType = communications.get(position).getSentToType();
+                                        String viewerRef = communications.get(position).getSentToRef();
 
                                         switch(profileType) {
                                             case "venues":
                                                 openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_VENUE_ID", profileRef);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_REF", viewerRef);
                                                 break;
                                             case "bands":
                                                 openProfileIntent = new Intent(v.getContext(), BandProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_BAND_ID", profileRef);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_REF", viewerRef);
                                                 break;
                                             case "musicians":
                                                 openProfileIntent = new Intent(v.getContext(), MusicianProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_REF", viewerRef);
                                                 break;
                                         }
 
