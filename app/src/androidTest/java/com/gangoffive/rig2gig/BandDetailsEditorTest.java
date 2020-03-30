@@ -56,8 +56,8 @@ public class BandDetailsEditorTest {
     private Activity activty;
     private ListingManager manager;
 
-        @Rule
-        public ActivityTestRule<BandDetailsEditor> testRule = new ActivityTestRule(BandDetailsEditor.class);
+    @Rule
+    public ActivityTestRule<BandDetailsEditor> testRule = new ActivityTestRule(BandDetailsEditor.class);
 
     @BeforeClass
     public static void setup() {

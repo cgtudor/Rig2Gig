@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class VenueDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
-
+    private boolean mapping;
     private Geocoder geocoder;
     private TextView name, description, venueType, email, phone;
     private AutoCompleteTextView location;
@@ -90,6 +90,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         venueRef = getIntent().getStringExtra("EXTRA_VENUE_ID");
         String listingRef = "profileEdit";
         type = "Venue";
+        mapping = false;
         listingManager = new ListingManager(venueRef, type, listingRef);
         listingManager.getUserInfo(this);
         geocoder = new Geocoder(this, Locale.getDefault());
@@ -311,7 +312,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
 
     @Override
     public void setMapping(boolean isMapping) {
-
+        mapping = isMapping;
     }
 
     /**
@@ -411,8 +412,9 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         {
             venue.put("name",name.getText().toString());
         }
-        if(location != null && location.getText() != null && venue != null)
+        if(location != null && location.getText() != null && venue != null && mapping == true)
         {
+            mapping = false;
             try
             {
                 String venueName = location.getText().toString();

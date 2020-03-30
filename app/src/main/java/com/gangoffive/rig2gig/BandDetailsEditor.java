@@ -27,6 +27,7 @@ import java.util.Map;
 
 public class BandDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
+    private boolean mapping;
     private Geocoder geocoder;
     private TextView name, distance, genres, email, phone;
     private AutoCompleteTextView location;
@@ -103,6 +104,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         bandRef = getIntent().getStringExtra("EXTRA_BAND_ID");
         String listingRef = "profileEdit";
         type = "Band";
+        mapping = false;
         listingManager = new ListingManager(bandRef, type, listingRef);
         listingManager.getUserInfo(this);
         geocoder = new Geocoder(this, Locale.getDefault());
@@ -332,7 +334,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
 
     @Override
     public void setMapping(boolean isMapping) {
-
+        mapping = isMapping;
     }
 
     /**
@@ -421,8 +423,9 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         {
             band.put("name",name.getText().toString());
         }
-        if(location != null && location.getText() != null && band != null)
+        if(location != null && location.getText() != null && band != null && mapping == true)
         {
+            mapping = false;
             try
             {
                 String bandName = location.getText().toString();
