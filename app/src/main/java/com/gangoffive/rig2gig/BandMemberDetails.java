@@ -36,22 +36,32 @@ public class BandMemberDetails extends AppCompatActivity implements CreateAdvert
         musicianDownloaded = false;
         musicianManager = new ListingManager(musicianRef,"Musician","profileEdit");
         musicianManager.getUserInfo(this);
+        ok = findViewById(R.id.ok);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
-        if (!musicianDownloaded)
+        if (data != null)
         {
-            musicianDownloaded = true;
-            musician = data;
-            userRef = musician.get("user-ref").toString();
-            userManager = new ListingManager(userRef,"User","profileEdit");
-            userManager.getUserInfo(this);
-        }
-        else
-        {
-            user = data;
-            setViewReferences();
+            if (!musicianDownloaded)
+            {
+                musicianDownloaded = true;
+                musician = data;
+                userRef = musician.get("user-ref").toString();
+                userManager = new ListingManager(userRef,"User","profileEdit");
+                userManager.getUserInfo(this);
+            }
+            else
+            {
+                user = data;
+                setViewReferences();
+            }
         }
     }
 
@@ -64,24 +74,23 @@ public class BandMemberDetails extends AppCompatActivity implements CreateAdvert
         phone = findViewById(R.id.phone);
         email = findViewById(R.id.email);
         rating = findViewById(R.id.rating);
-        ok = findViewById(R.id.ok);
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         populateInitialFields();
     }
 
     @Override
     public void populateInitialFields() {
-        name.setText(musician.get("name").toString());
-        userName.setText(user.get("username").toString());
-        location.setText(musician.get("location").toString());
-        phone.setText(user.get("phone-number").toString());
-        email.setText(user.get("email-address").toString());
-        rating.setText(musician.get("rating").toString());
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                name.setText(musician.get("name").toString());
+                userName.setText(user.get("username").toString());
+                location.setText(musician.get("location").toString());
+                phone.setText(user.get("phone-number").toString());
+                email.setText(user.get("email-address").toString());
+                rating.setText(musician.get("rating").toString());
+            }
+        });
     }
 
     @Override

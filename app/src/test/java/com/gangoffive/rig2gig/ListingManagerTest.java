@@ -2,6 +2,7 @@ package com.gangoffive.rig2gig;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.Observable;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -32,7 +33,6 @@ import java.lang.reflect.Array;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -575,5 +575,14 @@ public class ListingManagerTest{
     {
         ListingManager manager = dummyConstructor("testRef", "Band", "testRef");
         assertThat(manager.isNeedPayment(),is(equalTo(false)));
+    }
+
+    @Test
+    public void testGetUSerInfoNullRef()
+    {
+        ListingManager manager = dummyConstructor("testRef", "Band", "testRef");
+        CreateAdvertisement mockActivity = mock(CreateAdvertisement.class);
+        manager.getUserInfo(mockActivity);
+        verify(mockActivity,times(1)).onSuccessFromDatabase(any());
     }
 }

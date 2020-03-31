@@ -46,7 +46,7 @@ public class AddMemberConfirmationUITest {
     @Test
     public void testActivityInView()
     {
-        onView(withId(R.id.mainWindow)).check(matches(isDisplayed()));
+        onView(withId(R.id.confirmationMainWindow)).check(matches(isDisplayed()));
     }
 
     @Test

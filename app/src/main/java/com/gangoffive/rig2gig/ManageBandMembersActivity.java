@@ -100,86 +100,89 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data)
     {
-        if (checkIfInBand)
+        if(data != null)
         {
-            checkIfInBand = false;
-            band = data;
-            if (!((List)band.get("members")).contains(usersMusicianRef))
+            if (checkIfInBand)
             {
-                Intent intent = new Intent(this, NavBarActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            if (backClicked)
-            {
-                goBack();
-            }
-            if (searchingForMembers)
-            {
-                searchingForMembers = false;
-                searchForMembers();
-            }
-            if (removingMember)
-            {
-                removingMember = false;
-                areYouSureRemove();
-            }
-            if (removingMemberConfirmed)
-            {
-                removingMemberConfirmed = false;
-                finaliseRemoveMember();
-            }
-        }
-        else if (band == null)
-        {
-            band = data;
-            memberRefs = (ArrayList)(band.get("members"));
-            if (memberRefs.size() > 0)
-            {
-                names = new ArrayList<>();
-                musicanBands = new ArrayList<>();
-                musicianManagers = new ArrayList<>();
-                musicians = new ArrayList<>();
-                for (int i = 0; i < memberRefs.size(); i++)
+                checkIfInBand = false;
+                band = data;
+                if (!((List)band.get("members")).contains(usersMusicianRef))
                 {
-                    musicianManagers.add(new ListingManager(memberRefs.get(i).toString(),"Musician","profileEdit"));
+                    Intent intent = new Intent(this, NavBarActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
+                if (backClicked)
+                {
+                    goBack();
+                }
+                if (searchingForMembers)
+                {
+                    searchingForMembers = false;
+                    searchForMembers();
+                }
+                if (removingMember)
+                {
+                    removingMember = false;
+                    areYouSureRemove();
+                }
+                if (removingMemberConfirmed)
+                {
+                    removingMemberConfirmed = false;
+                    finaliseRemoveMember();
+                }
+            }
+            else if (band == null)
+            {
+                band = data;
+                memberRefs = (ArrayList)(band.get("members"));
+                if (memberRefs.size() > 0)
+                {
+                    names = new ArrayList<>();
+                    musicanBands = new ArrayList<>();
+                    musicianManagers = new ArrayList<>();
+                    musicians = new ArrayList<>();
+                    for (int i = 0; i < memberRefs.size(); i++)
+                    {
+                        musicianManagers.add(new ListingManager(memberRefs.get(i).toString(),"Musician","profileEdit"));
+                    }
+                    musicianManagers.get(membersDownloaded).getUserInfo(this);
+                }
+                else
+                {
+                    populateInitialFields();
+                }
+            }
+            else if (membersDownloaded != memberRefs.size() - 1)
+            {
+                names.add(data.get("name").toString());
+                musicanBands.add((List)(data.get("bands")));
+                musicians.add(data);
+                membersDownloaded++;
                 musicianManagers.get(membersDownloaded).getUserInfo(this);
             }
             else
             {
+                names.add(data.get("name").toString());
+                musicanBands.add((List)(data.get("bands")));
+                musicians.add(data);
+                for (int i = 0; i < musicians.size(); i++)
+                {
+                    if (musicians.get(i).get("user-ref").equals(uID))
+                    {
+                        userName = musicians.get(i).get("name").toString();
+                        usersMusicianRef = memberRefs.get(i).toString();
+                    }
+                }
+                for (Map<String, Object> musician: musicians)
+                {
+                    if (musician.get("user-ref").equals(uID))
+                    {
+                        userName = musician.get("name").toString();
+                    }
+                }
                 populateInitialFields();
             }
-        }
-        else if (membersDownloaded != memberRefs.size() - 1)
-        {
-            names.add(data.get("name").toString());
-            musicanBands.add((List)(data.get("bands")));
-            musicians.add(data);
-            membersDownloaded++;
-            musicianManagers.get(membersDownloaded).getUserInfo(this);
-        }
-        else
-        {
-            names.add(data.get("name").toString());
-            musicanBands.add((List)(data.get("bands")));
-            musicians.add(data);
-            for (int i = 0; i < musicians.size(); i++)
-            {
-                if (musicians.get(i).get("user-ref").equals(uID))
-                {
-                    userName = musicians.get(i).get("name").toString();
-                    usersMusicianRef = memberRefs.get(i).toString();
-                }
-            }
-            for (Map<String, Object> musician: musicians)
-            {
-                if (musician.get("user-ref").equals(uID))
-                {
-                    userName = musician.get("name").toString();
-                }
-            }
-            populateInitialFields();
         }
     }
 
@@ -187,7 +190,15 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     public void populateInitialFields() {
         gridView = (GridView) findViewById( R.id.gridView);
         BandMemberRemoverAdapter customAdapter = new BandMemberRemoverAdapter(names, memberRefs, this);
-        gridView.setAdapter(customAdapter);
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                gridView.setAdapter(customAdapter);
+            }
+        });
+
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
@@ -397,5 +408,9 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     @Override
     public ImageView getImageView() {
         return null;
+    }
+
+    public void setUsersMusicianRef(String usersMusicianRef) {
+        this.usersMusicianRef = usersMusicianRef;
     }
 }
