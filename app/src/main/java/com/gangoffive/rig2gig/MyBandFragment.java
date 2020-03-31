@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Source;
 
 public class MyBandFragment extends Fragment
 {
@@ -64,6 +68,15 @@ public class MyBandFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         System.out.println("=================== " + UUID);
         View view = inflater.inflate(R.layout.fragment_my_band, container, false);
 
@@ -74,7 +87,7 @@ public class MyBandFragment extends Fragment
         createBandBtn.setVisibility(view.INVISIBLE);
 
         DocumentReference user = fStore.collection("users").document(UUID);
-        user.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        user.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
@@ -85,7 +98,7 @@ public class MyBandFragment extends Fragment
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
                         bandRef = document.get("band-ref").toString().trim();
                         DocumentReference bandInfo = fStore.collection("bands").document(bandRef);
-                        bandInfo.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        bandInfo.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()){

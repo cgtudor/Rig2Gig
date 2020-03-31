@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.List;
 
@@ -84,7 +88,16 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
     private void databaseQuery()
     {
 
-        getVenues.whereEqualTo("user-ref", USERID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        getVenues.whereEqualTo("user-ref", USERID).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -97,7 +110,7 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
 
                     DocumentSnapshot venue = venues.get(0);
 
-                    getVenueAdverts.whereEqualTo("venue-ref", venue.getId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+                    getVenueAdverts.whereEqualTo("venue-ref", venue.getId()).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
                     {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -207,7 +220,16 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
      */
     private void deleteAdvert()
     {
-        getVenueAdverts.whereEqualTo("venue-ref", venueRef).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        getVenueAdverts.whereEqualTo("venue-ref", venueRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)

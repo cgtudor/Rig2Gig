@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -35,6 +38,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
@@ -103,11 +107,20 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         /*Finding the listing by its ID in the "performer-listings" subfolder*/
         DocumentReference performerListing = db.collection("performer-listings").document(pID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        performerListing.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        performerListing.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -136,7 +149,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                             listingOwner.append(document.get("listing-owner").toString());
                         }
 
-                        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        performer.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
@@ -154,7 +167,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                         }
 
                                         CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
-                                        sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get()
+                                        sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get(source)
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -208,7 +221,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
             @Override
             public void onClick(View v) {
                 db.collection("venues").whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid())
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        .get(source).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
@@ -291,8 +304,8 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
         /*Using Glide to load the picture from the reference directly into the ImageView*/
         GlideApp.with(this)
                 .load(performerPic)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .skipMemoryCache(false)
                 .into(performerPhoto);
     }
 
@@ -326,11 +339,20 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         /*Finding the listing by its ID in the "performer-listings" subfolder*/
         DocumentReference performerListing = db.collection("performer-listings").document(pID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        performerListing.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        performerListing.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -347,7 +369,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
 
                         listingOwner.append(document.get("performer-type").equals("Band") ? document.get("listing-owner").toString() : "");
 
-                        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        performer.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
@@ -364,11 +386,10 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                             star.setIcon(R.drawable.ic_full_star);
                                             star.setVisible(false);
                                         } else {
-                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
                                             CollectionReference favVenues = db.collection("favourite-ads")
                                                     .document(FirebaseAuth.getInstance().getUid())
                                                     .collection("performer-listings");
-                                            favVenues.document(pID).get()
+                                            favVenues.document(pID).get(source)
                                                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -407,6 +428,14 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
         int id = item.getItemId();
         TextView distance = findViewById(R.id.venue_description_final);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         if (id == R.id.saveButton) {
             Timestamp expiryDate = new Timestamp(expiry);
@@ -420,7 +449,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
             CollectionReference favPerformers = db.collection("favourite-ads")
                     .document(FirebaseAuth.getInstance().getUid())
                     .collection("performer-listings");
-            favPerformers.document(pID).get()
+            favPerformers.document(pID).get(source)
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -472,9 +501,18 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
 
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         final DocumentReference performerLocation = db.collection("performer-listings").document(pID);
 
-        performerLocation.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        performerLocation.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -508,9 +546,18 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
     }
 
     private void getBandLocation(GoogleMap googleMap, DocumentSnapshot document) {
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         final DocumentReference performer = db.collection("bands").document(document.get("performer-ref").toString());
 
-        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        performer.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 Log.d(TAG, "Google Map get performer successful");
@@ -533,9 +580,18 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
 
     private void getMusicianLocation(GoogleMap googleMap, DocumentSnapshot document)
     {
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         final DocumentReference performer = db.collection("musicians").document(document.get("performer-ref").toString());
 
-        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        performer.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 Log.d(TAG, "Google Map get performer successful");

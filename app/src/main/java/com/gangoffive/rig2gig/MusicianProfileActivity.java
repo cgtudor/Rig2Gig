@@ -1,5 +1,8 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -50,11 +55,20 @@ public class MusicianProfileActivity extends AppCompatActivity {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         /*Finding the musician by its ID in the "musicians" subfolder*/
         DocumentReference musician = db.collection("musicians").document(mID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        musician.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        musician.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -71,7 +85,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
                         for(String band : bandArray)
                         {
                             db.collection("bands").document(band)
-                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    .get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if(task.isSuccessful())
@@ -104,8 +118,8 @@ public class MusicianProfileActivity extends AppCompatActivity {
 
         GlideApp.with(this)
                 .load(musicianPic)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .skipMemoryCache(false)
                 .into(musicianPhoto);
     }
 
@@ -128,11 +142,20 @@ public class MusicianProfileActivity extends AppCompatActivity {
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         /*Finding the listing by its ID in the "performer-listings" subfolder*/
         DocumentReference musician = db.collection("musicians").document(mID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        musician.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        musician.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {

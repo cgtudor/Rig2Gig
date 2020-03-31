@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +37,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
@@ -97,6 +101,15 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
         final Button publish = findViewById(R.id.publish);
         final Button profile = findViewById(R.id.profile);
 
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         //Initialising the Google Map. See onMapReady().
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
         mapFragment.getMapAsync(this);
@@ -108,7 +121,7 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
         DocumentReference bandListing = db.collection("band-listings").document(bID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        bandListing.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        bandListing.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -128,7 +141,7 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
                         /*Find the band reference by looking for the band ID in the "bands" subfolder*/
                         DocumentReference band = db.collection("bands").document(document.get("band-ref").toString());
 
-                        band.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        band.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
@@ -142,7 +155,7 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
                                         ArrayList<String> members = (ArrayList<String>) document.get("members");
 
                                         CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
-                                        sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get()
+                                        sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get(source)
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -190,7 +203,7 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
             @Override
             public void onClick(View v) {
                 db.collection("musicians").whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid())
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        .get(source).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
@@ -279,8 +292,8 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
 
         GlideApp.with(this)
                 .load(bandPic)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .skipMemoryCache(false)
                 .into(bandPhoto);
     }
 
@@ -315,13 +328,20 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         /*Finding the listing by its ID in the "performer-listings" subfolder*/
         DocumentReference performerListing = db.collection("band-listings").document(bID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        performerListing.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        performerListing.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -334,7 +354,7 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
                         /*Find the performer reference by looking for the performer ID in the "performers" subfolder*/
                         DocumentReference performer = db.collection("bands").document(document.get("band-ref").toString());
 
-                        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        performer.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
@@ -345,7 +365,7 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
                                         ArrayList<String> members = (ArrayList<String>) document.get("members");
 
                                         Query musiciansInBand = db.collection("musicians").whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid());
-                                        musiciansInBand.get()
+                                        musiciansInBand.get(source)
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -383,7 +403,7 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
                                                                     CollectionReference favBands = db.collection("favourite-ads")
                                                                             .document(FirebaseAuth.getInstance().getUid())
                                                                             .collection("band-listings");
-                                                                    favBands.document(bID).get()
+                                                                    favBands.document(bID).get(source)
                                                                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                                                 @Override
                                                                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -436,6 +456,14 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
         int id = item.getItemId();
         TextView description = findViewById(R.id.description);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         if(id == R.id.saveButton)
         {
@@ -450,7 +478,7 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
             CollectionReference favBands = db.collection("favourite-ads")
                     .document(FirebaseAuth.getInstance().getUid())
                     .collection("band-listings");
-            favBands.document(bID).get()
+            favBands.document(bID).get(source)
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -511,13 +539,22 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
     {
         this.googleMap = googleMap;
 
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         final DocumentReference bandLocation = db.collection("band-listings").document(bID);
 
         final CollectionReference musiciansRef = db.collection("musicians");
 
         Query getMusiciansBands = musiciansRef;
 
-        getMusiciansBands.whereEqualTo("user-ref", fAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+        getMusiciansBands.whereEqualTo("user-ref", fAuth.getUid()).get(source).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
         {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task)
@@ -536,7 +573,7 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
                         {
                             final CollectionReference bandRef = db.collection("bands");
 
-                            bandRef.document(bands).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                            bandRef.document(bands).get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                             {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task)
