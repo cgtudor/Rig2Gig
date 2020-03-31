@@ -33,20 +33,24 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.gangoffive.rig2gig.PaginationListener.PAGE_START;
 
 
 public class ViewPerformersFragment extends Fragment
 {
-    private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+    private static final String TAG = "ViewPerformersFragment";
 
-    SwipeRefreshLayout swipeLayout;
-
-    private FirebaseFirestore db;
-    private CollectionReference colRef;
-    private List<DocumentSnapshot> documentSnapshots;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    DocumentSnapshot lastVisible;
 
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeLayout;
     private PerformerAdapter adapter;
+    private int currentPage = PAGE_START;
+    private boolean isLastPage = false;
+    private int totalPage = 7;
+    private boolean isLoading = false;
+    private int itemCount = 0;
 
     private ArrayList<PerformerListing> performerListings;
 
@@ -75,25 +79,68 @@ public class ViewPerformersFragment extends Fragment
                 getResources().getColor(android.R.color.holo_blue_dark),
                 getResources().getColor(android.R.color.holo_orange_dark));
 
-        /*setHasOptionsMenu(true);*/
-
-        db = FirebaseFirestore.getInstance();
-        colRef = db.collection("performer-listings");
+        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
 
         performerListings = new ArrayList<>();
 
+        adapter = new PerformerAdapter(performerListings, getContext());
+        adapter.setOnItemClickListener(new PerformerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
+                String listingRef = performerListings.get(position).getListingRef();
+                openListingIntent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingRef);
+                startActivityForResult(openListingIntent,1);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        firebaseCall();
+
+        recyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
+            @Override
+            protected void loadMoreItems() {
+                isLoading = true;
+                currentPage++;
+                firebaseCall();
+            }
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+        });
+
+        return v;
+    }
+
+    private void firebaseCall() {
+
+        Query next;
         Timestamp currentDate = Timestamp.now();
 
-        Query first = colRef
-                .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
-                .limit(10);
+        if(lastVisible == null) {
+            next = db.collection("performer-listings")
+                    .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
+                    .limit(7);
+        } else {
+            next = db.collection("performer-listings")
+                    .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
+                    .startAfter(lastVisible)
+                    .limit(7);
+        }
 
-        first.get()
+        next.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
-                            documentSnapshots = task.getResult().getDocuments();
+                            List<DocumentSnapshot> documentSnapshots = task.getResult().getDocuments();
                             if(!documentSnapshots.isEmpty())
                             {
                                 Log.d(TAG, "get successful with data");
@@ -106,65 +153,15 @@ public class ViewPerformersFragment extends Fragment
                                             documentSnapshot.get("performer-type").toString());
 
                                     performerListings.add(performerListing);
+                                    lastVisible = documentSnapshot;
                                 }
 
-                                adapter = new PerformerAdapter(performerListings, getContext());
-
-                                adapter.setOnItemClickListener(new PerformerAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(int position) {
-                                        Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
-                                        String listingRef = performerListings.get(position).getListingRef();
-                                        openListingIntent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingRef);
-                                        startActivityForResult(openListingIntent,1);
-                                    }
-                                });
-
-                                recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-                                recyclerView.setHasFixedSize(true);
-                                recyclerView.setAdapter(adapter);
-                                LinearLayoutManager llManager = new LinearLayoutManager(getContext());
-                                recyclerView.setLayoutManager(llManager);
-
-                            } else {
-                                Log.d(TAG, "get successful without data");
+                                adapter.notifyItemInserted(performerListings.size() - 1);
                             }
-                        } else {
-                            Log.d(TAG, "get failed with ", task.getException());
                         }
                     }
                 });
-
-        return v;
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    /*@Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.test, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem)
-    {
-        switch(menuItem.getItemId())
-        {
-            case R.id.favourite_icon:
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new SavedPerformersFragment()).commit();
-                break;
-            default:
-                break;
-        }
-
-        return true;
-    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
