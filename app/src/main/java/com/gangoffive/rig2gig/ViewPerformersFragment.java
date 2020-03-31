@@ -46,13 +46,9 @@ public class ViewPerformersFragment extends Fragment
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeLayout;
     private PerformerAdapter adapter;
-    private int currentPage = PAGE_START;
-    private boolean isLastPage = false;
-    private int totalPage = 7;
-    private boolean isLoading = false;
-    private int itemCount = 0;
 
     private ArrayList<PerformerListing> performerListings;
+    private boolean callingFirebase = false;
 
     @Nullable
     @Override
@@ -70,6 +66,9 @@ public class ViewPerformersFragment extends Fragment
                 if (Build.VERSION.SDK_INT >= 26) {
                     ft.setReorderingAllowed(false);
                 }
+
+                lastVisible = null;
+
                 ft.detach(ViewPerformersFragment.this).attach(ViewPerformersFragment.this).commit();
                 swipeLayout.setRefreshing(false);
             }
@@ -99,20 +98,22 @@ public class ViewPerformersFragment extends Fragment
         recyclerView.setAdapter(adapter);
         firebaseCall();
 
-        recyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            protected void loadMoreItems() {
-                isLoading = true;
-                currentPage++;
-                firebaseCall();
-            }
-            @Override
-            public boolean isLastPage() {
-                return isLastPage;
-            }
-            @Override
-            public boolean isLoading() {
-                return isLoading;
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if(callingFirebase == false) {
+                    super.onScrollStateChanged(recyclerView, newState);
+
+                    int offset = recyclerView.computeVerticalScrollOffset();
+                    int extent = recyclerView.computeVerticalScrollExtent();
+                    int range = recyclerView.computeVerticalScrollRange();
+
+                    float percentage = (100.0f * offset / (float)(range - extent));
+
+                    if(percentage > 75) {
+                        firebaseCall();
+                    }
+                }
             }
         });
 
@@ -121,18 +122,20 @@ public class ViewPerformersFragment extends Fragment
 
     private void firebaseCall() {
 
+        callingFirebase = true;
+
         Query next;
         Timestamp currentDate = Timestamp.now();
 
         if(lastVisible == null) {
             next = db.collection("performer-listings")
                     .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
-                    .limit(7);
+                    .limit(10);
         } else {
             next = db.collection("performer-listings")
                     .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
                     .startAfter(lastVisible)
-                    .limit(7);
+                    .limit(10);
         }
 
         next.get()
@@ -157,6 +160,8 @@ public class ViewPerformersFragment extends Fragment
                                 }
 
                                 adapter.notifyItemInserted(performerListings.size() - 1);
+
+                                callingFirebase = false;
                             }
                         }
                     }
@@ -171,6 +176,9 @@ public class ViewPerformersFragment extends Fragment
         if (Build.VERSION.SDK_INT >= 26) {
             ft.setReorderingAllowed(false);
         }
+
+        lastVisible = null;
+
         ft.detach(ViewPerformersFragment.this).attach(ViewPerformersFragment.this).commit();
     }
 }
