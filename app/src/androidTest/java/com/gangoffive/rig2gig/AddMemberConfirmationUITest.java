@@ -55,15 +55,13 @@ public class AddMemberConfirmationUITest {
         onView(withId(R.id.confirmationText)).check(matches(isDisplayed()));
         onView(withId(R.id.yes)).check(matches(isDisplayed()));
         onView(withId(R.id.no)).check(matches(isDisplayed()));
-
-        //alternatively
-        onView(withId(R.id.no)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test
     public void testTextOfComponents()
     {
-        onView(withId(R.id.confirmationText)).check(matches(withText("Are you sure you want to invite this person to your band?")));
+        onView(withId(R.id.confirmationText)).check(matches(withText("Are you sure you want to " +
+                "invite this person to your band?")));
         onView(withId(R.id.yes)).check(matches(withText("Yes")));
         onView(withId(R.id.no)).check(matches(withText("No")));
     }
@@ -109,7 +107,7 @@ public class AddMemberConfirmationUITest {
         assertThat(testRule.getActivity().isCheckIfInBand(),is(equalTo(expectedCheckIfInBand)));
     }
 
-    @Test (expected = NullPointerException.class)
+    @Test
     public void testOnSuccessFromDatabaseUserStillInBand()
     {
         testRule.getActivity().setCheckIfInBand(true);

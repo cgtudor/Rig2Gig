@@ -150,28 +150,31 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
 
     public void sendInvite()
     {
-        HashMap request = generateInvite();
-        received = db.collection("communications")
-                .document(userRef)
-                .collection("received");
-        received.add(request)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        if(task.isSuccessful())
-                        {
-                            Log.d("FIRESTORE", "Invite request added with info " + task.getResult().toString());
-                            logInvite();
+        if (userRef != null)
+        {
+            HashMap request = generateInvite();
+            received = db.collection("communications")
+                    .document(userRef)
+                    .collection("received");
+            received.add(request)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                            if(task.isSuccessful())
+                            {
+                                Log.d("FIRESTORE", "Invite request added with info " + task.getResult().toString());
+                                logInvite();
 
+                            }
+                            else
+                            {
+                                Log.d("FIRESTORE", "Invite request failed with ", task.getException());
+                                Toast.makeText(AddMemberConfirmation.this, "Invitation not sent.  " +
+                                        "Check your connection and try again", Toast.LENGTH_LONG).show();
+                            }
                         }
-                        else
-                        {
-                            Log.d("FIRESTORE", "Invite request failed with ", task.getException());
-                            Toast.makeText(AddMemberConfirmation.this, "Invitation not sent.  " +
-                                    "Check your connection and try again", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+                    });
+        }
     }
 
     public HashMap generateLoggedInvite()

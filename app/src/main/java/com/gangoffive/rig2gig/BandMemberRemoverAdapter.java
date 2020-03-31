@@ -88,7 +88,6 @@ public class BandMemberRemoverAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.band_member_list_item, parent, false);
 
         }
-        /* View view = context.getLayoutInflater().inflate(R.layout.band_member_list_item, null);*/
         ImageView image = (ImageView)convertView.findViewById(R.id.bandMemberImage);
         imageRef = storage.getReference().child("/images/musicians/" + memberRefs.get(position) + ".jpg");
         if (images.get(position) == null)
