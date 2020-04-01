@@ -2,6 +2,8 @@ package com.gangoffive.rig2gig;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.StorageReference;
 
 import org.w3c.dom.Document;
@@ -57,11 +60,20 @@ public class DisplayMusiciansBands extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_my_bands, container, false);
 
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         musiciansBands = new ArrayList<>();
 
         Query first = musiciansRef;
 
-        first.whereEqualTo("user-ref", USERID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+        first.whereEqualTo("user-ref", USERID).get(source).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
         {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task)
@@ -86,7 +98,7 @@ public class DisplayMusiciansBands extends Fragment
                         {
                             for(String b : bands)
                             {
-                                bandRef.document(b).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                                bandRef.document(b).get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                                 {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task)

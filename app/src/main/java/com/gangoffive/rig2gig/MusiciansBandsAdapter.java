@@ -1,6 +1,8 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -91,13 +94,22 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
     @Override
     public void onBindViewHolder(@NonNull AdapterViewHolder holder, int position)
     {
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         MusiciansBands currentBand = musiciansBandsArrayList.get(position);
 
         holder.listingReference = currentBand.getReference();
 
         docRef = db.collection("bands").document(currentBand.getReference());
 
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        docRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
@@ -112,7 +124,11 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
 
                         holder.textView.setText(document.get("name").toString());
                         StorageReference bandPic = storage.getReference().child("/images/bands/" + currentBand.getReference() + ".jpg");
-                        GlideApp.with(holder.imageView.getContext()).load(bandPic).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(holder.imageView);
+                        GlideApp.with(holder.imageView.getContext())
+                                .load(bandPic)
+                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                .skipMemoryCache(false)
+                                .into(holder.imageView);
                     }
                 }
             }

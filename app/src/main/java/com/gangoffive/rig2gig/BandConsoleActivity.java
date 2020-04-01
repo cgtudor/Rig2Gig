@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.List;
 
@@ -116,6 +120,15 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
      */
     private void databaseQuery()
     {
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         CardView editProfileLayout;
         LinearLayout textView;
 
@@ -134,7 +147,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         editProfileLayout = findViewById(R.id.card_view_manage_members);
         editProfileLayout.setVisibility(View.VISIBLE);
 
-        getPerformerAdverts.whereEqualTo("performer-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        getPerformerAdverts.whereEqualTo("performer-ref", displayMusicianBandsReference).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -179,7 +192,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
-        getBandAdverts.whereEqualTo("band-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        getBandAdverts.whereEqualTo("band-ref", displayMusicianBandsReference).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -281,7 +294,16 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
      */
     private void deleteBandAdvert()
     {
-        getBandAdverts.whereEqualTo("band-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        getBandAdverts.whereEqualTo("band-ref", displayMusicianBandsReference).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -317,7 +339,16 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
      */
     private void deletePerformerAdvert()
     {
-        getPerformerAdverts.whereEqualTo("performer-ref", displayMusicianBandsReference).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        getPerformerAdverts.whereEqualTo("performer-ref", displayMusicianBandsReference).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)

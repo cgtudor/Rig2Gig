@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +33,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -99,6 +103,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         final TextView location = findViewById(R.id.location);
         final Button contact = findViewById(R.id.contact);
         final Button publish = findViewById(R.id.publish);
+        final Button profile = findViewById(R.id.profile);
 
         //Initialising the Google Map. See onMapReady().
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
@@ -121,11 +126,20 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         /*Finding the listing by its ID in the "venue-listings" subfolder*/
         DocumentReference venueListing = db.collection("venue-listings").document(vID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        venueListing.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        venueListing.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -135,10 +149,17 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
 
                         Timestamp expiryDate = (Timestamp) document.get("expiry-date");
 
+                        profile.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(VenueListingDetailsActivity.this, VenueProfileActivity.class).putExtra("EXTRA_VENUE_ID", document.get("venue-ref").toString()));
+                            }
+                        });
+
                         /*Find the venue reference by looking for the venue ID in the "venues" subfolder*/
                         DocumentReference venue = db.collection("venues").document(document.get("venue-ref").toString());
 
-                        venue.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        venue.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
@@ -152,7 +173,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                                         listingOwner.append(document.get("user-ref").toString());
 
                                         CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
-                                        sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get()
+                                        sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get(source)
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -207,7 +228,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             public void onClick(View v) {
                 if (currentUserType.equals("musicians")) {
                     db.collection("musicians").whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid())
-                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            .get(source).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
@@ -276,7 +297,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                     });
                 } else {
                     db.collection("musicians").whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid())
-                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            .get(source).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
@@ -361,8 +382,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
 
         GlideApp.with(this)
                 .load(venuePic)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .skipMemoryCache(false)
                 .into(venuePhoto);
     }
 
@@ -383,7 +404,17 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
     @Override
     public void onBackPressed() {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(FirebaseAuth.getInstance().getUid()).get()
+
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        db.collection("users").document(FirebaseAuth.getInstance().getUid()).get(source)
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -421,13 +452,20 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         /*Finding the listing by its ID in the "performer-listings" subfolder*/
         DocumentReference performerListing = db.collection("venue-listings").document(vID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        performerListing.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        performerListing.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -438,7 +476,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                         /*Find the performer reference by looking for the performer ID in the "performers" subfolder*/
                         DocumentReference performer = db.collection("venues").document(document.get("venue-ref").toString());
 
-                        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        performer.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
@@ -455,7 +493,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                                             CollectionReference favVenues = db.collection("favourite-ads")
                                                     .document(FirebaseAuth.getInstance().getUid())
                                                     .collection("venue-listings");
-                                            favVenues.document(vID).get()
+                                            favVenues.document(vID).get(source)
                                                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -494,6 +532,15 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         int id = item.getItemId();
         TextView description = findViewById(R.id.description);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
 
         if (id == R.id.saveButton) {
             Timestamp expiryDate = new Timestamp(expiry);
@@ -506,7 +553,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             CollectionReference favVenues = db.collection("favourite-ads")
                     .document(FirebaseAuth.getInstance().getUid())
                     .collection("venue-listings");
-            favVenues.document(vID).get()
+            favVenues.document(vID).get(source)
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -557,9 +604,18 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
 
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         final DocumentReference venueLocation = db.collection("venue-listings").document(vID);
 
-        venueLocation.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        venueLocation.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -574,7 +630,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
 
                         final DocumentReference venue = db.collection("venues").document(document.get("venue-ref").toString());
 
-                        venue.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        venue.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 Log.d(TAG, "Google Map get venue successful");
@@ -645,7 +701,6 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
 
                     /*Firestore & Cloud Storage initialization*/
                     final FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
 
                     /*Finding the listing by its ID in the "venue-listings" subfolder*/
                     DocumentReference venueListing = db.collection("venue-listings").document(vID);

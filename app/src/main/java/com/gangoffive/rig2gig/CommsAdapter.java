@@ -1,6 +1,8 @@
 package com.gangoffive.rig2gig;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -19,6 +22,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -167,6 +171,15 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull CommsAdapter.ViewHolder holder, int position) {
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         Communication communication = communications.get(position);
 
         holder.commRef = communication.getCommRef();
@@ -176,7 +189,7 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                 .collection("received")
                 .document(holder.commRef);
 
-        commDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        commDocRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -185,7 +198,11 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + commDoc.getData());
 
                         StorageReference venuePic = storage.getReference().child("/images/" + communication.getSentFromType() + "/" + communication.getSentFromRef() + ".jpg");
-                        GlideApp.with(holder.imageViewPhoto.getContext()).load(venuePic).into(holder.imageViewPhoto);
+                        GlideApp.with(holder.imageViewPhoto.getContext())
+                                .load(venuePic)
+                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                .skipMemoryCache(false)
+                                .into(holder.imageViewPhoto);
 
                         Timestamp postingDate = (Timestamp) commDoc.get("posting-date");
                         Date pDate = postingDate.toDate();
@@ -221,7 +238,7 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                                 break;
                             case "join-request":
                                 DocumentReference bandDocRef = db.collection("bands").document(commDoc.get("sent-from-ref").toString());
-                                bandDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                bandDocRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
                                     /**
                                      * on successful database query, return data and image to calling activity
@@ -251,7 +268,7 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
 
                         DocumentReference sentFromDocRef = db.collection(communication.getSentFromType()).document(communication.getSentFromRef());
 
-                        sentFromDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        sentFromDocRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {

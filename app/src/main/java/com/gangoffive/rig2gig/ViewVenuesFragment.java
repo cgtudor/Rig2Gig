@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,49 +31,42 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViewVenuesFragment extends Fragment
 {
+    private static final String TAG = "ViewVenuesFragment";
+
     private String currentUserType;
     private String currentBandId;
 
-    private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
-
-    SwipeRefreshLayout swipeLayout;
-
-    private FirebaseFirestore db;
-    private CollectionReference colRef;
-    private List<DocumentSnapshot> documentSnapshots;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    DocumentSnapshot lastVisible;
 
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeLayout;
     private VenueAdapter adapter;
 
     private ArrayList<VenueListing> venueListings;
+    private boolean callingFirebase = false;
 
-    /**
-     * Upon creation of the ViewVenuesFragment, create the fragment_view_venues layout.
-     * @param inflater The inflater is used to read the passed xml file.
-     * @param container The views base class.
-     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
-     * @return Returns a View of the fragment_upgrade_to_musicians layout.
-     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         final View v = inflater.inflate(R.layout.fragment_view_venues, container, false);
 
-        currentUserType = this.getArguments().getString("CURRENT_USER_TYPE");
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        Bundle extras = this.getArguments();
-        if(extras != null) {
-            if(extras.containsKey("CURRENT_BAND_ID")) {
-                currentBandId = extras.getString("CURRENT_BAND_ID");
-            }
-        }
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
@@ -82,6 +78,9 @@ public class ViewVenuesFragment extends Fragment
                 if (Build.VERSION.SDK_INT >= 26) {
                     ft.setReorderingAllowed(false);
                 }
+
+                lastVisible = null;
+
                 ft.detach(ViewVenuesFragment.this).attach(ViewVenuesFragment.this).commit();
                 swipeLayout.setRefreshing(false);
             }
@@ -91,25 +90,86 @@ public class ViewVenuesFragment extends Fragment
                 getResources().getColor(android.R.color.holo_blue_dark),
                 getResources().getColor(android.R.color.holo_orange_dark));
 
-        /*setHasOptionsMenu(true);*/
-
-        db = FirebaseFirestore.getInstance();
-        colRef = db.collection("venue-listings");
+        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
 
         venueListings = new ArrayList<>();
+        adapter = new VenueAdapter(venueListings, getContext());
 
+        currentUserType = this.getArguments().getString("CURRENT_USER_TYPE");
+
+        Bundle extras = this.getArguments();
+        if(extras != null) {
+            if(extras.containsKey("CURRENT_BAND_ID")) {
+                currentBandId = extras.getString("CURRENT_BAND_ID");
+            }
+        }
+
+        adapter.setOnItemClickListener(new VenueAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent openListingIntent = new Intent(v.getContext(), VenueListingDetailsActivity.class);
+                String listingRef = venueListings.get(position).getListingRef();
+                openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
+                openListingIntent.putExtra("CURRENT_USER_TYPE", currentUserType);
+                if(currentBandId != null) {
+                    openListingIntent.putExtra("CURRENT_BAND_ID", currentBandId);
+                }
+                startActivityForResult(openListingIntent, 1);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        firebaseCall(source);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if(callingFirebase == false) {
+                    super.onScrollStateChanged(recyclerView, newState);
+
+                    int offset = recyclerView.computeVerticalScrollOffset();
+                    int extent = recyclerView.computeVerticalScrollExtent();
+                    int range = recyclerView.computeVerticalScrollRange();
+
+                    float percentage = (100.0f * offset / (float)(range - extent));
+
+                    if(percentage > 75) {
+                        firebaseCall(source);
+                    }
+                }
+            }
+        });
+
+        return v;
+    }
+
+    private void firebaseCall(Source source) {
+
+        callingFirebase = true;
+
+        Query next;
         Timestamp currentDate = Timestamp.now();
 
-        Query first = colRef
-                .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
-                .limit(10);
+        if(lastVisible == null) {
+            next = db.collection("venue-listings")
+                    .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
+                    .limit(10);
+        } else {
+            next = db.collection("venue-listings")
+                    .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
+                    .startAfter(lastVisible)
+                    .limit(10);
+        }
 
-        first.get()
+
+        next.get(source)
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
-                            documentSnapshots = task.getResult().getDocuments();
+                            List<DocumentSnapshot> documentSnapshots = task.getResult().getDocuments();
                             if(!documentSnapshots.isEmpty())
                             {
                                 Log.d(TAG, "get successful with data");
@@ -121,30 +181,12 @@ public class ViewVenuesFragment extends Fragment
                                             documentSnapshot.get("venue-ref").toString());
 
                                     venueListings.add(venueListing);
+                                    lastVisible = documentSnapshot;
                                 }
 
-                                adapter = new VenueAdapter(venueListings, getContext());
+                                adapter.notifyItemInserted(venueListings.size() - 1);
 
-                                adapter.setOnItemClickListener(new VenueAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(int position) {
-                                        Intent openListingIntent = new Intent(v.getContext(), VenueListingDetailsActivity.class);
-                                        String listingRef = venueListings.get(position).getListingRef();
-                                        openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
-                                        openListingIntent.putExtra("CURRENT_USER_TYPE", currentUserType);
-                                        if(currentBandId != null) {
-                                            openListingIntent.putExtra("CURRENT_BAND_ID", currentBandId);
-                                        }
-                                        startActivityForResult(openListingIntent, 1);
-                                    }
-                                });
-
-                                recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-                                recyclerView.setHasFixedSize(true);
-                                recyclerView.setAdapter(adapter);
-                                LinearLayoutManager llManager = new LinearLayoutManager(getContext());
-                                recyclerView.setLayoutManager(llManager);
-
+                                callingFirebase = false;
                             } else {
                                 Log.d(TAG, "get successful without data");
                             }
@@ -153,31 +195,7 @@ public class ViewVenuesFragment extends Fragment
                         }
                     }
                 });
-
-        return v;
     }
-
-    /*@Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.test, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem)
-    {
-        switch(menuItem.getItemId())
-        {
-            case R.id.favourite_icon:
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new SavedVenuesFragment()).commit();
-                break;
-            default:
-                break;
-        }
-
-        return true;
-    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -187,6 +205,9 @@ public class ViewVenuesFragment extends Fragment
         if (Build.VERSION.SDK_INT >= 26) {
             ft.setReorderingAllowed(false);
         }
+
+        lastVisible = null;
+
         ft.detach(ViewVenuesFragment.this).attach(ViewVenuesFragment.this).commit();
     }
 }
