@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,7 +59,10 @@ public class TabbedVenueActivity extends AppCompatActivity {
         submit = findViewById(R.id.submitBtn);
         submit = findViewById(R.id.createListing);
 
-
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Create Venue Account");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -159,5 +163,15 @@ public class TabbedVenueActivity extends AppCompatActivity {
         Intent backToMain = new Intent(this,
                 LoginActivity.class);
         startActivity(backToMain);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

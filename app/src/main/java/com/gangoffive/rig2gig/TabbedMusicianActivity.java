@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,6 +53,11 @@ public class TabbedMusicianActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
 
         test = findViewById(R.id.submitBtn);
+
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Create Musician Account");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void confirmOnClick(View view)
@@ -154,5 +160,15 @@ public class TabbedMusicianActivity extends AppCompatActivity {
         Intent backToMain = new Intent(this,
                 LoginActivity.class);
         startActivity(backToMain);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

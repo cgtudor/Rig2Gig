@@ -108,7 +108,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         getPerformerLocation();
 
         setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setTitle("Edit Advert");
+        getSupportActionBar().setTitle("Performer Advert");
         /*Setting the support action bar to the newly created toolbar*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
