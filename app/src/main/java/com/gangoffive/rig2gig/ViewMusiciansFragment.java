@@ -79,6 +79,9 @@ public class ViewMusiciansFragment extends Fragment
                 if (Build.VERSION.SDK_INT >= 26) {
                     ft.setReorderingAllowed(false);
                 }
+
+                lastVisible = null;
+
                 ft.detach(ViewMusiciansFragment.this).attach(ViewMusiciansFragment.this).commit();
                 swipeLayout.setRefreshing(false);
             }
