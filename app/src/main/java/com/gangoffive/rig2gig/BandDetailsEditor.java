@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -104,6 +105,11 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         listingManager = new ListingManager(bandRef, type, listingRef);
         listingManager.getUserInfo(this);
         geocoder = new Geocoder(this, Locale.getDefault());
+
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Edit Band Details");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -485,4 +491,12 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         return image;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

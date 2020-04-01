@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -106,6 +107,11 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         listingManager = new ListingManager(musicianRef, type, listingRef);
         listingManager.getUserInfo(this);
         geocoder = new Geocoder(this, Locale.getDefault());
+
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Edit Details");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -457,5 +463,15 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
      */
     public ImageView getImageView() {
         return image;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

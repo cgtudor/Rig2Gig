@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -101,12 +102,15 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
 
         setContentView(R.layout.activity_create_performer_advertisement);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         listingManager = new ListingManager(performerRef, performerType + " Performer", listingRef);
         listingManager.getUserInfo(this);
         getPerformerLocation();
+
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Edit Advert");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -365,6 +369,15 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
                 Log.d(TAG, "Failed to get Venue reference.");
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

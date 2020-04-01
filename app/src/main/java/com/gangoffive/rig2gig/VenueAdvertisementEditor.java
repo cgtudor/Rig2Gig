@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -92,6 +93,11 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         listingManager = new ListingManager(venueRef, type, listingRef);
         listingManager.getUserInfo(this);
         getVenueLocation();
+
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Venue Advert");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -352,5 +358,15 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
                 Log.d(TAG, "Failed to get Venue reference.");
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

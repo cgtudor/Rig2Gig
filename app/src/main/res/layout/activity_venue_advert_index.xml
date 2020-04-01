@@ -18,7 +18,7 @@
             android:gravity="center"
             android:minHeight="?actionBarSize"
             android:padding="@dimen/appbar_padding"
-            android:text="@string/app_name"
+            android:text="Venue Adverts"
             android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
 
@@ -29,6 +29,8 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
+
+    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"

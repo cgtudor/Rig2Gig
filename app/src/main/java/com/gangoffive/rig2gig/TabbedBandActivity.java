@@ -6,15 +6,18 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.gangoffive.rig2gig.ui.TabbedView.BandPagerAdapter;
 import com.gangoffive.rig2gig.ui.TabbedView.MusicianPagerAdapter;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -51,13 +54,6 @@ public class TabbedBandActivity extends AppCompatActivity {
 
         tabTitles = new int[]{R.string.bandInformation, R.string.bandImage};
 
-        BandPagerAdapter bandPagerAdapter = new BandPagerAdapter
-                (this, getSupportFragmentManager(), tabTitles, fragments);
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(bandPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
-
         test = findViewById(R.id.submitBtn);
         back = findViewById(R.id.cancel);
         back.setOnClickListener(new View.OnClickListener() {
@@ -67,8 +63,19 @@ public class TabbedBandActivity extends AppCompatActivity {
                 TabbedBandActivity.super.onBackPressed();
             }
         });
-    }
 
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Create A Band");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        BandPagerAdapter bandPagerAdapter = new BandPagerAdapter
+                (this, getSupportFragmentManager(), tabTitles, fragments);
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(bandPagerAdapter);
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
+    }
 
 
     public void confirmOnClick(View view)
@@ -120,4 +127,15 @@ public class TabbedBandActivity extends AppCompatActivity {
         CreateBandFragment.btn.performClick();
         System.out.println("clicked");
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }
