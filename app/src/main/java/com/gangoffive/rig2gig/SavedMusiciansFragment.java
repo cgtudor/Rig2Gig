@@ -36,7 +36,7 @@ import java.util.List;
 
 public class SavedMusiciansFragment extends Fragment
 {
-    private static final String TAG = "ViewPerformersFragment";
+    private static final String TAG = "SavedPerformersFragment";
 
     private String currentBandRef;
 
@@ -156,7 +156,7 @@ public class SavedMusiciansFragment extends Fragment
                 }
             }
         });
-        
+
         return v;
     }
 

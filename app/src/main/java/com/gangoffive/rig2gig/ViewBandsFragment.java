@@ -122,7 +122,6 @@ public class ViewBandsFragment extends Fragment
         recyclerView.setLayoutManager(layoutManager);
 
         bandListings = new ArrayList<>();
-
         adapter = new BandAdapter(bandListings, getContext());
         adapter.setOnItemClickListener(new BandAdapter.OnItemClickListener() {
             @Override
