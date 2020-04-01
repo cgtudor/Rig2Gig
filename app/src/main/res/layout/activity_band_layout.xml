@@ -82,7 +82,8 @@
             android:layout_weight="1.0"
             android:text="Confirm"
             android:textColor="#FFFFFF"
-            android:onClick="confirmOnClick"/>
+            android:onClick="confirmOnClick"
+            android:background="#a6a6a6"/>
     </LinearLayout>
 
 

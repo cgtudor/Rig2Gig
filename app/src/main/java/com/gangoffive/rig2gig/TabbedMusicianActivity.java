@@ -19,6 +19,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import org.identityconnectors.common.security.GuardedString;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class TabbedMusicianActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
@@ -78,18 +82,145 @@ public class TabbedMusicianActivity extends AppCompatActivity {
             rConfirmEmail.setError("Email doesn't match!");
             return;
         }
+
         rPassword = findViewById(R.id.registerPassword);
-        String password = rPassword.getText().toString();
-        if (TextUtils.isEmpty(password)) {
-            rPassword.setError("Password is required!");
-            return;
-        }
         rConfirmPassword = findViewById(R.id.registerConfirmPassword);
-        String confirmPassword = rConfirmPassword.getText().toString();
-        if (TextUtils.isEmpty(confirmPassword)) {
-            rConfirmPassword.setError("Confirm password is required!");
+
+        AtomicBoolean validPass = new AtomicBoolean();
+        validPass.set(true);
+        AtomicBoolean matchingPass = new AtomicBoolean();
+        matchingPass.set(true);
+
+        /*Creating an empty char array with the length of the password*/
+        char[] passChars = new char[rPassword.getText().length()];
+
+        /*Copying all the characters in the password textbox to the char array*/
+        rPassword.getText().getChars(0, rPassword.getText().length(), passChars, 0);
+
+        GuardedString encryptedPassword = new GuardedString(passChars);
+
+        /*Creating an empty char array with the length of the password*/
+        char[] confirmChars = new char[rConfirmPassword.getText().length()];
+
+        /*Copying all the characters in the password textbox to the char array*/
+        rConfirmPassword.getText().getChars(0, rConfirmPassword.getText().length(), confirmChars, 0);
+
+        GuardedString encryptedConfirm = new GuardedString(confirmChars);
+
+        /*Password validation check*/
+        /*Method used to access the encrypted password and get the clear chars*/
+        encryptedPassword.access(new GuardedString.Accessor() {
+            @Override
+            public void access(char[] chars) {
+                char[] passChars = chars;
+                if(chars.length == 0)
+                {
+                    validPass.set(false);
+                    return;
+                }
+                else if(chars.length < 8)
+                {
+                    validPass.set(false);
+                    return;
+                }
+                else
+                {
+                    boolean number = false, capital = false, lowerCase = false, space = false;
+                    for(char c : chars)
+                    {
+                        if(Character.isDigit(c))
+                        {
+                            number = true;
+                        }
+                        if(Character.isLetter(c) && Character.isUpperCase(c))
+                        {
+                            capital = true;
+                        }
+                        if(Character.isLetter(c) && Character.isLowerCase(c))
+                        {
+                            lowerCase = true;
+                        }
+                        if(c == ' ')
+                        {
+                            space = true;
+                        }
+                    }
+                    if(!number)
+                    {
+                        validPass.set(false);
+                        return;
+                    }
+                    if(!capital)
+                    {
+                        validPass.set(false);
+                        return;
+                    }
+                    if(!lowerCase)
+                    {
+                        validPass.set(false);
+                        return;
+                    }
+                    if(space)
+                    {
+                        validPass.set(false);
+                        return;
+                    }
+                }
+
+                /*Confirmation password check*/
+                /*Method used to access the encrypted password and get the clear chars*/
+                encryptedConfirm.access(new GuardedString.Accessor() {
+                    @Override
+                    public void access(char[] chars) {
+                        if(chars.length == 0)
+                        {
+                            matchingPass.set(false);
+                            return;
+                        }
+                        else if(chars.length != passChars.length)
+                        {
+                            matchingPass.set(false);
+                            return;
+                        }
+                        for(int i = 0; i < chars.length; i++)
+                        {
+                            if(chars[i] != passChars[i])
+                            {
+                                matchingPass.set(false);
+                                return;
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        if(!validPass.get())
+        {
+            rPassword.setError("Minimum password requirements:\n" +
+                    "Eight characters\n" +
+                    "One digit\n" +
+                    "One upper-case letter\n" +
+                    "One lower-case letter\n" +
+                    "No spaces");
             return;
         }
+        if(!matchingPass.get())
+        {
+            rConfirmPassword.setError("Passwords must be matching!");
+            return;
+        }
+//        rPassword = findViewById(R.id.registerPassword);
+//        String password = rPassword.getText().toString();
+//        if (TextUtils.isEmpty(password)) {
+//            rPassword.setError("Password is required!");
+//            return;
+//        }
+//        rConfirmPassword = findViewById(R.id.registerConfirmPassword);
+//        String confirmPassword = rConfirmPassword.getText().toString();
+//        if (TextUtils.isEmpty(confirmPassword)) {
+//            rConfirmPassword.setError("Confirm password is required!");
+//            return;
+//        }
         username = findViewById(R.id.venue_description_final);
         String usrname = username.getText().toString();
         if (TextUtils.isEmpty(usrname)) {
