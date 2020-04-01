@@ -41,8 +41,7 @@ public class ViewMusiciansFragment extends Fragment
 {
     private static final String TAG = "ViewPerformersFragment";
 
-    private String currentBandId;
-
+    private String currentBandRef;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentSnapshot lastVisible;
@@ -89,8 +88,8 @@ public class ViewMusiciansFragment extends Fragment
                 getResources().getColor(android.R.color.holo_blue_dark),
                 getResources().getColor(android.R.color.holo_orange_dark));
 
-        currentBandId = this.getArguments().getString("CURRENT_BAND_ID");
-        DocumentReference bandRef = db.collection("bands").document(currentBandId);
+        currentBandRef = this.getArguments().getString("CURRENT_BAND_ID");
+        DocumentReference bandRef = db.collection("bands").document(currentBandRef);
         bandRef.get(source)
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -128,7 +127,7 @@ public class ViewMusiciansFragment extends Fragment
                 Intent openListingIntent = new Intent(v.getContext(), MusicianListingDetailsActivity.class);
                 String listingRef = musicianListings.get(position).getListingRef();
                 openListingIntent.putExtra("EXTRA_MUSICIAN_LISTING_ID", listingRef);
-                openListingIntent.putExtra("CURRENT_BAND_ID", currentBandId);
+                openListingIntent.putExtra("CURRENT_BAND_ID", currentBandRef);
                 startActivityForResult(openListingIntent, 1);
             }
         });
@@ -195,6 +194,8 @@ public class ViewMusiciansFragment extends Fragment
                                     if (!bandMembers.contains(documentSnapshot.get("musician-ref").toString())) {
                                         musicianListings.add(musicianListing);
                                     }
+
+                                    lastVisible = documentSnapshot;
                                 }
 
                                 adapter.notifyItemInserted(musicianListings.size() - 1);
