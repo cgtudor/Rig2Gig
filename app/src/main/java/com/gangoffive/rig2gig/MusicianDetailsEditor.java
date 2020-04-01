@@ -510,4 +510,8 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     public void setMapping(boolean isMapping) {
         mapping = isMapping;
     }
+
+    public void setImage(ImageView image) {
+        this.image = image;
+    }
 }

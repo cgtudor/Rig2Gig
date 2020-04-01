@@ -1,17 +1,34 @@
 package com.gangoffive.rig2gig;
 
 import android.app.Activity;
+import android.app.Instrumentation;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.widget.Button;
+import android.widget.ImageView;
+
+import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
@@ -23,16 +40,25 @@ import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.swipeRight;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class MusicianDetailsEditorTest {
     private HashMap<String, Object> musicianData;
@@ -127,7 +153,7 @@ public class MusicianDetailsEditorTest {
         onView(withId(R.id.bandAdImageMain)).check(matches(isDisplayed()));
         onView(withId(R.id.imageView)).check(matches(isDisplayed()));
         onView(withId(R.id.changeImageLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.image)).check(matches(isDisplayed()));
+        onView(withId(R.id.venueAdImageMain)).check(matches(isDisplayed()));
         onView(withId(R.id.imageButtonLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
         onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
@@ -175,7 +201,7 @@ public class MusicianDetailsEditorTest {
         onView(withId(R.id.bandAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.changeImageLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.image)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.venueAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageButtonLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.galleryImage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.takePhoto)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -206,7 +232,7 @@ public class MusicianDetailsEditorTest {
         onView(withId(R.id.bandAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.changeImageLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.image)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.venueAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageButtonLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.galleryImage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.takePhoto)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -238,7 +264,7 @@ public class MusicianDetailsEditorTest {
         onView(withId(R.id.bandAdImageMain)).check(matches(isDisplayed()));
         onView(withId(R.id.imageView)).check(matches(isDisplayed()));
         onView(withId(R.id.changeImageLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.image)).check(matches(isDisplayed()));
+        onView(withId(R.id.venueAdImageMain)).check(matches(isDisplayed()));
         onView(withId(R.id.imageButtonLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
         onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
@@ -480,5 +506,41 @@ public class MusicianDetailsEditorTest {
         verify(manager,times(0)).postDataToDatabase(any(),any(),any());
         onView(withText("Listing not created.  Ensure all fields are complete and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testGetGalleryImage()
+    {
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().setMusician(musicianData);
+        testRule.getActivity().onSuccessFromDatabase(musicianData);
+        testRule.getActivity().saveTabs();
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().populateInitialFields();
+        testRule.getActivity().reinitialiseTabs();
+        Intents.init();
+        Matcher<Intent> expectedIntent = allOf(hasAction(Intent.ACTION_GET_CONTENT));
+        intending(expectedIntent).respondWith(new Instrumentation.ActivityResult(0, null));
+        onView(withId(R.id.galleryImage)).perform(click());
+        intended(expectedIntent);
+        Intents.release();
+    }
+
+    @Test
+    public void testGalleryImageReturned()  {
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().setMusician(musicianData);
+        testRule.getActivity().onSuccessFromDatabase(musicianData);
+        testRule.getActivity().saveTabs();
+        testRule.getActivity().setViewReferences();
+        testRule.getActivity().populateInitialFields();
+        testRule.getActivity().reinitialiseTabs();
+        Intent intent = new Intent();
+        Resources resources = InstrumentationRegistry.getInstrumentation().getContext().getResources();
+        Uri uri = Uri.parse("android.resource://com.gangoffive.rig2gig/drawable/misc");
+        intent.setData(uri);
+        assertTrue(testRule.getActivity().getImageView().getDrawable() == null);
+        testRule.getActivity().onActivityResult(1,-1,intent);
+        assertTrue(testRule.getActivity().getImageView().getDrawable() != null);
     }
 }

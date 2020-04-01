@@ -9,17 +9,16 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
-import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withResourceName;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.junit.Assert.*;
 
 public class MusicianSearchActivityTest {
 
@@ -46,5 +45,11 @@ public class MusicianSearchActivityTest {
     @Test
     public void testTextOfComponents()  {
         onView(allOf(isAssignableFrom(TextView.class), withParent(withResourceName("toolbar")))).check(matches(withText("Invite musicians")));
+    }
+
+    @Test
+    public void testTypeTextInSearchView() throws InterruptedException {
+        onView(withId(R.id.search_bar)).perform(typeText("a"));
+        onView(withId(R.id.search_bar)).check(matches(withText("a")));
     }
 }
