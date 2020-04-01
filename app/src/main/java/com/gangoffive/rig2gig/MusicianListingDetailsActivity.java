@@ -3,6 +3,10 @@ package com.gangoffive.rig2gig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -31,6 +35,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -70,6 +75,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
         final TextView distance = findViewById(R.id.venue_description_final);
         final TextView position = findViewById(R.id.position);
         final Button contact = findViewById(R.id.contact);
+        final Button profile = findViewById(R.id.profile);
 
         //Initialising the Google Map. See onMapReady().
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
@@ -84,11 +90,20 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         /*Finding the listing by its ID in the "musician-listings" subfolder*/
         DocumentReference musicianListing = db.collection("musician-listings").document(mID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        musicianListing.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        musicianListing.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -96,10 +111,17 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
+                        profile.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(MusicianListingDetailsActivity.this, MusicianProfileActivity.class).putExtra("EXTRA_MUSICIAN_ID", document.get("musician-ref").toString()));
+                            }
+                        });
+
                         /*Find the musician reference by looking for the musician ID in the "musicians" subfolder*/
                         DocumentReference musician = db.collection("musicians").document(document.get("musician-ref").toString());
 
-                        musician.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        musician.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
@@ -114,7 +136,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                                         listingOwner.append(document.get("user-ref").toString());
 
                                         CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
-                                        sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get()
+                                        sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get(source)
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -172,7 +194,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 db.collection("musicians").whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid())
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        .get(source).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
@@ -264,8 +286,8 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
 
         GlideApp.with(this)
                 .load(musicianPic)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .skipMemoryCache(false)
                 .into(musicianPhoto);
     }
 
@@ -300,13 +322,20 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         /*Finding the listing by its ID in the "performer-listings" subfolder*/
         DocumentReference performerListing = db.collection("musician-listings").document(mID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        performerListing.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        performerListing.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -317,7 +346,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                         /*Find the performer reference by looking for the performer ID in the "performers" subfolder*/
                         DocumentReference performer = db.collection("musicians").document(document.get("musician-ref").toString());
 
-                        performer.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        performer.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
@@ -337,7 +366,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                                             CollectionReference favMusicians = db.collection("favourite-ads")
                                                     .document(FirebaseAuth.getInstance().getUid())
                                                     .collection("musician-listings");
-                                            favMusicians.document(mID).get()
+                                            favMusicians.document(mID).get(source)
                                                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -378,6 +407,14 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
         int id = item.getItemId();
         TextView description = findViewById(R.id.description);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         if(id == R.id.saveButton)
         {
@@ -392,7 +429,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
             CollectionReference favMusicians = db.collection("favourite-ads")
                     .document(FirebaseAuth.getInstance().getUid())
                     .collection("musician-listings");
-            favMusicians.document(mID).get()
+            favMusicians.document(mID).get(source)
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -451,11 +488,20 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         this.googleMap = googleMap;
 
         final DocumentReference musicianLocation = db.collection("musician-listings").document(mID);
 
-        musicianLocation.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        musicianLocation.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
@@ -474,7 +520,7 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
 
                         final DocumentReference musician = db.collection("musicians").document(document.get("musician-ref").toString());
 
-                        musician.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                        musician.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                         {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task)

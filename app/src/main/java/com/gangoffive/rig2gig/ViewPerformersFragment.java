@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +32,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +87,15 @@ public class ViewPerformersFragment extends Fragment
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         performerListings = new ArrayList<>();
 
         adapter = new PerformerAdapter(performerListings, getContext());
@@ -96,7 +109,7 @@ public class ViewPerformersFragment extends Fragment
             }
         });
         recyclerView.setAdapter(adapter);
-        firebaseCall();
+        firebaseCall(source);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -111,7 +124,7 @@ public class ViewPerformersFragment extends Fragment
                     float percentage = (100.0f * offset / (float)(range - extent));
 
                     if(percentage > 75) {
-                        firebaseCall();
+                        firebaseCall(source);
                     }
                 }
             }
@@ -120,7 +133,7 @@ public class ViewPerformersFragment extends Fragment
         return v;
     }
 
-    private void firebaseCall() {
+    private void firebaseCall(Source source) {
 
         callingFirebase = true;
 
@@ -138,7 +151,8 @@ public class ViewPerformersFragment extends Fragment
                     .limit(10);
         }
 
-        next.get()
+
+        next.get(source)
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {

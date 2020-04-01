@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +32,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +62,15 @@ public class ViewMusiciansFragment extends Fragment
     {
         final View v = inflater.inflate(R.layout.fragment_view_musicians, container, false);
 
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         currentBandId = this.getArguments().getString("CURRENT_BAND_ID");
 
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
@@ -85,7 +98,7 @@ public class ViewMusiciansFragment extends Fragment
         db = FirebaseFirestore.getInstance();
         DocumentReference bandRef = db.collection("bands").document(currentBandId);
 
-        bandRef.get()
+        bandRef.get(source)
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -115,7 +128,7 @@ public class ViewMusiciansFragment extends Fragment
                 .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
                 .limit(10);
 
-        first.get()
+        first.get(source)
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {

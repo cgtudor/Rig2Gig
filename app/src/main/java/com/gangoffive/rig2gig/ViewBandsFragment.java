@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +78,14 @@ public class ViewBandsFragment extends Fragment
         /*setHasOptionsMenu(true);*/
 
         db = FirebaseFirestore.getInstance();
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
         colRef = db.collection("band-listings");
 
         bandListings = new ArrayList<>();
@@ -84,7 +96,7 @@ public class ViewBandsFragment extends Fragment
                 .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
                 .limit(10);
 
-        first.get()
+        first.get(source)
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
