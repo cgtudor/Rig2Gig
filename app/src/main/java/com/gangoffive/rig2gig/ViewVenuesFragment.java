@@ -96,7 +96,6 @@ public class ViewVenuesFragment extends Fragment
         recyclerView.setLayoutManager(layoutManager);
 
         venueListings = new ArrayList<>();
-
         adapter = new VenueAdapter(venueListings, getContext());
 
         currentUserType = this.getArguments().getString("CURRENT_USER_TYPE");
