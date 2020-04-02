@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -100,6 +101,7 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
         final Button contact = findViewById(R.id.contact);
         final Button publish = findViewById(R.id.publish);
         final Button profile = findViewById(R.id.profile);
+        final Button noInternet = findViewById(R.id.noInternet);
 
         ConnectivityManager cm =
                 (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -108,6 +110,7 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
+        noInternet.setVisibility(isConnected ? View.GONE : View.VISIBLE);
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         //Initialising the Google Map. See onMapReady().

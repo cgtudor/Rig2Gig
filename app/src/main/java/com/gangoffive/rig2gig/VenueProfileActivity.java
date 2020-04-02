@@ -61,12 +61,16 @@ public class VenueProfileActivity extends AppCompatActivity {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
+        final Button noInternet = findViewById(R.id.noInternet);
+
         ConnectivityManager cm =
                 (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
+
+        noInternet.setVisibility(isConnected ? View.GONE : View.VISIBLE);
 
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 
