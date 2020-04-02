@@ -26,6 +26,7 @@
             android:textColor="#FFFFFF" />
     </com.google.android.material.appbar.AppBarLayout>
 
+    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
 
     <TextView
         android:id="@+id/firstName"

@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
@@ -11,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,6 +33,7 @@ import java.util.Map;
 
 public class BandAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser, SearchView.OnQueryTextListener {
 
+    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
     private TextView name, position, description, searchHint;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
@@ -94,6 +97,13 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         type = "Band";
         listingManager = new ListingManager(bandRef, type, listingRef);
         listingManager.getUserInfo(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, 2);
+        }
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Edit Band Advert Details");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -105,7 +115,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             &&  (bandPositions.size() == 0
             || description.getText().toString().trim().length() == 0))
         {
-            createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+            createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
             createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
         else if (createListing != null && description!= null
@@ -582,5 +592,12 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         this.bandRef = bandRef;
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

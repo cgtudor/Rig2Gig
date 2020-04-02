@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import static androidx.core.app.ActivityCompat.requestPermissions;
+
 
 public class ImageRequestHandler
 {
@@ -31,6 +35,7 @@ public class ImageRequestHandler
      * @param v view of calling activity
      */
     public static void getCameraImage(View v) {
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(((Activity)v.getContext()).getPackageManager()) != null) {
             ((Activity)v.getContext()).startActivityForResult(intent, REQUEST_PHOTO);

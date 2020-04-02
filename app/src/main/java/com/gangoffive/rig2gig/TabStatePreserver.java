@@ -32,7 +32,10 @@ public class TabStatePreserver {
     {
         if (!editingText && !breakout)
         {
-            tabView.saveTabs();
+            if (saveLoopCount == 0)
+            {
+                tabView.saveTabs();
+            }
             ((Activity)tabView).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
             breakOut();
         }

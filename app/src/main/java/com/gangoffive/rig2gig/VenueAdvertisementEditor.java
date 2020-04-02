@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,7 +36,7 @@ import java.util.Map;
 
 public class VenueAdvertisementEditor extends AppCompatActivity implements CreateAdvertisement {
 
-
+    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
     private TextView name, description;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
@@ -53,7 +55,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (s.toString().trim().length() == 0 && createListing != null) {
-                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+                createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
             else if (before == 0 && count == 1 && createListing != null
@@ -95,8 +97,15 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         FSTORE = FirebaseFirestore.getInstance();
         venueReference = FSTORE.collection("venues");
         getVenueLocation = venueReference;
-        getVenueLocation();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, 2);
+        }
 
+        getVenueLocation();
+                setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Venue Advert");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -422,5 +431,15 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
                 Log.d(TAG, "Failed to get Venue reference.");
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

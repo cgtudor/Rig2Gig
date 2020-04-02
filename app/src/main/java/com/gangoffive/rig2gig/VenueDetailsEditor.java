@@ -5,9 +5,11 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -27,7 +29,8 @@ import java.util.Map;
 
 public class VenueDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
-    private boolean mapping;
+    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
+    private boolean mapping, tab2set;
     private Geocoder geocoder;
     private TextView name, description, venueType, email, phone;
     private AutoCompleteTextView location;
@@ -56,7 +59,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (s.toString().trim().length() == 0 && createListing != null) {
-                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+                createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
             else if (before == 0 && count == 1 && createListing != null
@@ -94,6 +97,13 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         listingManager = new ListingManager(venueRef, type, listingRef);
         listingManager.getUserInfo(this);
         geocoder = new Geocoder(this, Locale.getDefault());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, 2);
+        }
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Edit Details");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -132,67 +142,73 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
      */
     @Override
     public void setViewReferences() {
-        image = findViewById(R.id.venueAdImageMain);
+        image = findViewById(R.id.detailsImage);
         if (image != null)
         {
             image.setImageDrawable(null);
         }
-        name = findViewById(R.id.venue_name_final);
-        if (name != null)
+        if(!tab2set)
         {
-            name.setOnFocusChangeListener(editTextFocusListener);
-            name.addTextChangedListener(textWatcher);
-
-        }
-        location = findViewById(R.id.venue_location);
-        if (location != null)
-        {
-            if(location.getAdapter() == null)
+            name = findViewById(R.id.venue_name_final);
+            if (name != null)
             {
-                location.setAdapter(new GooglePlacesAutoSuggestAdapter(VenueDetailsEditor.this, android.R.layout.simple_list_item_1));
-            }
+                name.setOnFocusChangeListener(editTextFocusListener);
+                name.addTextChangedListener(textWatcher);
 
-            location.setOnFocusChangeListener(editTextFocusListener);
-            location.addTextChangedListener(textWatcher);
+            }
+            location = findViewById(R.id.venue_location);
+            if (location != null)
+            {
+                if(location.getAdapter() == null)
+                {
+                    location.setAdapter(new GooglePlacesAutoSuggestAdapter(VenueDetailsEditor.this, android.R.layout.simple_list_item_1));
+                }
+
+                location.setOnFocusChangeListener(editTextFocusListener);
+                location.addTextChangedListener(textWatcher);
+            }
+            venueType = findViewById(R.id.type);
+            if (venueType != null)
+            {
+                venueType.setOnFocusChangeListener(editTextFocusListener);
+                venueType.addTextChangedListener(textWatcher);
+            }
+            email = findViewById(R.id.email);
+            if (email != null)
+            {
+                email.setOnFocusChangeListener(editTextFocusListener);
+                email.addTextChangedListener(textWatcher);
+            }
+            phone = findViewById(R.id.phone);
+            if (phone != null)
+            {
+                phone.setOnFocusChangeListener(editTextFocusListener);
+                phone.addTextChangedListener(textWatcher);
+
+            }
+            createListing = findViewById(R.id.createListing);
+            createListing.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    createAdvertisement();
+                }
+            });
+            cancel = findViewById(R.id.cancel);
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cancelAdvertisement();
+                }
+            });
         }
-        venueType = findViewById(R.id.type);
-        if (venueType != null)
-        {
-            venueType.setOnFocusChangeListener(editTextFocusListener);
-            venueType.addTextChangedListener(textWatcher);
-        }
-        email = findViewById(R.id.email);
-        if (email != null)
-        {
-            email.setOnFocusChangeListener(editTextFocusListener);
-            email.addTextChangedListener(textWatcher);
-        }
-        phone = findViewById(R.id.phone);
-        if (phone != null)
-        {
-            phone.setOnFocusChangeListener(editTextFocusListener);
-            phone.addTextChangedListener(textWatcher);
-        }
+
         description = findViewById(R.id.venue_description_final);
         if (description != null)
         {
             description.setOnFocusChangeListener(editTextFocusListener);
             description.addTextChangedListener(textWatcher);
         }
-        createListing = findViewById(R.id.createListing);
-        createListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAdvertisement();
-            }
-        });
-        cancel = findViewById(R.id.cancel);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelAdvertisement();
-            }
-        });
+
         galleryImage = findViewById(R.id.galleryImage);
         if (galleryImage != null)
         {
@@ -224,58 +240,52 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         {
             image.setImageDrawable(chosenPic);
         }
-        if(name != null && venue !=null)
-        {
-            name.setText(venue.get("name").toString());
+        if(!tab2set) {
+            if(name != null && venue !=null)
+            {
+                name.setText(venue.get("name").toString());
+            }
+
+            if(location != null && venue !=null)
+            {
+                try
+                {
+                    List<Address> getVenueAddress = geocoder.getFromLocation(Double.parseDouble(venue.get("latitude").toString()), Double.parseDouble(venue.get("longitude").toString()), 1);
+
+                    if(getVenueAddress != null && getVenueAddress.size() > 0)
+                    {
+                        String street = getVenueAddress.get(0).getAddressLine(0);
+                        location.setText(street);
+                    }
+                }
+                catch(IOException io)
+                {
+                    System.out.println(io.getMessage());
+                }
+
+
+                //location.setText(venue.get("location").toString());
+            }
+            if(venueType != null && venue !=null)
+            {
+                venueType.setText(venue.get("venue-type").toString());
+            }
+            if(email != null && venue !=null)
+            {
+                email.setText(venue.get("email-address").toString());
+            }
+            if(phone != null && venue !=null)
+            {
+                phone.setText(venue.get("phone-number").toString());
+                tab2set = true;
+            }
         }
         if(description != null && venue !=null)
         {
-            runOnUiThread(new Runnable() {
+            description.setText(venue.get("description").toString());
 
-                @Override
-                public void run() {
-                    description.setText(venue.get("description").toString());
-                }
-            });
         }
-        if(location != null && venue !=null)
-        {
-            try
-            {
-                List<Address> getVenueAddress = geocoder.getFromLocation(Double.parseDouble(venue.get("latitude").toString()), Double.parseDouble(venue.get("longitude").toString()), 1);
 
-                if(getVenueAddress != null && getVenueAddress.size() > 0)
-                {
-                    String street = getVenueAddress.get(0).getAddressLine(0);
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            location.setText(street);
-                        }
-                    });
-                }
-            }
-            catch(IOException io)
-            {
-                System.out.println(io.getMessage());
-            }
-
-
-            //location.setText(venue.get("location").toString());
-        }
-        if(venueType != null && venue !=null)
-        {
-            venueType.setText(venue.get("venue-type").toString());
-        }
-        if(email != null && venue !=null)
-        {
-            email.setText(venue.get("email-address").toString());
-        }
-        if(phone != null && venue !=null)
-        {
-            phone.setText(venue.get("phone-number").toString());
-        }
     }
 
     /**
@@ -284,6 +294,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     @Override
     public void saveTabs()
     {
+        mapping = true;
         if (image != null && image.getDrawable() != null)
         {
             chosenPic = (image.getDrawable());
@@ -340,7 +351,25 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
             chosenPic = image.getDrawable();
         }
         if (validateDataMap()) {
-            listingManager.postDataToDatabase((HashMap)venue, chosenPic, this);
+            try
+            {
+                String venueName = location.getText().toString();
+                List<Address> postVenueAddress = geocoder.getFromLocationName(venueName, 1);
+
+                if(postVenueAddress.size() > 0)
+                {
+                    Address address = postVenueAddress.get(0);
+                    venue.put("latitude", address.getLatitude());
+                    venue.put("longitude", address.getLongitude());
+                    venue.put("location", address.getSubAdminArea());
+                }
+                listingManager.postDataToDatabase((HashMap)venue, chosenPic, this);
+            }
+            catch(IOException io)
+            {
+                System.out.println(io.getMessage());
+            }
+
         } else {
             Toast.makeText(VenueDetailsEditor.this,
                     "Listing not created.  Ensure all fields are complete " +
@@ -412,27 +441,6 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         {
             venue.put("name",name.getText().toString());
         }
-        if(location != null && location.getText() != null && venue != null && mapping == true)
-        {
-            mapping = false;
-            try
-            {
-                String venueName = location.getText().toString();
-                List<Address> postVenueAddress = geocoder.getFromLocationName(venueName, 1);
-
-                if(postVenueAddress.size() > 0)
-                {
-                    Address address = postVenueAddress.get(0);
-                    venue.put("latitude", address.getLatitude());
-                    venue.put("longitude", address.getLongitude());
-                    venue.put("location", address.getSubAdminArea());
-                }
-            }
-            catch(IOException io)
-            {
-                System.out.println(io.getMessage());
-            }
-        }
         if(venueType != null && venueType.getText() != null && venue != null)
         {
             venue.put("venue-type",venueType.getText().toString());
@@ -485,4 +493,15 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     public void setListingManager(ListingManager listingManager) {
         this.listingManager = listingManager;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

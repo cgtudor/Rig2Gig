@@ -1,13 +1,16 @@
 package com.gangoffive.rig2gig;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -25,9 +28,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static androidx.core.app.ActivityCompat.requestPermissions;
+
 public class MusicianDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
 
-    private GooglePlacesAutoSuggestAdapter googleAdapter;
+    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
     private Geocoder geocoder;
     private TextView name, distance, genres;
     private AutoCompleteTextView location;
@@ -71,7 +76,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             if (createListing != null && (s.toString().trim().length() == 0 ||
                     actualNumber.length() == 0))
             {
-                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+                createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
                 createListing.setTextColor(Color.parseColor("#ffffff"));
             }
             else if (before == 0 && count == 1 && createListing != null
@@ -107,9 +112,15 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         type = "Musician";
         listingManager = new ListingManager(musicianRef, type, listingRef);
         listingManager.getUserInfo(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, 2);
+        }
         mapping = false;
         geocoder = new Geocoder(this, Locale.getDefault());
-        googleAdapter = new GooglePlacesAutoSuggestAdapter(MusicianDetailsEditor.this, android.R.layout.simple_list_item_1);
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Edit Details");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -148,7 +159,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
      */
     @Override
     public void setViewReferences() {
-        image = findViewById(R.id.venueAdImageMain);
+        image = findViewById(R.id.detailsImage);
         if (image != null)
         {
             image.setImageDrawable(null);
@@ -165,7 +176,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         {
             if(location.getAdapter() == null)
             {
-                location.setAdapter(googleAdapter);
+                location.setAdapter(new GooglePlacesAutoSuggestAdapter(MusicianDetailsEditor.this, android.R.layout.simple_list_item_1));
             }
 
             location.setOnFocusChangeListener(editTextFocusListener);
@@ -184,7 +195,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             genres.addTextChangedListener(textWatcher);
         }
         createListing = findViewById(R.id.createListing);
-        createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+        createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
         createListing.setTextColor(Color.parseColor("#FFFFFF"));
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,6 +298,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     @Override
     public void saveTabs()
     {
+        mapping = true;
         if (image != null && image.getDrawable() != null)
         {
             chosenPic = (image.getDrawable());
@@ -411,7 +423,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             try
             {
                 String musicianName = location.getText().toString();
-                List<Address> postMusicianAddress = geocoder.getFromLocationName(musicianName, 1);
+                List<Address> postMusicianAddress = geocoder.getFromLocationName(musicianName, 20);
 
                 if(postMusicianAddress.size() > 0)
                 {
@@ -513,5 +525,16 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
 
     public void setImage(ImageView image) {
         this.image = image;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
+
     }
 }

@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -10,11 +11,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,6 +47,7 @@ import java.util.Map;
 
 public class MusicianAdvertisementEditor extends AppCompatActivity  implements CreateAdvertisement, TabbedViewReferenceInitialiser, SearchView.OnQueryTextListener {
 
+    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
     private TextView name, position, description, searchHint;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
@@ -115,8 +119,17 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
 
         listingManager = new ListingManager(musicianRef, type, listingRef);
         listingManager.getUserInfo(this);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, 2);
+        }
         getMusicianLocation();
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Advertise yourself to bands");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //Advertise yourself to bands
     }
 
     /**
@@ -339,7 +352,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         if (createListing != null && description!= null
                 &&  (bandPositions.size() == 0
                 || description.getText().toString().trim().length() == 0)) {
-            createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+            createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
             createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
         else if (createListing != null && description!= null
@@ -628,6 +641,16 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
                 Log.d(TAG, "Failed to get Venue reference.");
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }
