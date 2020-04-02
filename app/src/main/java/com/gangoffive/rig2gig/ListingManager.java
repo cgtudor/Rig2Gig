@@ -418,6 +418,7 @@ public class ListingManager
      */
     public void editAdvertisement (HashMap<String, Object> listing, Drawable image, CreateAdvertisement activity)
     {
+        this.image = image;
         setListingInfo(listing);
         db.runTransaction(new Transaction.Function<Void>() {
             @Override
