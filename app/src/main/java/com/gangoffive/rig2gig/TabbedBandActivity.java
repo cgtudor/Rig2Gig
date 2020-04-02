@@ -74,34 +74,8 @@ public class TabbedBandActivity extends AppCompatActivity {
             String genreInput = genre.getText().toString().trim();
             String emailInput = email.getText().toString().trim();
             String numberInput = number.getText().toString().trim();
+            image = findViewById(R.id.imageView);
 
-//            int leadingZeros = 0;
-//            while (true)
-//            {
-//                if (nameInput.length() != 0 && nameInput.length() > leadingZeros && nameInput.charAt(leadingZeros) == '0')
-//                {
-//                    leadingZeros++;
-//                }
-//                else
-//                {
-//                    break;
-//                }
-//            }
-//            String actualNumber = nameInput.substring(leadingZeros,nameInput.length());
-//            if (createListing != null && (s.toString().trim().length() == 0 ||
-//                    actualNumber.length() == 0))
-//            {
-//                createListing.setBackgroundColor(Color.parseColor("#129ee9"));
-//                createListing.setTextColor(Color.parseColor("#FFFFFF"));
-//            }
-//            else if (before == 0 && count == 1 && createListing != null
-//                    && name.getText().toString().trim().length() > 0
-//            )
-//            {
-//                createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
-//                createListing.setTextColor(Color.parseColor("#FFFFFF"));
-//            }
-//        }
             if (!nameInput.isEmpty() && !locationInput.isEmpty() && !distanceInput.isEmpty() && !genreInput.isEmpty() && !emailInput.isEmpty() && !numberInput.isEmpty())
             {
                 createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
