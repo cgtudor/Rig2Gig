@@ -96,12 +96,16 @@ public class ViewCommsFragment extends Fragment
 
         db = FirebaseFirestore.getInstance();
 
+        final Button noInternet = v.findViewById(R.id.noInternet);
+
         ConnectivityManager cm =
                 (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
+
+        noInternet.setVisibility(isConnected ? View.GONE : View.VISIBLE);
 
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 

@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -68,6 +69,17 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         Intent intent = getIntent();
         displayMusicianBandsReference = intent.getStringExtra("EXTRA_SELECTED_BAND_ID");
         bandName = intent.getStringExtra("EXTRA_SELECTED_BAND_NAME");
+
+        final Button noInternet = findViewById(R.id.noInternet);
+
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        noInternet.setVisibility(isConnected ? View.GONE : View.VISIBLE);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
