@@ -14,6 +14,22 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
 
+        <Button
+            android:id="@+id/noInternet"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            android:layout_marginTop="0dp"
+            android:clickable="false"
+            android:visibility="gone"
+            android:background="@color/tw__light_gray"
+            android:text="No Internet Connection."
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
+
         <ImageView
             android:id="@+id/venuePhoto"
             android:layout_width="0dp"
