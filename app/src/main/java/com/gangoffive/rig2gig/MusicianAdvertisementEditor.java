@@ -10,11 +10,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -111,6 +113,13 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         listingManager = new ListingManager(musicianRef, type, listingRef);
         listingManager.getUserInfo(this);
         getMusicianLocation();
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Advertise yourself to bands");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //Advertise yourself to bands
     }
 
     /**
@@ -315,7 +324,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         if (createListing != null && description!= null
                 &&  (bandPositions.size() == 0
                 || description.getText().toString().trim().length() == 0)) {
-            createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+            createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
             createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
         else if (createListing != null && description!= null
@@ -540,6 +549,16 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
                 Log.d(TAG, "Failed to get Venue reference.");
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

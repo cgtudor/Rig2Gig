@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -95,6 +96,11 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         type = "Band";
         listingManager = new ListingManager(bandRef, type, listingRef);
         listingManager.getUserInfo(this);
+
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Edit Band Advert Details");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -106,7 +112,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             &&  (bandPositions.size() == 0
             || description.getText().toString().trim().length() == 0))
         {
-            createListing.setBackgroundColor(Color.parseColor("#129ee9"));
+            createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
             createListing.setTextColor(Color.parseColor("#FFFFFF"));
         }
         else if (createListing != null && description!= null
@@ -495,5 +501,14 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     public void onBackPressed()
     {
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
