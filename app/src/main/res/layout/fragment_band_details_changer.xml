@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/detailsTitle"
+        android:id="@+id/detailTitle"
         android:layout_width="236dp"
         android:layout_height="32dp"
         android:layout_marginTop="24dp"
@@ -28,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailsTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/detailTitle" />
 
     <TextView
         android:id="@+id/nameLabel"
@@ -38,7 +38,7 @@
         android:layout_marginTop="24dp"
         android:text="Band Name:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailsTitle"
+        app:layout_constraintTop_toBottomOf="@+id/detailTitle"
         android:textColor="#000000"/>
 
     <TextView
