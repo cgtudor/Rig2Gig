@@ -126,6 +126,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
+        final Button noInternet = findViewById(R.id.noInternet);
+
         ConnectivityManager cm =
                 (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -133,6 +135,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
+        noInternet.setVisibility(isConnected ? View.GONE : View.VISIBLE);
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         /*Finding the listing by its ID in the "venue-listings" subfolder*/

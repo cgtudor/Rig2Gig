@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,12 +61,16 @@ public class ViewMusiciansFragment extends Fragment
     {
         final View v = inflater.inflate(R.layout.fragment_view_musicians, container, false);
 
+        final Button noInternet = v.findViewById(R.id.noInternet);
+
         ConnectivityManager cm =
-                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
+
+        noInternet.setVisibility(isConnected ? View.GONE : View.VISIBLE);
 
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 

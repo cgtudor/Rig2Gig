@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -68,6 +69,17 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         view = inflater.inflate(R.layout.fragment_musician_console, container, false);
+
+        final Button noInternet = view.findViewById(R.id.noInternet);
+
+        ConnectivityManager cm =
+                (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        noInternet.setVisibility(isConnected ? View.GONE : View.VISIBLE);
 
         //General Section.
         final CardView card_view_view_venues = view.findViewById(R.id.card_view_view_Venues);
