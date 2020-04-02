@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +25,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.List;
 
@@ -111,8 +115,16 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
      */
     private void databaseQuery()
     {
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        getMusicians.whereEqualTo("user-ref", USERID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        getMusicians.whereEqualTo("user-ref", USERID).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -143,7 +155,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                     editProfileLayout = view.findViewById(R.id.card_view_create_band);
                     editProfileLayout.setVisibility(View.VISIBLE);
 
-                    getPerformerAdverts.whereEqualTo("performer-ref", musician.getId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+                    getPerformerAdverts.whereEqualTo("performer-ref", musician.getId()).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
                     {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -188,7 +200,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                         }
                     });
 
-                    getMusicianAdverts.whereEqualTo("musician-ref", musicianRef).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+                    getMusicianAdverts.whereEqualTo("musician-ref", musicianRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
                     {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -295,7 +307,16 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
      */
     private void deletePerformerAdvert()
     {
-        getPerformerAdverts.whereEqualTo("performer-ref", musicianRef).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        getPerformerAdverts.whereEqualTo("performer-ref", musicianRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -326,7 +347,16 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
 
     private void deleteMusicianAdvert()
     {
-        getMusicianAdverts.whereEqualTo("musician-ref", musicianRef).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        getMusicianAdverts.whereEqualTo("musician-ref", musicianRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)

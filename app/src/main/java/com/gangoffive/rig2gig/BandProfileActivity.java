@@ -1,5 +1,8 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,6 +21,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -52,11 +56,20 @@ public class BandProfileActivity extends AppCompatActivity {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         /*Finding the band by its ID in the "bands" subfolder*/
         DocumentReference band = db.collection("bands").document(mID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        band.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        band.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -74,7 +87,7 @@ public class BandProfileActivity extends AppCompatActivity {
                         for(String member : memberArray)
                         {
                             db.collection("musicians").document(member)
-                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    .get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if(task.isSuccessful())
@@ -106,8 +119,8 @@ public class BandProfileActivity extends AppCompatActivity {
 
         GlideApp.with(this)
                 .load(bandPic)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .skipMemoryCache(false)
                 .into(bandPhoto);
     }
 
@@ -127,6 +140,15 @@ public class BandProfileActivity extends AppCompatActivity {
 
         AtomicBoolean currentUserInBand = new AtomicBoolean(false);
 
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         mID = getIntent().getStringExtra("EXTRA_BAND_ID");
 
         /*Firestore & Cloud Storage initialization*/
@@ -136,7 +158,7 @@ public class BandProfileActivity extends AppCompatActivity {
         DocumentReference band = db.collection("bands").document(mID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        band.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        band.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {

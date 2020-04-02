@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,51 +23,49 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SavedVenuesFragment extends Fragment implements DefaultGoBack
+public class SavedVenuesFragment extends Fragment
 {
-    private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+    private static final String TAG = "SavedVenuesFragment";
 
-    SwipeRefreshLayout swipeLayout;
+    private String currentUserType;
+    private String currentBandId;
 
-    private FirebaseFirestore db;
-    private CollectionReference colRef;
-    private List<DocumentSnapshot> documentSnapshots;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    DocumentSnapshot lastVisible;
 
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeLayout;
     private VenueAdapter adapter;
 
     private ArrayList<VenueListing> venueListings;
+    private boolean callingFirebase = false;
 
-    /**
-     * Upon creation of the ViewVenuesFragment, create the fragment_view_venues layout.
-     * @param inflater The inflater is used to read the passed xml file.
-     * @param container The views base class.
-     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
-     * @return Returns a View of the fragment_upgrade_to_musicians layout.
-     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-            @Override
-            public void handleOnBackPressed() {
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewVenuesFragment()).commit();
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-
         final View v = inflater.inflate(R.layout.fragment_saved_venues, container, false);
+
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
@@ -76,6 +77,9 @@ public class SavedVenuesFragment extends Fragment implements DefaultGoBack
                 if (Build.VERSION.SDK_INT >= 26) {
                     ft.setReorderingAllowed(false);
                 }
+
+                lastVisible = null;
+
                 ft.detach(SavedVenuesFragment.this).attach(SavedVenuesFragment.this).commit();
                 swipeLayout.setRefreshing(false);
             }
@@ -85,22 +89,82 @@ public class SavedVenuesFragment extends Fragment implements DefaultGoBack
                 getResources().getColor(android.R.color.holo_blue_dark),
                 getResources().getColor(android.R.color.holo_orange_dark));
 
-        String uID = FirebaseAuth.getInstance().getUid();
-
-        db = FirebaseFirestore.getInstance();
-        colRef = db.collection("favourite-ads").document(uID).collection("venue-listings");
+        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
 
         venueListings = new ArrayList<>();
+        adapter = new VenueAdapter(venueListings, getContext());
 
-        Query first = colRef
-                .limit(10);
+        currentUserType = this.getArguments().getString("CURRENT_USER_TYPE");
 
-        first.get()
+        Bundle extras = this.getArguments();
+        if(extras != null) {
+            if(extras.containsKey("CURRENT_BAND_ID")) {
+                currentBandId = extras.getString("CURRENT_BAND_ID");
+            }
+        }
+
+        adapter.setOnItemClickListener(new VenueAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent openListingIntent = new Intent(v.getContext(), VenueListingDetailsActivity.class);
+                String listingRef = venueListings.get(position).getListingRef();
+                openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
+                startActivityForResult(openListingIntent, 1);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        firebaseCall(source);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if(callingFirebase == false) {
+                    super.onScrollStateChanged(recyclerView, newState);
+
+                    int offset = recyclerView.computeVerticalScrollOffset();
+                    int extent = recyclerView.computeVerticalScrollExtent();
+                    int range = recyclerView.computeVerticalScrollRange();
+
+                    float percentage = (100.0f * offset / (float)(range - extent));
+
+                    if(percentage > 75) {
+                        firebaseCall(source);
+                    }
+                }
+            }
+        });
+
+        return v;
+    }
+
+    private void firebaseCall(Source source) {
+
+        callingFirebase = true;
+
+        Query next;
+        String uID = FirebaseAuth.getInstance().getUid();
+        Timestamp currentDate = Timestamp.now();
+
+        if(lastVisible == null) {
+            next = db.collection("favourite-ads").document(uID).collection("venue-listings")
+                    .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
+                    .limit(10);
+        } else {
+            next = db.collection("favourite-ads").document(uID).collection("venue-listings")
+                    .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
+                    .startAfter(lastVisible)
+                    .limit(10);
+        }
+
+        next.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
-                            documentSnapshots = task.getResult().getDocuments();
+                            List<DocumentSnapshot> documentSnapshots = task.getResult().getDocuments();
                             if(!documentSnapshots.isEmpty())
                             {
                                 Log.d(TAG, "get successful with data");
@@ -112,26 +176,12 @@ public class SavedVenuesFragment extends Fragment implements DefaultGoBack
                                             documentSnapshot.get("venue-ref").toString());
 
                                     venueListings.add(venueListing);
+                                    lastVisible = documentSnapshot;
                                 }
 
-                                adapter = new VenueAdapter(venueListings, getContext());
+                                adapter.notifyItemInserted(venueListings.size() - 1);
 
-                                adapter.setOnItemClickListener(new VenueAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(int position) {
-                                        Intent openListingIntent = new Intent(v.getContext(), VenueListingDetailsActivity.class);
-                                        String listingRef = venueListings.get(position).getListingRef();
-                                        openListingIntent.putExtra("EXTRA_VENUE_LISTING_ID", listingRef);
-                                        startActivityForResult(openListingIntent, 1);
-                                    }
-                                });
-
-                                recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-                                recyclerView.setHasFixedSize(true);
-                                recyclerView.setAdapter(adapter);
-                                LinearLayoutManager llManager = new LinearLayoutManager(getContext());
-                                recyclerView.setLayoutManager(llManager);
-
+                                callingFirebase = false;
                             } else {
                                 Log.d(TAG, "get successful without data");
                             }
@@ -140,19 +190,6 @@ public class SavedVenuesFragment extends Fragment implements DefaultGoBack
                         }
                     }
                 });
-
-        return v;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        return true;
     }
 
     @Override
@@ -163,6 +200,9 @@ public class SavedVenuesFragment extends Fragment implements DefaultGoBack
         if (Build.VERSION.SDK_INT >= 26) {
             ft.setReorderingAllowed(false);
         }
+
+        lastVisible = null;
+
         ft.detach(SavedVenuesFragment.this).attach(SavedVenuesFragment.this).commit();
     }
 }

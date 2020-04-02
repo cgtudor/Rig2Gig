@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,28 +32,27 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViewMusiciansFragment extends Fragment
 {
-    private String currentBandId;
+    private static final String TAG = "ViewPerformersFragment";
 
-    private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+    private String currentBandRef;
 
-    SwipeRefreshLayout swipeLayout;
-
-    private FirebaseFirestore db;
-    private CollectionReference colRef;
-    private List<DocumentSnapshot> documentSnapshots;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    DocumentSnapshot lastVisible;
 
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeLayout;
     private MusicianAdapter adapter;
 
     private ArrayList<MusicianListing> musicianListings;
-
     private final ArrayList<String> bandMembers = new ArrayList();
+    private boolean callingFirebase = false;
 
     @Nullable
     @Override
@@ -58,7 +60,14 @@ public class ViewMusiciansFragment extends Fragment
     {
         final View v = inflater.inflate(R.layout.fragment_view_musicians, container, false);
 
-        currentBandId = this.getArguments().getString("CURRENT_BAND_ID");
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
@@ -70,6 +79,9 @@ public class ViewMusiciansFragment extends Fragment
                 if (Build.VERSION.SDK_INT >= 26) {
                     ft.setReorderingAllowed(false);
                 }
+
+                lastVisible = null;
+
                 ft.detach(ViewMusiciansFragment.this).attach(ViewMusiciansFragment.this).commit();
                 swipeLayout.setRefreshing(false);
             }
@@ -79,44 +91,99 @@ public class ViewMusiciansFragment extends Fragment
                 getResources().getColor(android.R.color.holo_blue_dark),
                 getResources().getColor(android.R.color.holo_orange_dark));
 
-        /*setHasOptionsMenu(true);*/
-
-
-        db = FirebaseFirestore.getInstance();
-        DocumentReference bandRef = db.collection("bands").document(currentBandId);
-
-        bandRef.get()
+        currentBandRef = this.getArguments().getString("CURRENT_BAND_ID");
+        DocumentReference bandRef = db.collection("bands").document(currentBandRef);
+        bandRef.get(source)
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
+                                Log.d(TAG, "Band Query Get successful with data");
                                 ArrayList<String> members = (ArrayList<String>) document.get("members");
                                 for(String member : members) {
                                     bandMembers.add(member);
                                 }
+                            } else {
+                                Log.d(TAG, "Band Query Get successful without data");
                             }
+                        } else {
+                            Log.d(TAG, "Band Query Get unsuccessful");
                         }
                     }
                 });
+        /*while(bandMembers.isEmpty()) {
 
-        colRef = db.collection("musician-listings");
+        }
+*/
+        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
 
         musicianListings = new ArrayList<>();
+        adapter = new MusicianAdapter(musicianListings, getContext());
+        adapter.setOnItemClickListener(new MusicianAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent openListingIntent = new Intent(v.getContext(), MusicianListingDetailsActivity.class);
+                String listingRef = musicianListings.get(position).getListingRef();
+                openListingIntent.putExtra("EXTRA_MUSICIAN_LISTING_ID", listingRef);
+                openListingIntent.putExtra("CURRENT_BAND_ID", currentBandRef);
+                startActivityForResult(openListingIntent, 1);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        firebaseCall(source);
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if(callingFirebase == false) {
+                    super.onScrollStateChanged(recyclerView, newState);
+
+                    int offset = recyclerView.computeVerticalScrollOffset();
+                    int extent = recyclerView.computeVerticalScrollExtent();
+                    int range = recyclerView.computeVerticalScrollRange();
+
+                    float percentage = (100.0f * offset / (float)(range - extent));
+
+                    if(percentage > 75) {
+                        firebaseCall(source);
+                    }
+                }
+            }
+        });
+
+        return v;
+    }
+
+    private void firebaseCall(Source source) {
+
+        callingFirebase = true;
+
+        Query next;
         Timestamp currentDate = Timestamp.now();
 
-        Query first = colRef
-                .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
-                .limit(10);
+        if(lastVisible == null) {
+            next = db.collection("musician-listings")
+                    .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
+                    .limit(10);
+        } else {
+            next = db.collection("musician-listings")
+                    .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
+                    .startAfter(lastVisible)
+                    .limit(10);
+        }
 
-        first.get()
+
+        next.get(source)
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
-                            documentSnapshots = task.getResult().getDocuments();
+                            List<DocumentSnapshot> documentSnapshots = task.getResult().getDocuments();
                             if(!documentSnapshots.isEmpty())
                             {
                                 Log.d(TAG, "get successful with data");
@@ -127,31 +194,16 @@ public class ViewMusiciansFragment extends Fragment
                                             documentSnapshot.getId(),
                                             documentSnapshot.get("musician-ref").toString(),
                                             positions);
-
                                     if (!bandMembers.contains(documentSnapshot.get("musician-ref").toString())) {
                                         musicianListings.add(musicianListing);
                                     }
+
+                                    lastVisible = documentSnapshot;
                                 }
 
-                                adapter = new MusicianAdapter(musicianListings, getContext());
+                                adapter.notifyItemInserted(musicianListings.size() - 1);
 
-                                adapter.setOnItemClickListener(new MusicianAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(int position) {
-                                        Intent openListingIntent = new Intent(v.getContext(), MusicianListingDetailsActivity.class);
-                                        String listingRef = musicianListings.get(position).getListingRef();
-                                        openListingIntent.putExtra("EXTRA_MUSICIAN_LISTING_ID", listingRef);
-                                        openListingIntent.putExtra("CURRENT_BAND_ID", currentBandId);
-                                        startActivityForResult(openListingIntent, 1);
-                                    }
-                                });
-
-                                recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-                                recyclerView.setHasFixedSize(true);
-                                recyclerView.setAdapter(adapter);
-                                LinearLayoutManager llManager = new LinearLayoutManager(getContext());
-                                recyclerView.setLayoutManager(llManager);
-
+                                callingFirebase = false;
                             } else {
                                 Log.d(TAG, "get successful without data");
                             }
@@ -160,31 +212,7 @@ public class ViewMusiciansFragment extends Fragment
                         }
                     }
                 });
-
-        return v;
     }
-
-    /*@Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.test, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem)
-    {
-        switch(menuItem.getItemId())
-        {
-            case R.id.favourite_icon:
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new SavedMusiciansFragment()).commit();
-                break;
-            default:
-                break;
-        }
-
-        return true;
-    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -194,6 +222,9 @@ public class ViewMusiciansFragment extends Fragment
         if (Build.VERSION.SDK_INT >= 26) {
             ft.setReorderingAllowed(false);
         }
+
+        lastVisible = null;
+
         ft.detach(ViewMusiciansFragment.this).attach(ViewMusiciansFragment.this).commit();
     }
 }

@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
@@ -90,6 +94,16 @@ public class ViewCommsFragment extends Fragment
         String uID = FirebaseAuth.getInstance().getUid();
 
         db = FirebaseFirestore.getInstance();
+
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
         colRef = db.collection("communications").document(uID).collection("received");
 
         communications = new ArrayList<>();
@@ -98,7 +112,7 @@ public class ViewCommsFragment extends Fragment
                 .limit(10)
                 .orderBy("posting-date", Query.Direction.ASCENDING);
 
-        first.get()
+        first.get(source)
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -158,19 +172,27 @@ public class ViewCommsFragment extends Fragment
 
                                         String profileType = communications.get(position).getSentFromType();
                                         String profileRef = communications.get(position).getSentFromRef();
+                                        String viewerType = communications.get(position).getSentToType();
+                                        String viewerRef = communications.get(position).getSentToRef();
 
                                         switch(profileType) {
                                             case "venues":
                                                 openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_VENUE_ID", profileRef);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_REF", viewerRef);
                                                 break;
                                             case "bands":
                                                 openProfileIntent = new Intent(v.getContext(), BandProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_BAND_ID", profileRef);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_REF", viewerRef);
                                                 break;
                                             case "musicians":
                                                 openProfileIntent = new Intent(v.getContext(), MusicianProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_REF", viewerRef);
                                                 break;
                                         }
 
@@ -184,19 +206,27 @@ public class ViewCommsFragment extends Fragment
 
                                         String profileType = communications.get(position).getSentFromType();
                                         String profileRef = communications.get(position).getSentFromRef();
+                                        String viewerType = communications.get(position).getSentToType();
+                                        String viewerRef = communications.get(position).getSentToRef();
 
                                         switch(profileType) {
                                             case "venues":
                                                 openProfileIntent = new Intent(v.getContext(), VenueProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_VENUE_ID", profileRef);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_REF", viewerRef);
                                                 break;
                                             case "bands":
                                                 openProfileIntent = new Intent(v.getContext(), BandProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_BAND_ID", profileRef);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_REF", viewerRef);
                                                 break;
                                             case "musicians":
                                                 openProfileIntent = new Intent(v.getContext(), MusicianProfileActivity.class);
                                                 openProfileIntent.putExtra("EXTRA_MUSICIAN_ID", profileRef);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                                                openProfileIntent.putExtra("EXTRA_VIEWER_REF", viewerRef);
                                                 break;
                                         }
 
@@ -207,7 +237,7 @@ public class ViewCommsFragment extends Fragment
                                     @Override
                                     public void onTopButtonClick(int position) {
 
-                                        db.collection("users").document(FirebaseAuth.getInstance().getUid()).get()
+                                        db.collection("users").document(FirebaseAuth.getInstance().getUid()).get(source)
                                                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -218,7 +248,7 @@ public class ViewCommsFragment extends Fragment
                                                             {
                                                                 String userType = user.get("user-type").equals("Musician") ? "musicians" : "venues";
                                                                 db.collection(userType).whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid())
-                                                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                        .get(source).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                                     @Override
                                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                                         if(task.isSuccessful())
@@ -367,7 +397,7 @@ public class ViewCommsFragment extends Fragment
                                     @Override
                                     public void onBotButtonClick(int position) {
 
-                                        db.collection("users").document(FirebaseAuth.getInstance().getUid()).get()
+                                        db.collection("users").document(FirebaseAuth.getInstance().getUid()).get(source)
                                                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -378,7 +408,7 @@ public class ViewCommsFragment extends Fragment
                                                             {
                                                                 String userType = user.get("user-type").equals("Musician") ? "musicians" : "venues";
                                                                 db.collection(userType).whereEqualTo("user-ref", FirebaseAuth.getInstance().getUid())
-                                                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                        .get(source).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                                     @Override
                                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                                         if(task.isSuccessful())

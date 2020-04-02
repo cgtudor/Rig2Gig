@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.List;
 
@@ -87,7 +91,16 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
     private void databaseQuery()
     {
 
-        getBands.whereEqualTo("user-ref", USERID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        getBands.whereEqualTo("user-ref", USERID).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -100,7 +113,7 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
 
                     DocumentSnapshot band = bands.get(0);
 
-                    getBandAdverts.whereEqualTo("performer-ref", band.getId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+                    getBandAdverts.whereEqualTo("performer-ref", band.getId()).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
                     {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -214,7 +227,16 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
      */
     private void deleteAdvert()
     {
-        getBandAdverts.whereEqualTo("performer-ref", bandRef).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        getBandAdverts.whereEqualTo("performer-ref", bandRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)

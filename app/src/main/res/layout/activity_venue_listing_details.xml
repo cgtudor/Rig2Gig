@@ -145,7 +145,7 @@
             android:text="Request Contact"
             android:textAllCaps="false"
             android:textColor="#FFF"
-            android:layout_margin="10dp"
+            android:layout_margin="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -155,7 +155,7 @@
             android:id="@+id/publish"
             android:layout_width="280dp"
             android:layout_height="40dp"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/button_bg_rounded_corners"
             android:onClick="onBuyPressed"
             android:visibility="gone"
@@ -165,6 +165,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/google_map" />
+
+        <Button
+            android:id="@+id/profile"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_bg_rounded_corners"
+            android:visibility="visible"
+            android:text="Profile"
+            android:textAllCaps="false"
+            android:textColor="#FFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contact" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

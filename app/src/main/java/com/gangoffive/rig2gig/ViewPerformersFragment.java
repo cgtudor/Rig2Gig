@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,32 +32,42 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.gangoffive.rig2gig.PaginationListener.PAGE_START;
 
 
 public class ViewPerformersFragment extends Fragment
 {
-    private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+    private static final String TAG = "ViewPerformersFragment";
 
-    SwipeRefreshLayout swipeLayout;
-
-    private FirebaseFirestore db;
-    private CollectionReference colRef;
-    private List<DocumentSnapshot> documentSnapshots;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    DocumentSnapshot lastVisible;
 
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeLayout;
     private PerformerAdapter adapter;
 
     private ArrayList<PerformerListing> performerListings;
+    private boolean callingFirebase = false;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         final View v = inflater.inflate(R.layout.fragment_view_performers, container, false);
+
+        ConnectivityManager cm =
+                (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
@@ -66,6 +79,9 @@ public class ViewPerformersFragment extends Fragment
                 if (Build.VERSION.SDK_INT >= 26) {
                     ft.setReorderingAllowed(false);
                 }
+
+                lastVisible = null;
+
                 ft.detach(ViewPerformersFragment.this).attach(ViewPerformersFragment.this).commit();
                 swipeLayout.setRefreshing(false);
             }
@@ -75,25 +91,73 @@ public class ViewPerformersFragment extends Fragment
                 getResources().getColor(android.R.color.holo_blue_dark),
                 getResources().getColor(android.R.color.holo_orange_dark));
 
-        /*setHasOptionsMenu(true);*/
-
-        db = FirebaseFirestore.getInstance();
-        colRef = db.collection("performer-listings");
+        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
 
         performerListings = new ArrayList<>();
 
+        adapter = new PerformerAdapter(performerListings, getContext());
+        adapter.setOnItemClickListener(new PerformerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
+                String listingRef = performerListings.get(position).getListingRef();
+                openListingIntent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingRef);
+                startActivityForResult(openListingIntent,1);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        firebaseCall(source);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if(callingFirebase == false) {
+                    super.onScrollStateChanged(recyclerView, newState);
+
+                    int offset = recyclerView.computeVerticalScrollOffset();
+                    int extent = recyclerView.computeVerticalScrollExtent();
+                    int range = recyclerView.computeVerticalScrollRange();
+
+                    float percentage = (100.0f * offset / (float)(range - extent));
+
+                    if(percentage > 75) {
+                        firebaseCall(source);
+                    }
+                }
+            }
+        });
+
+        return v;
+    }
+
+    private void firebaseCall(Source source) {
+
+        callingFirebase = true;
+
+        Query next;
         Timestamp currentDate = Timestamp.now();
 
-        Query first = colRef
-                .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
-                .limit(10);
+        if(lastVisible == null) {
+            next = db.collection("performer-listings")
+                    .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
+                    .limit(10);
+        } else {
+            next = db.collection("performer-listings")
+                    .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
+                    .startAfter(lastVisible)
+                    .limit(10);
+        }
 
-        first.get()
+
+        next.get(source)
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
-                            documentSnapshots = task.getResult().getDocuments();
+                            List<DocumentSnapshot> documentSnapshots = task.getResult().getDocuments();
                             if(!documentSnapshots.isEmpty())
                             {
                                 Log.d(TAG, "get successful with data");
@@ -106,65 +170,17 @@ public class ViewPerformersFragment extends Fragment
                                             documentSnapshot.get("performer-type").toString());
 
                                     performerListings.add(performerListing);
+                                    lastVisible = documentSnapshot;
                                 }
 
-                                adapter = new PerformerAdapter(performerListings, getContext());
+                                adapter.notifyItemInserted(performerListings.size() - 1);
 
-                                adapter.setOnItemClickListener(new PerformerAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(int position) {
-                                        Intent openListingIntent = new Intent(v.getContext(), PerformanceListingDetailsActivity.class);
-                                        String listingRef = performerListings.get(position).getListingRef();
-                                        openListingIntent.putExtra("EXTRA_PERFORMANCE_LISTING_ID", listingRef);
-                                        startActivityForResult(openListingIntent,1);
-                                    }
-                                });
-
-                                recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-                                recyclerView.setHasFixedSize(true);
-                                recyclerView.setAdapter(adapter);
-                                LinearLayoutManager llManager = new LinearLayoutManager(getContext());
-                                recyclerView.setLayoutManager(llManager);
-
-                            } else {
-                                Log.d(TAG, "get successful without data");
+                                callingFirebase = false;
                             }
-                        } else {
-                            Log.d(TAG, "get failed with ", task.getException());
                         }
                     }
                 });
-
-        return v;
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    /*@Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        inflater.inflate(R.menu.test, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem)
-    {
-        switch(menuItem.getItemId())
-        {
-            case R.id.favourite_icon:
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new SavedPerformersFragment()).commit();
-                break;
-            default:
-                break;
-        }
-
-        return true;
-    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -174,6 +190,9 @@ public class ViewPerformersFragment extends Fragment
         if (Build.VERSION.SDK_INT >= 26) {
             ft.setReorderingAllowed(false);
         }
+
+        lastVisible = null;
+
         ft.detach(ViewPerformersFragment.this).attach(ViewPerformersFragment.this).commit();
     }
 }
