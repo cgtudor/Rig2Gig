@@ -6,6 +6,9 @@ import android.widget.TextView;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
+
+import com.gangoffive.rig2gig.band.management.ManageBandMembersActivity;
+
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;

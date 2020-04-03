@@ -5,6 +5,8 @@ import android.widget.TextView;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
+import com.gangoffive.rig2gig.band.management.MusicianSearchActivity;
+
 import org.junit.Rule;
 import org.junit.Test;
 

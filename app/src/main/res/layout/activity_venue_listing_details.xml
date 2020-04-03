@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".VenueListingDetailsActivity">
+        tools:context=".advert.details.VenueListingDetailsActivity">
 
         <include
             android:id="@+id/toolbar"
@@ -151,7 +151,7 @@
             app:layout_constraintHorizontal_bias="0.491"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView9"
-            tools:context=".VenueListingDetailsActivity" />
+            tools:context=".advert.details.VenueListingDetailsActivity" />
 
         <Button
             android:id="@+id/contact"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".PerformerAdvertisementEditor">
+    tools:context=".advert.management.PerformerAdvertisementEditor">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"

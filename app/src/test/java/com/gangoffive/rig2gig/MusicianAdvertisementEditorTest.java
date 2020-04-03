@@ -1,8 +1,8 @@
 package com.gangoffive.rig2gig;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.gangoffive.rig2gig.advert.management.MusicianAdvertisementEditor;
+import com.gangoffive.rig2gig.firebase.ListingManager;
+import com.gangoffive.rig2gig.utils.TabStatePreserver;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,9 +16,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
 public class MusicianAdvertisementEditorTest {
 

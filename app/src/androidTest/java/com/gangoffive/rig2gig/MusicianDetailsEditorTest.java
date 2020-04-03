@@ -2,24 +2,22 @@ package com.gangoffive.rig2gig;
 
 import android.app.Activity;
 import android.app.Instrumentation;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Looper;
-import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+
+import com.gangoffive.rig2gig.firebase.ListingManager;
+import com.gangoffive.rig2gig.musician.management.MusicianDetailsEditor;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -27,8 +25,6 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
@@ -58,7 +54,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class MusicianDetailsEditorTest {
     private HashMap<String, Object> musicianData;

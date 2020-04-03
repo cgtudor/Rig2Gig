@@ -5,6 +5,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.widget.Button;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
+
+import com.gangoffive.rig2gig.advert.management.MusicianAdvertisementEditor;
+import com.gangoffive.rig2gig.firebase.ListingManager;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

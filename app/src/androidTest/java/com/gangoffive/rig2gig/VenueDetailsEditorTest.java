@@ -8,6 +8,10 @@ import android.view.KeyEvent;
 import android.widget.Button;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
+
+import com.gangoffive.rig2gig.firebase.ListingManager;
+import com.gangoffive.rig2gig.venue.management.VenueDetailsEditor;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;

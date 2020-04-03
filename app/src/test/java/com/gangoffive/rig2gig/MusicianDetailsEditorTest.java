@@ -1,5 +1,8 @@
 package com.gangoffive.rig2gig;
 
+import com.gangoffive.rig2gig.firebase.ListingManager;
+import com.gangoffive.rig2gig.musician.management.MusicianDetailsEditor;
+import com.gangoffive.rig2gig.utils.TabStatePreserver;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;

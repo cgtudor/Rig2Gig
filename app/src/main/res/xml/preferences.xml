@@ -40,13 +40,13 @@
             app:iconSpaceReserved="false"
             app:isPreferenceVisible="false"
             android:selectable="true"
-            app:fragment="com.gangoffive.rig2gig.UpgradeToMusicianFragment"/>
+            app:fragment="com.gangoffive.rig2gig.navbar.UpgradeToMusicianFragment"/>
 
         <Preference
             app:title="Delete Account"
             app:summary="Delete or deactivate your account"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.DeleteAccountFragment"/>
+            app:fragment="com.gangoffive.rig2gig.navbar.DeleteAccountFragment"/>
 
 
     <PreferenceCategory android:title="@string/notifications_settings"
@@ -75,19 +75,19 @@
             app:title="FAQ"
             app:summary="Frequently Asked Questions"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.FAQFragment"/>
+            app:fragment="com.gangoffive.rig2gig.navbar.FAQFragment"/>
 
         <Preference
             app:title="About"
             app:summary="View version details"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.AboutFragment"/>
+            app:fragment="com.gangoffive.rig2gig.navbar.AboutFragment"/>
 
         <Preference
             app:title="Report"
             app:summary="Report a bug/user and suggest new features"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.ReportFragment"/>-->
+            app:fragment="com.gangoffive.rig2gig.navbar.ReportFragment"/>-->
     </PreferenceCategory>
 
     <!--<PreferenceCategory android:title="@string/privacy_settings"
@@ -113,13 +113,13 @@
             app:title="Licenses"
             app:summary="View Licenses"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.LicencesFragment"/>-->
+            app:fragment="com.gangoffive.rig2gig.navbar.LicencesFragment"/>-->
 
         <!--<Preference
             app:title="Privacy Policy"
             app:summary="View Our Privacy Policy"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.PrivacyPolicyFragment" />-->
+            app:fragment="com.gangoffive.rig2gig.navbar.PrivacyPolicyFragment" />-->
 
         <Preference
             app:title="Terms of Service"

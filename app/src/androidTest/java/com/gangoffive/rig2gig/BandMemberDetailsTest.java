@@ -1,8 +1,8 @@
 package com.gangoffive.rig2gig;
 
-import android.widget.TextView;
-
 import androidx.test.rule.ActivityTestRule;
+
+import com.gangoffive.rig2gig.band.management.BandMemberDetails;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;

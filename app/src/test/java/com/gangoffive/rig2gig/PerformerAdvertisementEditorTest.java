@@ -1,5 +1,8 @@
 package com.gangoffive.rig2gig;
 
+import com.gangoffive.rig2gig.advert.management.PerformerAdvertisementEditor;
+import com.gangoffive.rig2gig.firebase.ListingManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import java.util.ArrayList;

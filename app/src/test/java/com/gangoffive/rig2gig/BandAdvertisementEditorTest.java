@@ -1,5 +1,9 @@
 package com.gangoffive.rig2gig;
 
+import com.gangoffive.rig2gig.advert.management.BandAdvertisementEditor;
+import com.gangoffive.rig2gig.firebase.ListingManager;
+import com.gangoffive.rig2gig.utils.TabStatePreserver;
+
 import org.junit.Before;
 import org.junit.Test;
 import java.util.ArrayList;

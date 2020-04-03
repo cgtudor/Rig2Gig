@@ -8,12 +8,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.gangoffive.rig2gig.BandGenreFragment;
-import com.gangoffive.rig2gig.BandImageFragment;
-import com.gangoffive.rig2gig.CreateBandFragment;
-import com.gangoffive.rig2gig.CreateMusicianFragment;
-import com.gangoffive.rig2gig.CredentialFragment;
-import com.gangoffive.rig2gig.TabbedViewReferenceInitialiser;
+import com.gangoffive.rig2gig.band.management.BandImageFragment;
+import com.gangoffive.rig2gig.band.management.CreateBandFragment;
+import com.gangoffive.rig2gig.utils.TabbedViewReferenceInitialiser;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to

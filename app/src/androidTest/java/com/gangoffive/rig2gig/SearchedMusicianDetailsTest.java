@@ -2,6 +2,8 @@ package com.gangoffive.rig2gig;
 
 import androidx.test.rule.ActivityTestRule;
 
+import com.gangoffive.rig2gig.advert.management.SearchedMusicianDetails;
+
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;

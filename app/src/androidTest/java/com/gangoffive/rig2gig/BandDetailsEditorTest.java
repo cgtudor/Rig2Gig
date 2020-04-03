@@ -1,21 +1,17 @@
 package com.gangoffive.rig2gig;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.widget.Button;
 
-import androidx.test.annotation.UiThreadTest;
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
+
+import com.gangoffive.rig2gig.band.management.BandDetailsEditor;
+import com.gangoffive.rig2gig.firebase.ListingManager;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -25,8 +21,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static android.content.Intent.ACTION_MAIN;
-import static androidx.core.content.ContextCompat.startActivity;
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -40,16 +34,13 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.*;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class BandDetailsEditorTest {
     private HashMap<String, Object> bandData;

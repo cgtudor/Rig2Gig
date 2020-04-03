@@ -1,5 +1,8 @@
 package com.gangoffive.rig2gig;
 
+import com.gangoffive.rig2gig.firebase.ListingManager;
+import com.gangoffive.rig2gig.utils.TabStatePreserver;
+import com.gangoffive.rig2gig.venue.management.VenueDetailsEditor;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -8,7 +11,6 @@ import com.google.firebase.firestore.DocumentReference;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.hamcrest.CoreMatchers.equalTo;

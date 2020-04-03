@@ -1,6 +1,9 @@
 package com.gangoffive.rig2gig;
 
 import androidx.test.rule.ActivityTestRule;
+
+import com.gangoffive.rig2gig.band.management.DeleteMemberConfirmation;
+
 import org.junit.Rule;
 import org.junit.Test;
 import static androidx.test.espresso.Espresso.onView;
