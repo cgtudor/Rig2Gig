@@ -37,13 +37,13 @@ public class TabStatePreserver {
             {
                 tabView.saveTabs();
             }
-            ((Activity)tabView).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+            ((Activity)tabView).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
             breakOut();
         }
         else if (editingText && !savedOnFocus)
         {
             tabView.saveTabs();
-            ((Activity)tabView).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+            ((Activity)tabView).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
             savedOnFocus = true;
         }
         else if (breakout)

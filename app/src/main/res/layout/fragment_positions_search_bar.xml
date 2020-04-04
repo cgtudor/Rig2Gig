@@ -47,9 +47,11 @@
         <ListView
             android:id="@+id/list_results"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            app:layout_constraintTop_toTopOf="@id/search_bar"/>
+            android:paddingBottom="26dp"
+            app:layout_constraintTop_toTopOf="@id/search_bar"
+            app:layout_constraintBottom_toBottomOf="@id/positionsMain"/>
     </LinearLayout>
 
     <TextView

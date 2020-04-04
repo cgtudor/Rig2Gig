@@ -31,24 +31,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/venue_description_final" />
+        app:layout_constraintTop_toBottomOf="@+id/descriptionLabel" />
 
-    <EditText
-        android:id="@+id/venue_description_final"
-        android:layout_width="364dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:maxLength="500"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        android:singleLine="false"
-        android:textSize="18sp"
-        android:hint="Describe your band to musicians and explain what you are looking for"
-        app:layout_constraintEnd_toEndOf="parent"
+
+    <ScrollView
+        android:id="@+id/scrollDetails"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionLabel"
-        android:background="@android:color/transparent"/>
+        app:layout_constraintTop_toBottomOf="@+id/detailView"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+
+        <EditText
+            android:id="@+id/venue_description_final"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:maxLength="1000"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:singleLine="false"
+            android:textSize="18sp"
+            android:paddingBottom="26dp"
+            android:hint="Describe your band to musicians and explain what you are looking for"
+            android:layout_marginStart="26dp"
+            android:layout_marginEnd="26dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/scrollDetails"
+            android:background="@android:color/transparent"/>
+    </ScrollView>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
