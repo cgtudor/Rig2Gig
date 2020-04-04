@@ -124,10 +124,9 @@
                 android:id="@+id/venue_description_final"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="8dp"
-                android:maxLength="5"
+                android:layout_marginTop="16dp"
                 android:inputType="number"
+                android:maxLength="5"
                 android:textAlignment="textStart"
                 app:layout_constraintStart_toStartOf="@+id/band_location"
                 app:layout_constraintTop_toBottomOf="@+id/band_location" />
@@ -146,12 +145,13 @@
                 android:id="@+id/genres"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="start|top"
+                android:hint="Preferred genres"
                 android:inputType="textMultiLine"
                 android:maxLength="200"
                 android:singleLine="false"
-                android:hint="Preferred genres"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/venue_description_final" />
 
@@ -171,12 +171,13 @@
                 android:id="@+id/email"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="start|top"
-                android:maxLength="200"
-                android:singleLine="false"
                 android:hint="Enter email"
                 android:inputType="textMultiLine"
+                android:maxLength="200"
+                android:singleLine="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/genres" />
 
