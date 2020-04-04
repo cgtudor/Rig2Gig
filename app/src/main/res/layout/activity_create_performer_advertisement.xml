@@ -37,7 +37,8 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar" />
+        app:layout_constraintTop_toBottomOf="@+id/app_bar"
+        android:textColor="#000000"/>
 
     <View
         android:id="@+id/imageView"
@@ -66,7 +67,8 @@
             android:layout_width="144dp"
             android:layout_height="43dp"
             android:ems="10"
-            android:inputType="numberDecimal"
+            android:inputType="number"
+            android:maxLength="5"
             android:textAlignment="textEnd"
             android:textSize="18sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/distanceLabel"
