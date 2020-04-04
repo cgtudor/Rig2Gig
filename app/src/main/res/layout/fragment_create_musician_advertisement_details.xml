@@ -7,13 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.TabbedView.PlaceholderFragment">
 
-
     <TextView
         android:id="@+id/descriptionLabel"
-        android:layout_width="176dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="16dp"
-        android:text="Position details"
+        android:layout_width="203dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="About yourself"
+        android:textAlignment="center"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,27 +30,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/venue_description_final" />
+        app:layout_constraintTop_toBottomOf="@+id/descriptionLabel" />
 
 
-    <EditText
-        android:id="@+id/venue_description_final"
-        android:layout_width="336dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:maxLength="500"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:gravity="start|bottom"
-        android:hint="Describe yourself to bands and explain what you are looking for"
-        android:inputType="textMultiLine"
-        android:singleLine="false"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <ScrollView
+        android:id="@+id/scrollDetails"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionLabel"
-        android:background="@android:color/transparent" />
+        app:layout_constraintTop_toBottomOf="@+id/detailView"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+
+        <EditText
+            android:id="@+id/venue_description_final"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:maxLength="1000"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:singleLine="false"
+            android:textSize="18sp"
+            android:paddingBottom="26dp"
+            android:hint="Describe yourself to bands and explain what you are looking for"
+            android:layout_marginStart="26dp"
+            android:layout_marginEnd="26dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/scrollDetails"
+            android:background="@android:color/transparent"/>
+    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

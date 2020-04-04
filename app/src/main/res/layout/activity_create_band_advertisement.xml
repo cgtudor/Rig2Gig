@@ -13,8 +13,6 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_constraintTop_toTopOf="parent" >
-        android:focusable="true"
-        android:focusableInTouchMode="true"
 
         <TextView
             android:id="@+id/title"
