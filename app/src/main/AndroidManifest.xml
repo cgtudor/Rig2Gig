@@ -34,7 +34,8 @@
             android:theme="@style/AppTheme.TranslucentBackground" />
         <activity
             android:name=".band.management.BandMemberDetails"
-            android:theme="@style/AppTheme.TranslucentBackground" />
+            android:theme="@style/AppTheme.TranslucentBackground"/>
+
         <activity
             android:name=".band.management.MusicianSearchActivity"
             android:label="@string/title_activity_musician_search"
