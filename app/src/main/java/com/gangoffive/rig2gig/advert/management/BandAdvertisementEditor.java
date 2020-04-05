@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-
 import com.gangoffive.rig2gig.utils.ImageRequestHandler;
 import com.gangoffive.rig2gig.utils.Positions;
 import com.gangoffive.rig2gig.R;
@@ -45,7 +44,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     private TextView name, position, description, searchHint;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
-    private String bandRef, type, listingRef;
+    private String bandRef, type, listingRef, editType;
     private HashMap<String, Object> listing;
     private Map<String, Object> band, previousListing;
     private ListingManager listingManager;
@@ -103,6 +102,14 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         bandRef = getIntent().getStringExtra("EXTRA_BAND_ID");
         String listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
         type = "Band";
+        if (listingRef.equals(""))
+        {
+            editType = "creation";
+        }
+        else
+        {
+            editType = "edit";
+        }
         listingManager = new ListingManager(bandRef, type, listingRef);
         listingManager.getUserInfo(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -425,9 +432,9 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             listingManager.postDataToDatabase(listing, chosenPic, this);
         } else {
             Toast.makeText(BandAdvertisementEditor.this,
-                    "Advertisement not created.  Ensure all fields are complete " +
+                    "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
                             "and try again",
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -438,12 +445,14 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(BandAdvertisementEditor.this,"Advertisement created successfully",
-                            Toast.LENGTH_LONG).show();
-                }
-            });
+            {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(BandAdvertisementEditor.this,"Advertisement " + editType + " successful",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
             Intent intent = new Intent(BandAdvertisementEditor.this, BandListingDetailsActivity.class);
             listingRef = listingManager.getListingRef();
             intent.putExtra("EXTRA_BAND_LISTING_ID", listingRef);
@@ -456,9 +465,9 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(BandAdvertisementEditor.this,
-                            "Listing creation failed.  Check your connection " +
+                            "Advertisement " + editType + " failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -466,9 +475,9 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(BandAdvertisementEditor.this,
-                            "Listing creation failed.  Check your connection " +
+                            "Advertisement " + editType + " failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         }

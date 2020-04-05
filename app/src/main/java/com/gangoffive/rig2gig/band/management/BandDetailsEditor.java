@@ -394,7 +394,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(BandDetailsEditor.this,"Details updated successfully",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
             finish();
@@ -404,7 +404,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                     Toast.makeText(BandDetailsEditor.this,
                             "Updating details failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
@@ -413,7 +413,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                     Toast.makeText(BandDetailsEditor.this,
                             "Updating details failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         }

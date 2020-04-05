@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.advert.details.VenueListingDetailsActivity;
 import com.gangoffive.rig2gig.firebase.ListingManager;
@@ -14,7 +13,6 @@ import com.gangoffive.rig2gig.utils.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
-
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,7 +32,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +42,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     private TextView name, description;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
-    private String venueRef, type, listingRef;
+    private String venueRef, type, listingRef, editType;
     private HashMap<String, Object> listing;
     private Map<String, Object> venue, previousListing;
     private ListingManager listingManager;
@@ -95,6 +92,14 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         tabs.setupWithViewPager(viewPager);
         venueRef = getIntent().getStringExtra("EXTRA_VENUE_ID");
         listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
+        if (listingRef.equals(""))
+        {
+            editType = "creation";
+        }
+        else
+        {
+            editType = "edit";
+        }
         type = "Venue";
         listingManager = new ListingManager(venueRef, type, listingRef);
         listingManager.getUserInfo(this);
@@ -266,9 +271,9 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             listingManager.postDataToDatabase(listing, chosenPic, this);
         } else {
             Toast.makeText(VenueAdvertisementEditor.this,
-                    "Listing not created.  Ensure all fields are complete " +
+                    "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
                             "and try again",
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -279,24 +284,12 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     public void handleDatabaseResponse(Enum creationResult) {
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
-            if (listingRef.equals(""))
-            {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(VenueAdvertisementEditor.this,"Advertisement created successfully",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-            else
-            {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(VenueAdvertisementEditor.this,"Advertisement edited successfully",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(VenueAdvertisementEditor.this,"Advertisement " + editType + " successful",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
             Intent intent = new Intent(VenueAdvertisementEditor.this, VenueListingDetailsActivity.class);
             intent.putExtra("EXTRA_VENUE_LISTING_ID", listingManager.getListingRef());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -306,18 +299,18 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(VenueAdvertisementEditor.this,
-                            "Listing creation failed.  Check your connection " +
+                            "Advertisement " + editType + " failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(VenueAdvertisementEditor.this,
-                            "Listing creation failed.  Check your connection " +
+                            "Advertisement " + editType + " failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
 

@@ -394,7 +394,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                 @Override
                 public void run() {
                     Toast.makeText(VenueDetailsEditor.this,"Details updated successfully",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
             finish();
@@ -405,7 +405,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                     Toast.makeText(VenueDetailsEditor.this,
                             "Updating details failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
@@ -416,7 +416,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                     Toast.makeText(VenueDetailsEditor.this,
                             "Updating details failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -471,7 +471,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                 Toast.makeText(VenueDetailsEditor.this,
                         "Details not updated.  Ensure all fields are complete " +
                                 "and try again",
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_SHORT).show();
                 return false;
             }
         }

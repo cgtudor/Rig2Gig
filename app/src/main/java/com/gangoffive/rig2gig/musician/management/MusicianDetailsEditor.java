@@ -368,7 +368,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                 public void run() {
 
                     Toast.makeText(MusicianDetailsEditor.this,"Details updated successfully",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
             Intent intent = new Intent(MusicianDetailsEditor.this, NavBarActivity.class);
@@ -384,7 +384,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                     Toast.makeText(MusicianDetailsEditor.this,
                             "Updating details failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
@@ -395,7 +395,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                     Toast.makeText(MusicianDetailsEditor.this,
                             "Updating details failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         }

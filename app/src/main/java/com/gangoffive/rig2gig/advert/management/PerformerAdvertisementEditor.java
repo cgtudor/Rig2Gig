@@ -14,10 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.advert.details.PerformanceListingDetailsActivity;
 import com.gangoffive.rig2gig.firebase.ListingManager;
@@ -30,7 +28,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +38,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     private TextView distance, name;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
-    private String performerRef, performerType, listingRef;
+    private String performerRef, performerType, listingRef, editType;
     private HashMap<String, Object> listing;
     private Map<String, Object> band, previousListing;
     private ListingManager listingManager;
@@ -105,7 +102,14 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         performerRef = getIntent().getStringExtra("EXTRA_PERFORMER_ID");
         performerType = getIntent().getStringExtra("EXTRA_PERFORMER_TYPE");
         listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
-
+        if (listingRef.equals(""))
+        {
+            editType = "creation";
+        }
+        else
+        {
+            editType = "edit";
+        }
         setContentView(R.layout.activity_create_performer_advertisement);
 
         listingManager = new ListingManager(performerRef, performerType + " Performer", listingRef);
@@ -244,11 +248,6 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         }
         if (validateDataMap()) {
             listingManager.postDataToDatabase(listing, chosenPic, this);
-        } else {
-            Toast.makeText(PerformerAdvertisementEditor.this,
-                    "Listing not created.  Ensure all fields are complete " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -261,8 +260,8 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    Toast.makeText(PerformerAdvertisementEditor.this,"Advertisement created successfully",
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(PerformerAdvertisementEditor.this,"Advertisement " + editType + " successful",
+                            Toast.LENGTH_SHORT).show();
                 }
             });
             Intent intent = new Intent(this, PerformanceListingDetailsActivity.class);
@@ -273,9 +272,9 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(PerformerAdvertisementEditor.this,
-                            "Listing creation failed.  Check your connection " +
+                            "Advertisement " + editType + " failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -283,9 +282,9 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(PerformerAdvertisementEditor.this,
-                            "Listing creation failed.  Check your connection " +
+                            "Advertisement " + editType + " failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -345,6 +344,10 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         for (Map.Entry element : listing.entrySet()) {
             String val = element.getValue().toString();
             if (val == null || val.trim().isEmpty()) {
+                Toast.makeText(PerformerAdvertisementEditor.this,
+                        "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
+                                "and try again",
+                        Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
@@ -366,6 +369,9 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
             if (actualNumber.length() == 0)
             {
+                Toast.makeText(PerformerAdvertisementEditor.this,
+                        "Advertisement " + editType + " unsuccessful.  Distance cannot be '0'",
+                        Toast.LENGTH_SHORT).show();
                 return false;
             }
         }

@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-
 import com.gangoffive.rig2gig.utils.Positions;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.utils.TabStatePreserver;
@@ -17,7 +16,6 @@ import com.gangoffive.rig2gig.utils.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -44,7 +42,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,7 +55,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     private TextView name, position, description, searchHint;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
-    private String musicianRef, type;
+    private String musicianRef, type, listingRef, editType;
     private HashMap<String, Object> listing;
     private Map<String, Object> musician, previousListing;
     private ListingManager listingManager;
@@ -121,9 +118,16 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         tabs.setupWithViewPager(viewPager);
 
         musicianRef = getIntent().getStringExtra("EXTRA_MUSICIAN_ID");
-        String listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
+        listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
         type = "Musician";
-
+        if (listingRef.equals(""))
+        {
+            editType = "creation";
+        }
+        else
+        {
+            editType = "edit";
+        }
         listingManager = new ListingManager(musicianRef, type, listingRef);
         listingManager.getUserInfo(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -466,9 +470,9 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             listingManager.postDataToDatabase(listing, chosenPic, this);
         } else {
             Toast.makeText(MusicianAdvertisementEditor.this,
-                    "Listing not created.  Ensure all fields are complete " +
+                    "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
                             "and try again",
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -481,8 +485,8 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         if (creationResult == ListingManager.CreationResult.SUCCESS) {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    Toast.makeText(MusicianAdvertisementEditor.this,"Advertisement created successfully",
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(MusicianAdvertisementEditor.this,"Advertisement " + editType + " successful",
+                            Toast.LENGTH_SHORT).show();
                 }
             });
             Intent intent = new Intent(MusicianAdvertisementEditor.this,
@@ -497,9 +501,9 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(MusicianAdvertisementEditor.this,
-                            "Listing creation failed.  Check your connection " +
+                            "Advertisement " + editType + " failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -507,9 +511,9 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(MusicianAdvertisementEditor.this,
-                            "Listing creation failed.  Check your connection " +
+                            "Advertisement " + editType + " failed.  Check your connection " +
                                     "and try again",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
             });
 
