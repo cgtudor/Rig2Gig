@@ -15,13 +15,14 @@ import android.widget.TextView;
 import com.gangoffive.rig2gig.advert.management.CreateAdvertisement;
 import com.gangoffive.rig2gig.firebase.ListingManager;
 import com.gangoffive.rig2gig.R;
+import com.gangoffive.rig2gig.profile.MusicianProfileActivity;
 
 import java.util.Map;
 
 public class BandMemberDetails extends AppCompatActivity implements CreateAdvertisement {
 
     private int height, width;
-    private Button ok;
+    private Button ok, profile;
     private TextView name, userName, location, phone, email, rating;
     private String musicianRef, userRef;
     private ListingManager userManager, musicianManager;
@@ -92,6 +93,16 @@ public class BandMemberDetails extends AppCompatActivity implements CreateAdvert
             }
         });
         rating = findViewById(R.id.rating);
+        profile = findViewById(R.id.profile);
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BandMemberDetails.this, MusicianProfileActivity.class);
+                intent.putExtra("EXTRA_MUSICIAN_ID", musicianRef);
+                startActivity(intent);
+                finish();
+            }
+        });
         populateInitialFields();
     }
 
