@@ -49,8 +49,6 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     private ArrayList <Map<String, Object>> musicians;
     private int membersDownloaded, position, removePosition;
     private GridView gridView;
-    private ImageView addImage;
-    private TextView addMemberText;
     private boolean firstDeletion, backClicked, stillInBand, checkIfInBand, searchingByName, searchingByEmail,
             removingMember, removingMemberConfirmed;
     private FirebaseFirestore db;
@@ -84,7 +82,8 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
             @Override
             public void onClick(View v)
             {
-
+                searchingByEmail = true;
+                checkIfInBand();
             }
         });
         addByName = findViewById(R.id.add_by_name);
@@ -314,7 +313,14 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
 
     public void searchByEmail()
     {
-
+        Intent intent = new Intent(this, EmailSearchActivity.class);
+        intent.putExtra("EXTRA_CURRENT_MEMBERS", (Serializable) memberRefs);
+        intent.putExtra("EXTRA_BAND_ID", bandRef);
+        intent.putExtra("EXTRA_BAND_NAME",band.get("name").toString());
+        intent.putExtra("EXTRA_USER_NAME",userName);
+        intent.putExtra("EXTRA_USERS_MUSICIAN_ID", usersMusicianRef);
+        startActivity(intent);
+        finish();
     }
 
     public void checkIfInBand()
