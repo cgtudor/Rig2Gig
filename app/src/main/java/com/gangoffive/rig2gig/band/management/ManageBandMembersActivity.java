@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ import java.util.Map;
 public class ManageBandMembersActivity extends AppCompatActivity implements CreateAdvertisement {
 
     private String bandRef, type, removedRef, uID, userName, usersMusicianRef, removeMember, removeeUserRef;
+    private Button addByEmail, addByName;
     private ListingManager bandInfoManager;
     private Map<String, Object> band;
     private List memberRefs;
@@ -49,7 +51,7 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     private GridView gridView;
     private ImageView addImage;
     private TextView addMemberText;
-    private boolean firstDeletion, backClicked, stillInBand, checkIfInBand, searchingForMembers,
+    private boolean firstDeletion, backClicked, stillInBand, checkIfInBand, searchingByName, searchingByEmail,
             removingMember, removingMemberConfirmed;
     private FirebaseFirestore db;
 
@@ -72,25 +74,25 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         backClicked = false;
         stillInBand = true;
         checkIfInBand = false;
-        searchingForMembers = false;
+        searchingByName = false;
+        searchingByEmail = false;
         removingMember = false;
         bandInfoManager = new ListingManager(bandRef, type, listingRef);
         bandInfoManager.getUserInfo(this);
-        addMemberText = findViewById(R.id.addMemberText);
-        addMemberText.setOnClickListener(new View.OnClickListener() {
+        addByEmail = findViewById(R.id.add_by_email);
+        addByEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                searchingForMembers = true;
-                checkIfInBand();
+
             }
         });
-        addImage = findViewById(R.id.addImage);
-        addImage.setOnClickListener(new View.OnClickListener() {
+        addByName = findViewById(R.id.add_by_name);
+        addByName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                searchingForMembers = true;
+                searchingByName = true;
                 checkIfInBand();
             }
         });
@@ -115,10 +117,15 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
                 {
                     goBack();
                 }
-                if (searchingForMembers)
+                if (searchingByName)
                 {
-                    searchingForMembers = false;
+                    searchingByName = false;
                     searchForMembers();
+                }
+                if(searchingByEmail)
+                {
+                    searchingByEmail = false;
+                    searchByEmail();
                 }
                 if (removingMember)
                 {
@@ -303,6 +310,11 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         intent.putExtra("EXTRA_USERS_MUSICIAN_ID", usersMusicianRef);
         startActivity(intent);
         finish();
+    }
+
+    public void searchByEmail()
+    {
+
     }
 
     public void checkIfInBand()

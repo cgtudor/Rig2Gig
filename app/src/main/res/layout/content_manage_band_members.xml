@@ -28,18 +28,53 @@
         android:layout_height="52dp"
         app:layout_constraintStart_toStartOf="@id/constraintLayout"
         app:layout_constraintTop_toBottomOf="@id/toolbar2"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@drawable/ic_add_blue_24dp" />
 
     <TextView
         android:id="@+id/addMemberText"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="52dp"
         android:gravity="center_vertical"
-        android:text="  Add members"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@id/constraintLayout"
+        android:text="  Add members by:"
+        android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/addImage"
         app:layout_constraintTop_toBottomOf="@id/toolbar2" />
+
+    <LinearLayout
+        android:id="@+id/button_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="@id/addMemberText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar2">
+
+
+        <Button
+            android:id="@+id/add_by_email"
+            android:layout_width="0.0dip"
+            android:background="@drawable/button_rounded_flat_blue"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_height="35dp"
+            android:layout_weight="1.0"
+            android:textColor="#FFFFFF"
+            android:text="Email" />
+
+        <Button
+            android:id="@+id/add_by_name"
+            android:layout_width="0.0dip"
+            android:background="@drawable/button_rounded_flat_blue"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_height="35dp"
+            android:layout_weight="1.0"
+            android:textColor="#FFFFFF"
+            android:text="Name" />
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scroll"
