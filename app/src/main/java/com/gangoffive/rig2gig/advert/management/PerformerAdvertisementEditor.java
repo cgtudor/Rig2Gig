@@ -316,8 +316,22 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             listing.put("performer-type", performerType);
             listing.put("listing-owner", FirebaseAuth.getInstance().getUid());
         }
-        listing.put("distance", distance.getText().toString());
-
+        String distanceText = distance.getText().toString();
+        for (int i = 0; i < distanceText.length(); i++)
+        {
+            char digit = distanceText.charAt(i);
+            if (digit!= '0')
+            {
+                distanceText = distanceText.substring(i);
+                break;
+            }
+            if (i == distanceText.length()-1)
+            {
+                distanceText = "0";
+            }
+        }
+        distance.setText(distanceText);
+        listing.put("distance", distanceText);
         listing.put("latitude", performerLatitude);
         listing.put("longitude", performerLongitude);
     }

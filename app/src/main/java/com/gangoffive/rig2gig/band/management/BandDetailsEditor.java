@@ -473,7 +473,22 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         }
         if(distance != null && distance.getText() != null && band != null)
         {
-            band.put("distance",distance.getText().toString());
+            String distanceText = distance.getText().toString();
+            for (int i = 0; i < distanceText.length(); i++)
+            {
+                char digit = distanceText.charAt(i);
+                if (digit!= '0')
+                {
+                    distanceText = distanceText.substring(i);
+                    break;
+                }
+                if (i == distanceText.length()-1)
+                {
+                    distanceText = "0";
+                }
+            }
+            distance.setText(distanceText);
+            band.put("distance", distanceText);
         }
         if(genres != null && genres.getText() != null && band != null)
         {
