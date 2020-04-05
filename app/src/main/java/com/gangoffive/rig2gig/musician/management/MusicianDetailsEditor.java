@@ -353,11 +353,6 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
         if (validateDataMap()) {
             listingManager.postDataToDatabase((HashMap)musician, chosenPic, this);
-        } else {
-            Toast.makeText(MusicianDetailsEditor.this,
-                    "Listing not created.  Ensure all fields are complete " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -488,6 +483,10 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             {
                 String val = element.getValue().toString();
                 if (val == null || val.trim().isEmpty()) {
+                    Toast.makeText(MusicianDetailsEditor.this,
+                            "Details not updated.  Ensure all fields are complete " +
+                                    "and try again",
+                            Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
@@ -510,6 +509,9 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
             if (actualNumber.length() == 0)
             {
+                Toast.makeText(MusicianDetailsEditor.this,
+                        "Details not updated.  Distance cannot be '0'.",
+                        Toast.LENGTH_SHORT).show();
                 return false;
             }
         }

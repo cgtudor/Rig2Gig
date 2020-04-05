@@ -379,11 +379,6 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                 System.out.println(io.getMessage());
             }
 
-        } else {
-            Toast.makeText(VenueDetailsEditor.this,
-                    "Listing not created.  Ensure all fields are complete " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -473,8 +468,19 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         for (Map.Entry element : venue.entrySet()) {
             String val = element.getValue().toString();
             if (val == null || val.trim().isEmpty()) {
+                Toast.makeText(VenueDetailsEditor.this,
+                        "Details not updated.  Ensure all fields are complete " +
+                                "and try again",
+                        Toast.LENGTH_LONG).show();
                 return false;
             }
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(venue.get("email-address").toString()).matches())
+        {
+            Toast.makeText(VenueDetailsEditor.this,
+                    "Details not updated.  Email address is invalid.",
+                    Toast.LENGTH_SHORT).show();
+            return false;
         }
         return true;
     }

@@ -381,11 +381,6 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         }
         if (validateDataMap()) {
             listingManager.postDataToDatabase((HashMap)band, chosenPic, this);
-        } else {
-            Toast.makeText(BandDetailsEditor.this,
-                    "Listing not created.  Ensure all fields are complete " +
-                            "and try again",
-                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -515,6 +510,10 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             {
                 String val = element.getValue().toString();
                 if (val == null || val.trim().isEmpty()) {
+                    Toast.makeText(BandDetailsEditor.this,
+                            "Details not updated.  Ensure all fields are complete " +
+                                    "and try again",
+                            Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
@@ -537,8 +536,18 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
             if (actualNumber.length() == 0)
             {
+                Toast.makeText(BandDetailsEditor.this,
+                        "Details not updated.  Distance cannot be '0'.",
+                        Toast.LENGTH_SHORT).show();
                 return false;
             }
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(band.get("email").toString()).matches())
+        {
+            Toast.makeText(BandDetailsEditor.this,
+                    "Details not updated.  Email address is invalid.",
+                    Toast.LENGTH_SHORT).show();
+            return false;
         }
         return true;
     }
