@@ -112,7 +112,7 @@ public class CredentialFragment extends Fragment implements View.OnClickListener
                 String username = cUsername.getText().toString();
                 String phoneNumber = cPhoneNumber.getText().toString();
 
-                final String email = rEmailAddress.getText().toString().trim();
+                final String email = rEmailAddress.getText().toString().trim().toLowerCase();
                 String confirmEmail = rConfirmEmail.getText().toString().trim();
                 String password = rPassword.getText().toString().trim();
 
