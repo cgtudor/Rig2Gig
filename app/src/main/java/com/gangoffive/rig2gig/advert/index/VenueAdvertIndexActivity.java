@@ -2,6 +2,7 @@ package com.gangoffive.rig2gig.advert.index;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.gangoffive.rig2gig.R;
@@ -13,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class VenueAdvertIndexActivity extends AppCompatActivity {
 
     private String currentUserType;
@@ -21,6 +24,9 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_view_venues,
             R.layout.fragment_saved_venues};
+
+    private String sortBy, minRating, maxDistance;
+    private ArrayList<String> venueTypes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,10 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
         Intent intent = getIntent();
         currentUserType = intent.getStringExtra("CURRENT_USER_TYPE");
         bundle.putString("CURRENT_USER_TYPE", currentUserType);
+        bundle.putString("EXTRA_SORT_BY", sortBy);
+        bundle.putString("EXTRA_MIN_RATING", minRating);
+        bundle.putString("EXTRA_MAX_DISTANCE", maxDistance);
+        bundle.putStringArrayList("EXTRA_VENUE_TYPES", venueTypes);
 
         Bundle extras = intent.getExtras();
         if(extras != null) {
@@ -71,10 +81,35 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.index_menu, menu);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
         // handle arrow click here
-        if (item.getItemId() == android.R.id.home) {
+        if (id == android.R.id.home) {
             finish(); // close this activity and return to preview activity (if there is any)
+        } else if (id == R.id.refineButton) {
+            Intent intent =  new Intent(VenueAdvertIndexActivity.this, VenueRefineSearchActivity.class);
+            if(sortBy != null) {
+                intent.putExtra("EXTRA_SORT_BY", sortBy);
+            }
+            if(minRating != null) {
+                intent.putExtra("EXTRA_MIN_RATING", minRating);
+            }
+            if(maxDistance != null) {
+                intent.putExtra("EXTRA_MAX_DISTANCE", maxDistance);
+            }
+            if(venueTypes != null) {
+                intent.putExtra("EXTRA_VENUE_TYPES", venueTypes);
+            }
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

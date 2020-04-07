@@ -51,6 +51,9 @@ public class SavedVenuesFragment extends Fragment
     private ArrayList<VenueListing> venueListings;
     private boolean callingFirebase = false;
 
+    private String sortBy, minRating, maxDistance;
+    private ArrayList<String> venueTypes;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -102,6 +105,18 @@ public class SavedVenuesFragment extends Fragment
         if(extras != null) {
             if(extras.containsKey("CURRENT_BAND_ID")) {
                 currentBandId = extras.getString("CURRENT_BAND_ID");
+            }
+            if(extras.containsKey("EXTRA_SORT_BY")) {
+                sortBy = extras.getString("EXTRA_SORT_BY");
+            }
+            if(extras.containsKey("EXTRA_MIN_RATING")) {
+                minRating = extras.getString("EXTRA_MIN_RATING");
+            }
+            if(extras.containsKey("EXTRA_MAX_DISTANCE")) {
+                maxDistance = extras.getString("EXTRA_MAX_DISTANCE");
+            }
+            if(extras.containsKey("EXTRA_VENUE_TYPES")) {
+                venueTypes = extras.getStringArrayList("EXTRA_VENUE_TYPES");
             }
         }
 

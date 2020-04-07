@@ -3,17 +3,18 @@
     package="com.gangoffive.rig2gig">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <!--For card.io card scanning-->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- For card.io card scanning -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-feature android:name="android.hardware.camera" android:required = "false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 
-    <!--For most things, including card.io and paypal-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" /> <!-- For most things, including card.io and paypal -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:name="android.hardware.camera.any"
@@ -26,7 +27,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".band.management.TabbedBandActivity"></activity>
+        <activity android:name=".advert.index.VenueRefineSearchActivity"
+            android:theme="@style/AppTheme.TranslucentBackground" />
+        <activity android:name=".band.management.TabbedBandActivity" />
         <activity android:name=".musician.management.TabbedMusicianActivity" />
         <activity android:name=".account.TabbedVenueActivity" />
         <activity
@@ -49,7 +52,6 @@
         <activity android:name=".profile.VenueProfileActivity" />
         <activity android:name=".profile.MusicianProfileActivity" />
         <activity android:name=".profile.BandProfileActivity" />
-
         <activity android:name=".account.CreateMusicianAccountActivity" />
 
         <service android:name=".utils.NotificationService" />
@@ -58,7 +60,6 @@
         <activity android:name=".comms.LaunchCommsActivity" />
 
         <service android:name=".utils.NotificationService" />
-
         <service
             android:name=".firebase.FirebaseNotificationService"
             android:exported="false">
@@ -80,12 +81,10 @@
  Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.
         -->
-
         <!--
  Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.
         -->
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notifications_active_black_24dp" />
@@ -185,16 +184,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".navbar.BandConsoleActivity" />
-
-        <activity android:name=".advert.index.BandAdvertIndexActivity"/>
-        <activity android:name=".advert.index.MusicianAdvertIndexActivity"/>
-		
-        <!--Google Maps meta data-->
+        <activity android:name=".advert.index.BandAdvertIndexActivity" />
+        <activity android:name=".advert.index.MusicianAdvertIndexActivity" /> <!-- Google Maps meta data -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB4sMbIQwQaO0qlPHRuRCxB5--Zx54ACTE"/>
+            android:value="AIzaSyB4sMbIQwQaO0qlPHRuRCxB5--Zx54ACTE" />
 
-        <activity android:name=".advert.index.PerformerAdvertIndexActivity"/>
+        <activity android:name=".advert.index.PerformerAdvertIndexActivity" />
     </application>
 
 </manifest>

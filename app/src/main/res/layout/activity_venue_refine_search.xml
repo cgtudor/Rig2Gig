@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/border"
+    android:padding="20dp"
+    tools:context=".advert.index.VenueRefineSearchActivity">
+
+    <TextView
+        android:id="@+id/sortByLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="SORT BY"
+        android:textAlignment="viewStart"
+        android:textColor="#111111"
+        android:textStyle="bold"/>
+
+    <RadioGroup
+        android:id="@+id/sortByRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sortByLabel"
+        android:layout_alignParentStart="true"
+        android:paddingTop="10dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            android:text="Rating"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/radio_button_left_selector"
+            android:onClick="onRadioButtonClicked"
+            android:checked="true"/>
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbCentre"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/mainColour"
+            android:text="Distance"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/radio_button_centre_selector"
+            android:onClick="onRadioButtonClicked" />
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rbRight"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/mainColour"
+            android:text="Recent"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/radio_button_right_selector"
+            android:onClick="onRadioButtonClicked"/>
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/filterByLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sortByRadioGroup"
+        android:paddingTop="10dp"
+        android:text="FILTER BY"
+        android:textAlignment="viewStart"
+        android:textColor="#111111"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/ratingLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/filterByLabel"
+        android:layout_marginStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="Minimum Rating"
+        android:textAlignment="viewStart"
+        android:textColor="#111111"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/ratingValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/filterByLabel"
+        android:layout_alignParentRight="true"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="0.0/5"
+        android:textAlignment="viewStart"
+        android:textColor="#111111"
+        android:textStyle="bold"/>
+
+    <SeekBar
+        android:id="@+id/ratingSlider"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ratingLabel"
+        android:max="50"
+        android:progress="1"
+        android:progressTint="@color/mainColour"
+        android:thumbTint="@color/mainColour"/>
+
+    <TextView
+        android:id="@+id/distanceLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ratingSlider"
+        android:layout_marginStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="Maximum Distance"
+        android:textAlignment="viewStart"
+        android:textColor="#111111"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/distanceValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ratingSlider"
+        android:layout_alignParentRight="true"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="500 Miles"
+        android:textAlignment="viewStart"
+        android:textColor="#111111"
+        android:textStyle="bold"/>
+
+    <SeekBar
+        android:id="@+id/distanceSlider"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/distanceLabel"
+        android:max="100"
+        android:progress="100"
+        android:progressTint="@color/mainColour"
+        android:thumbTint="@color/mainColour"/>
+
+    <TextView
+        android:id="@+id/venueTypeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/distanceSlider"
+        android:layout_marginStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="Venue Type"
+        android:textAlignment="viewStart"
+        android:textColor="#111111"
+        android:textStyle="bold"/>
+
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:text="OK" />
+
+</RelativeLayout>

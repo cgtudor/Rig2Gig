@@ -51,6 +51,9 @@ public class ViewVenuesFragment extends Fragment
     private ArrayList<VenueListing> venueListings;
     private boolean callingFirebase = false;
 
+    private String sortBy, minRating, maxDistance;
+    private ArrayList<String> venueTypes;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -107,6 +110,18 @@ public class ViewVenuesFragment extends Fragment
             if(extras.containsKey("CURRENT_BAND_ID")) {
                 currentBandId = extras.getString("CURRENT_BAND_ID");
             }
+            if(extras.containsKey("EXTRA_SORT_BY")) {
+                sortBy = extras.getString("EXTRA_SORT_BY");
+            }
+            if(extras.containsKey("EXTRA_MIN_RATING")) {
+                minRating = extras.getString("EXTRA_MIN_RATING");
+            }
+            if(extras.containsKey("EXTRA_MAX_DISTANCE")) {
+                maxDistance = extras.getString("EXTRA_MAX_DISTANCE");
+            }
+            if(extras.containsKey("EXTRA_VENUE_TYPES")) {
+                venueTypes = extras.getStringArrayList("EXTRA_VENUE_TYPES");
+            }
         }
 
         adapter.setOnItemClickListener(new VenueAdapter.OnItemClickListener() {
@@ -151,20 +166,38 @@ public class ViewVenuesFragment extends Fragment
 
         callingFirebase = true;
 
-        Query next;
         Timestamp currentDate = Timestamp.now();
 
-        if(lastVisible == null) {
-            next = db.collection("venue-listings")
-                    .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
-                    .limit(10);
-        } else {
-            next = db.collection("venue-listings")
-                    .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
-                    .startAfter(lastVisible)
-                    .limit(10);
+        Query next = db.collection("venue-listings")
+                .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
+                .limit(10);
+
+        if(lastVisible != null) {
+            next = next.startAfter(lastVisible);
         }
 
+        if(sortBy != null) {
+            switch (sortBy) {
+                case "Rating": next.orderBy("rating");
+                    break;
+                case "Distance": next.orderBy();
+                    break;
+                case "Recent": next.orderBy();
+                    break;
+            }
+        }
+
+        if(minRating != null) {
+
+        }
+
+        if(maxDistance != null) {
+
+        }
+
+        if(venueTypes != null) {
+            next.whereArrayContainsAny("venue-type", venueTypes)
+        }
 
         next.get(source)
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
