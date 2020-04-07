@@ -240,6 +240,7 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
 
                                 Map<String, Object> musicians = new HashMap<>();
                                 musicians.put("name", musicianName);
+                                musicians.put("index-name",musicianName.toLowerCase());
                                 musicians.put("location", checkLocality(musicianAddress));
                                 musicians.put("user-ref", userRef);
                                 musicians.put("email-address", email);

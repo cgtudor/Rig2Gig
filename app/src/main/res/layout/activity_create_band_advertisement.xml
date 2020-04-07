@@ -52,13 +52,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#008577"
+        android:background="#12c2e9"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="#12c2e9">
+        app:layout_constraintStart_toStartOf="parent">
 
 
         <Button

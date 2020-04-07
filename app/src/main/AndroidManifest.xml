@@ -37,10 +37,15 @@
             android:theme="@style/AppTheme.TranslucentBackground" />
         <activity
             android:name=".band.management.BandMemberDetails"
-            android:theme="@style/AppTheme.TranslucentBackground" />
+            android:theme="@style/AppTheme.TranslucentBackground"/>
+
         <activity
             android:name=".band.management.MusicianSearchActivity"
             android:label="@string/title_activity_musician_search"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".band.management.EmailSearchActivity"
+            android:label="@string/title_activity_email_search"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".advert.index.VenueAdvertIndexActivity"

@@ -4,18 +4,22 @@ public class Genres {
 
     private final static String [] genres = new String[]
     {
-            "Hip Hop",
-            "Rock",
-            "Pop",
-            "Jaz",
-            "Country",
             "Blues",
-            "Heavy Metal",
             "Classical",
+            "Country",
+            "Dance",
             "Folk",
-            "Rap",
+            "Hip Hop",
             "Indie",
-            "Reggae"
+            "Jazz",
+            "Metal",
+            "Pop",
+            "Punk",
+            "R n B",
+            "Rap",
+            "Reggae",
+            "Rock",
+            "Soul"
     };
 
     static public String [] getGenres()

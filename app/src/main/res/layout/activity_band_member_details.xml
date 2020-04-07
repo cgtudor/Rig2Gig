@@ -117,9 +117,10 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="1dp"
         android:layout_toEndOf="@+id/nameLabel"
+        android:clickable="true"
         android:text=""
         android:textAlignment="viewStart"
-        android:textColor="#111111" />
+        android:textColor="#2644C0" />
 
     <TextView
         android:id="@+id/emailLabel"
@@ -148,7 +149,7 @@
         android:layout_toEndOf="@+id/nameLabel"
         android:text=""
         android:textAlignment="viewStart"
-        android:textColor="#111111" />
+        android:textColor="#2644C0" />
 
     <TextView
         android:id="@+id/ratingLabel"
@@ -179,13 +180,34 @@
         android:textAlignment="viewStart"
         android:textColor="#111111" />
 
-    <Button
-        android:id="@+id/ok"
-        android:layout_width="80dp"
+    <LinearLayout
+        android:id="@+id/button_holder"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp"
-        android:text="OK" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="15dp"
+            android:layout_weight="1.0"
+            android:backgroundTint="#008577"
+            android:text="Back"
+            style="?android:attr/borderlessButtonStyle"/>
+
+        <Button
+            android:id="@+id/profile"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="40dp"
+            android:layout_weight="1.0"
+            android:text="Profile" />
+    </LinearLayout>
 
 </RelativeLayout>
