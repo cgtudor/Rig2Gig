@@ -35,7 +35,6 @@ public class GenreSelectorActivity extends AppCompatActivity implements SearchVi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         height = (metrics.heightPixels) /100 * 80;
@@ -61,7 +60,7 @@ public class GenreSelectorActivity extends AppCompatActivity implements SearchVi
         searchBar.setSubmitButtonEnabled(false);
         searchBar.setQueryHint("Enter genre");
         listResults = findViewById(R.id.list_results);
-        if (genresExtra != null)
+        if (genresExtra != null && !genresExtra.equals(""))
         {
             selectedGenres = new ArrayList<String>(Arrays.asList(genresExtra.split(",")));
             for (int i = 0; i < selectedGenres.size(); i++)

@@ -27,7 +27,6 @@
             android:padding="5dp"
             app:layout_constraintTop_toTopOf="@+id/scroll"
             app:layout_constraintBottom_toBottomOf="@+id/scroll">
-
         </GridView>
 
     </ScrollView>

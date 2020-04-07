@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.gangoffive.rig2gig.band.management.DeleteMemberConfirmation;
@@ -91,7 +93,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                 createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
                 createListing.setTextColor(Color.parseColor("#ffffff"));
             }
-            else if (before == 0 && count == 1 && createListing != null
+            else if (before == 0 && count >= 1 && createListing != null
                     && name.getText().toString().trim().length() > 0
                     && location.getText().toString().trim().length() > 0
                     && genres.getText().toString().trim().length() > 0
@@ -259,6 +261,10 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
 
     public void selectGenres()
     {
+        //ConstraintLayout constraintLayout = (ConstraintLayout) findViewById( R.id.constraintLayout);
+        //constraintLayout.setAlpha( 0);
+        //constraintLayout.setAlpha(0.9f );
+
         Intent intent =  new Intent(this, GenreSelectorActivity.class);
         intent.putExtra("EXTRA_LAYOUT_TYPE", "Not Login");
         intent.putExtra("EXTRA_GENRES", genres.getText().toString());
@@ -526,10 +532,10 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     @Override
     public boolean validateDataMap() {
         for (Map.Entry element : musician.entrySet()) {
-            if (!(element.getValue().toString().equals("bands")))
+            if (!(element.getKey().equals("bands")))
             {
                 String val = element.getValue().toString();
-                if (element.getValue().toString().equals("genres"))
+                if (element.getKey().equals("genres"))
                 {
                     if (val != null && !val.equals(""))
                     {
