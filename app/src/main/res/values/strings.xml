@@ -144,7 +144,7 @@
     <string name="change_password_dialog_title">Confirm to send a change password email.</string>
     <string name="change_password_confirm">Confirm</string>
     <string name="change_password_cancel">Cancel</string>
-
+    <string name="title_activity_email_search">EmailSearchActivity</string>
     <string name="title_activity_musician_search">MusicianSearchActivity</string>
     <string name="title_activity_venue_advert_index">VenueAdvertIndexActivity</string>
 

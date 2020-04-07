@@ -619,7 +619,9 @@ public class ViewCommsFragment extends Fragment
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Map<String, Object> bandInfo = document.getData();
-                        ((List)bandInfo.get("members")).add(musicianRef);
+                        if (!((List)bandInfo.get("members")).contains(musicianRef)) {
+                            ((List) bandInfo.get("members")).add(musicianRef);
+                        }
                         db.runTransaction(new Transaction.Function<Void>() {
                             @Override
                             public Void apply(Transaction transaction) throws FirebaseFirestoreException {
@@ -634,9 +636,10 @@ public class ViewCommsFragment extends Fragment
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.d("FIRESTORE", "Musician added to band members list successfully!");
-                                        updateMusiciansBands(bandRef, musicianRef);
                                     }});
-                }}
+                        }
+                        updateMusiciansBands(bandRef, musicianRef);
+                }
                 else {
                     Log.w("FIRESTORE", "Error adding musician to band!");
                 }}});
@@ -655,7 +658,9 @@ public class ViewCommsFragment extends Fragment
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Map<String, Object> musicianInfo = document.getData();
-                        ((List) musicianInfo.get("bands")).add(bandRef);
+                        if (!((List)musicianInfo.get("bands")).contains(bandRef)) {
+                            ((List) musicianInfo.get("bands")).add(bandRef);
+                        }
                         db.runTransaction(new Transaction.Function<Void>() {
                             @Override
                             public Void apply(Transaction transaction) throws FirebaseFirestoreException {

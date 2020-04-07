@@ -144,7 +144,7 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         request.put("sent-from", getUserId());
         request.put("sent-from-type", "bands");
         request.put("sent-from-ref",bandRef);
-        request.put("sent-from-type", "musicians");
+        request.put("sent-to-type", "musicians");
         request.put("sent-to-ref", musicianRef);
         request.put("musician-ref", musicianRef);
         request.put("notification-title","You have been invited to join a band!");
@@ -190,7 +190,7 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         request.put("sent-from-ref",bandRef);
         request.put("sent-from-type", "bands");
         request.put("sent-to-ref", musicianRef);
-        request.put("sent-from-type", "musicians");
+        request.put("sent-to-type", "musicians");
         request.put("notification-title","You have been invited to join a band!");
         request.put("notification-message", inviterName + " would like you to join their band " + bandName + ".");
         return request;
