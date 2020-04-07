@@ -90,6 +90,21 @@ public class GenreSelectorActivity extends AppCompatActivity implements SearchVi
         });
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        returnSelectedGenres();
+    }
+
+    @Override
+    public void onTopResumedActivityChanged (boolean isTopResumedActivity)
+    {
+        if(!isTopResumedActivity)
+        {
+            returnSelectedGenres();
+        }
+    }
+
     public void setupGridView()
     {
         DeleteInstrumentAdapter customAdapter = new DeleteInstrumentAdapter(selectedGenres, this);

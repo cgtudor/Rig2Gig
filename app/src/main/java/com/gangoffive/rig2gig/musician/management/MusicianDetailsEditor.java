@@ -2,6 +2,7 @@ package com.gangoffive.rig2gig.musician.management;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -15,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +50,8 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
 
     private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
     private Geocoder geocoder;
-    private TextView name, distance, genres;
+    private LinearLayout linearLayout;
+    private TextView name, distance, genres, fader;
     private AutoCompleteTextView location;
     private Button createListing, cancel, galleryImage, takePhoto, selectGenre;
     private ImageView image;
@@ -59,6 +62,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     private int[] fragments = {R.layout.fragment_image_changer,
             R.layout.fragment_musician_details_changer};
     private Drawable chosenPic;
+    private ConstraintLayout constraintLayout;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
     private boolean mapping;
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
@@ -124,8 +128,6 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         musicianRef = getIntent().getStringExtra("EXTRA_MUSICIAN_ID");
         String listingRef = "profileEdit";
         type = "Musician";
-        listingManager = new ListingManager(musicianRef, type, listingRef);
-        listingManager.getUserInfo(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(permissions, 2);
         }
@@ -135,6 +137,8 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         getSupportActionBar().setTitle("Edit Details");
         /*Setting the support action bar to the newly created toolbar*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        listingManager = new ListingManager(musicianRef, type, listingRef);
+        listingManager.getUserInfo(this);
     }
 
     /**
@@ -257,14 +261,12 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                 }
             });
         }
+        fader = findViewById(R.id.fader);
     }
 
     public void selectGenres()
     {
-        //ConstraintLayout constraintLayout = (ConstraintLayout) findViewById( R.id.constraintLayout);
-        //constraintLayout.setAlpha( 0);
-        //constraintLayout.setAlpha(0.9f );
-
+        fader.setVisibility(View.VISIBLE);
         Intent intent =  new Intent(this, GenreSelectorActivity.class);
         intent.putExtra("EXTRA_LAYOUT_TYPE", "Not Login");
         intent.putExtra("EXTRA_GENRES", genres.getText().toString());
@@ -282,8 +284,13 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 99 && resultCode == RESULT_OK)
         {
+            fader.setVisibility(View.GONE);
             String genresExtra = data.getStringExtra("EXTRA_SELECTED_GENRES");
             genres.setText(genresExtra);
+        }
+        if (requestCode == 99 && resultCode == 0)
+        {
+            fader.setVisibility(View.GONE);
         }
         else
         {
