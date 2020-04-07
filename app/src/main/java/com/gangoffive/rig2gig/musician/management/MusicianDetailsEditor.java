@@ -16,11 +16,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.gangoffive.rig2gig.band.management.DeleteMemberConfirmation;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
+import com.gangoffive.rig2gig.utils.GenreSelectorActivity;
 import com.gangoffive.rig2gig.utils.TabStatePreserver;
 import com.gangoffive.rig2gig.utils.TabbedViewReferenceInitialiser;
 import com.gangoffive.rig2gig.advert.management.CreateAdvertisement;
@@ -31,6 +35,8 @@ import com.gangoffive.rig2gig.utils.ImageRequestHandler;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -42,7 +48,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     private Geocoder geocoder;
     private TextView name, distance, genres;
     private AutoCompleteTextView location;
-    private Button createListing, cancel, galleryImage, takePhoto;
+    private Button createListing, cancel, galleryImage, takePhoto, selectGenre;
     private ImageView image;
     private String musicianRef, type;
     private Map<String, Object> musician;
@@ -138,6 +144,9 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     {
         setViewReferences();
         musician = data;
+        String currentGenres = musician.get("genres").toString();
+        currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
+        musician.put("genres",currentGenres);
         listingManager.getImage(this);
     }
 
@@ -236,7 +245,47 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                 }
             });
         }
+        selectGenre = findViewById(R.id.selectGenres);
+        if (selectGenre != null)
+        {
+            selectGenre.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectGenres();
+                }
+            });
+        }
     }
+
+    public void selectGenres()
+    {
+        Intent intent =  new Intent(this, GenreSelectorActivity.class);
+        intent.putExtra("EXTRA_GENRES", genres.getText().toString());
+        startActivityForResult(intent, 99);
+    }
+
+    /**
+     * handles activity results
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 99 && resultCode == RESULT_OK)
+        {
+            String genresExtra = data.getStringExtra("EXTRA_SELECTED_GENRES");
+            genres.setText(genresExtra);
+        }
+        else
+        {
+            image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
+            chosenPic = image.getDrawable();
+        }
+    }
+
+
 
     /**
      * populate text views
@@ -294,7 +343,12 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
         if(genres != null && musician !=null)
         {
-            genres.setText(musician.get("genres").toString());
+            String currentGenres = musician.get("genres").toString();
+            if (currentGenres.charAt(0) == '[')
+            {
+                currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
+            }
+            genres.setText(currentGenres);
         }
     }
 
@@ -326,20 +380,6 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     public void beginTabPreservation() {
         tabPreserver.preserveTabState();
     }
-
-    /**
-     * handles activity results
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
-        chosenPic = image.getDrawable();
-    }
-
 
     /**
      * create advertisement, posting to database
@@ -468,7 +508,13 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
         if(genres != null && genres.getText() != null && musician != null)
         {
-            musician.put("genres",genres.getText().toString());
+            String genresText = genres.getText().toString();
+            ArrayList<String> selectedGenres = new ArrayList<String>(Arrays.asList(genresText.split(",")));
+            for (int i = 0; i < selectedGenres.size(); i++)
+            {
+                selectedGenres.set(i,selectedGenres.get(i).trim());
+            }
+            musician.put("genres",selectedGenres);
         }
     }
 
@@ -482,12 +528,30 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             if (!(element.getValue().toString().equals("bands")))
             {
                 String val = element.getValue().toString();
-                if (val == null || val.trim().isEmpty()) {
-                    Toast.makeText(MusicianDetailsEditor.this,
-                            "Details not updated.  Ensure all fields are complete " +
-                                    "and try again",
-                            Toast.LENGTH_SHORT).show();
-                    return false;
+                if (element.getValue().toString().equals("genres"))
+                {
+                    if (val != null && !val.equals(""))
+                    {
+                        val = val.substring(1, val.length() - 1);
+                    }
+                    if (val.trim().isEmpty())
+                    {
+                        Toast.makeText(MusicianDetailsEditor.this,
+                                "Details not updated.  Ensure all fields are complete " +
+                                        "and try again",
+                                Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (val == null || val.trim().isEmpty()) {
+                        Toast.makeText(MusicianDetailsEditor.this,
+                                "Details not updated.  Ensure all fields are complete " +
+                                        "and try again",
+                                Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
                 }
             }
         }
