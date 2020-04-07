@@ -15,7 +15,7 @@ public class Genres {
             "Metal",
             "Pop",
             "Punk",
-            "R n B",
+            "R&B",
             "Rap",
             "Reggae",
             "Rock",

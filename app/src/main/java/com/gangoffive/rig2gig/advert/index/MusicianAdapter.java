@@ -124,7 +124,9 @@ public class MusicianAdapter extends RecyclerView.Adapter<MusicianAdapter.ViewHo
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
                         holder.textViewName.setText(document.get("name").toString());
-                        holder.textViewGenres.setText(document.get("genres").toString());
+                        String genres = document.get("genres").toString();
+                        genres = genres.substring(1, genres.length() - 1);
+                        holder.textViewGenres.setText(genres);
                         String positions = "";
                         for(String position : musicianListing.getPosition()) {
                             positions += position + " ";
