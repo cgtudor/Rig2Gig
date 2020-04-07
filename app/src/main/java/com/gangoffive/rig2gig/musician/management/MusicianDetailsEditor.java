@@ -260,6 +260,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     public void selectGenres()
     {
         Intent intent =  new Intent(this, GenreSelectorActivity.class);
+        intent.putExtra("EXTRA_LAYOUT_TYPE", "Not Login");
         intent.putExtra("EXTRA_GENRES", genres.getText().toString());
         startActivityForResult(intent, 99);
     }
