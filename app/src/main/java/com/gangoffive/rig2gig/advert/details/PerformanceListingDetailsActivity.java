@@ -200,7 +200,7 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                         } else if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()) && expiryDate.compareTo(Timestamp.now()) < 0) {
                                             getSupportActionBar().setTitle("My Advert Preview");
                                             contact.setClickable(false);
-                                            contact.setVisibility(View.GONE);
+                                            contact.setVisibility(View.INVISIBLE);
                                             publish.setVisibility(View.VISIBLE);
                                             publish.setClickable(true);
                                         } else {
@@ -658,6 +658,9 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                     DocumentReference venueListing = db.collection("performer-listings").document(pID);
 
                     Calendar currentExpiry = Calendar.getInstance();
+                    Timestamp postingDate = new Timestamp(currentExpiry.getTime());
+                    venueListing.update("posting-date", postingDate);
+
                     currentExpiry.setTime(expiry);
                     currentExpiry.add(Calendar.MONTH, 1);
                     currentExpiry.add(Calendar.DAY_OF_MONTH, 1);
