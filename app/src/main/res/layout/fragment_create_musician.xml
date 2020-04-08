@@ -53,7 +53,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-    <EditText
+    <TextView
         android:id="@+id/firstName5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -176,7 +176,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.241"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view19" />
+        app:layout_constraintTop_toBottomOf="@+id/selectGenres" />
 
     <Button
         android:id="@+id/takeBtn"
@@ -192,7 +192,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.758"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view19" />
+        app:layout_constraintTop_toBottomOf="@+id/selectGenres" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -203,5 +203,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/uploadBtn"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <Button
+        android:id="@+id/selectGenres"
+        android:layout_width="140dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1.0"
+        android:background="@drawable/button_rounded_flat_blue"
+        android:text="Select genres"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.217"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view19" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

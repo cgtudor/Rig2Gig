@@ -1,8 +1,14 @@
 package com.gangoffive.rig2gig.band.management;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +25,7 @@ import androidx.fragment.app.Fragment;
 
 import com.gangoffive.rig2gig.advert.management.GooglePlacesAutoSuggestAdapter;
 import com.gangoffive.rig2gig.R;
+import com.gangoffive.rig2gig.utils.GenreSelectorActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,6 +36,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,8 +55,10 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
     private final List<String> newBand = new ArrayList<>();
 
     public static Button btn;
+    private Button genreButton;
 
-    EditText cBandName, cBandLocation, cBandDistance, cBandGenres, cBandEmail, cBandPhoneNumber;
+    TextView genre;
+    EditText cBandName, cBandLocation, cBandDistance, cBandEmail, cBandPhoneNumber;
 
     public static String bandRef;
     /**
@@ -65,14 +76,16 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
         final View v = inflater.inflate(R.layout.fragment_create_band, container, false);
 
         btn = v.findViewById(R.id.createBandBtn);
+        genreButton = v.findViewById(R.id.selectGenres);
         btn.setOnClickListener(this);
+        genreButton.setOnClickListener(this);
         btn.setVisibility(View.INVISIBLE);
 
         cBandName = v.findViewById(R.id.BandName);
         location = v.findViewById(R.id.location3);
         location.setAdapter(new GooglePlacesAutoSuggestAdapter(getActivity(), android.R.layout.simple_list_item_1));
         cBandDistance = v.findViewById(R.id.bandDistance);
-        cBandGenres = v.findViewById(R.id.bandGenres);
+        genre = v.findViewById(R.id.bandGenres);
         cBandEmail = v.findViewById(R.id.bandEmail);
         cBandPhoneNumber = v.findViewById(R.id.bandPhoneNumber);
 
@@ -116,7 +129,6 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                 final String bandLocation = location.getText().toString().trim();
                 final Address bandAddress = getAddress();
                 final String bandDistance = cBandDistance.getText().toString().trim();
-                final String bandGenres = cBandGenres.getText().toString().trim();
                 final String bandEmail = cBandEmail.getText().toString().trim();
                 final String bandPhoneNumber = cBandPhoneNumber.getText().toString().trim();
                 newBand.add(TabbedBandActivity.musicianID);
@@ -159,11 +171,17 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document != null) {
+                                String genresText = genre.getText().toString();
+                                ArrayList<String> selectedGenres = new ArrayList<String>(Arrays.asList(genresText.split(",")));
+                                for (int i = 0; i < selectedGenres.size(); i++)
+                                {
+                                    selectedGenres.set(i,selectedGenres.get(i).trim());
+                                }
                                 Map<String, Object> band = new HashMap<>();
                                 band.put("name", bandName);
                                 band.put("location", checkLocality(bandAddress));
                                 band.put("distance", bandDistance);
-                                band.put("genres", bandGenres);
+                                band.put("genres",selectedGenres);
                                 band.put("email", bandEmail);
                                 band.put("phone-number", bandPhoneNumber);
                                 band.put("latitude", bandAddress.getLatitude());
@@ -178,7 +196,6 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                                             public void onSuccess(DocumentReference documentReference) {
                                                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ going to band image");
                                                 bandRef = documentReference.getId();
-
 
                                                 DocumentReference doc = fStore.collection("musicians").document(TabbedBandActivity.musicianID);
                                                 doc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -223,6 +240,9 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                     }
                 });
                 break;
+            case R.id.selectGenres:
+                selectGenres();
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
         }
@@ -241,6 +261,24 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
         else
         {
             return bandAddress.getPostalCode();
+        }
+    }
+
+    public void selectGenres()
+    {
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@ HERE");
+        Intent intent =  new Intent(getActivity(), GenreSelectorActivity.class);
+        intent.putExtra("EXTRA_LAYOUT_TYPE", "Not Login");
+        intent.putExtra("EXTRA_GENRES", genre.getText().toString());
+        startActivityForResult(intent, 99);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 99 && resultCode == Activity.RESULT_OK)
+        {
+            String genresExtra = data.getStringExtra("EXTRA_SELECTED_GENRES");
+            genre.setText(genresExtra);
         }
     }
 }

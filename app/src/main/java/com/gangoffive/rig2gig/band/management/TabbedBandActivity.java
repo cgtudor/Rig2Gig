@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gangoffive.rig2gig.R;
@@ -36,7 +37,8 @@ public class TabbedBandActivity extends AppCompatActivity {
 
     Button test, back;
 
-    EditText name, location, distance, genre, email, number, invis;
+    TextView genre;
+    EditText name, location, distance, email, number, invis;
     ImageView image;
     String bandName;
 

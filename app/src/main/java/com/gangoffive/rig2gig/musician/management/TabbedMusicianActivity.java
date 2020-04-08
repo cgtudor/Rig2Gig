@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gangoffive.rig2gig.R;
@@ -44,7 +45,8 @@ public class TabbedMusicianActivity extends AppCompatActivity {
 
     private static final String TAG = "======================";
 
-    EditText cFirstName, cLastName, cUsername, cPhoneNumber, rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword, username, musicianName, musicianLocation, musicianDistance, musicianGenre, invis;
+    TextView musicianGenre;
+    EditText cFirstName, cLastName, cUsername, cPhoneNumber, rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword, username, musicianName, musicianLocation, musicianDistance, invis;
     ImageView image;
 
     private int[] tabTitles;
