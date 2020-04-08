@@ -60,7 +60,8 @@
             android:layout_marginEnd="20dp"
             android:layout_weight="1.0"
             android:text="Gallery"
-            android:background="@drawable/transparent_button_dark_outline"/>
+            android:textColor="#ffffff"
+            android:background="@drawable/button_rounded_flat_blue"/>
 
         <Button
             android:id="@+id/takePhoto"
@@ -70,7 +71,8 @@
             android:layout_marginEnd="80dp"
             android:layout_weight="1.0"
             android:text="Camera"
-            android:background="@drawable/transparent_button_dark_outline"/>
+            android:textColor="#ffffff"
+            android:background="@drawable/button_rounded_flat_blue"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
