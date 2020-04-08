@@ -45,8 +45,32 @@ public class DeleteMemberConfirmation extends Activity {
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                returnNotDeleted();
             }
         });
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        returnNotDeleted();
+    }
+
+    @Override
+    public void onTopResumedActivityChanged (boolean isTopResumedActivity)
+    {
+        if(!isTopResumedActivity)
+        {
+            returnNotDeleted();
+        }
+    }
+
+    public void returnNotDeleted()
+    {
+        Intent result = new Intent();
+        result.putExtra("EXTRA_POSITION", -1);
+        setResult(RESULT_OK, result);
+        finish();
+    }
+
 }

@@ -122,7 +122,9 @@ public class BandAdapter extends RecyclerView.Adapter<BandAdapter.ViewHolder>{
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
                         holder.textViewName.setText(document.get("name").toString());
-                        holder.textViewGenres.setText(document.get("genres").toString());
+                        String genres = document.get("genres").toString();
+                        genres = genres.substring(1, genres.length() - 1);
+                        holder.textViewGenres.setText(genres);
                         holder.textViewLoc.setText(document.get("location").toString());
                         holder.textViewRating.setText(document.get("rating").toString());
                         holder.textViewRatingText.setText("out of 5");

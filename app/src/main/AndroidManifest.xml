@@ -33,6 +33,9 @@
             android:name=".advert.management.SearchedMusicianDetails"
             android:theme="@style/AppTheme.TranslucentBackground" />
         <activity
+            android:name=".utils.GenreSelectorActivity"
+            android:theme="@style/AppTheme.TranslucentBackground" />
+        <activity
             android:name=".band.management.BandMemberDetails"
             android:theme="@style/AppTheme.TranslucentBackground"/>
 

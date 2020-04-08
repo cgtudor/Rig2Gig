@@ -168,7 +168,9 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                         performerName.setText(document.get("name").toString());
                                         rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
-                                        genre.setText(document.get("genres").toString());
+                                        String genres = document.get("genres").toString();
+                                        genres = genres.substring(1, genres.length() - 1);
+                                        genre.setText(genres);
 
                                         if (performerType.equals("musicians")) {
                                             listingOwner.append(document.get("user-ref").toString());
