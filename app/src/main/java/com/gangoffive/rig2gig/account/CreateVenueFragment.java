@@ -35,6 +35,7 @@ import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.advert.index.VenueListing;
 import com.gangoffive.rig2gig.advert.index.ViewVenuesFragment;
+import com.gangoffive.rig2gig.utils.VenueTypes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -126,10 +127,8 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
 
         submit.setVisibility(View.INVISIBLE);
 
-        String [] values =
-                {"Function Room","Bar", "Club", "Pub", "Hotel"};
         Spinner spinner = v.findViewById(R.id.spinner1);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner, values);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner, VenueTypes.getTypes());
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner.setAdapter(adapter);
 
