@@ -81,18 +81,6 @@
                 app:layout_constraintEnd_toStartOf="@+id/venue_description_final"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <TextView
-                android:id="@+id/genresLabel"
-                android:layout_width="140dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="Genres:"
-                android:textColor="#000000"
-                app:layout_constraintBaseline_toBaselineOf="@+id/genres"
-                app:layout_constraintEnd_toStartOf="@+id/genres"
-                app:layout_constraintStart_toStartOf="parent" />
-
             <EditText
                 android:id="@+id/venue_name_final"
                 android:layout_width="220dp"
@@ -157,19 +145,18 @@
 
             <Button
                 android:id="@+id/selectGenres"
-                android:layout_width="140dp"
+                android:layout_width="130dp"
                 android:layout_height="35dp"
-                android:layout_marginStart="172dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_weight="1.0"
                 android:background="@drawable/button_rounded_flat_blue"
-                android:text="Select genres"
+                android:text="Select Genres"
+                android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/genres" />
+                app:layout_constraintTop_toBottomOf="@+id/venue_description_final" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

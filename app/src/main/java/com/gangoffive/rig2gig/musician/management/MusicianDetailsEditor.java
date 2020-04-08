@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.gangoffive.rig2gig.band.management.DeleteMemberConfirmation;
@@ -266,6 +268,8 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
 
     public void selectGenres()
     {
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.darkerMain));
         fader.setVisibility(View.VISIBLE);
         Intent intent =  new Intent(this, GenreSelectorActivity.class);
         intent.putExtra("EXTRA_LAYOUT_TYPE", "Not Login");
@@ -282,15 +286,18 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 99 && resultCode == RESULT_OK)
+        if (requestCode == 99)
         {
+            Window window = getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
             fader.setVisibility(View.GONE);
-            String genresExtra = data.getStringExtra("EXTRA_SELECTED_GENRES");
-            genres.setText(genresExtra);
-        }
-        if (requestCode == 99 && resultCode == 0)
-        {
-            fader.setVisibility(View.GONE);
+            if (resultCode == RESULT_OK)
+            {
+                String genresExtra = data.getStringExtra("EXTRA_SELECTED_GENRES");
+                genres.setText(genresExtra);
+                setGenreButton();
+            }
+
         }
         else
         {
@@ -299,7 +306,17 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
     }
 
-
+    public void setGenreButton()
+    {
+        if (genres.getText().toString().equals(""))
+        {
+            selectGenre.setText("Select Genres");
+        }
+        else
+        {
+            selectGenre.setText("Edit Genres");
+        }
+    }
 
     /**
      * populate text views
@@ -363,6 +380,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                 currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
             }
             genres.setText(currentGenres);
+            setGenreButton();
         }
     }
 

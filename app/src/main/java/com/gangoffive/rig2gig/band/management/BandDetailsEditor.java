@@ -11,12 +11,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.gangoffive.rig2gig.advert.management.CreateAdvertisement;
@@ -44,7 +46,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
     private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
     private boolean mapping;
     private Geocoder geocoder;
-    private TextView name, distance, genres, email, phone;
+    private TextView name, distance, genres, email, phone, fader;
     private AutoCompleteTextView location;
     private Button createListing, cancel, galleryImage, takePhoto, selectGenre;
     private ImageView image;
@@ -264,14 +266,30 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                 }
             });
         }
+        fader = findViewById(R.id.fader);
     }
 
     public void selectGenres()
     {
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.darkerMain));
+        fader.setVisibility(View.VISIBLE);
         Intent intent =  new Intent(this, GenreSelectorActivity.class);
         intent.putExtra("EXTRA_LAYOUT_TYPE", "Not Login");
         intent.putExtra("EXTRA_GENRES", genres.getText().toString());
         startActivityForResult(intent, 99);
+    }
+
+    public void setGenreButton()
+    {
+        if (genres.getText().toString().equals(""))
+        {
+            selectGenre.setText("Select Genres");
+        }
+        else
+        {
+            selectGenre.setText("Edit Genres");
+        }
     }
 
     /**
@@ -338,6 +356,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                 currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
             }
             genres.setText(currentGenres);
+            setGenreButton();
         }
         if(email != null && band !=null)
         {
@@ -395,11 +414,17 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 99 && resultCode == RESULT_OK)
+        if (requestCode == 99)
         {
-            String genresExtra = data.getStringExtra("EXTRA_SELECTED_GENRES");
-            genres.setText(genresExtra);
-
+            Window window = getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+            fader.setVisibility(View.GONE);
+            if (resultCode == RESULT_OK)
+            {
+                String genresExtra = data.getStringExtra("EXTRA_SELECTED_GENRES");
+                genres.setText(genresExtra);
+                setGenreButton();
+            }
         }
         else
         {
