@@ -46,4 +46,10 @@ public class PerformerAdvertIndexActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void refreshActivity()
+    {
+        finish();
+        startActivity(getIntent());
+    }
 }
