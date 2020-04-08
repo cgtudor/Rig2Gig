@@ -17,10 +17,10 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.gangoffive.rig2gig.R;
-import com.gangoffive.rig2gig.advert.management.VenueAdvertisementEditor;
-import com.gangoffive.rig2gig.venue.management.VenueDetailsEditor;
 import com.gangoffive.rig2gig.advert.details.VenueListingDetailsActivity;
 import com.gangoffive.rig2gig.advert.index.PerformerAdvertIndexActivity;
+import com.gangoffive.rig2gig.advert.management.VenueAdvertisementEditor;
+import com.gangoffive.rig2gig.venue.management.VenueDetailsEditor;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -92,6 +92,18 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
         card_view_edit_advert.setOnClickListener(this);
         card_view_view_advert.setOnClickListener(this);
         card_view_delete_advert.setOnClickListener(this);
+
+        if(!isConnected)
+        {
+            card_view_edit_venue.setAlpha(0.5f);
+            card_view_create_advert.setAlpha(0.5f);
+            card_view_edit_advert.setAlpha(0.5f);
+            card_view_delete_advert.setAlpha(0.5f);
+            card_view_edit_venue.setClickable(false);
+            card_view_create_advert.setClickable(false);
+            card_view_edit_advert.setClickable(false);
+            card_view_delete_advert.setClickable(false);
+        }
 
         databaseQuery();
 

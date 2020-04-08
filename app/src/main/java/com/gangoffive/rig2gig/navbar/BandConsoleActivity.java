@@ -131,6 +131,31 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         card_view_edit_band_band_advert.setOnClickListener(this);
         card_view_delete_band_advert.setOnClickListener(this);
 
+        if(!isConnected)
+        {
+            //General Section
+            card_view_edit_band.setAlpha(0.5f);
+            card_view_manage_members.setAlpha(0.5f);
+            card_view_edit_band.setClickable(false);
+            card_view_manage_members.setClickable(false);
+
+            //Performer Section
+            card_view_create_advert.setAlpha(0.5f);
+            card_view_edit_advert.setAlpha(0.5f);
+            card_view_delete_advert.setAlpha(0.5f);
+            card_view_create_advert.setClickable(false);
+            card_view_edit_advert.setClickable(false);
+            card_view_delete_advert.setClickable(false);
+
+            //Band Section
+            card_view_create_band_advert.setAlpha(0.5f);
+            card_view_edit_band_band_advert.setAlpha(0.5f);
+            card_view_delete_band_advert.setAlpha(0.5f);
+            card_view_create_band_advert.setClickable(false);
+            card_view_edit_band_band_advert.setClickable(false);
+            card_view_delete_band_advert.setClickable(false);
+        }
+
         //Setup layout
         databaseQuery();
     }
