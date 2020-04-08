@@ -386,6 +386,10 @@ public class ListingManager
     {
         this.image = image;
         calendar = Calendar.getInstance();
+        if (!needPayment)
+        {
+            listing.put("posting-date", new Timestamp(calendar.getTime()));
+        }
         getExpiryDate();
         listing.put("expiry-date", new Timestamp(calendar.getTime()));
         db.collection(collectionPath)

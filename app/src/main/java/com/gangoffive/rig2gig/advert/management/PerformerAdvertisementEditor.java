@@ -43,6 +43,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     private Map<String, Object> band, previousListing;
     private ListingManager listingManager;
     private Drawable chosenPic;
+    private boolean finalCheck;
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -97,8 +98,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        finalCheck = false;
         performerRef = getIntent().getStringExtra("EXTRA_PERFORMER_ID");
         performerType = getIntent().getStringExtra("EXTRA_PERFORMER_TYPE");
         listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
@@ -111,7 +111,6 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             editType = "edit";
         }
         setContentView(R.layout.activity_create_performer_advertisement);
-
         listingManager = new ListingManager(performerRef, performerType + " Performer", listingRef);
         listingManager.getUserInfo(this);
         fAuth = FirebaseAuth.getInstance();
@@ -134,9 +133,16 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
      */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
-        setViewReferences();
-        band = data;
-        listingManager.getImage(this);
+        if (finalCheck)
+        {
+            postToDatabase(data);
+        }
+        else
+        {
+            setViewReferences();
+            band = data;
+            listingManager.getImage(this);
+        }
     }
 
     /**
@@ -146,11 +152,17 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
      */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
-
-        setViewReferences();
-        band = data;
-        previousListing = listingData;
-        listingManager.getImage(this);
+        if (finalCheck)
+        {
+            postToDatabase(data);
+        }
+        else
+        {
+            setViewReferences();
+            band = data;
+            previousListing = listingData;
+            listingManager.getImage(this);
+        }
     }
 
     /**
@@ -247,7 +259,31 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             chosenPic = image.getDrawable();
         }
         if (validateDataMap()) {
+            finalCheck = true;
+            listingManager.getUserInfo(this);
+        } else {
+            Toast.makeText(PerformerAdvertisementEditor.this,
+                    "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
+                            "and try again",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void postToDatabase(Map<String, Object> data)
+    {
+        if (data != null)
+        {
+            listing.put("genres",data.get("genres"));
+            listing.put("rating",data.get("rating"));
             listingManager.postDataToDatabase(listing, chosenPic, this);
+        }
+        else
+        {
+            Toast.makeText(PerformerAdvertisementEditor.this,
+                    "Advertisement " + editType + " unsuccessful.  Check your connection " +
+                            "and try again",
+                    Toast.LENGTH_SHORT).show();
+            finalCheck = false;
         }
     }
 

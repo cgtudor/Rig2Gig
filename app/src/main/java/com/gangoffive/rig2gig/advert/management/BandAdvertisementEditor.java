@@ -48,6 +48,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     private HashMap<String, Object> listing;
     private Map<String, Object> band, previousListing;
     private ListingManager listingManager;
+    private boolean finalCheck;
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_create_band_advertisement_image,
             R.layout.fragment_positions_search_bar,
@@ -99,6 +100,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         bandPositions = new ArrayList();
+        finalCheck = false;
         bandRef = getIntent().getStringExtra("EXTRA_BAND_ID");
         String listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
         type = "Band";
@@ -148,15 +150,23 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
      */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
-        setViewReferences();
-        setInitialColours();
-        band = data;
-        listingManager.getImage(this);
+        if (finalCheck)
+        {
+            postToDatabase(data);
+        }
+        else
+        {
+            setViewReferences();
+            setInitialColours();
+            band = data;
+            listingManager.getImage(this);
+        }
+
     }
 
     public void setInitialColours()
     {
-        createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
+        createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
         createListing.setTextColor(Color.parseColor("#FFFFFF"));
     }
 
@@ -167,17 +177,24 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
      */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
-        setViewReferences();
-        band = data;
-        previousListing = listingData;
-        bandPositions = (ArrayList)previousListing.get("position");
-        for (Object pos : bandPositions)
+        if (finalCheck)
         {
-            positions.remove(pos.toString());
+            postToDatabase(data);
         }
-        setupGridView();
-        setSearchHintInvisible();
-        listingManager.getImage(this);
+        else
+        {
+            setViewReferences();
+            band = data;
+            previousListing = listingData;
+            bandPositions = (ArrayList)previousListing.get("position");
+            for (Object pos : bandPositions)
+            {
+                positions.remove(pos.toString());
+            }
+            setupGridView();
+            setSearchHintInvisible();
+            listingManager.getImage(this);
+        }
     }
 
     public void setSearchHintInvisible()
@@ -359,11 +376,6 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
 
             }
         });
-
-
-
-
-
     }
 
     /**
@@ -428,8 +440,13 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     @Override
     public void createAdvertisement() {
         listingDataMap();
+        if (chosenPic == null)
+        {
+            chosenPic = image.getDrawable();
+        }
         if (validateDataMap()) {
-            listingManager.postDataToDatabase(listing, chosenPic, this);
+            finalCheck = true;
+            listingManager.getUserInfo(this);
         } else {
             Toast.makeText(BandAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
@@ -437,6 +454,26 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
                     Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void postToDatabase(Map<String, Object> data)
+    {
+        if (data != null)
+        {
+            listing.put("genres",data.get("genres"));
+            listing.put("rating",data.get("rating"));
+            listingManager.postDataToDatabase(listing, chosenPic, this);
+        }
+        else
+        {
+            Toast.makeText(BandAdvertisementEditor.this,
+                    "Advertisement " + editType + " unsuccessful.  Check your connection " +
+                            "and try again",
+                    Toast.LENGTH_SHORT).show();
+            finalCheck = false;
+        }
+    }
+
+
 
     /**
      * handle response from posting to database
