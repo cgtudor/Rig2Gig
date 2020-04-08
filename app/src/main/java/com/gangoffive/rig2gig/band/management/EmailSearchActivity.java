@@ -25,14 +25,14 @@ import com.google.firebase.storage.StorageReference;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
     private FirebaseStorage storage;
     private StorageReference storageRef, imageRef;
     private SearchView searchBar;
-    private TextView name, user, location, rating, nameLabel, userLabel, locationLabel, ratingLabel, infoText;
+    private TextView name, user, location, rating, nameLabel, userLabel, locationLabel, ratingLabel, infoText, fader;
     private ImageView image;
     private Button invite;
     private HashMap<String, Object> userData, musicianData;
@@ -134,6 +134,7 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
         ratingLabel = findViewById(R.id.ratingLabel);
         image = findViewById(R.id.image);
         infoText = findViewById(R.id.infoText);
+        fader = findViewById(R.id.fader);
     }
 
     public void setupSearchBar()
@@ -337,6 +338,10 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
     public void confirmAddMember()
     {
         searchBar.clearFocus();
+        fader = findViewById(R.id.fader);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.darkerMain));
+        fader.setVisibility(View.VISIBLE);
         Intent intent =  new Intent(this, AddMemberConfirmation.class);
         intent.putExtra("EXTRA_NAME", musicianData.get("name").toString());
         intent.putExtra("EXTRA_POSITION", 0);
@@ -352,6 +357,9 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+        fader.setVisibility(View.GONE);
         if (requestCode == 1 && resultCode == RESULT_OK)
         {
             invite.setOnClickListener(null);

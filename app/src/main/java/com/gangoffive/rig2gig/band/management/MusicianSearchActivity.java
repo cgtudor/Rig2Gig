@@ -20,11 +20,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,6 +46,7 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
 
     private SearchView searchBar;
     private ListView listResults;
+    private TextView fader;
     private ArrayAdapter<String> resultsAdapter;
     private ArrayList<String> musicians, currentMemberRefs, searchRefs, searchNames, names, gridRefs, userRefs;
     private ArrayList<Boolean> invitesSent;
@@ -83,6 +86,7 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         activityRef = this;
         checkIfInBand = false;
         addPosition = -1;
+        fader = findViewById(R.id.fader);
         setupSearchBar();
     }
 
@@ -330,9 +334,13 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+                fader = findViewById(R.id.fader);
+                Window window = getWindow();
+                window.setStatusBarColor(ContextCompat.getColor(MusicianSearchActivity.this,R.color.darkerMain));
+                fader.setVisibility(View.VISIBLE);
                 Intent intent =  new Intent(MusicianSearchActivity.this, SearchedMusicianDetails.class);
                 intent.putExtra("EXTRA_MUSICIAN_REF", gridRefs.get(position).toString());
-                startActivity(intent);
+                startActivityForResult(intent, 2);
             }
         });
     }
@@ -348,6 +356,10 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
     public void confirmAddMember()
     {
         searchBar.clearFocus();
+        fader = findViewById(R.id.fader);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.darkerMain));
+        fader.setVisibility(View.VISIBLE);
         Intent intent =  new Intent(this, AddMemberConfirmation.class);
         intent.putExtra("EXTRA_NAME", confirmMember);
         intent.putExtra("EXTRA_POSITION", confirmPosition);
@@ -363,6 +375,9 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+        fader.setVisibility(View.GONE);
         if (requestCode == 1 && resultCode == RESULT_OK)
         {
             addPosition = data.getIntExtra("EXTRA_POSITION", -1);
