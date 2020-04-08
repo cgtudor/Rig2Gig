@@ -219,14 +219,6 @@ public class ViewMusiciansFragment extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "get successful with data123213213");
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        if (Build.VERSION.SDK_INT >= 26) {
-            ft.setReorderingAllowed(false);
-        }
-
-        lastVisible = null;
-
-        ft.detach(ViewMusiciansFragment.this).attach(ViewMusiciansFragment.this).commit();
+        ((MusicianAdvertIndexActivity)getActivity()).refreshActivity();
     }
 }
