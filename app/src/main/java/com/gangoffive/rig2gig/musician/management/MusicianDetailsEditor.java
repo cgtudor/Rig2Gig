@@ -31,6 +31,7 @@ import com.gangoffive.rig2gig.band.management.DeleteMemberConfirmation;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.utils.GenreSelectorActivity;
+import com.gangoffive.rig2gig.utils.PositionSelectorActivity;
 import com.gangoffive.rig2gig.utils.TabStatePreserver;
 import com.gangoffive.rig2gig.utils.TabbedViewReferenceInitialiser;
 import com.gangoffive.rig2gig.advert.management.CreateAdvertisement;
