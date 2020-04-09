@@ -69,4 +69,10 @@ public class MusicianAdvertIndexActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void refreshActivity()
+    {
+        finish();
+        startActivity(getIntent());
+    }
 }

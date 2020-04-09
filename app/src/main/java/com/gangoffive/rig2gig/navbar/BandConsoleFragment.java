@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -65,6 +66,17 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
     {
         view = inflater.inflate(R.layout.activity_band_console, container, false);
 
+        final Button noInternet = view.findViewById(R.id.noInternet);
+
+        ConnectivityManager cm =
+                (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        noInternet.setVisibility(isConnected ? View.GONE : View.VISIBLE);
+
         final CardView card_view_view_venues = view.findViewById(R.id.card_view_view_Venues);
         final CardView card_view_edit_band = view.findViewById(R.id.card_view_edit_musician);
         //final CardView card_view_invite_musicians = view.findViewById(R.id.card_view_my_bands);
@@ -80,6 +92,18 @@ public class BandConsoleFragment extends Fragment implements View.OnClickListene
         card_view_edit_advert.setOnClickListener(this);
         card_view_view_advert.setOnClickListener(this);
         card_view_delete_advert.setOnClickListener(this);
+
+        if(!isConnected)
+        {
+            card_view_create_advert.setAlpha(0.5f);
+            card_view_edit_advert.setAlpha(0.5f);
+            card_view_delete_advert.setAlpha(0.5f);
+            card_view_edit_band.setAlpha(0.5f);
+            card_view_create_advert.setClickable(false);
+            card_view_edit_advert.setClickable(false);
+            card_view_delete_advert.setClickable(false);
+            card_view_edit_band.setClickable(false);
+        }
 
         databaseQuery();
 

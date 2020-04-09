@@ -706,6 +706,9 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                     DocumentReference venueListing = db.collection("venue-listings").document(vID);
 
                     Calendar currentExpiry = Calendar.getInstance();
+                    Timestamp postingDate = new Timestamp(currentExpiry.getTime());
+                    venueListing.update("posting-date", postingDate);
+
                     currentExpiry.setTime(expiry);
                     currentExpiry.add(Calendar.MONTH, 1);
                     currentExpiry.add(Calendar.DAY_OF_MONTH, 1);

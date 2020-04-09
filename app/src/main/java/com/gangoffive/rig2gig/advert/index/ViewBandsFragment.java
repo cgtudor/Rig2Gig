@@ -1,4 +1,4 @@
-package com.gangoffive.rig2gig.band.management;
+package com.gangoffive.rig2gig.advert.index;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +22,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.advert.details.BandListingDetailsActivity;
-import com.gangoffive.rig2gig.advert.index.BandAdapter;
-import com.gangoffive.rig2gig.advert.index.BandListing;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -219,14 +217,6 @@ public class ViewBandsFragment extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "get successful with data123213213");
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        if (Build.VERSION.SDK_INT >= 26) {
-            ft.setReorderingAllowed(false);
-        }
-
-        lastVisible = null;
-
-        ft.detach(ViewBandsFragment.this).attach(ViewBandsFragment.this).commit();
+        ((BandAdvertIndexActivity)getActivity()).refreshActivity();
     }
 }

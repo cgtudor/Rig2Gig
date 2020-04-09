@@ -11,9 +11,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +31,7 @@ import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
 import com.gangoffive.rig2gig.utils.ImageRequestHandler;
 import com.gangoffive.rig2gig.utils.TabStatePreserver;
 import com.gangoffive.rig2gig.utils.TabbedViewReferenceInitialiser;
+import com.gangoffive.rig2gig.utils.VenueTypes;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
@@ -41,10 +45,11 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
     private boolean mapping, tab2set;
     private Geocoder geocoder;
-    private TextView name, description, venueType, email, phone;
+    private TextView name, description, email, phone;
     private AutoCompleteTextView location;
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
+    private Spinner venueType;
     private String venueRef, type;
     private Map<String, Object> venue;
     private ListingManager listingManager;
@@ -74,7 +79,6 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
             else if (before == 0 && count == 1 && createListing != null
                     && name.getText().toString().trim().length() > 0
                     && location.getText().toString().trim().length() > 0
-                    && venueType.getText().toString().trim().length() > 0
                     && email.getText().toString().trim().length() > 0
                     && phone.getText().toString().trim().length() > 0
                     && description.getText().toString().trim().length() > 0)
@@ -144,6 +148,41 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     public void onSuccessfulImageDownload() {
         populateInitialFields();
         saveTabs();
+        setUpTypeSpinner();
+        setSpinnerValue();
+    }
+
+    public void setSpinnerValue()
+    {
+        for (int i = 0; i < VenueTypes.getTypes().length; i++)
+        {
+            if (VenueTypes.getTypes()[i].equals(venue.get("venue-type")))
+            {
+                venueType.setSelection(i);
+                i = VenueTypes.getTypes().length;
+            }
+        }
+    }
+
+    public void setUpTypeSpinner()
+    {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner, VenueTypes.getTypes());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        venueType.setAdapter(adapter);
+        venueType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                ((TextView)parentView.getChildAt(0)).setTextColor(Color.BLACK);
+                venue.put("venue-type", VenueTypes.getTypes()[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView)
+            {
+            }
+        });
     }
 
     /**
@@ -177,11 +216,6 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                 location.addTextChangedListener(textWatcher);
             }
             venueType = findViewById(R.id.type);
-            if (venueType != null)
-            {
-                venueType.setOnFocusChangeListener(editTextFocusListener);
-                venueType.addTextChangedListener(textWatcher);
-            }
             email = findViewById(R.id.email);
             if (email != null)
             {
@@ -271,14 +305,8 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                 {
                     System.out.println(io.getMessage());
                 }
-
-
-                //location.setText(venue.get("location").toString());
             }
-            if(venueType != null && venue !=null)
-            {
-                venueType.setText(venue.get("venue-type").toString());
-            }
+
             if(email != null && venue !=null)
             {
                 email.setText(venue.get("email-address").toString());
@@ -294,7 +322,6 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
             description.setText(venue.get("description").toString());
 
         }
-
     }
 
     /**
@@ -444,10 +471,6 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         if(name != null && name.getText() != null && venue != null)
         {
             venue.put("name",name.getText().toString());
-        }
-        if(venueType != null && venueType.getText() != null && venue != null)
-        {
-            venue.put("venue-type",venueType.getText().toString());
         }
         if(email != null && email.getText() != null && venue != null)
         {

@@ -63,9 +63,10 @@
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
                 android:text="Venue type:"
                 android:textColor="#000000"
-                app:layout_constraintBaseline_toBaselineOf="@+id/type"
+                app:layout_constraintTop_toBottomOf="@+id/venue_location"
                 app:layout_constraintEnd_toStartOf="@+id/type"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -120,17 +121,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/venue_name_final" />
 
-            <EditText
+            <Spinner
                 android:id="@+id/type"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="start|top"
-                android:hint="Venue type e.g. pub, club"
-                android:inputType="textMultiLine"
-                android:maxLength="200"
-                android:singleLine="false"
+                android:textColor="#000000"
+                android:popupBackground="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/venue_location" />
 
