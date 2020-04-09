@@ -121,13 +121,13 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == LAUNCH_REFINED_SEARCH) {
-            if(resultCode == VenueRefineSearchActivity.RESULT_OK){
+            if (resultCode == VenueRefineSearchActivity.RESULT_OK) {
                 sortBy = data.getStringExtra("EXTRA_SORT_BY");
                 minRating = data.getStringExtra("EXTRA_MIN_RATING");
                 maxDistance = data.getStringExtra("EXTRA_MAX_DISTANCE");
@@ -137,6 +137,8 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
                 //Write your code if there's no result
             }
         }
+    }
+    
     public void refreshActivity()
     {
         finish();
