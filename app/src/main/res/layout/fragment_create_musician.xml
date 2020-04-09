@@ -210,7 +210,7 @@
         android:layout_height="35dp"
         android:layout_marginTop="16dp"
         android:layout_weight="1.0"
-        android:background="@drawable/button_rounded_flat_blue"
+        android:background="@drawable/transparent_button"
         android:text="Select genres"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
