@@ -40,7 +40,7 @@ public class PositionSelectorActivity extends AppCompatActivity implements Searc
         height = (metrics.heightPixels) /100 * 80;
         width = (metrics.widthPixels) /100 * 80;
         getWindow().setLayout(width,height);
-        String positionsExtra = getIntent().getStringExtra("EXTRA_GENRES");
+        String positionsExtra = getIntent().getStringExtra("EXTRA_POSITIONS");
         setContentView(R.layout.genre_selector);
         gridView = findViewById(R.id.gridView);
         gridView.setNumColumns(2);
@@ -178,7 +178,7 @@ public class PositionSelectorActivity extends AppCompatActivity implements Searc
         String positions = selectedPositions.toString();
         positions = positions.substring(1, positions.length() - 1);
         Intent result = new Intent();
-        result.putExtra("EXTRA_SELECTED_GENRES", positions);
+        result.putExtra("EXTRA_SELECTED_POSITIONS", positions);
         setResult(RESULT_OK, result);
         finish();
     }

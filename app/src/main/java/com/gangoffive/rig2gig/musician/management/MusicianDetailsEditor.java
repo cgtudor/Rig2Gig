@@ -272,7 +272,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.darkerMain));
         fader.setVisibility(View.VISIBLE);
-        Intent intent =  new Intent(this, PositionSelectorActivity.class);
+        Intent intent =  new Intent(this, GenreSelectorActivity.class);
         intent.putExtra("EXTRA_LAYOUT_TYPE", "Not Login");
         intent.putExtra("EXTRA_GENRES", genres.getText().toString());
         startActivityForResult(intent, 99);
