@@ -42,6 +42,9 @@
             android:name=".utils.PositionSelectorActivity"
             android:theme="@style/AppTheme.TranslucentBackground" />
         <activity
+            android:name=".utils.VenueTypeSelectorActivity"
+            android:theme="@style/AppTheme.TranslucentBackground" />
+        <activity
             android:name=".band.management.BandMemberDetails"
             android:theme="@style/AppTheme.TranslucentBackground"/>
 
