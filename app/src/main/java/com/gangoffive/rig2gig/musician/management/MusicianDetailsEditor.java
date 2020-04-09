@@ -2,6 +2,7 @@ package com.gangoffive.rig2gig.musician.management;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -11,16 +12,26 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import com.gangoffive.rig2gig.band.management.DeleteMemberConfirmation;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
+import com.gangoffive.rig2gig.utils.GenreSelectorActivity;
+import com.gangoffive.rig2gig.utils.PositionSelectorActivity;
 import com.gangoffive.rig2gig.utils.TabStatePreserver;
 import com.gangoffive.rig2gig.utils.TabbedViewReferenceInitialiser;
 import com.gangoffive.rig2gig.advert.management.CreateAdvertisement;
@@ -31,6 +42,8 @@ import com.gangoffive.rig2gig.utils.ImageRequestHandler;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -40,9 +53,10 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
 
     private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
     private Geocoder geocoder;
-    private TextView name, distance, genres;
+    private LinearLayout linearLayout;
+    private TextView name, distance, genres, fader;
     private AutoCompleteTextView location;
-    private Button createListing, cancel, galleryImage, takePhoto;
+    private Button createListing, cancel, galleryImage, takePhoto, selectGenre;
     private ImageView image;
     private String musicianRef, type;
     private Map<String, Object> musician;
@@ -51,6 +65,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     private int[] fragments = {R.layout.fragment_image_changer,
             R.layout.fragment_musician_details_changer};
     private Drawable chosenPic;
+    private ConstraintLayout constraintLayout;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
     private boolean mapping;
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
@@ -85,7 +100,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                 createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
                 createListing.setTextColor(Color.parseColor("#ffffff"));
             }
-            else if (before == 0 && count == 1 && createListing != null
+            else if (before == 0 && count >= 1 && createListing != null
                     && name.getText().toString().trim().length() > 0
                     && location.getText().toString().trim().length() > 0
                     && genres.getText().toString().trim().length() > 0
@@ -116,8 +131,6 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         musicianRef = getIntent().getStringExtra("EXTRA_MUSICIAN_ID");
         String listingRef = "profileEdit";
         type = "Musician";
-        listingManager = new ListingManager(musicianRef, type, listingRef);
-        listingManager.getUserInfo(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(permissions, 2);
         }
@@ -127,6 +140,8 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         getSupportActionBar().setTitle("Edit Details");
         /*Setting the support action bar to the newly created toolbar*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        listingManager = new ListingManager(musicianRef, type, listingRef);
+        listingManager.getUserInfo(this);
     }
 
     /**
@@ -138,6 +153,9 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     {
         setViewReferences();
         musician = data;
+        String currentGenres = musician.get("genres").toString();
+        currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
+        musician.put("genres",currentGenres);
         listingManager.getImage(this);
     }
 
@@ -236,6 +254,69 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                 }
             });
         }
+        selectGenre = findViewById(R.id.selectGenres);
+        if (selectGenre != null)
+        {
+            selectGenre.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectGenres();
+                }
+            });
+        }
+        fader = findViewById(R.id.fader);
+    }
+
+    public void selectGenres()
+    {
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.darkerMain));
+        fader.setVisibility(View.VISIBLE);
+        Intent intent =  new Intent(this, GenreSelectorActivity.class);
+        intent.putExtra("EXTRA_LAYOUT_TYPE", "Not Login");
+        intent.putExtra("EXTRA_GENRES", genres.getText().toString());
+        startActivityForResult(intent, 99);
+    }
+
+    /**
+     * handles activity results
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 99)
+        {
+            Window window = getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+            fader.setVisibility(View.GONE);
+            if (resultCode == RESULT_OK)
+            {
+                String genresExtra = data.getStringExtra("EXTRA_SELECTED_GENRES");
+                genres.setText(genresExtra);
+                setGenreButton();
+            }
+
+        }
+        else
+        {
+            image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
+            chosenPic = image.getDrawable();
+        }
+    }
+
+    public void setGenreButton()
+    {
+        if (genres.getText().toString().equals(""))
+        {
+            selectGenre.setText("Select Genres");
+        }
+        else
+        {
+            selectGenre.setText("Edit Genres");
+        }
     }
 
     /**
@@ -294,7 +375,13 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
         if(genres != null && musician !=null)
         {
-            genres.setText(musician.get("genres").toString());
+            String currentGenres = musician.get("genres").toString();
+            if (currentGenres.charAt(0) == '[')
+            {
+                currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
+            }
+            genres.setText(currentGenres);
+            setGenreButton();
         }
     }
 
@@ -326,20 +413,6 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     public void beginTabPreservation() {
         tabPreserver.preserveTabState();
     }
-
-    /**
-     * handles activity results
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
-        chosenPic = image.getDrawable();
-    }
-
 
     /**
      * create advertisement, posting to database
@@ -468,7 +541,13 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
         if(genres != null && genres.getText() != null && musician != null)
         {
-            musician.put("genres",genres.getText().toString());
+            String genresText = genres.getText().toString();
+            ArrayList<String> selectedGenres = new ArrayList<String>(Arrays.asList(genresText.split(",")));
+            for (int i = 0; i < selectedGenres.size(); i++)
+            {
+                selectedGenres.set(i,selectedGenres.get(i).trim());
+            }
+            musician.put("genres",selectedGenres);
         }
     }
 
@@ -479,15 +558,33 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     @Override
     public boolean validateDataMap() {
         for (Map.Entry element : musician.entrySet()) {
-            if (!(element.getValue().toString().equals("bands")))
+            if (!(element.getKey().equals("bands")))
             {
                 String val = element.getValue().toString();
-                if (val == null || val.trim().isEmpty()) {
-                    Toast.makeText(MusicianDetailsEditor.this,
-                            "Details not updated.  Ensure all fields are complete " +
-                                    "and try again",
-                            Toast.LENGTH_SHORT).show();
-                    return false;
+                if (element.getKey().equals("genres"))
+                {
+                    if (val != null && !val.equals(""))
+                    {
+                        val = val.substring(1, val.length() - 1);
+                    }
+                    if (val.trim().isEmpty())
+                    {
+                        Toast.makeText(MusicianDetailsEditor.this,
+                                "Details not updated.  Ensure all fields are complete " +
+                                        "and try again",
+                                Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (val == null || val.trim().isEmpty()) {
+                        Toast.makeText(MusicianDetailsEditor.this,
+                                "Details not updated.  Ensure all fields are complete " +
+                                        "and try again",
+                                Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
                 }
             }
         }

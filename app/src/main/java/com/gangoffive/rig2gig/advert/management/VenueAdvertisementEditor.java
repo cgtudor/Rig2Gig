@@ -46,6 +46,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     private HashMap<String, Object> listing;
     private Map<String, Object> venue, previousListing;
     private ListingManager listingManager;
+    private boolean finalCheck;
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_create_venue_advertisement_image,
             R.layout.fragment_create_venue_advertisement_details};
@@ -101,6 +102,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             editType = "edit";
         }
         type = "Venue";
+        finalCheck = false;
         listingManager = new ListingManager(venueRef, type, listingRef);
         listingManager.getUserInfo(this);
         fAuth = FirebaseAuth.getInstance();
@@ -124,10 +126,17 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
-        setViewReferences();
-        setInitialColours();
-        venue = data;
-        listingManager.getImage(this);
+        if (finalCheck)
+        {
+            postToDatabase(data);
+        }
+        else
+        {
+            setViewReferences();
+            setInitialColours();
+            venue = data;
+            listingManager.getImage(this);
+        }
     }
 
     public void setInitialColours()
@@ -135,7 +144,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         if (description != null)
         {
             if (description.getText().toString().trim().length() == 0 && createListing != null) {
-                createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
+                createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
         }
@@ -148,10 +157,16 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData)
     {
-        setViewReferences();
-        venue = data;
-        previousListing = listingData;
-        listingManager.getImage(this);
+        if (finalCheck)
+        {
+            postToDatabase(data);
+        }
+        else{
+            setViewReferences();
+            venue = data;
+            previousListing = listingData;
+            listingManager.getImage(this);
+        }
     }
 
     /**
@@ -238,8 +253,6 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
 
                 }
             });
-
-
         }
     }
 
@@ -268,12 +281,31 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             chosenPic = image.getDrawable();
         }
         if (validateDataMap()) {
-            listingManager.postDataToDatabase(listing, chosenPic, this);
+            finalCheck = true;
+            listingManager.getUserInfo(this);
         } else {
             Toast.makeText(VenueAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
                             "and try again",
                     Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void postToDatabase(Map<String, Object> data)
+    {
+        if (data != null)
+        {
+            listing.put("venue-type",data.get("venue-type"));
+            listing.put("rating",data.get("rating"));
+            listingManager.postDataToDatabase(listing, chosenPic, this);
+        }
+        else
+        {
+            Toast.makeText(VenueAdvertisementEditor.this,
+                    "Advertisement " + editType + " unsuccessful.  Check your connection " +
+                            "and try again",
+                    Toast.LENGTH_SHORT).show();
+            finalCheck = false;
         }
     }
 

@@ -56,6 +56,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     private Button createListing, cancel, galleryImage, takePhoto;
     private ImageView image;
     private String musicianRef, type, listingRef, editType;
+    private boolean finalCheck;
     private HashMap<String, Object> listing;
     private Map<String, Object> musician, previousListing;
     private ListingManager listingManager;
@@ -116,7 +117,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-
+        finalCheck = false;
         musicianRef = getIntent().getStringExtra("EXTRA_MUSICIAN_ID");
         listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
         type = "Musician";
@@ -149,18 +150,26 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
      */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
-        setViewReferences();
-        if (createListing != null)
+        if (finalCheck)
         {
-            setInitialColours();
+            postToDatabase(data);
         }
-        musician = data;
-        listingManager.getImage(this);
+        else
+        {
+            setViewReferences();
+            if (createListing != null)
+            {
+                setInitialColours();
+            }
+            musician = data;
+            listingManager.getImage(this);
+        }
+
     }
 
     public void setInitialColours()
     {
-        createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
+        createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
         createListing.setTextColor(Color.parseColor("#FFFFFF"));
     }
 
@@ -171,20 +180,27 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
      */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
-        setViewReferences();
-        musician = data;
-        previousListing = listingData;
-        bandPositions = (ArrayList)previousListing.get("position");
-        for (Object pos : bandPositions)
+        if (finalCheck)
         {
-            positions.remove(pos.toString());
+            postToDatabase(data);
         }
-        setupGridView();
-        if (searchHint != null)
+        else
         {
-            searchHint.setVisibility(View.INVISIBLE);
+            setViewReferences();
+            musician = data;
+            previousListing = listingData;
+            bandPositions = (ArrayList)previousListing.get("position");
+            for (Object pos : bandPositions)
+            {
+                positions.remove(pos.toString());
+            }
+            setupGridView();
+            if (searchHint != null)
+            {
+                searchHint.setVisibility(View.INVISIBLE);
+            }
+            listingManager.getImage(this);
         }
-        listingManager.getImage(this);
     }
 
     /**
@@ -466,8 +482,13 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     @Override
     public void createAdvertisement() {
         listingDataMap();
+        if (chosenPic == null)
+        {
+            chosenPic = image.getDrawable();
+        }
         if (validateDataMap()) {
-            listingManager.postDataToDatabase(listing, chosenPic, this);
+            finalCheck = true;
+            listingManager.getUserInfo(this);
         } else {
             Toast.makeText(MusicianAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
@@ -475,6 +496,25 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
                     Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void postToDatabase(Map<String, Object> data)
+    {
+        if (data != null)
+        {
+            listing.put("genres",data.get("genres"));
+            listing.put("rating",data.get("rating"));
+            listingManager.postDataToDatabase(listing, chosenPic, this);
+        }
+        else
+        {
+            Toast.makeText(MusicianAdvertisementEditor.this,
+                    "Advertisement " + editType + " unsuccessful.  Check your connection " +
+                            "and try again",
+                    Toast.LENGTH_SHORT).show();
+            finalCheck = false;
+        }
+    }
+
 
     /**
      * handle response from posting to database

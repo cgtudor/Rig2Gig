@@ -10,10 +10,14 @@ import com.gangoffive.rig2gig.ui.TabbedView.IndexSectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
+
+import com.gangoffive.rig2gig.R;
+import com.gangoffive.rig2gig.ui.TabbedView.IndexSectionsPagerAdapter;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 
@@ -117,7 +121,7 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+    
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -133,5 +137,9 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
                 //Write your code if there's no result
             }
         }
+    public void refreshActivity()
+    {
+        finish();
+        startActivity(getIntent());
     }
 }

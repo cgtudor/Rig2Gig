@@ -6,10 +6,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -40,6 +42,7 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
 
     private String bandRef, type, removedRef, uID, userName, usersMusicianRef, removeMember, removeeUserRef;
     private Button addByEmail, addByName;
+    private TextView fader;
     private ListingManager bandInfoManager;
     private Map<String, Object> band;
     private List memberRefs;
@@ -194,6 +197,7 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     @Override
     public void populateInitialFields() {
         gridView = (GridView) findViewById( R.id.gridView);
+
         BandMemberRemoverAdapter customAdapter = new BandMemberRemoverAdapter(names, memberRefs, this);
         runOnUiThread(new Runnable() {
 
@@ -207,9 +211,13 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+                fader = findViewById(R.id.fader);
+                Window window = getWindow();
+                window.setStatusBarColor(ContextCompat.getColor(ManageBandMembersActivity.this,R.color.darkerMain));
+                fader.setVisibility(View.VISIBLE);
                 Intent intent =  new Intent(ManageBandMembersActivity.this, BandMemberDetails.class);
                 intent.putExtra("EXTRA_MUSICIAN_REF", memberRefs.get(position).toString());
-                startActivity(intent);
+                startActivityForResult(intent, 2);
             }
         });
     }
@@ -224,6 +232,10 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
 
     public void areYouSureRemove()
     {
+        fader = findViewById(R.id.fader);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.darkerMain));
+        fader.setVisibility(View.VISIBLE);
         Intent intent =  new Intent(this, DeleteMemberConfirmation.class);
         intent.putExtra("EXTRA_NAME", removeMember);
         intent.putExtra("EXTRA_POSITION", removePosition);
@@ -233,6 +245,9 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+        fader.setVisibility(View.GONE);
         if (requestCode == 1 && resultCode == RESULT_OK)
         {
             position = data.getIntExtra("EXTRA_POSITION", -1);

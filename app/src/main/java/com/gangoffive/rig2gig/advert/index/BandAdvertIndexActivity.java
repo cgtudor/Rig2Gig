@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.gangoffive.rig2gig.R;
-import com.gangoffive.rig2gig.band.management.ViewBandsFragment;
 import com.gangoffive.rig2gig.ui.TabbedView.IndexSectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
@@ -54,5 +53,11 @@ public class BandAdvertIndexActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void refreshActivity()
+    {
+        finish();
+        startActivity(getIntent());
     }
 }
