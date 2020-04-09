@@ -1,7 +1,9 @@
 package com.gangoffive.rig2gig.musician.management;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -12,6 +14,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.account.CredentialFragment;
 import com.gangoffive.rig2gig.account.LoginActivity;
+import com.gangoffive.rig2gig.band.management.TabbedBandActivity;
 import com.gangoffive.rig2gig.ui.TabbedView.MusicianPagerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,7 +49,9 @@ public class TabbedMusicianActivity extends AppCompatActivity {
 
     private static final String TAG = "======================";
 
-    TextView musicianGenre;
+    public static Button  faderBtn;
+
+    TextView musicianGenre, fader;
     EditText cFirstName, cLastName, cUsername, cPhoneNumber, rEmailAddress, rConfirmEmail, rPassword, rConfirmPassword, username, musicianName, musicianLocation, musicianDistance, invis;
     ImageView image;
 
@@ -126,6 +132,9 @@ public class TabbedMusicianActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Create Musician Account");
         /*Setting the support action bar to the newly created toolbar*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        faderBtn = findViewById(R.id.faderBtn2);
+        fader = findViewById(R.id.fader2);
 
         createListing = findViewById(R.id.createListing);
         /**
@@ -414,4 +423,22 @@ public class TabbedMusicianActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    public void faderOnclick(View view) {
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(TabbedMusicianActivity.this,R.color.darkerMain));
+        fader.setVisibility(View.VISIBLE);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+        fader.setVisibility(View.GONE);
+    }
+
+
 }

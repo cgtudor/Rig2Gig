@@ -35,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gangoffive.rig2gig.advert.management.GooglePlacesAutoSuggestAdapter;
+import com.gangoffive.rig2gig.band.management.TabbedBandActivity;
+import com.gangoffive.rig2gig.musician.management.TabbedMusicianActivity;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.advert.index.ViewVenuesFragment;
@@ -337,6 +339,7 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@2 " + REQUEST_GALLERY__PHOTO);
                 break;
             case R.id.selectGenres:
+                TabbedMusicianActivity.faderBtn.performClick();
                 selectGenres();
                 break;
             default:
