@@ -136,6 +136,15 @@ public class VenueRefineSearchActivity extends AppCompatActivity {
 
         venueTypeValue = findViewById(R.id.venueTypeValue);
 
+        if(venueTypes != null) {
+            String venueTypesString = venueTypes.toString();
+            venueTypesString = venueTypesString.substring(1, (venueTypesString.length() - 1));
+            if(!venueTypes.isEmpty()) {
+                venueTypeButton.setText("Edit Types");
+            }
+            venueTypeValue.setText(venueTypesString);
+        }
+
         applyButton = findViewById(R.id.applyButton);
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
