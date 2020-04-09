@@ -31,6 +31,7 @@ import com.gangoffive.rig2gig.band.management.DeleteMemberConfirmation;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.utils.GenreSelectorActivity;
+import com.gangoffive.rig2gig.utils.PositionSelectorActivity;
 import com.gangoffive.rig2gig.utils.TabStatePreserver;
 import com.gangoffive.rig2gig.utils.TabbedViewReferenceInitialiser;
 import com.gangoffive.rig2gig.advert.management.CreateAdvertisement;
@@ -271,7 +272,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.darkerMain));
         fader.setVisibility(View.VISIBLE);
-        Intent intent =  new Intent(this, GenreSelectorActivity.class);
+        Intent intent =  new Intent(this, PositionSelectorActivity.class);
         intent.putExtra("EXTRA_LAYOUT_TYPE", "Not Login");
         intent.putExtra("EXTRA_GENRES", genres.getText().toString());
         startActivityForResult(intent, 99);
