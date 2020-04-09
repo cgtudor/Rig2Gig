@@ -50,6 +50,14 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
 
         Fragment[] frags = new Fragment[2];
 
+        Intent receivedIntent = getIntent();
+
+        sortBy = receivedIntent.getStringExtra("EXTRA_SORT_BY");
+        minRating = receivedIntent.getStringExtra("EXTRA_MIN_RATING");
+        maxDistance = receivedIntent.getStringExtra("EXTRA_MAX_DISTANCE");
+        venueTypes = receivedIntent.getStringArrayListExtra("EXTRA_VENUE_TYPES");
+
+
         Bundle bundle = new Bundle();
 
         Intent intent = getIntent();
@@ -154,7 +162,12 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
 
     public void refreshActivity()
     {
+        Intent refreshIntent = new Intent(VenueAdvertIndexActivity.this, VenueAdvertIndexActivity.class);
+        refreshIntent.putExtra("EXTRA_SORT_BY", sortBy);
+        refreshIntent.putExtra("EXTRA_MIN_RATING", minRating);
+        refreshIntent.putExtra("EXTRA_MAX_DISTANCE", maxDistance);
+        refreshIntent.putStringArrayListExtra("EXTRA_VENUE_TYPES", venueTypes);
         finish();
-        startActivity(getIntent());
+        startActivity(refreshIntent);
     }
 }
