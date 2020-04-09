@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.TextView;
 
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.ui.TabbedView.IndexSectionsPagerAdapter;
@@ -12,6 +15,7 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -31,6 +35,8 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
     private int[] tabTitles;
     private int[] fragments = {R.layout.fragment_view_venues,
             R.layout.fragment_saved_venues};
+
+    private TextView fader;
 
     private String sortBy, minRating, maxDistance;
     private ArrayList<String> venueTypes;
@@ -103,6 +109,10 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             finish(); // close this activity and return to preview activity (if there is any)
         } else if (id == R.id.refineButton) {
+            fader = findViewById(R.id.fader);
+            Window window = getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(this,R.color.darkerMain));
+            fader.setVisibility(View.VISIBLE);
             Intent intent =  new Intent(VenueAdvertIndexActivity.this, VenueRefineSearchActivity.class);
             if(sortBy != null) {
                 intent.putExtra("EXTRA_SORT_BY", sortBy);
@@ -127,6 +137,9 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == LAUNCH_REFINED_SEARCH) {
+            Window window = getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+            fader.setVisibility(View.GONE);
             if (resultCode == VenueRefineSearchActivity.RESULT_OK) {
                 sortBy = data.getStringExtra("EXTRA_SORT_BY");
                 minRating = data.getStringExtra("EXTRA_MIN_RATING");
@@ -138,7 +151,7 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
             }
         }
     }
-    
+
     public void refreshActivity()
     {
         finish();
