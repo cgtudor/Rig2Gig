@@ -176,7 +176,7 @@ public class ViewVenuesFragment extends Fragment
             next = next.startAfter(lastVisible);
         }
 
-        if(sortBy != null) {
+        /*if(sortBy != null) {
             switch (sortBy) {
                 case "Rating": next.orderBy("rating");
                     break;
@@ -185,7 +185,7 @@ public class ViewVenuesFragment extends Fragment
                 case "Recent": next.orderBy();
                     break;
             }
-        }
+        }*/
 
         if(minRating != null) {
 
@@ -196,7 +196,7 @@ public class ViewVenuesFragment extends Fragment
         }
 
         if(venueTypes != null) {
-            next.whereArrayContainsAny("venue-type", venueTypes)
+            next.whereArrayContainsAny("venue-type", venueTypes);
         }
 
         next.get(source)

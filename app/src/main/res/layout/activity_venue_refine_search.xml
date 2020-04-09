@@ -43,18 +43,6 @@
             android:onClick="onRadioButtonClicked"
             android:checked="true"/>
         <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/rbCentre"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textColor="@color/mainColour"
-            android:text="Distance"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:button="@android:color/transparent"
-            android:background="@drawable/radio_button_centre_selector"
-            android:onClick="onRadioButtonClicked" />
-        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/rbRight"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -164,14 +152,26 @@
         android:textColor="#111111"
         android:textStyle="bold"/>
 
-
-    <Button
-        android:id="@+id/ok"
-        android:layout_width="80dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
-        android:text="OK" />
+        android:layout_marginBottom="40dp">
+
+        <Button
+            android:id="@+id/applyButton"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:text="Apply"
+            android:layout_marginEnd="20dp"/>
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+    </LinearLayout>
 
 </RelativeLayout>

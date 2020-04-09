@@ -9,6 +9,7 @@ import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.ui.TabbedView.IndexSectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -17,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
 public class VenueAdvertIndexActivity extends AppCompatActivity {
+
+    private final int LAUNCH_REFINED_SEARCH = 749;
 
     private String currentUserType;
 
@@ -109,9 +112,26 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
             if(venueTypes != null) {
                 intent.putExtra("EXTRA_VENUE_TYPES", venueTypes);
             }
-            startActivity(intent);
+            startActivityForResult(intent, LAUNCH_REFINED_SEARCH);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LAUNCH_REFINED_SEARCH) {
+            if(resultCode == VenueRefineSearchActivity.RESULT_OK){
+                sortBy = data.getStringExtra("EXTRA_SORT_BY");
+                minRating = data.getStringExtra("EXTRA_MIN_RATING");
+                maxDistance = data.getStringExtra("EXTRA_MAX_DISTANCE");
+                venueTypes = data.getStringArrayListExtra("EXTRA_VENUE_TYPES");
+            }
+            if (resultCode == VenueRefineSearchActivity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
     }
 }
