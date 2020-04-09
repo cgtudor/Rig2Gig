@@ -152,6 +152,33 @@
         android:textColor="#111111"
         android:textStyle="bold"/>
 
+    <Button
+        android:id="@+id/venueTypeButton"
+        android:layout_width="120dp"
+        android:layout_height="25dp"
+        android:layout_below="@+id/distanceSlider"
+        android:layout_toEndOf="@+id/venueTypeLabel"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/button_rounded_flat_blue"
+        android:text="Select Types"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/venue_description_final" />
+
+    <TextView
+        android:id="@+id/venueTypeValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/venueTypeLabel"
+        android:layout_marginStart="40dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text=""
+        android:textAlignment="viewStart"
+        android:textColor="#111111" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

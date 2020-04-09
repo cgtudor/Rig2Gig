@@ -43,7 +43,7 @@ public class VenueTypeSelectorActivity extends AppCompatActivity implements Sear
         height = (metrics.heightPixels) /100 * 80;
         width = (metrics.widthPixels) /100 * 80;
         getWindow().setLayout(width,height);
-        String typeExtra = getIntent().getStringExtra("EXTRA_TYPES");
+        selectedTypes = getIntent().getStringArrayListExtra("EXTRA_TYPES");
         setContentView(R.layout.genre_selector);
         gridView = findViewById(R.id.gridView);
         gridView.setNumColumns(2);
@@ -55,13 +55,8 @@ public class VenueTypeSelectorActivity extends AppCompatActivity implements Sear
         searchBar.setSubmitButtonEnabled(false);
         searchBar.setQueryHint("Enter venue type");
         listResults = findViewById(R.id.list_results);
-        if (typeExtra != null && !typeExtra.equals(""))
+        if (selectedTypes != null && !selectedTypes.isEmpty())
         {
-            selectedTypes = new ArrayList<String>(Arrays.asList(typeExtra.split(",")));
-            for (int i = 0; i < selectedTypes.size(); i++)
-            {
-                selectedTypes.set(i,selectedTypes.get(i).trim());
-            }
             for (String type : selectedTypes)
             {
                 if(selectableTypes.contains(type))
@@ -178,10 +173,8 @@ public class VenueTypeSelectorActivity extends AppCompatActivity implements Sear
 
     public void returnselectedTypes()
     {
-        String types = selectedTypes.toString();
-        types = types.substring(1, types.length() - 1);
         Intent result = new Intent();
-        result.putExtra("EXTRA_SELECTED_TYPES", types);
+        result.putStringArrayListExtra("EXTRA_SELECTED_TYPES", selectedTypes);
         setResult(RESULT_OK, result);
         finish();
     }

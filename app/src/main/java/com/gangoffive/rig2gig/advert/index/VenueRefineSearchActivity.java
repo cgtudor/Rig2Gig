@@ -2,29 +2,35 @@ package com.gangoffive.rig2gig.advert.index;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.gangoffive.rig2gig.R;
+import com.gangoffive.rig2gig.utils.GenreSelectorActivity;
+import com.gangoffive.rig2gig.utils.VenueTypeSelectorActivity;
 
 import java.util.ArrayList;
 
 public class VenueRefineSearchActivity extends AppCompatActivity {
 
+    private final int LAUNCH_VENUE_TYPE_SELECT = 6183;
+
     private int height, width;
     AppCompatRadioButton rbLeft, rbRight;
 
-    private TextView ratingValue, distanceValue;
+    private TextView ratingValue, distanceValue, venueTypeValue;
     private SeekBar ratingSlider, distanceSlider;
 
-    private Button applyButton, cancelButton;
+    private Button venueTypeButton, applyButton, cancelButton;
 
     private String sortBy, minRating, maxDistance;
     private ArrayList<String> venueTypes;
@@ -119,6 +125,17 @@ public class VenueRefineSearchActivity extends AppCompatActivity {
             }
         });
 
+        venueTypeButton = findViewById(R.id.venueTypeButton);
+
+        venueTypeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectVenueTypes();
+            }
+        });
+
+        venueTypeValue = findViewById(R.id.venueTypeValue);
+
         applyButton = findViewById(R.id.applyButton);
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,6 +186,43 @@ public class VenueRefineSearchActivity extends AppCompatActivity {
                     sortBy = "Recent";
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LAUNCH_VENUE_TYPE_SELECT)
+        {
+            if (resultCode == RESULT_OK)
+            {
+                venueTypes = data.getStringArrayListExtra("EXTRA_SELECTED_TYPES");
+                String venueTypesString = venueTypes.toString();
+                venueTypesString = venueTypesString.substring(1, (venueTypesString.length() - 1));
+                venueTypeValue.setText(venueTypesString);
+                setVenueTypes();
+            }
+
+        }
+    }
+
+    public void selectVenueTypes()
+    {
+        Intent intent =  new Intent(this, VenueTypeSelectorActivity.class);
+        intent.putExtra("EXTRA_LAYOUT_TYPE", "Not Login");
+        intent.putExtra("EXTRA_TYPES", venueTypes);
+        startActivityForResult(intent, LAUNCH_VENUE_TYPE_SELECT);
+    }
+
+    public void setVenueTypes()
+    {
+        if (venueTypeValue.getText().toString().equals(""))
+        {
+            venueTypeButton.setText("Select Types");
+        }
+        else
+        {
+            venueTypeButton.setText("Edit Types");
         }
     }
 }
