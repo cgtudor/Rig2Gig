@@ -149,8 +149,8 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
 
     public void queryDatabase(String query)
     {
-        musicianDb.whereGreaterThanOrEqualTo("name",query.substring(0,1).toUpperCase() + query.substring(1))
-                .whereLessThanOrEqualTo("name", query.substring(0,1).toUpperCase() + query.substring(1) + '\uf8ff')
+        musicianDb.whereGreaterThanOrEqualTo("index-name",query.toLowerCase())
+                .whereLessThanOrEqualTo("index-name", query.toLowerCase() + '\uf8ff')
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

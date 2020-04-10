@@ -163,7 +163,7 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
     {
         Query first = userDb
                 .limit(1)
-                .whereEqualTo("email-address", query);
+                .whereEqualTo("index-email-address", query);
         first.get()
              .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
