@@ -490,6 +490,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         if(name != null && name.getText() != null && musician != null)
         {
             musician.put("name",name.getText().toString());
+            musician.put("index-name",name.getText().toString().toLowerCase());
         }
         if(location != null && location.getText() != null && musician != null && mapping == true)
         {
