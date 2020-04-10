@@ -70,6 +70,9 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         });
     }
 
+    /**
+     * Initialise variables onCreate
+     */
     public void initVariables()
     {
         Intent intent = getIntent();
@@ -88,12 +91,18 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         checkIfInBand = false;
     }
 
+    /**
+     * Begin checks before sending an invite
+     */
     public void beginSendInvite()
     {
         sendingInvite = true;
         checkIfInBand();
     }
 
+    /**
+     * Check if the user is still in the band
+     */
     public void checkIfInBand()
     {
         checkIfInBand = true;
@@ -103,6 +112,9 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         }
     }
 
+    /**
+     * handle success from database
+     */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         if (checkIfInBand) {
@@ -126,15 +138,21 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
                         Toast.LENGTH_LONG).show();
                 finish();
             }
-
         }
     }
 
+    /**
+     * @return user's id
+     */
     public String getUserId()
     {
         return FirebaseAuth.getInstance().getUid();
     }
 
+    /**
+     * Generate a band invite to be posted to the database
+     * @return generated invite
+     */
     public HashMap generateInvite()
     {
         HashMap<String, Object> request = new HashMap<>();
@@ -152,6 +170,9 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         return request;
     }
 
+    /**
+     * Post generated invite to the database
+     */
     public void sendInvite()
     {
         if (userRef != null)
@@ -181,6 +202,10 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         }
     }
 
+    /**
+     * Generate a band invite log to be posted to the database
+     * @return generated band invite log
+     */
     public HashMap generateLoggedInvite()
     {
         HashMap<String, Object> request = new HashMap<>();
@@ -196,6 +221,9 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         return request;
     }
 
+    /**
+     * Post generated invite log to the database
+     */
     public void logInvite()
     {
         HashMap<String, Object> request = generateLoggedInvite();
@@ -221,6 +249,9 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
                 });
     }
 
+    /**
+     * Handle a successful band invite
+     */
     public void onSuccessfulInvite()
     {
         Toast.makeText(this, name + " has been invited to join your band.", Toast.LENGTH_LONG).show();
@@ -230,153 +261,238 @@ public class AddMemberConfirmation extends Activity implements CreateAdvertiseme
         finish();
     }
 
+    /**
+     * @return db
+     */
     public FirebaseFirestore getDb() {
         return db;
     }
 
+    /**
+     * @return position
+     */
     public int getPosition() {
         return position;
     }
 
+    /**
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return musicianRef
+     */
     public String getMusicianRef() {
         return musicianRef;
     }
 
+    /**
+     * @return bandRef
+     */
     public String getBandRef() {
         return bandRef;
     }
 
+    /**
+     * @return userRef
+     */
     public String getUserRef() {
         return userRef;
     }
 
+    /**
+     * @return bandName
+     */
     public String getBandName() {
         return bandName;
     }
 
+    /**
+     * @return inviterName
+     */
     public String getInviterName() {
         return inviterName;
     }
 
+    /**
+     * @return userMusicianRef
+     */
     public String getUsersMusicianRef() {
         return usersMusicianRef;
     }
 
+    /**
+     * @return sendingInvite
+     */
     public boolean isSendingInvite() {
         return sendingInvite;
     }
 
+    /**
+     * @return checkIfInBand
+     */
     public boolean isCheckIfInBand() {
         return checkIfInBand;
     }
 
+    /**
+     * @return musicManager
+     */
     public ListingManager getMusicManager() {
         return musicManager;
     }
 
+    /**
+     * @param position position to set
+     */
     public void setPosition(int position) {
         this.position = position;
     }
 
+    /**
+     * @param name name to set
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @param musicianRef musicianRef to set
+     */
     public void setMusicianRef(String musicianRef) {
         this.musicianRef = musicianRef;
     }
 
+    /**
+     * @param bandRef bandRef to set
+     */
     public void setBandRef(String bandRef) {
         this.bandRef = bandRef;
     }
 
+    /**
+     * @param userRef userRef to set
+     */
     public void setUserRef(String userRef) {
         this.userRef = userRef;
     }
 
+    /**
+     * @param bandName bandName to set
+     */
     public void setBandName(String bandName) {
         this.bandName = bandName;
     }
 
+    /**
+     * @param inviterName inviterName to set
+     */
     public void setInviterName(String inviterName) {
         this.inviterName = inviterName;
     }
 
+    /**
+     * @param usersMusicianRef userMusicianRef to set
+     */
     public void setUsersMusicianRef(String usersMusicianRef) {
         this.usersMusicianRef = usersMusicianRef;
     }
 
+    /**
+     * @param sendingInvite sendingInvite to set
+     */
     public void setSendingInvite(boolean sendingInvite) {
         this.sendingInvite = sendingInvite;
     }
 
+    /**
+     * @param checkIfInBand checkIfInBand to set
+     */
     public void setCheckIfInBand(boolean checkIfInBand) {
         this.checkIfInBand = checkIfInBand;
     }
 
+    /**
+     * @param musicManager musicManager to set
+     */
     public void setMusicManager(ListingManager musicManager) {
         this.musicManager = musicManager;
     }
 
+    /**
+     * @param db db to set
+     */
     public void setDb(FirebaseFirestore db) {
         this.db = db;
     }
 
+    /**
+     * @param received received to set
+     */
     public void setReceived(CollectionReference received) {
         this.received = received;
     }
 
+    /**
+     * Not used
+     */
     @Override
-    public void setViewReferences() {
+    public void setViewReferences() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void populateInitialFields() {
+    public void populateInitialFields() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void createAdvertisement() {
+    public void createAdvertisement() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void cancelAdvertisement() {
+    public void cancelAdvertisement() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void listingDataMap() {
+    public void listingDataMap() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public boolean validateDataMap() {
-        return false;
-    }
+    public boolean validateDataMap() {return false;}
 
+    /**
+     * Not used
+     */
     @Override
-    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public ImageView getImageView() {
-        return null;
-    }
+    public ImageView getImageView() {return null;}
 
+    /**
+     * Not used
+     */
     @Override
-    public void handleDatabaseResponse(Enum creationResult) {
+    public void handleDatabaseResponse(Enum creationResult) {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void onSuccessfulImageDownload() {
-
-    }
+    public void onSuccessfulImageDownload() {}
 }

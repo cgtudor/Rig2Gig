@@ -269,6 +269,9 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         fader = findViewById(R.id.fader);
     }
 
+    /**
+     * Start genre selector popup activity
+     */
     public void selectGenres()
     {
         Window window = getWindow();
@@ -280,6 +283,9 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         startActivityForResult(intent, 99);
     }
 
+    /**
+     * Amend text of genre button accordingly
+     */
     public void setGenreButton()
     {
         if (genres.getText().toString().equals(""))
@@ -310,7 +316,6 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             try
             {
                 List<Address> getBandCity = geocoder.getFromLocation(Double.parseDouble(band.get("latitude").toString()), Double.parseDouble(band.get("longitude").toString()), 20);
-
                 if (getBandCity != null && getBandCity.size() > 0)
                 {
                     for (Address adr : getBandCity)
@@ -318,24 +323,18 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                         if (adr.getLocality() != null)
                         {
                             runOnUiThread(new Runnable() {
-
                                 @Override
                                 public void run() {
-
                                     location.setText(adr.getLocality() + ", " + adr.getCountryCode());
-
-
                                 }
                             });
                             break;
-
                         }
                         else if (adr.getSubLocality() != null)
                         {
                             location.setText(adr.getSubLocality() + ", " + adr.getCountryCode());
                             break;
                         }
-
                     }
                 }
             }
@@ -604,7 +603,6 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                                 Toast.LENGTH_SHORT).show();
                         return false;
                     }
-
                 }
             }
         }
@@ -650,22 +648,39 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         return image;
     }
 
+    /**
+     * @param listingManager listingManager to set
+     */
     public void setListingManager(ListingManager listingManager) {
         this.listingManager = listingManager;
     }
 
+    /**
+     * @return band
+     */
     public Map<String, Object> getBand() {
         return band;
     }
 
+    /**
+     * @param band band to set
+     */
     public void setBand(Map<String, Object> band) {
         this.band = band;
     }
 
+    /**
+     * @param tabPreserver tabPreserver to set
+     */
     public void setTabPreserver(TabStatePreserver tabPreserver) {
         this.tabPreserver = tabPreserver;
     }
 
+    /**
+     * Handle menu item selection
+     * @param item item selected
+     * @return true if item selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
