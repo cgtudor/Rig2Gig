@@ -123,12 +123,14 @@
 
     <Button
         android:id="@+id/ok"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
+        android:layout_width="130dp"
+        android:layout_height="35dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp"
-        android:text="OK" />
-
+        android:background="@drawable/button_rounded_flat_blue"
+        android:text="OK"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF" />
 
 </RelativeLayout>

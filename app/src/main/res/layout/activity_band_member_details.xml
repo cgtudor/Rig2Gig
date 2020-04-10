@@ -185,29 +185,40 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginBottom="40dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/ok"
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
+            android:layout_width="130dp"
+            android:layout_height="35dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
             android:layout_marginStart="40dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="20dp"
             android:layout_weight="1.0"
-            android:backgroundTint="#008577"
+            android:background="@drawable/button_rounded_flat_blue"
             android:text="Back"
-            style="?android:attr/borderlessButtonStyle"/>
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF" />
+
 
         <Button
             android:id="@+id/profile"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:layout_marginStart="15dp"
+            android:layout_width="130dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="20dp"
             android:layout_marginEnd="40dp"
             android:layout_weight="1.0"
-            android:text="Profile" />
+            android:background="@drawable/button_rounded_flat_blue"
+            android:text="Profile"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF" />
+
     </LinearLayout>
 
 </RelativeLayout>
