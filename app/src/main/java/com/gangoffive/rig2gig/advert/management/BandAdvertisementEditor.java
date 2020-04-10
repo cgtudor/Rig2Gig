@@ -164,6 +164,9 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
 
     }
 
+    /**
+     * Set initial colour for confirm button
+     */
     public void setInitialColours()
     {
         createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
@@ -197,6 +200,9 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         }
     }
 
+    /**
+     * Sets the search hint to invisible
+     */
     public void setSearchHintInvisible()
     {
         searchHint.setVisibility(View.INVISIBLE);
@@ -326,6 +332,11 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         }
     }
 
+    /**
+     * Not used
+     * @param typedText
+     * @return
+     */
     @Override
     public boolean onQueryTextSubmit(String typedText)
     {
@@ -435,7 +446,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
 
 
     /**
-     * create advertisement, posting to database
+     * create advertisement, and begin final checks for posting to database
      */
     @Override
     public void createAdvertisement() {
@@ -455,6 +466,10 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         }
     }
 
+    /**
+     * Post to database after final checks
+     * @param data advrtisement data
+     */
     public void postToDatabase(Map<String, Object> data)
     {
         if (data != null)
@@ -600,52 +615,90 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         reinitialiseTabs();
     }
 
+    /**
+     * Finish activity on back pressed
+     */
     @Override
     public void onBackPressed()
     {
         finish();
     }
 
+    /**
+     * @return band
+     */
     public Map<String, Object> getBand() {
         return band;
     }
 
+    /**
+     * @return previousListing
+     */
     public Map<String, Object> getPreviousListing() {
         return previousListing;
     }
 
+    /**
+     * @return bandPositions
+     */
     public List getBandPositions() {
         return bandPositions;
     }
 
+    /**
+     * @param listing listing to set
+     */
     public void setListing(HashMap<String, Object> listing) {
         this.listing = listing;
     }
 
+    /**
+     * @param listingManager listingManager to set
+     */
     public void setListingManager(ListingManager listingManager) {
         this.listingManager = listingManager;
     }
 
+    /**
+     * @param bandPositions bandPositions to set
+     */
     public void setBandPositions(List bandPositions) {
         this.bandPositions = bandPositions;
     }
 
+    /**
+     * @param tabPreserver tabPreserver to set
+     */
     public void setTabPreserver(TabStatePreserver tabPreserver) {
         this.tabPreserver = tabPreserver;
     }
 
+    /**
+     * @param band band to set
+     */
     public void setBand(Map<String, Object> band) {
         this.band = band;
     }
 
+    /**
+     * @param previousListing previousListing to set
+     */
     public void setPreviousListing(Map<String, Object> previousListing) {
         this.previousListing = previousListing;
     }
 
+    /**
+     * @param bandRef bandRef to set
+     */
     public void setBandRef(String bandRef) {
         this.bandRef = bandRef;
     }
 
+    /**
+     * Handle menue item selection
+     * @param item item selected
+     * @return true if item was selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here

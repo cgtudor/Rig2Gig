@@ -249,7 +249,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     }
 
     /**
-     * create advertisement, posting to database
+     * create advertisement, begin final checks before posting to database
      */
     @Override
     public void createAdvertisement() {
@@ -269,6 +269,10 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         }
     }
 
+    /**
+     * Post advert to database
+     * @param data advert data
+     */
     public void postToDatabase(Map<String, Object> data)
     {
         if (data != null)
@@ -335,6 +339,9 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         finish();
     }
 
+    /**
+     * Finish activity on back pressed
+     */
     @Override
     public void onBackPressed()
     {
@@ -415,37 +422,57 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     }
 
     /**
-     * get image
      * @return image
      */
     public ImageView getImageView() {
         return image;
     }
 
+    /**
+     * @return performer
+     */
     public Map<String, Object> getPerformer() {
         return band;
     }
 
+    /**
+     * @return previousListing
+     */
     public Map<String, Object> getPreviousListing() {
         return previousListing;
     }
 
+    /**
+     * @param listingManager listingManager to set
+     */
     public void setListingManager(ListingManager listingManager) {
         this.listingManager = listingManager;
     }
 
+    /**
+     * @param listing listing to set
+     */
     public void setListing(HashMap<String, Object> listing) {
         this.listing = listing;
     }
 
+    /**
+     * @param band band to set
+     */
     public void setPerformer(Map<String, Object> band) {
         this.band = band;
     }
 
+    /**
+     * @param previousListing previousListing to set
+     */
     public void setPreviousListing(Map<String, Object> previousListing) {
         this.previousListing = previousListing;
     }
 
+    /**
+     * Get location of performer
+     */
     private void getPerformerLocation()
     {
         getPerformerLocation.whereEqualTo("user-ref", fAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -479,6 +506,11 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         });
     }
 
+    /**
+     * Jandle menu item selection
+     * @param item item selected
+     * @return true if item selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here

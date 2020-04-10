@@ -139,6 +139,9 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         }
     }
 
+    /**
+     * Set initial colours of confirm button
+     */
     public void setInitialColours()
     {
         if (description != null)
@@ -256,7 +259,6 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         }
     }
 
-
     /**
      * handles activity results
      * @param requestCode
@@ -271,7 +273,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     }
 
     /**
-     * create advertisement, posting to database
+     * create advertisement, then begin final checks before posting to database
      */
     @Override
     public void createAdvertisement() {
@@ -291,6 +293,10 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         }
     }
 
+    /**
+     * Post advert to database
+     * @param data advert to be posted
+     */
     public void postToDatabase(Map<String, Object> data)
     {
         if (data != null)
@@ -345,8 +351,6 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
                             Toast.LENGTH_SHORT).show();
                 }
             });
-
-
         }
     }
 
@@ -402,34 +406,54 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         return image;
     }
 
-    public Map<String, Object> getVenue() {
-        return venue;
-    }
+    /**
+     * @return venue
+     */
+    public Map<String, Object> getVenue() {return venue;}
 
-    public Map<String, Object> getPreviousListing() {
-        return previousListing;
-    }
+    /**
+     * @return previousListing
+     */
+    public Map<String, Object> getPreviousListing() {return previousListing;}
 
+    /**
+     * @param listingManager listingManager to set
+     */
     public void setListingManager(ListingManager listingManager) {
         this.listingManager = listingManager;
     }
 
+    /**
+     * @param listing listing to set
+     */
     public void setListing(HashMap<String, Object> listing) {
         this.listing = listing;
     }
 
+    /**
+     * @param venue venue to set
+     */
     public void setVenue(Map<String, Object> venue) {
         this.venue = venue;
     }
 
+    /**
+     * @param previousListing previousListing to set
+     */
     public void setPreviousListing(Map<String, Object> previousListing) {
         this.previousListing = previousListing;
     }
 
+    /**
+     * @param listingRef listingRef to set
+     */
     public void setListingRef(String listingRef) {
         this.listingRef = listingRef;
     }
 
+    /**
+     * get location of venue
+     */
     private void getVenueLocation()
     {
         getVenueLocation.whereEqualTo("user-ref", fAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -463,6 +487,11 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         });
     }
 
+    /**
+     * handle menu item selection
+     * @param item item selected
+     * @return true if item selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
