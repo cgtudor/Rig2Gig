@@ -68,9 +68,16 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     private ArrayList<String> positions = new ArrayList<>(Arrays.asList(Positions.getPositions()));
     private List bandPositions = new ArrayList();
     private Drawable chosenPic;
-    SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
+    private SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
             (this, getSupportFragmentManager(), tabTitles, fragments);
-    ViewPager viewPager;
+    private ViewPager viewPager;
+    private View.OnClickListener confirm = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            createListing.setOnClickListener(null);
+            createAdvertisement();
+        }
+    };
     private SearchView searchBar;
     private ListView listResults;
     private ArrayAdapter<String> resultsAdapter;
@@ -236,12 +243,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             description.setOnFocusChangeListener(editTextFocusListener);
         }
         createListing = findViewById(R.id.createListing);
-        createListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAdvertisement();
-            }
-        });
+        createListing.setOnClickListener(confirm);
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -498,6 +500,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             finalCheck = true;
             listingManager.getUserInfo(this);
         } else {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(MusicianAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
                             "and try again",
@@ -519,6 +522,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         }
         else
         {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(MusicianAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Check your connection " +
                             "and try again",
@@ -550,6 +554,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(MusicianAdvertisementEditor.this,
@@ -560,6 +565,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             });
 
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(MusicianAdvertisementEditor.this,
