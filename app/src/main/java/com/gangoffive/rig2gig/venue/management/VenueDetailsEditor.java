@@ -59,6 +59,13 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                                R.layout.fragment_description_changer};
     private Drawable chosenPic;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
+    View.OnClickListener confirm = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            createListing.setOnClickListener(null);
+            createAdvertisement();
+        }
+    };
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
@@ -230,12 +237,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
 
             }
             createListing = findViewById(R.id.createListing);
-            createListing.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    createAdvertisement();
-                }
-            });
+            createListing.setOnClickListener(confirm);
             cancel = findViewById(R.id.cancel);
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -403,9 +405,14 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
             }
             catch(IOException io)
             {
+                createListing.setOnClickListener(confirm);
                 System.out.println(io.getMessage());
             }
 
+        }
+        else
+        {
+            createListing.setOnClickListener(confirm);
         }
     }
 
@@ -426,6 +433,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
             });
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -436,6 +444,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                 }
             });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
 
                 @Override
