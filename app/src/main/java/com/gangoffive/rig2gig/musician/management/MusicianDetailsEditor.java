@@ -68,6 +68,20 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     private ConstraintLayout constraintLayout;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
     private boolean mapping;
+    private View.OnClickListener genreSelect = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            selectGenre.setOnClickListener(null);
+            selectGenres();
+        }
+    };
+    private View.OnClickListener confirm = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            createListing.setOnClickListener(null);
+            createAdvertisement();
+        }
+    };
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
@@ -221,12 +235,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         createListing = findViewById(R.id.createListing);
         createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
         createListing.setTextColor(Color.parseColor("#FFFFFF"));
-        createListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAdvertisement();
-            }
-        });
+        createListing.setOnClickListener(confirm);
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,12 +266,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         selectGenre = findViewById(R.id.selectGenres);
         if (selectGenre != null)
         {
-            selectGenre.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectGenres();
-                }
-            });
+            selectGenre.setOnClickListener(genreSelect);
         }
         fader = findViewById(R.id.fader);
     }
@@ -289,6 +293,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 99)
         {
+            selectGenre.setOnClickListener(genreSelect);
             Window window = getWindow();
             window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
             fader.setVisibility(View.GONE);
@@ -420,12 +425,17 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     @Override
     public void createAdvertisement() {
         saveTabs();
+        createListing.setOnClickListener(null);
         if (chosenPic != null)
         {
             chosenPic = image.getDrawable();
         }
         if (validateDataMap()) {
             listingManager.postDataToDatabase((HashMap)musician, chosenPic, this);
+        }
+        else
+        {
+            createListing.setOnClickListener(confirm);
         }
     }
 
@@ -450,8 +460,8 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
-
                 @Override
                 public void run() {
                     Toast.makeText(MusicianDetailsEditor.this,
@@ -461,8 +471,8 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                 }
             });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
-
                 @Override
                 public void run() {
                     Toast.makeText(MusicianDetailsEditor.this,
