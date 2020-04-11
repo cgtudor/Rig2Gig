@@ -310,6 +310,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         }
         else
         {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(VenueAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Check your connection " +
                             "and try again",

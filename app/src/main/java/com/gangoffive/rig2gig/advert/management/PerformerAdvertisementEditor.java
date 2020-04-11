@@ -44,6 +44,14 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     private ListingManager listingManager;
     private Drawable chosenPic;
     private boolean finalCheck;
+    private View.OnClickListener confirm = new View.OnClickListener() {
+        @Override
+        public void onClick(View v)
+        {
+            createListing.setOnClickListener(null);
+            createAdvertisement();
+        }
+    };
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -190,10 +198,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         createListing = findViewById(R.id.createListing);
         createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
         createListing.setTextColor(Color.parseColor("#FFFFFF"));
-        createListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {createAdvertisement();}
-        });
+        createListing.setOnClickListener(confirm);
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -262,6 +267,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             finalCheck = true;
             listingManager.getUserInfo(this);
         } else {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(PerformerAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
                             "and try again",
@@ -283,6 +289,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         }
         else
         {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(PerformerAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Check your connection " +
                             "and try again",
@@ -309,6 +316,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(PerformerAdvertisementEditor.this,
@@ -319,6 +327,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             });
 
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(PerformerAdvertisementEditor.this,
