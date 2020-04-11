@@ -22,6 +22,9 @@ public class Genres {
             "Soul"
     };
 
+    /**
+     * @return genres
+     */
     static public String [] getGenres()
     {
         return genres;

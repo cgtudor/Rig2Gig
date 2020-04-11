@@ -66,6 +66,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
             createAdvertisement();
         }
     };
+
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
@@ -159,6 +160,9 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         setSpinnerValue();
     }
 
+    /**
+     * set value of spinne for venue type
+     */
     public void setSpinnerValue()
     {
         for (int i = 0; i < VenueTypes.getTypes().length; i++)
@@ -171,6 +175,9 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         }
     }
 
+    /**
+     * set up venue type spinner
+     */
     public void setUpTypeSpinner()
     {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner, VenueTypes.getTypes());
@@ -354,11 +361,17 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         }
     }
 
+    /**
+     * Begin tab preservation process
+     */
     @Override
     public void beginTabPreservation() {
         tabPreserver.preserveTabState();
     }
 
+    /**
+     * @param isMapping isMapping to set
+     */
     @Override
     public void setMapping(boolean isMapping) {
         mapping = isMapping;
@@ -376,7 +389,6 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
         chosenPic = image.getDrawable();
     }
-
 
     /**
      * create advertisement, posting to database
@@ -525,30 +537,45 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         return image;
     }
 
+    /**
+     * @return venue
+     */
     public Map<String, Object> getVenue() {
         return venue;
     }
 
+    /**
+     * @param venue venue to set
+     */
     public void setVenue(Map<String, Object> venue) {
         this.venue = venue;
     }
 
+    /**
+     * @param tabPreserver tabPreserver to set
+     */
     public void setTabPreserver(TabStatePreserver tabPreserver) {
         this.tabPreserver = tabPreserver;
     }
 
+    /**
+     * @param listingManager listingManager to set
+     */
     public void setListingManager(ListingManager listingManager) {
         this.listingManager = listingManager;
     }
 
+    /**
+     * Handle memnu item selection
+     * @param item item selected
+     * @return true if item selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
             finish(); // close this activity and return to preview activity (if there is any)
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 }

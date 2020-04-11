@@ -10,6 +10,9 @@ public class VenueTypes {
                     "Pub"
             };
 
+    /**
+     * @return types
+     */
     static public String[] getTypes() {
         return types;
     }

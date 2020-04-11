@@ -271,6 +271,9 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         fader = findViewById(R.id.fader);
     }
 
+    /**
+     * Start popup activty to select/edit genres
+     */
     public void selectGenres()
     {
         Window window = getWindow();
@@ -312,6 +315,9 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
     }
 
+    /**
+     * Change genre button text to be relevant to situation
+     */
     public void setGenreButton()
     {
         if (genres.getText().toString().equals(""))
@@ -414,6 +420,9 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         populateInitialFields();
     }
 
+    /**
+     * Begin tab preservation process
+     */
     @Override
     public void beginTabPreservation() {
         tabPreserver.preserveTabState();
@@ -627,37 +636,59 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     }
 
     /**
-     * get image
      * @return image
      */
     public ImageView getImageView() {
         return image;
     }
 
+    /**
+     * @param listingManager listingMnager to set
+     */
     public void setListingManager(ListingManager listingManager) {
         this.listingManager = listingManager;
     }
 
+    /**
+     * @return musician
+     */
     public Map<String, Object> getMusician() {
         return musician;
     }
 
+    /**
+     * @param musician musician to set
+     */
     public void setMusician(Map<String, Object> musician) {
         this.musician = musician;
     }
 
+    /**
+     * @param tabPreserver tabPreserver to set
+     */
     public void setTabPreserver(TabStatePreserver tabPreserver) {
         this.tabPreserver = tabPreserver;
     }
 
+    /**
+     * @param isMapping isMapping to set
+     */
     public void setMapping(boolean isMapping) {
         mapping = isMapping;
     }
 
+    /**
+     * @param image image to set
+     */
     public void setImage(ImageView image) {
         this.image = image;
     }
 
+    /**
+     * Handle menu item selection
+     * @param item item selected
+     * @return if item was seleceted
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here

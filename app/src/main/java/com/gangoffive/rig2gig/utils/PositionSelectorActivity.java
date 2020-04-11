@@ -82,12 +82,19 @@ public class PositionSelectorActivity extends AppCompatActivity implements Searc
         });
     }
 
+    /**
+     * Handle back button press
+     */
     @Override
     public void onBackPressed()
     {
         returnSelectedPositions();
     }
 
+    /**
+     * Handle if top activity has changed
+     * @param isTopResumedActivity true if currently the top activity
+     */
     @Override
     public void onTopResumedActivityChanged (boolean isTopResumedActivity)
     {
@@ -97,6 +104,9 @@ public class PositionSelectorActivity extends AppCompatActivity implements Searc
         }
     }
 
+    /**
+     * Setup grid view for deletable positions
+     */
     public void setupGridView()
     {
         DeleteInstrumentAdapter customAdapter = new DeleteInstrumentAdapter(selectedPositions, this);
@@ -155,6 +165,11 @@ public class PositionSelectorActivity extends AppCompatActivity implements Searc
         }
     }
 
+    /**
+     * Not used
+     * @param typedText typed text
+     * @return false
+     */
     @Override
     public boolean onQueryTextSubmit(String typedText)
     {
@@ -173,6 +188,9 @@ public class PositionSelectorActivity extends AppCompatActivity implements Searc
         return true;
     }
 
+    /**
+     * Return selected positions as string
+     */
     public void returnSelectedPositions()
     {
         String positions = selectedPositions.toString();
