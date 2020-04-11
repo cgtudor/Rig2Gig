@@ -92,11 +92,18 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
         setupSearchBar();
     }
 
+    /**
+     * Obtain user info from database, to check if in band
+     */
     public void checkIfInBand()
     {
         bandManager.getUserInfo(this);
     }
 
+    /**
+     * handle response from database
+     * @param data map of user data
+     */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         if (!((List)data.get("members")).contains(usersMusicianRef))
@@ -126,6 +133,9 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
         }
     }
 
+    /**
+     * Set view references
+     */
     @Override
     public void setViewReferences()
     {
@@ -144,6 +154,9 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
         fader = findViewById(R.id.fader);
     }
 
+    /**
+     * Setup search bar
+     */
     public void setupSearchBar()
     {
         searchBar.setIconifiedByDefault(false);
@@ -152,6 +165,11 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
         searchBar.setQueryHint("Enter musician email address");
     }
 
+    /**
+     * Handle query submission on search bar
+     * @param typedText text typed
+     * @return false
+     */
     @Override
     public boolean onQueryTextSubmit(String typedText)
     {
@@ -161,11 +179,19 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
         return false;
     }
 
+    /**
+     * Not used
+     * @param newText typed text
+     * @return false
+     */
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
     }
 
+    /**
+     * Query database for typed email address
+     */
     public void queryUserDatabase()
     {
         Query first = userDb
@@ -209,6 +235,9 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
     });
     }
 
+    /**
+     * Check if the email address search for has an associated, active invite already
+     */
     public void checkInvitesSent()
     {
         CollectionReference sentMessages = db.collection("communications").document(searchedUserRef).collection("received");
@@ -239,6 +268,10 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
                 });
     }
 
+    /**
+     * Obtain search for musicians data and image to display
+     * @param userRef reference of searched musician
+     */
     public void queryMusicianDatabase(String userRef)
     {
         Query first = musicianDb
@@ -296,6 +329,9 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
                 });
     }
 
+    /**
+     * Display musician information obtained from database
+     */
     public void displayMusician()
     {
         infoText.setText("");
@@ -311,6 +347,10 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
         rating.setText(musicianData.get("rating").toString());
     }
 
+    /**
+     * Handle when musician data is not found, or should not be found (ie already invited or in band)
+     * @param text relevant message to display to user
+     */
     public void failedToFind(String text)
     {
         infoText.setText(text);
@@ -326,17 +366,18 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
         rating.setText("");
     }
 
-    @Override
-    public void populateInitialFields() {
-
-    }
-
+    /**
+     * Begin the process of inviting the musician, checking if user is still in band
+     */
     public void beginConfirmAddMember ()
     {
         confirmingAdd = true;
         checkIfInBand();
     }
 
+    /**
+     * Start popup intent to confirm if the musician is to be invited
+     */
     public void confirmAddMember()
     {
         searchBar.clearFocus();
@@ -356,6 +397,12 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
         startActivityForResult(intent, 1);
     }
 
+    /**
+     * Handle activity results, namely if the musician was confirmed to be invited
+     * @param requestCode request code
+     * @param resultCode result code
+     * @param data intent data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -370,24 +417,38 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
         }
     }
 
+    /**
+     * Handle phone back button press
+     */
     @Override
     public void onBackPressed()
     {
         handleBack();
     }
 
+    /**
+     * Handle app bar back button press
+     * @param item item pressed
+     * @return true
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         handleBack();
         return true;
     }
 
+    /**
+     * begin navigate back process, first checking if user remains in band
+     */
     public void handleBack()
     {
         backClicked = true;
         checkIfInBand();
     }
 
+    /**
+     * Return to band manager after confirmation user remains in band
+     */
     public void goBack()
     {
         Intent intent = new Intent(this, ManageBandMembersActivity.class);
@@ -396,42 +457,57 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
         finish();
     }
 
+    /**
+     * Not used
+     */
     @Override
-    public void createAdvertisement() {
+    public void createAdvertisement() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void cancelAdvertisement() {
+    public void cancelAdvertisement() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void listingDataMap() {
+    public void listingDataMap() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public boolean validateDataMap() {
-        return false;
-    }
+    public boolean validateDataMap() {return false;}
 
+    /**
+     * Not used
+     */
     @Override
-    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public ImageView getImageView() {
-        return null;
-    }
+    public ImageView getImageView() {return null;}
 
+    /**
+     * Not used
+     */
     @Override
-    public void handleDatabaseResponse(Enum creationResult) {
-    }
+    public void handleDatabaseResponse(Enum creationResult) {}
 
+    /**
+     * Not used
+     */
     @Override
-    public void onSuccessfulImageDownload() {
+    public void onSuccessfulImageDownload() {}
 
-    }
+    /**
+     * Not used
+     */
+    @Override
+    public void populateInitialFields() {}
 }

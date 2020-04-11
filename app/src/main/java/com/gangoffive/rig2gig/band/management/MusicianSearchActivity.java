@@ -115,6 +115,9 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         setupSearchBar();
     }
 
+    /**
+     * Set up search bar
+     */
     public void setupSearchBar()
     {
         listResults = findViewById(R.id.list_results);
@@ -129,6 +132,11 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         remainingHeight = (metrics.heightPixels) - searchBarHeight;
     }
 
+    /**
+     * Not used
+     * @param typedText text typed
+     * @return false
+     */
     @Override
     public boolean onQueryTextSubmit(String typedText)
     {
@@ -136,7 +144,7 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
     }
 
     /**
-     * filter search bar list based on typed text
+     * Filter search bar list based on typed text
      * @param typedText text enterd in search bar
      * @return false
      */
@@ -172,6 +180,10 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         return true;
     }
 
+    /**
+     * Query database with typed text
+     * @param query typed text
+     */
     public void queryDatabase(String query)
     {
         musicianDb.whereGreaterThanOrEqualTo("index-name",query.toLowerCase())
@@ -211,6 +223,10 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
                 });
     }
 
+    /**
+     * Begin the process of generating results for list view, first checking user remains in band
+     * @param name
+     */
     public void beginResultsGeneration(String name)
     {
         resultsName = name;
@@ -218,6 +234,9 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         checkIfInBand();
     }
 
+    /**
+     * Generate results of search for use in the list view
+     */
     public void generateResults()
     {
         for (int i = 0; i < searchNames.size(); i++)
@@ -245,6 +264,9 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         }
     }
 
+    /**
+     * Out of the returned search results, check which have already been invited to the band
+     */
     public void checkInvitesSent()
     {
         if (gridRefs.size() > 0)
@@ -289,6 +311,10 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         }
     }
 
+    /**
+     * Handle successfull data retrieval from the database
+     * @param data data retrieved
+     */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         if (checkIfInBand)
@@ -339,6 +365,9 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         }
     }
 
+    /**
+     * Set up scroll and grid view
+     */
     @Override
     public void populateInitialFields() {
         gridView = (GridView) findViewById( R.id.gridView);
@@ -350,6 +379,11 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         gridView.setOnItemClickListener(viewDetails);
     }
 
+    /**
+     * Begin the process of inviting the musician, checking if user is still in band
+     * @param member member to be invited
+     * @param position position in grid view of invited member
+     */
     public void beginConfirmAddMember (String member, int position)
     {
         confirmMember = member;
@@ -358,6 +392,9 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         checkIfInBand();
     }
 
+    /**
+     * Start popup intent to confirm if the musician is to be invited
+     */
     public void confirmAddMember()
     {
         searchBar.clearFocus();
@@ -377,6 +414,12 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         startActivityForResult(intent, 1);
     }
 
+    /**
+     * Handle activity results, namely if the musician was confirmed to be invited
+     * @param requestCode request code
+     * @param resultCode result code
+     * @param data intent data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -400,6 +443,9 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         }
     }
 
+    /**
+     * Reset tracking variables before checking invites sent
+     */
     public void inviteMember()
     {
         membersDownloaded = 0;
@@ -409,6 +455,9 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         searchBar.clearFocus();
     }
 
+    /**
+     * Reset search and grid view data lists
+     */
     public void resetLists()
     {
         musicians = new ArrayList<>();
@@ -421,30 +470,46 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         invitesSent = new ArrayList<>();
     }
 
+    /**
+     * Begin process of checking if user remains in band
+     */
     public void checkIfInBand()
     {
         checkIfInBand = true;
         musicManager.getUserInfo(this);
     }
 
+    /**
+     * Handle phone back button press
+     */
     @Override
     public void onBackPressed()
     {
         handleBack();
     }
-
+    /**
+     * Handle app bar back button press
+     * @param item item pressed
+     * @return true
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         handleBack();
         return true;
     }
 
+    /**
+     * begin navigate back process, first checking if user remains in band
+     */
     public void handleBack()
     {
         backClicked = true;
         checkIfInBand();
     }
 
+    /**
+     * Return to band manager after confirmation user remains in band
+     */
     public void goBack()
     {
         Intent intent = new Intent(this, ManageBandMembersActivity.class);
@@ -453,59 +518,71 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         finish();
     }
 
+    /**
+     * Check if currently in the process of inviting a new member
+     * @return
+     */
+    public boolean isInvitingMember() {return invitingMember;}
+
+    /**
+      * @param invitingMember set if currently in the process of inviting a new member
+     */
+    public void setInvitingMember(boolean invitingMember) {this.invitingMember = invitingMember;}
+
+    /**
+     * Not used
+     */
     @Override
-    public void setViewReferences() {
+    public void setViewReferences() {}
 
-    }
-
-
+    /**
+     * Not used
+     */
     @Override
-    public void createAdvertisement() {
+    public void createAdvertisement() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void cancelAdvertisement() {
+    public void cancelAdvertisement() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void listingDataMap() {
+    public void listingDataMap() {}
 
-    }
-
+    /**
+     * Not used
+     * @return false
+     */
     @Override
-    public boolean validateDataMap() {
-        return false;
-    }
+    public boolean validateDataMap() {return false;}
 
-
-
+    /**
+     * Not used
+     */
     @Override
-    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {}
 
-    }
-
+    /**
+     * Not used
+     * @return null
+     */
     @Override
-    public ImageView getImageView() {
-        return null;
-    }
+    public ImageView getImageView() {return null;}
 
+    /**
+     * Not used
+     * @param creationResult defines the result (eg SUCCESS, IMAGE_FAILURE, etc)
+     */
     @Override
-    public void handleDatabaseResponse(Enum creationResult) {
+    public void handleDatabaseResponse(Enum creationResult) {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void onSuccessfulImageDownload() {
-
-    }
-
-    public boolean isInvitingMember() {
-        return invitingMember;
-    }
-
-    public void setInvitingMember(boolean invitingMember) {
-        this.invitingMember = invitingMember;
-    }
+    public void onSuccessfulImageDownload() {}
 }

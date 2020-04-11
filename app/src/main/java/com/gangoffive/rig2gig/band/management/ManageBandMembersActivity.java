@@ -113,6 +113,10 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         });
     }
 
+    /**
+     * Handle success from database
+     * @param data map of data downloaded from database
+     */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data)
     {
@@ -207,22 +211,27 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         }
     }
 
+    /**
+     * Populate gridview with downloaded musician data
+     */
     @Override
     public void populateInitialFields() {
         gridView = (GridView) findViewById( R.id.gridView);
-
         BandMemberRemoverAdapter customAdapter = new BandMemberRemoverAdapter(names, memberRefs, this);
         runOnUiThread(new Runnable() {
-
             @Override
             public void run() {
                 gridView.setAdapter(customAdapter);
             }
         });
-
         gridView.setOnItemClickListener(displayDetails);
     }
 
+    /**
+     * Begin process of removing band member, first confiriming if user is still in band
+     * @param member member to be removed
+     * @param position position in grid view
+     */
     public void confirmRemoveMember(String member, int position)
     {
         removeMember = member;
@@ -231,6 +240,9 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         checkIfInBand();
     }
 
+    /**
+     * Start popup activity to confirm whether band member is to be removed
+     */
     public void areYouSureRemove()
     {
         fader = findViewById(R.id.fader);
@@ -243,6 +255,12 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         startActivityForResult(intent, 1);
     }
 
+    /**
+     * Handle activity result, namely whether the musician is confirmed to be removed
+     * @param requestCode request code
+     * @param resultCode result code
+     * @param data intent data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -260,12 +278,18 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         }
     }
 
+    /**
+     * Begin process of removing confirmed removee, first checking if user is still in the band
+     */
     public void beginRemoveMember()
     {
         removingMemberConfirmed = true;
         checkIfInBand();
     }
 
+    /**
+     * Finalise the removal of the band member
+     */
     public void finaliseRemoveMember()
     {
         removedRef = (String)memberRefs.get(position);
@@ -279,6 +303,10 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         musicianManagers.get(position).postDataToDatabase((HashMap)musicians.get(position),null,this);
     }
 
+    /**
+     * Handle if the member was successfully removed from the database band document
+     * @param creationResult defines the result (eg SUCCESS, IMAGE_FAILURE, etc)
+     */
     @Override
     public void handleDatabaseResponse(Enum creationResult)
     {
@@ -316,6 +344,9 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
 
     }
 
+    /**
+     * Start activity to search for new members by name
+     */
     public void searchForMembers()
     {
         Intent intent = new Intent(this, MusicianSearchActivity.class);
@@ -328,6 +359,9 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         finish();
     }
 
+    /**
+     * Start activity to search for new members by email
+     */
     public void searchByEmail()
     {
         Intent intent = new Intent(this, EmailSearchActivity.class);
@@ -340,12 +374,18 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         finish();
     }
 
+    /**
+     * Begin process of checking is user remains in band
+     */
     public void checkIfInBand()
     {
         checkIfInBand = true;
         bandInfoManager.getUserInfo(this);
     }
 
+    /**
+     * Handle phone back button press
+     */
     @Override
     public void onBackPressed()
     {
@@ -353,6 +393,11 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         checkIfInBand();
     }
 
+    /**
+     * Handle app bar back button press
+     * @param item item selected
+     * @return true
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         backClicked = true;
@@ -360,11 +405,17 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         return true;
     }
 
+    /**
+     * Handle going back, finishing activity
+     */
     public void goBack()
     {
         finish();
     }
 
+    /**
+     * Update joined communication in database, allowing removed member to be reinvited
+     */
     public void updateJoinedCommunication() {
         CollectionReference joinedBand = db.collection("communications")
                 .document(removeeUserRef)
@@ -404,47 +455,62 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
                 });
     }
 
-    @Override
-    public void onSuccessfulImageDownload()
-    {
-    }
-
-    @Override
-    public void setViewReferences() {
-
-    }
-
-    @Override
-    public void createAdvertisement() {
-
-    }
-
-    @Override
-    public void cancelAdvertisement() {
-
-    }
-
-    @Override
-    public void listingDataMap() {
-
-    }
-
-    @Override
-    public boolean validateDataMap() {
-        return false;
-    }
-
-    @Override
-    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
-
-    }
-
-    @Override
-    public ImageView getImageView() {
-        return null;
-    }
-
+    /**
+     * @param usersMusicianRef user musician reference to set
+     */
     public void setUsersMusicianRef(String usersMusicianRef) {
         this.usersMusicianRef = usersMusicianRef;
     }
+
+    /**
+     * Not used
+     */
+    @Override
+    public void onSuccessfulImageDownload() {}
+
+    /**
+     * Not used
+     */
+    @Override
+    public void setViewReferences() {}
+
+    /**
+     * Not used
+     */
+    @Override
+    public void createAdvertisement() {}
+
+    /**
+     * Not used
+     */
+    @Override
+    public void cancelAdvertisement() {}
+
+    /**
+     * Not used
+     */
+    @Override
+    public void listingDataMap() {}
+
+    /**
+     * not used
+     * @return false
+     */
+    @Override
+    public boolean validateDataMap() {return false;}
+
+    /**
+     * Not used
+     * @param data not used
+     * @param listingData not used
+     */
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {}
+
+    /**
+     * Not used
+     * @return null
+     */
+    @Override
+    public ImageView getImageView() {return null;}
 }
