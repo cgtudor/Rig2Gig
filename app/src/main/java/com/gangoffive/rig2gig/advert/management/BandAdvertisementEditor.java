@@ -66,6 +66,13 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     private ArrayAdapter<String> resultsAdapter;
     private CharSequence query = null;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
+    private View.OnClickListener confirm = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            createListing.setOnClickListener(null);
+            createAdvertisement();
+        }
+    };
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
@@ -239,12 +246,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             description.setOnFocusChangeListener(editTextFocusListener);
         }
         createListing = findViewById(R.id.createListing);
-        createListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAdvertisement();
-            }
-        });
+        createListing.setOnClickListener(confirm);
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -459,6 +461,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             finalCheck = true;
             listingManager.getUserInfo(this);
         } else {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(BandAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
                             "and try again",
@@ -480,6 +483,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         }
         else
         {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(BandAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Check your connection " +
                             "and try again",
@@ -514,6 +518,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(BandAdvertisementEditor.this,
@@ -524,6 +529,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
             });
 
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(BandAdvertisementEditor.this,
