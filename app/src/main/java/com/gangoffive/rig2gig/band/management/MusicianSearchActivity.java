@@ -54,13 +54,37 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
     private CollectionReference musicianDb;
     private Activity activityRef;
     private ArrayList <ListingManager> musicianManagers;
-    ListingManager musicManager;
+    private ListingManager musicManager;
     private int membersDownloaded, remainingHeight, addPosition, invitesChecked, confirmPosition;
     private GridView gridView;
     private ScrollView scroll;
     private String bandRef, bandName, userName, usersMusicianRef, resultsName, confirmMember;
     private int numChecks;
-    private boolean backClicked, stillInBand, checkIfInBand, generatingResults, confirmingAdd;
+    private boolean backClicked, stillInBand, checkIfInBand, generatingResults, confirmingAdd, invitingMember;
+    private AdapterView.OnItemClickListener viewDetails = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> parent, View v,
+                                int position, long id) {
+            gridView.setOnItemClickListener(null);
+            fader = findViewById(R.id.fader);
+            Window window = getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(MusicianSearchActivity.this,R.color.darkerMain));
+            fader.setVisibility(View.VISIBLE);
+            Intent intent =  new Intent(MusicianSearchActivity.this, SearchedMusicianDetails.class);
+            intent.putExtra("EXTRA_MUSICIAN_REF", gridRefs.get(position).toString());
+            startActivityForResult(intent, 2);
+        }
+    };
+    private AdapterView.OnItemClickListener viewResults = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> parent, View v,
+                                int position, long id) {
+            listResults.setOnItemClickListener(null);
+            beginResultsGeneration(((TextView) v).getText().toString());
+            ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
+                    .hideSoftInputFromWindow(getCurrentFocus()
+                            .getWindowToken(),0);
+            listResults.setAdapter(null);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +109,7 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         stillInBand = true;
         activityRef = this;
         checkIfInBand = false;
+        invitingMember = false;
         addPosition = -1;
         fader = findViewById(R.id.fader);
         setupSearchBar();
@@ -177,16 +202,7 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
                             listResults.setAdapter(resultsAdapter = new ArrayAdapter<String>(activityRef,
                                     android.R.layout.simple_list_item_1,
                                     musicians));
-                            listResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                public void onItemClick(AdapterView<?> parent, View v,
-                                                        int position, long id) {
-                                    beginResultsGeneration(((TextView) v).getText().toString());
-                                    ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
-                                            .hideSoftInputFromWindow(getCurrentFocus()
-                                                    .getWindowToken(),0);
-                                    listResults.setAdapter(null);
-                                }
-                            });
+                            listResults.setOnItemClickListener(viewResults);
                         } else {
                             musicians = new ArrayList<>();
                             listResults.setAdapter(null);
@@ -331,18 +347,7 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
         gridView.setMinimumHeight(remainingHeight);
         BandMemberAdderAdapter customAdapter = new BandMemberAdderAdapter(names, gridRefs, userRefs, invitesSent, this);
         gridView.setAdapter(customAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                fader = findViewById(R.id.fader);
-                Window window = getWindow();
-                window.setStatusBarColor(ContextCompat.getColor(MusicianSearchActivity.this,R.color.darkerMain));
-                fader.setVisibility(View.VISIBLE);
-                Intent intent =  new Intent(MusicianSearchActivity.this, SearchedMusicianDetails.class);
-                intent.putExtra("EXTRA_MUSICIAN_REF", gridRefs.get(position).toString());
-                startActivityForResult(intent, 2);
-            }
-        });
+        gridView.setOnItemClickListener(viewDetails);
     }
 
     public void beginConfirmAddMember (String member, int position)
@@ -375,6 +380,9 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        invitingMember = false;
+        gridView.setOnItemClickListener(viewDetails);
+        listResults.setOnItemClickListener(viewResults);
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
         fader.setVisibility(View.GONE);
@@ -491,5 +499,13 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
     @Override
     public void onSuccessfulImageDownload() {
 
+    }
+
+    public boolean isInvitingMember() {
+        return invitingMember;
+    }
+
+    public void setInvitingMember(boolean invitingMember) {
+        this.invitingMember = invitingMember;
     }
 }

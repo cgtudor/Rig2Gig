@@ -55,6 +55,19 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     private boolean firstDeletion, backClicked, stillInBand, checkIfInBand, searchingByName, searchingByEmail,
             removingMember, removingMemberConfirmed;
     private FirebaseFirestore db;
+    private AdapterView.OnItemClickListener displayDetails = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> parent, View v,
+                                int position, long id) {
+            gridView.setOnItemClickListener(null);
+            fader = findViewById(R.id.fader);
+            Window window = getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(ManageBandMembersActivity.this,R.color.darkerMain));
+            fader.setVisibility(View.VISIBLE);
+            Intent intent =  new Intent(ManageBandMembersActivity.this, BandMemberDetails.class);
+            intent.putExtra("EXTRA_MUSICIAN_REF", memberRefs.get(position).toString());
+            startActivityForResult(intent, 2);
+        }
+    };
 
 
     @Override
@@ -207,19 +220,7 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
             }
         });
 
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                fader = findViewById(R.id.fader);
-                Window window = getWindow();
-                window.setStatusBarColor(ContextCompat.getColor(ManageBandMembersActivity.this,R.color.darkerMain));
-                fader.setVisibility(View.VISIBLE);
-                Intent intent =  new Intent(ManageBandMembersActivity.this, BandMemberDetails.class);
-                intent.putExtra("EXTRA_MUSICIAN_REF", memberRefs.get(position).toString());
-                startActivityForResult(intent, 2);
-            }
-        });
+        gridView.setOnItemClickListener(displayDetails);
     }
 
     public void confirmRemoveMember(String member, int position)
@@ -245,6 +246,7 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        gridView.setOnItemClickListener(displayDetails);
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
         fader.setVisibility(View.GONE);

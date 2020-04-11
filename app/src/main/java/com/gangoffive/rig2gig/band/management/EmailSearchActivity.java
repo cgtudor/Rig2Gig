@@ -60,6 +60,13 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
     private String alreadyInBand = "User is already in your band.";
     private String userInvited = "You have already invited this person to join your band.";
     private ArrayList<String> members;
+    private View.OnClickListener sendInvite = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            invite.setOnClickListener(null);
+            beginConfirmAddMember();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -293,12 +300,7 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
     {
         infoText.setText("");
         invite.setVisibility(View.VISIBLE);
-        invite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                beginConfirmAddMember();
-            }
-        });
+        invite.setOnClickListener(sendInvite);
         nameLabel.setTextColor(Color.BLACK);
         userLabel.setTextColor(Color.BLACK);
         locationLabel.setTextColor(Color.BLACK);
@@ -357,6 +359,7 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        invite.setOnClickListener(sendInvite);
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
         fader.setVisibility(View.GONE);
