@@ -51,6 +51,13 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     private int[] fragments = {R.layout.fragment_create_venue_advertisement_image,
             R.layout.fragment_create_venue_advertisement_details};
     private Drawable chosenPic;
+    private View.OnClickListener confirm = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            createListing.setOnClickListener(null);
+            createAdvertisement();
+        }
+    };
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -197,12 +204,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             description.addTextChangedListener(textWatcher);
         }
         createListing = findViewById(R.id.createListing);
-        createListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAdvertisement();
-            }
-        });
+        createListing.setOnClickListener(confirm);
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -286,6 +288,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             finalCheck = true;
             listingManager.getUserInfo(this);
         } else {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(VenueAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
                             "and try again",
@@ -334,6 +337,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(VenueAdvertisementEditor.this,
@@ -343,6 +347,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
                 }
             });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(VenueAdvertisementEditor.this,

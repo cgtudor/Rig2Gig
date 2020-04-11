@@ -59,7 +59,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                                R.layout.fragment_description_changer};
     private Drawable chosenPic;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
-    View.OnClickListener confirm = new View.OnClickListener() {
+    private View.OnClickListener confirm = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             createListing.setOnClickListener(null);
