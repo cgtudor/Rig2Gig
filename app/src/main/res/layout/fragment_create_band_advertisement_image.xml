@@ -7,11 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".ui.TabbedView.PlaceholderFragment">
 
-
     <TextView
         android:id="@+id/firstName"
-        android:layout_width="362dp"
-        android:layout_height="42dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textAlignment="center"
         android:textColor="#000000"
@@ -20,48 +19,67 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="367dp"
-        android:layout_height="223dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstName"
-        app:srcCompat="@android:color/background_light" />
+        app:layout_constraintTop_toBottomOf="@+id/firstName">
 
-    <LinearLayout
-        android:id="@+id/imageButtonLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/galleryImage"
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:layout_marginStart="80dp"
-            android:layout_marginEnd="20dp"
-            android:layout_weight="1.0"
-            android:text="Gallery"
-            android:textColor="#ffffff"
-            android:background="@drawable/button_rounded_flat_blue"/>
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="367dp"
+                android:layout_height="223dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:color/background_light" />
 
-        <Button
-            android:id="@+id/takePhoto"
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="80dp"
-            android:layout_weight="1.0"
-            android:text="Camera"
-            android:textColor="#ffffff"
-            android:background="@drawable/button_rounded_flat_blue"/>
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/imageButtonLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image">
+
+                <Button
+                    android:id="@+id/galleryImage"
+                    android:layout_width="0.0dip"
+                    android:layout_height="fill_parent"
+                    android:layout_marginStart="80dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="1.0"
+                    android:text="Gallery"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/button_rounded_flat_blue"/>
+
+                <Button
+                    android:id="@+id/takePhoto"
+                    android:layout_width="0.0dip"
+                    android:layout_height="fill_parent"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="80dp"
+                    android:layout_weight="1.0"
+                    android:text="Camera"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/button_rounded_flat_blue"/>
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -40,9 +40,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class VenueDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
+public class VenueDetailsEditor extends AppCompatActivity implements CreateAdvertisement,
+        TabbedViewReferenceInitialiser {
 
-    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
+    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE",
+            "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE",
+            "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
     private boolean mapping, tab2set;
     private Geocoder geocoder;
     private TextView name, description, email, phone;

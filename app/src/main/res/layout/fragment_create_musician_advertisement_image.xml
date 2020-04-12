@@ -20,7 +20,7 @@
         android:textColor="#000000"/>
 
     <ScrollView
-        android:id="@+id/scrollDetails"
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="5dp"
@@ -33,7 +33,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent">
-
 
             <ImageView
                 android:id="@+id/image"
@@ -82,11 +81,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
-
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

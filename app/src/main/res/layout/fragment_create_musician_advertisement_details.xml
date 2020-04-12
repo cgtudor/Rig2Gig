@@ -53,5 +53,4 @@
             app:layout_constraintTop_toTopOf="@+id/scrollDetails" />
     </ScrollView>
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>
