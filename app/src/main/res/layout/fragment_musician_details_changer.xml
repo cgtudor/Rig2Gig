@@ -23,7 +23,8 @@
         android:id="@+id/scrollDetails"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
         android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +39,6 @@
                 android:layout_width="140dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginEnd="16dp"
                 android:text="Musician Name:"
                 android:textColor="#000000"
@@ -60,14 +60,13 @@
 
             <TextView
                 android:id="@+id/distanceLabel"
-                android:layout_width="140dp"
+                android:layout_width="120dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="Distance:"
                 android:textColor="#000000"
                 app:layout_constraintBaseline_toBaselineOf="@+id/venue_description_final"
-                app:layout_constraintEnd_toStartOf="@+id/venue_description_final"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <EditText
@@ -134,7 +133,7 @@
 
             <Button
                 android:id="@+id/selectGenres"
-                android:layout_width="130dp"
+                android:layout_width="120dp"
                 android:layout_height="35dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"

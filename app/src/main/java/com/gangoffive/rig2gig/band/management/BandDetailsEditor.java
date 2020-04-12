@@ -197,7 +197,6 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         {
             name.setOnFocusChangeListener(editTextFocusListener);
             name.addTextChangedListener(textWatcher);
-
         }
         location = findViewById(R.id.band_location);
         if (location != null)
