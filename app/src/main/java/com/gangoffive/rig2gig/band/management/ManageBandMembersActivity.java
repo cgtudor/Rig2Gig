@@ -1,12 +1,15 @@
 package com.gangoffive.rig2gig.band.management;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gangoffive.rig2gig.advert.index.ViewMusiciansFragment;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.advert.management.CreateAdvertisement;
@@ -40,8 +44,9 @@ import java.util.Map;
 
 public class ManageBandMembersActivity extends AppCompatActivity implements CreateAdvertisement {
 
-    private String bandRef, type, removedRef, uID, userName, usersMusicianRef, removeMember, removeeUserRef;
+    private String bandRef, type, removedRef, uID, userName, usersMusicianRef, removeMember, removeeUserRef, listingRef;
     private Button addByEmail, addByName;
+    private SwipeRefreshLayout swipeLayout;
     private TextView fader;
     private ListingManager bandInfoManager;
     private Map<String, Object> band;
@@ -69,7 +74,6 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,19 +84,9 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         db = FirebaseFirestore.getInstance();
         uID = FirebaseAuth.getInstance().getUid();
         bandRef = getIntent().getStringExtra("EXTRA_BAND_ID");
-        String listingRef = "profileEdit";
+        listingRef = "profileEdit";
         type = "Band";
-        position = -1;
-        membersDownloaded = 0;
-        firstDeletion = false;
-        backClicked = false;
-        stillInBand = true;
-        checkIfInBand = false;
-        searchingByName = false;
-        searchingByEmail = false;
-        removingMember = false;
         bandInfoManager = new ListingManager(bandRef, type, listingRef);
-        bandInfoManager.getUserInfo(this);
         addByEmail = findViewById(R.id.add_by_email);
         addByEmail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +105,33 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
                 checkIfInBand();
             }
         });
+        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                resetActivity();
+            }
+        });
+        resetActivity();
     }
+
+    public void resetActivity()
+    {
+        position = -1;
+        membersDownloaded = 0;
+        firstDeletion = false;
+        backClicked = false;
+        stillInBand = true;
+        checkIfInBand = false;
+        searchingByName = false;
+        searchingByEmail = false;
+        removingMember = false;
+        band = null;
+        bandInfoManager.getUserInfo(this);
+        swipeLayout.setRefreshing(false);
+    }
+
+
 
     /**
      * Handle success from database
