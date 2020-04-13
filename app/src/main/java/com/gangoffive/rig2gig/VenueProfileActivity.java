@@ -59,6 +59,7 @@ public class VenueProfileActivity extends AppCompatActivity {
     private int numOfVenueRatings;
     private int totaledVenueRatings;
     private TextView venueName;
+    private TextView viewer_rating_xml;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +128,7 @@ public class VenueProfileActivity extends AppCompatActivity {
         venueRatingBar = findViewById(R.id.rating_bar);
 
         getRatingFromFirebase();
-        //setupRatingDialog();
+        setupRatingDialog();
         checkAlreadyRated();
     }
 
@@ -136,7 +137,28 @@ public class VenueProfileActivity extends AppCompatActivity {
      */
     private void getRatingFromFirebase()
     {
+        venueReference.document(vID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+                String currentVenueRating = task.getResult().get("venue-rating").toString();
 
+                if(currentVenueRating.equals("unrated"))
+                {
+                    //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
+                    venueRatingBar.setRating(0);
+
+                    TextView unrated = findViewById(R.id.unrated);
+                    unrated.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    //Else we want to show what the current rating is.
+                    venueRatingBar.setRating(Float.valueOf(currentVenueRating));
+                }
+            }
+        });
     }
 
     /**
@@ -157,7 +179,7 @@ public class VenueProfileActivity extends AppCompatActivity {
 
                 layout = inflater.inflate(R.layout.rating, null);
 
-                RatingBar alertDialogRatingBar = layout.findViewById(R.id.rating_bar);
+                RatingBar alertDialogRatingBar = (RatingBar) layout.findViewById(R.id.ratingBar);
 
                 builder.setTitle("Rate Us!");
                 builder.setMessage("Thank you for rating us. It will help us improve in the future.");
@@ -175,6 +197,64 @@ public class VenueProfileActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<DocumentSnapshot> task)
                             {
                                 //Here, calculate the new rating and store in Firebase.
+
+                                String currentVenueRating = task.getResult().get("venue-rating").toString();
+                                float venueRatingCount = Float.valueOf(task.getResult().get("venue-rating-count").toString());
+                                float venueRatingTotal = Float.valueOf(task.getResult().get("venue-rating-total").toString());
+
+                                HashMap<String, Object> updateRatingMap = new HashMap<>();
+
+                                if(venueRatingCount + 1 >= 3)
+                                {
+                                    //After this rating, we now have enough ratings to provide a fair rating for a Venue.
+                                    //Calculate and submit new rating to Firebase changing unrated to new calculated rating.
+
+                                    updateRatingMap.put("venue-rating", (Float.valueOf(venueRatingTotal + venueRating) / (Float.valueOf(venueRatingCount + 1))));
+                                    updateRatingMap.put("venue-rating-count", venueRatingCount + 1);
+                                    updateRatingMap.put("venue-rating-total", venueRatingTotal + venueRating);
+                                }
+                                else
+                                {
+                                    //Add to current rating count
+                                    //Add to current rating sum
+                                    //Update Firebase with new numbers.
+
+                                    updateRatingMap.put("venue-rating-count", venueRatingCount + 1);
+                                    updateRatingMap.put("venue-rating-total", venueRatingTotal + venueRating);
+                                }
+
+                                venueReference.document(vID).update(updateRatingMap);
+
+                                ratingDocReference = FSTORE.collection("ratings").document(viewerRef);
+
+                                ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                                {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                    {
+                                        HashMap<String, Object> ratedMap = (HashMap<String, Object>) task.getResult().get("rated");
+
+                                        if(ratedMap != null)
+                                        {
+                                            ratedMap.put(vID, String.valueOf(venueRating));
+                                            ratingDocReference.update("rated", ratedMap);
+                                        }
+                                        else
+                                        {
+                                            ratedMap = new HashMap<>();
+                                            ratedMap.put(vID, String.valueOf(venueRating));
+                                            ratingDocReference.update("rated", ratedMap);
+                                        }
+                                    }
+                                });
+
+                                Toast.makeText(VenueProfileActivity.this, "Rating Submitted!", Toast.LENGTH_SHORT).show();
+
+                                rateMeButton.setVisibility(View.GONE);
+
+                                viewer_rating_xml = findViewById(R.id.viewer_rating);
+                                viewer_rating_xml.setText("Thank you for rating us!");
+                                viewer_rating_xml.setVisibility(View.VISIBLE);
                             }
                         });
                     }
@@ -203,27 +283,6 @@ public class VenueProfileActivity extends AppCompatActivity {
      */
     private void checkAlreadyRated()
     {
-        //Use vID global variable to get the correct Venue Document from the Venue Collection in Firebase
-        //Then create and check the "Already Rated" String[] to see if the logged in user has already submitted a rating.
-        //If they have, do not call setupRatingDialog() and replace the rating button on layout with appropriate text.
-        //Else if they haven't, call setupRatingDialog() to create the necessary steps for the user to rate this Musician.
-
-        /*
-
-
-        Insert check for a band here.
-        Upon clicking on a Venue Profile via their advert, pass an intent to the Venue Profile containing the reference to the viewer's type.
-        Check if the type of the viewer is a Band or a Musician.
-        If the type of viewer is a Band Performer, then check if the band has already submitted a rating for this Venue yet.
-        Else the viewer must be a Musician Performer, then check again if the musician has already submitted a rating for this Venue yet.
-
-        Once one of those checks are complete:
-        If the checked performer has already submitted a rating, display appropriate message (Maybe what they rated the Venue as).
-        Else if they haven't submitted a rating yet, call setupRatingDialog() method to setup the Rate Me button and the pop up rating alert dialog.
-
-
-         */
-
         ratingDocReference = FSTORE.collection("ratings").document(viewerRef);
                 //.collection(viewerType);
 
@@ -244,8 +303,8 @@ public class VenueProfileActivity extends AppCompatActivity {
 
                     System.out.println(TAG + " Setting viewer rating on profile.");
 
-                    TextView viewer_rating_xml = findViewById(R.id.viewer_rating);
-                    viewer_rating_xml.setText("You rated " + venueName.getText().toString() + " " + viewerRating + " stars!");
+                    viewer_rating_xml = findViewById(R.id.viewer_rating);
+                    viewer_rating_xml.setText("You rated us " + viewerRating + " stars!");
                     viewer_rating_xml.setVisibility(View.VISIBLE);
                 }
                 else
