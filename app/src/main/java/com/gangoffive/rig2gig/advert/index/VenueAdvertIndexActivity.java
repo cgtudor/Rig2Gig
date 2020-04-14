@@ -153,6 +153,7 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
                 minRating = data.getStringExtra("EXTRA_MIN_RATING");
                 maxDistance = data.getStringExtra("EXTRA_MAX_DISTANCE");
                 venueTypes = data.getStringArrayListExtra("EXTRA_VENUE_TYPES");
+                refreshActivity();
             }
             if (resultCode == VenueRefineSearchActivity.RESULT_CANCELED) {
                 //Write your code if there's no result

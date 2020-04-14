@@ -15,7 +15,8 @@
         android:required="false" /> <!-- For most things, including card.io and paypal -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="false" />
@@ -28,6 +29,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".advert.index.VenueRefineSearchActivity"
+            android:theme="@style/AppTheme.TranslucentBackground" />
+        <activity android:name=".advert.index.PerformerRefineSearchActivity"
             android:theme="@style/AppTheme.TranslucentBackground" />
         <activity android:name=".band.management.TabbedBandActivity" />
         <activity android:name=".musician.management.TabbedMusicianActivity" />

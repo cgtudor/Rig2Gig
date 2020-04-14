@@ -72,9 +72,6 @@ dependencies {
     implementation 'com.twitter.sdk.android:twitter:3.1.1'
     implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
 
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
-
-
     /*Dependency for Settings Fragment*/
     implementation 'androidx.preference:preference:1.1.0'
 
@@ -89,6 +86,8 @@ dependencies {
     /*Google Maps Dependency*/
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
+    implementation 'com.google.android.gms:play-services-gcm:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

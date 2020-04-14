@@ -30,20 +30,20 @@
         android:gravity="center">
 
         <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/rbLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textColor="@android:color/white"
-            android:text="Rating"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:button="@android:color/transparent"
-            android:background="@drawable/radio_button_left_selector"
-            android:onClick="onRadioButtonClicked"
-            android:checked="true"/>
+        android:id="@+id/rbRating"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:textColor="@android:color/white"
+        android:text="Rating"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:button="@android:color/transparent"
+        android:background="@drawable/radio_button_left_selector"
+        android:onClick="onRadioButtonClicked"
+        android:checked="true"/>
         <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/rbRight"
+            android:id="@+id/rbRecent"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -66,6 +66,8 @@
         android:textAlignment="viewStart"
         android:textColor="#111111"
         android:textStyle="bold"/>
+
+
 
     <TextView
         android:id="@+id/ratingLabel"
@@ -139,38 +141,87 @@
         android:progressTint="@color/mainColour"
         android:thumbTint="@color/mainColour"/>
 
-    <TextView
-        android:id="@+id/venueTypeLabel"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/showMusicianLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/distanceSlider"
         android:layout_marginStart="20dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:text="Venue Type"
+        android:text="Show Musicians"
+        android:textAlignment="viewStart"
+        android:textColor="#111111"
+        android:textStyle="bold"
+        android:layout_below="@+id/distanceSlider"/>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/showMusicianCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_below="@+id/distanceSlider"
+        android:layout_alignParentRight="true"
+        android:button="@drawable/check_box_selector"
+        android:onClick="onCheckBoxClicked"
+        android:checked="true"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/showBandLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="Show Bands"
+        android:textAlignment="viewStart"
+        android:textColor="#111111"
+        android:textStyle="bold"
+        android:layout_below="@+id/showMusicianLabel"/>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/showBandCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_below="@+id/showMusicianLabel"
+        android:layout_alignParentRight="true"
+        android:button="@drawable/check_box_selector"
+        android:onClick="onCheckBoxClicked"
+        android:checked="true"/>
+
+    <TextView
+        android:id="@+id/genreLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/showBandLabel"
+        android:layout_marginStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="Genres"
         android:textAlignment="viewStart"
         android:textColor="#111111"
         android:textStyle="bold"/>
 
     <Button
-        android:id="@+id/venueTypeButton"
+        android:id="@+id/genreButton"
         android:layout_width="120dp"
         android:layout_height="25dp"
-        android:layout_below="@+id/distanceSlider"
+        android:layout_below="@+id/showBandLabel"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:background="@drawable/button_rounded_flat_blue"
-        android:text="Select Types"
+        android:text="Select Genres"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:layout_alignParentRight="true"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_alignParentRight="true"/>
 
     <TextView
-        android:id="@+id/venueTypeValue"
+        android:id="@+id/genreValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/venueTypeLabel"
+        android:layout_below="@+id/genreLabel"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:paddingTop="8dp"

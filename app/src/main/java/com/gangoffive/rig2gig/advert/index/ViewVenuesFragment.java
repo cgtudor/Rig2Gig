@@ -2,6 +2,7 @@ package com.gangoffive.rig2gig.advert.index;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -22,6 +23,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.advert.details.VenueListingDetailsActivity;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -54,6 +57,10 @@ public class ViewVenuesFragment extends Fragment
     private String sortBy, minRating, maxDistance;
     private ArrayList<String> venueTypes;
 
+    private FusedLocationProviderClient client;
+    private final StringBuilder latRadius = new StringBuilder(),
+                               longRadius = new StringBuilder();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -72,6 +79,8 @@ public class ViewVenuesFragment extends Fragment
         noInternet.setVisibility(isConnected ? View.GONE : View.VISIBLE);
 
         Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        client = LocationServices.getFusedLocationProviderClient(getActivity());
 
         swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
@@ -168,36 +177,81 @@ public class ViewVenuesFragment extends Fragment
 
         Timestamp currentDate = Timestamp.now();
 
-        Query next = db.collection("venue-listings")
+        final Query next = db.collection("venue-listings")
                 .whereGreaterThanOrEqualTo("expiry-date",  currentDate)
                 .limit(10);
 
         if(lastVisible != null) {
-            next = next.startAfter(lastVisible);
+            next.startAfter(lastVisible);
         }
 
         /*if(sortBy != null) {
             switch (sortBy) {
                 case "Rating": next.orderBy("rating");
                     break;
-                case "Distance": next.orderBy();
-                    break;
-                case "Recent": next.orderBy();
+                case "Recent": next.orderBy("posting-date");
                     break;
             }
-        }*/
+        }
 
         if(minRating != null) {
-
+            next.whereGreaterThanOrEqualTo("rating", minRating);
         }
 
-        if(maxDistance != null) {
+         if(maxDistance != null) {
+             if(latRadiusSB.length() == 0) {
+                 client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                     @Override
+                     public void onComplete(@NonNull Task<Location> task) {
+                         if(task.isSuccessful()) {
+                             Location location = task.getResult();
+                             if(location != null) {
+                                 double currentLatitude = location.getLatitude();
+                                 double currentLongitude = location.getLongitude();
 
+                                 double maxDistDouble = Double.valueOf(maxDistance);
+
+                                 latRadius.append(maxDistDouble / 68.6863716);
+                                 longRadius.append(maxDistDouble / (69.1710411 * Math.cos(currentLatitude)));
+                             }
+                         } else {
+                             //could do a database query to get their set location?
+                         }
+                     }
+                 });
+             }
         }
+
+        *//*if(maxDistance != null) {
+            client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    if(task.isSuccessful()) {
+                        Location location = task.getResult();
+                        if(location != null) {
+                            double currentLatitude = location.getLatitude();
+                            double currentLongitude = location.getLongitude();
+
+                            double maxDisDouble = Double.valueOf(maxDistance);
+
+                            double latRadius = maxDisDouble / 68.6863716;
+                            double longRadius = maxDisDouble / (69.1710411 * Math.cos(currentLatitude));
+
+                            next.whereLessThanOrEqualTo("latitude", (currentLatitude + latRadius))
+                                    .whereGreaterThanOrEqualTo("latitude", (currentLatitude - latRadius))
+                                    .whereLessThanOrEqualTo("longitude", (currentLongitude + longRadius))
+                                    .whereGreaterThanOrEqualTo("longitude", (currentLongitude - longRadius));
+                        }
+                    } else {
+                        //could do a database query to get their set location?
+                    }
+                }
+            });
+        }*//*
 
         if(venueTypes != null) {
             next.whereArrayContainsAny("venue-type", venueTypes);
-        }
+        }*/
 
         next.get(source)
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
