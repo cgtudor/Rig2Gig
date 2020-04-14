@@ -4,6 +4,7 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.widget.Button;
 
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
 import com.gangoffive.rig2gig.advert.management.PerformerAdvertisementEditor;
@@ -20,6 +21,7 @@ import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.swipeRight;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
@@ -40,7 +42,7 @@ public class PerformerAdvertisementEditorTest {
         performerData.put("availability","test availability");
         performerData.put("charge","test charge");
         performerData.put("description","test description");
-        performerData.put("distance","test distance");
+        performerData.put("distance","0");
         performerData.put("email","test@email.com");
         performerData.put("genres","test genres");
         performerData.put("location","test location");
@@ -55,7 +57,7 @@ public class PerformerAdvertisementEditorTest {
         adData.put("band-ref","test ref");
         adData.put("description","test description");
         adData.put("expiry-data","test data");
-        adData.put("distance","test distance");
+        adData.put("distance","0");
     }
 
     @Test
@@ -72,8 +74,7 @@ public class PerformerAdvertisementEditorTest {
         onView(withId(R.id.button_holder)).check(matches(isDisplayed()));
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
-        onView(withId(R.id.firstName)).check(matches(isDisplayed()));
-        onView(withId(R.id.imageView)).check(matches(isDisplayed()));
+        onView(withId(R.id.firstName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.image)).check(matches(isDisplayed()));
         onView(withId(R.id.imageLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
@@ -101,8 +102,7 @@ public class PerformerAdvertisementEditorTest {
         onView(withId(R.id.button_holder)).check(matches(isDisplayed()));
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
-        onView(withId(R.id.firstName)).check(matches(isDisplayed()));
-        onView(withId(R.id.imageView)).check(matches(isDisplayed()));
+        onView(withId(R.id.firstName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.image)).check(matches(isDisplayed()));
         onView(withId(R.id.imageLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
@@ -121,8 +121,7 @@ public class PerformerAdvertisementEditorTest {
         onView(withId(R.id.button_holder)).check(matches(isDisplayed()));
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
-        onView(withId(R.id.firstName)).check(matches(isDisplayed()));
-        onView(withId(R.id.imageView)).check(matches(isDisplayed()));
+        onView(withId(R.id.firstName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.image)).check(matches(isDisplayed()));
         onView(withId(R.id.imageLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
@@ -179,7 +178,7 @@ public class PerformerAdvertisementEditorTest {
         Thread.sleep(2000);
         Enum result = ListingManager.CreationResult.LISTING_FAILURE;
         testRule.getActivity().handleDatabaseResponse(result);
-        onView(withText("Listing creation failed.  Check your connection and try again"))
+        onView(withText("Advertisement edit failed.  Check your connection and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 
@@ -188,7 +187,7 @@ public class PerformerAdvertisementEditorTest {
     {
         Enum result = ListingManager.CreationResult.IMAGE_FAILURE;
         testRule.getActivity().handleDatabaseResponse(result);
-        onView(withText("Listing creation failed.  Check your connection and try again"))
+        onView(withText("Advertisement edit failed.  Check your connection and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 
@@ -200,8 +199,6 @@ public class PerformerAdvertisementEditorTest {
         when(manager.getListingRef()).thenReturn("testRef");
         Enum result = ListingManager.CreationResult.SUCCESS;
         testRule.getActivity().handleDatabaseResponse(result);
-        onView(withText("Advertisement created successfully"))
-                .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
         assertTrue(testRule.getActivity().isFinishing());
         onView(withId(R.id.performanceListingDetailsMain)).check(matches(isDisplayed()));
     }

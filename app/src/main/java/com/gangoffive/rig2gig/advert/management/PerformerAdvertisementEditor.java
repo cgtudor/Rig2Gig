@@ -110,7 +110,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         performerRef = getIntent().getStringExtra("EXTRA_PERFORMER_ID");
         performerType = getIntent().getStringExtra("EXTRA_PERFORMER_TYPE");
         listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
-        if (listingRef.equals(""))
+        if (listingRef != null && listingRef.equals(""))
         {
             editType = "creation";
         }
@@ -224,7 +224,12 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     public void populateInitialFields() {
         if(name != null && band !=null && name.getText() != band.get("name") && name.getText() == "")
         {
-            name.setText(band.get("name").toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    name.setText(band.get("name").toString());
+                }
+            });
         }
         if (chosenPic != null && image != null)
         {
