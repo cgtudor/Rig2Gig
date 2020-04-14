@@ -566,33 +566,36 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
                 {
                     List<DocumentSnapshot> myMusicianID = task.getResult().getDocuments();
 
-                    DocumentSnapshot musician = myMusicianID.get(0);
-
-                    ArrayList<String> bandsImIn = (ArrayList<String>) musician.get("bands");
-
-                    if(bandsImIn != null && bandsImIn.size() > 0)
+                    if (!myMusicianID.isEmpty())
                     {
-                        for(String bands : bandsImIn)
+                        DocumentSnapshot musician = myMusicianID.get(0);
+
+                        ArrayList<String> bandsImIn = (ArrayList<String>) musician.get("bands");
+
+                        if(bandsImIn != null && bandsImIn.size() > 0)
                         {
-                            final CollectionReference bandRef = db.collection("bands");
-
-                            bandRef.document(bands).get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                            for(String bands : bandsImIn)
                             {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                final CollectionReference bandRef = db.collection("bands");
+
+                                bandRef.document(bands).get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                                 {
-                                    if(task.isSuccessful())
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task)
                                     {
-                                        DocumentSnapshot bandSnapshot = task.getResult();
+                                        if(task.isSuccessful())
+                                        {
+                                            DocumentSnapshot bandSnapshot = task.getResult();
 
-                                        String musicianName = bandSnapshot.get("name").toString();
+                                            String musicianName = bandSnapshot.get("name").toString();
 
-                                        LatLng bandLocation = new LatLng(Double.parseDouble(bandSnapshot.get("latitude").toString()), Double.parseDouble(bandSnapshot.get("longitude").toString()));
-                                        googleMap.addMarker(new MarkerOptions().position(bandLocation).title(musicianName));
-                                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bandLocation, 10));
+                                            LatLng bandLocation = new LatLng(Double.parseDouble(bandSnapshot.get("latitude").toString()), Double.parseDouble(bandSnapshot.get("longitude").toString()));
+                                            googleMap.addMarker(new MarkerOptions().position(bandLocation).title(musicianName));
+                                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bandLocation, 10));
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 }

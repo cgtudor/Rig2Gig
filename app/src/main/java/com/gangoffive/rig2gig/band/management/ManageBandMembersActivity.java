@@ -268,7 +268,12 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         fader = findViewById(R.id.fader);
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.darkerMain));
-        fader.setVisibility(View.VISIBLE);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                fader.setVisibility(View.VISIBLE);
+            }
+        });
         Intent intent =  new Intent(this, DeleteMemberConfirmation.class);
         intent.putExtra("EXTRA_NAME", removeMember);
         intent.putExtra("EXTRA_POSITION", removePosition);
@@ -533,4 +538,19 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
      */
     @Override
     public ImageView getImageView() {return null;}
+
+    /**
+     * @param uID uID to set
+     */
+    public void setuID(String uID) {
+        this.uID = uID;
+    }
+
+    /**
+     *
+     * @return checkIfInBand
+     */
+    public boolean isCheckIfInBand() {
+        return checkIfInBand;
+    }
 }
