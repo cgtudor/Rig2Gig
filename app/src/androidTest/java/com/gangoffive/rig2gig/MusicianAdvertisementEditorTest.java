@@ -78,14 +78,13 @@ public class MusicianAdvertisementEditorTest {
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.musicianAdImageMain)).check(matches(isDisplayed()));
-        onView(withId(R.id.firstName)).check(matches(isDisplayed()));
-        onView(withId(R.id.imageView)).check(matches(isDisplayed()));
+        onView(withId(R.id.firstName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.image)).check(matches(isDisplayed()));
         onView(withId(R.id.imageButtonLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
         onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
         onView(withId(R.id.positionsMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.scroll)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.imageScroll)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.gridView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.search_bar_holder)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.search_bar)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -116,13 +115,13 @@ public class MusicianAdvertisementEditorTest {
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.musicianAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.firstName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.imageView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.image)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageButtonLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.galleryImage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.takePhoto)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.imageScroll)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.positionsMain)).check(matches(isDisplayed()));
-        onView(withId(R.id.scroll)).check(matches(isDisplayed()));
+        onView(withId(R.id.positionsScroll)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.gridView)).check(matches(isDisplayed()));
         onView(withId(R.id.search_bar_holder)).check(matches(isDisplayed()));
         onView(withId(R.id.search_bar)).check(matches(isDisplayed()));
@@ -145,7 +144,7 @@ public class MusicianAdvertisementEditorTest {
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.positionsMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.scroll)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.positionsScroll)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.gridView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.search_bar_holder)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.search_bar)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -168,13 +167,12 @@ public class MusicianAdvertisementEditorTest {
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.musicianAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.firstName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.imageView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.image)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageButtonLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.galleryImage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.takePhoto)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.positionsMain)).check(matches(isDisplayed()));
-        onView(withId(R.id.scroll)).check(matches(isDisplayed()));
+        onView(withId(R.id.imageScroll)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.gridView)).check(matches(isDisplayed()));
         onView(withId(R.id.search_bar_holder)).check(matches(isDisplayed()));
         onView(withId(R.id.search_bar)).check(matches(isDisplayed()));
@@ -191,7 +189,7 @@ public class MusicianAdvertisementEditorTest {
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable)confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-15547671, intColour);
+        assertEquals(-5855578, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
@@ -200,10 +198,11 @@ public class MusicianAdvertisementEditorTest {
     @Test
     public void testOnSuccessFromDatabaseExistingAd() {
         testRule.getActivity().onSuccessFromDatabase(musicianData, adData);
+        testRule.getActivity().populateInitialFields();
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable)confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-15547671, intColour);
+        assertEquals(-5855578, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
@@ -260,7 +259,7 @@ public class MusicianAdvertisementEditorTest {
         Thread.sleep(2000);
         Enum result = ListingManager.CreationResult.LISTING_FAILURE;
         testRule.getActivity().handleDatabaseResponse(result);
-        onView(withText("Listing creation failed.  Check your connection and try again"))
+        onView(withText("Advertisement edit failed.  Check your connection and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 
@@ -269,7 +268,7 @@ public class MusicianAdvertisementEditorTest {
         Thread.sleep(1000);
         Enum result = ListingManager.CreationResult.IMAGE_FAILURE;
         testRule.getActivity().handleDatabaseResponse(result);
-        onView(withText("Listing creation failed.  Check your connection and try again"))
+        onView(withText("Advertisement edit failed.  Check your connection and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 
@@ -281,7 +280,7 @@ public class MusicianAdvertisementEditorTest {
         when(manager.getListingRef()).thenReturn("testRef");
         Enum result = ListingManager.CreationResult.SUCCESS;
         testRule.getActivity().handleDatabaseResponse(result);
-        onView(withText("Advertisement created successfully"))
+        onView(withText("Advertisement edit successful"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
         assertTrue(testRule.getActivity().isFinishing());
         onView(withId(R.id.musicianListingDetailsMain)).check(matches(isDisplayed()));

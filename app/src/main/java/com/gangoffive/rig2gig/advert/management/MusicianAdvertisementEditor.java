@@ -128,7 +128,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         musicianRef = getIntent().getStringExtra("EXTRA_MUSICIAN_ID");
         listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
         type = "Musician";
-        if (listingRef.equals(""))
+        if (listingRef != null && listingRef.equals(""))
         {
             editType = "creation";
         }
@@ -408,7 +408,12 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     public void populateInitialFields() {
         if(name != null && musician !=null && name.getText() != musician.get("name") && name.getText() == "")
         {
-            name.setText(musician.get("name").toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    name.setText(musician.get("name").toString());
+                }
+            });
         }
         if (chosenPic != null && image != null)
         {
