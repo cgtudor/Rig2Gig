@@ -18,7 +18,6 @@ public class DeleteMemberConfirmation extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirmation_layout);
         DisplayMetrics metrics = new DisplayMetrics();
@@ -50,12 +49,19 @@ public class DeleteMemberConfirmation extends Activity {
         });
     }
 
+    /**
+     * Handle on back pressed
+     */
     @Override
     public void onBackPressed()
     {
         returnNotDeleted();
     }
 
+    /**
+     * Handle if top activity changes
+     * @param isTopResumedActivity false if no longer the top activty
+     */
     @Override
     public void onTopResumedActivityChanged (boolean isTopResumedActivity)
     {
@@ -65,6 +71,9 @@ public class DeleteMemberConfirmation extends Activity {
         }
     }
 
+    /**
+     * Finish activity if band member is not deleted
+     */
     public void returnNotDeleted()
     {
         Intent result = new Intent();

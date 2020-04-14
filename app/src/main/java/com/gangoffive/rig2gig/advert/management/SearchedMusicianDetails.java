@@ -49,6 +49,10 @@ public class SearchedMusicianDetails extends AppCompatActivity implements Create
         });
     }
 
+    /**
+     * Handle data received from database
+     * @param data map of data pulled from database
+     */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         if(data != null)
@@ -69,6 +73,9 @@ public class SearchedMusicianDetails extends AppCompatActivity implements Create
         }
     }
 
+    /**
+     * set view references then begin populating fields
+     */
     @Override
     public void setViewReferences()
     {
@@ -79,6 +86,9 @@ public class SearchedMusicianDetails extends AppCompatActivity implements Create
         populateInitialFields();
     }
 
+    /**
+     * Populate fields with data
+     */
     @Override
     public void populateInitialFields() {
         runOnUiThread(new Runnable() {
@@ -90,49 +100,53 @@ public class SearchedMusicianDetails extends AppCompatActivity implements Create
                 rating.setText(musician.get("rating").toString());
             }
         });
-
-
     }
 
+    /**
+     * Unused
+     */
     @Override
-    public void createAdvertisement() {
+    public void createAdvertisement() {}
 
-    }
-
+    /**
+     * Unused
+     */
     @Override
-    public void cancelAdvertisement() {
+    public void cancelAdvertisement() {}
 
-    }
-
+    /**
+     * Unused
+     */
     @Override
-    public void listingDataMap() {
+    public void listingDataMap() {}
 
-    }
-
+    /**
+     * Unused
+     */
     @Override
-    public boolean validateDataMap() {
-        return false;
-    }
+    public boolean validateDataMap() {return false;}
 
-
-
+    /**
+     * Unused
+     */
     @Override
-    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {}
 
-    }
-
+    /**
+     * Unused
+     */
     @Override
-    public ImageView getImageView() {
-        return null;
-    }
+    public ImageView getImageView() {return null;}
 
+    /**
+     * Unused
+     */
     @Override
-    public void handleDatabaseResponse(Enum creationResult) {
+    public void handleDatabaseResponse(Enum creationResult) {}
 
-    }
-
+    /**
+     * Unused
+     */
     @Override
-    public void onSuccessfulImageDownload() {
-
-    }
+    public void onSuccessfulImageDownload() {}
 }

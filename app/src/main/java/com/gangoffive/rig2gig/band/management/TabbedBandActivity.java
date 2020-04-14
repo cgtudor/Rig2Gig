@@ -1,9 +1,12 @@
 package com.gangoffive.rig2gig.band.management;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,10 +14,12 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gangoffive.rig2gig.R;
@@ -34,9 +39,11 @@ public class TabbedBandActivity extends AppCompatActivity {
     FirebaseFirestore fStore;
     FirebaseStorage fStorage;
 
+    public static Button  faderBtn;
     Button test, back;
 
-    EditText name, location, distance, genre, email, number, invis;
+    TextView genre, fader;
+    EditText name, location, distance, email, number, invis;
     ImageView image;
     String bandName;
 
@@ -102,6 +109,9 @@ public class TabbedBandActivity extends AppCompatActivity {
 
         tabTitles = new int[]{R.string.bandInformation, R.string.bandImage};
 
+        faderBtn = findViewById(R.id.fakeFaderBtn);
+        faderBtn.setVisibility(View.INVISIBLE);
+        fader = findViewById(R.id.fader1);
         test = findViewById(R.id.submitBtn);
         back = findViewById(R.id.cancel);
         back.setOnClickListener(new View.OnClickListener() {
@@ -219,4 +229,19 @@ public class TabbedBandActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void fakeFaderOnClick(View view) {
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(TabbedBandActivity.this,R.color.darkerMain));
+        fader.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+        fader.setVisibility(View.GONE);
+    }
+
 }

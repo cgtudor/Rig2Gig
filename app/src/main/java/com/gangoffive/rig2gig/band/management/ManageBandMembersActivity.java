@@ -1,12 +1,15 @@
 package com.gangoffive.rig2gig.band.management;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gangoffive.rig2gig.advert.index.ViewMusiciansFragment;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.advert.management.CreateAdvertisement;
@@ -40,8 +44,9 @@ import java.util.Map;
 
 public class ManageBandMembersActivity extends AppCompatActivity implements CreateAdvertisement {
 
-    private String bandRef, type, removedRef, uID, userName, usersMusicianRef, removeMember, removeeUserRef;
+    private String bandRef, type, removedRef, uID, userName, usersMusicianRef, removeMember, removeeUserRef, listingRef;
     private Button addByEmail, addByName;
+    private SwipeRefreshLayout swipeLayout;
     private TextView fader;
     private ListingManager bandInfoManager;
     private Map<String, Object> band;
@@ -55,7 +60,19 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     private boolean firstDeletion, backClicked, stillInBand, checkIfInBand, searchingByName, searchingByEmail,
             removingMember, removingMemberConfirmed;
     private FirebaseFirestore db;
-
+    private AdapterView.OnItemClickListener displayDetails = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> parent, View v,
+                                int position, long id) {
+            gridView.setOnItemClickListener(null);
+            fader = findViewById(R.id.fader);
+            Window window = getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(ManageBandMembersActivity.this,R.color.darkerMain));
+            fader.setVisibility(View.VISIBLE);
+            Intent intent =  new Intent(ManageBandMembersActivity.this, BandMemberDetails.class);
+            intent.putExtra("EXTRA_MUSICIAN_REF", memberRefs.get(position).toString());
+            startActivityForResult(intent, 2);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +84,9 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         db = FirebaseFirestore.getInstance();
         uID = FirebaseAuth.getInstance().getUid();
         bandRef = getIntent().getStringExtra("EXTRA_BAND_ID");
-        String listingRef = "profileEdit";
+        listingRef = "profileEdit";
         type = "Band";
-        position = -1;
-        membersDownloaded = 0;
-        firstDeletion = false;
-        backClicked = false;
-        stillInBand = true;
-        checkIfInBand = false;
-        searchingByName = false;
-        searchingByEmail = false;
-        removingMember = false;
         bandInfoManager = new ListingManager(bandRef, type, listingRef);
-        bandInfoManager.getUserInfo(this);
         addByEmail = findViewById(R.id.add_by_email);
         addByEmail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,8 +105,38 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
                 checkIfInBand();
             }
         });
+        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                resetActivity();
+            }
+        });
+        resetActivity();
     }
 
+    public void resetActivity()
+    {
+        position = -1;
+        membersDownloaded = 0;
+        firstDeletion = false;
+        backClicked = false;
+        stillInBand = true;
+        checkIfInBand = false;
+        searchingByName = false;
+        searchingByEmail = false;
+        removingMember = false;
+        band = null;
+        bandInfoManager.getUserInfo(this);
+        swipeLayout.setRefreshing(false);
+    }
+
+
+
+    /**
+     * Handle success from database
+     * @param data map of data downloaded from database
+     */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data)
     {
@@ -194,34 +231,27 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         }
     }
 
+    /**
+     * Populate gridview with downloaded musician data
+     */
     @Override
     public void populateInitialFields() {
         gridView = (GridView) findViewById( R.id.gridView);
-
         BandMemberRemoverAdapter customAdapter = new BandMemberRemoverAdapter(names, memberRefs, this);
         runOnUiThread(new Runnable() {
-
             @Override
             public void run() {
                 gridView.setAdapter(customAdapter);
             }
         });
-
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                fader = findViewById(R.id.fader);
-                Window window = getWindow();
-                window.setStatusBarColor(ContextCompat.getColor(ManageBandMembersActivity.this,R.color.darkerMain));
-                fader.setVisibility(View.VISIBLE);
-                Intent intent =  new Intent(ManageBandMembersActivity.this, BandMemberDetails.class);
-                intent.putExtra("EXTRA_MUSICIAN_REF", memberRefs.get(position).toString());
-                startActivityForResult(intent, 2);
-            }
-        });
+        gridView.setOnItemClickListener(displayDetails);
     }
 
+    /**
+     * Begin process of removing band member, first confiriming if user is still in band
+     * @param member member to be removed
+     * @param position position in grid view
+     */
     public void confirmRemoveMember(String member, int position)
     {
         removeMember = member;
@@ -230,6 +260,9 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         checkIfInBand();
     }
 
+    /**
+     * Start popup activity to confirm whether band member is to be removed
+     */
     public void areYouSureRemove()
     {
         fader = findViewById(R.id.fader);
@@ -242,9 +275,16 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         startActivityForResult(intent, 1);
     }
 
+    /**
+     * Handle activity result, namely whether the musician is confirmed to be removed
+     * @param requestCode request code
+     * @param resultCode result code
+     * @param data intent data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        gridView.setOnItemClickListener(displayDetails);
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
         fader.setVisibility(View.GONE);
@@ -258,12 +298,18 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         }
     }
 
+    /**
+     * Begin process of removing confirmed removee, first checking if user is still in the band
+     */
     public void beginRemoveMember()
     {
         removingMemberConfirmed = true;
         checkIfInBand();
     }
 
+    /**
+     * Finalise the removal of the band member
+     */
     public void finaliseRemoveMember()
     {
         removedRef = (String)memberRefs.get(position);
@@ -277,6 +323,10 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         musicianManagers.get(position).postDataToDatabase((HashMap)musicians.get(position),null,this);
     }
 
+    /**
+     * Handle if the member was successfully removed from the database band document
+     * @param creationResult defines the result (eg SUCCESS, IMAGE_FAILURE, etc)
+     */
     @Override
     public void handleDatabaseResponse(Enum creationResult)
     {
@@ -314,6 +364,9 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
 
     }
 
+    /**
+     * Start activity to search for new members by name
+     */
     public void searchForMembers()
     {
         Intent intent = new Intent(this, MusicianSearchActivity.class);
@@ -326,6 +379,9 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         finish();
     }
 
+    /**
+     * Start activity to search for new members by email
+     */
     public void searchByEmail()
     {
         Intent intent = new Intent(this, EmailSearchActivity.class);
@@ -338,12 +394,18 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         finish();
     }
 
+    /**
+     * Begin process of checking is user remains in band
+     */
     public void checkIfInBand()
     {
         checkIfInBand = true;
         bandInfoManager.getUserInfo(this);
     }
 
+    /**
+     * Handle phone back button press
+     */
     @Override
     public void onBackPressed()
     {
@@ -351,6 +413,11 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         checkIfInBand();
     }
 
+    /**
+     * Handle app bar back button press
+     * @param item item selected
+     * @return true
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         backClicked = true;
@@ -358,11 +425,17 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         return true;
     }
 
+    /**
+     * Handle going back, finishing activity
+     */
     public void goBack()
     {
         finish();
     }
 
+    /**
+     * Update joined communication in database, allowing removed member to be reinvited
+     */
     public void updateJoinedCommunication() {
         CollectionReference joinedBand = db.collection("communications")
                 .document(removeeUserRef)
@@ -402,47 +475,62 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
                 });
     }
 
-    @Override
-    public void onSuccessfulImageDownload()
-    {
-    }
-
-    @Override
-    public void setViewReferences() {
-
-    }
-
-    @Override
-    public void createAdvertisement() {
-
-    }
-
-    @Override
-    public void cancelAdvertisement() {
-
-    }
-
-    @Override
-    public void listingDataMap() {
-
-    }
-
-    @Override
-    public boolean validateDataMap() {
-        return false;
-    }
-
-    @Override
-    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
-
-    }
-
-    @Override
-    public ImageView getImageView() {
-        return null;
-    }
-
+    /**
+     * @param usersMusicianRef user musician reference to set
+     */
     public void setUsersMusicianRef(String usersMusicianRef) {
         this.usersMusicianRef = usersMusicianRef;
     }
+
+    /**
+     * Not used
+     */
+    @Override
+    public void onSuccessfulImageDownload() {}
+
+    /**
+     * Not used
+     */
+    @Override
+    public void setViewReferences() {}
+
+    /**
+     * Not used
+     */
+    @Override
+    public void createAdvertisement() {}
+
+    /**
+     * Not used
+     */
+    @Override
+    public void cancelAdvertisement() {}
+
+    /**
+     * Not used
+     */
+    @Override
+    public void listingDataMap() {}
+
+    /**
+     * not used
+     * @return false
+     */
+    @Override
+    public boolean validateDataMap() {return false;}
+
+    /**
+     * Not used
+     * @param data not used
+     * @param listingData not used
+     */
+    @Override
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {}
+
+    /**
+     * Not used
+     * @return null
+     */
+    @Override
+    public ImageView getImageView() {return null;}
 }

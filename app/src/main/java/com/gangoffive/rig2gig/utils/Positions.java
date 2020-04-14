@@ -26,6 +26,9 @@ public class Positions {
             "Harmonica"
     };
 
+    /**
+     * @return positions
+     */
     static public String [] getPositions()
     {
         return positions;

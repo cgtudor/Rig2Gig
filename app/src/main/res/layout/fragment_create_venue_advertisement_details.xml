@@ -7,9 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.TabbedView.PlaceholderFragment">
 
-
-
-
     <TextView
         android:id="@+id/descriptionLabel"
         android:layout_width="242dp"
@@ -24,46 +21,35 @@
         app:layout_constraintTop_toTopOf="parent"
         android:textColor="#000000"/>
 
-    <View
-        android:id="@+id/detailView"
-        android:layout_width="364dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="8dp"
-        android:background="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionLabel" />
-
     <ScrollView
         android:id="@+id/scrollDetails"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailView"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/descriptionLabel">
 
 
         <EditText
             android:id="@+id/venue_description_final"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
             android:layout_marginTop="24dp"
-            android:maxLength="1000"
+            android:layout_marginEnd="26dp"
+            android:background="@android:color/transparent"
             android:ems="10"
             android:gravity="start|top"
+            android:hint="Enter information to display to performers e.g. preferred dates, times, genres etc"
             android:inputType="textMultiLine"
+            android:maxLength="1000"
+            android:paddingBottom="26dp"
             android:singleLine="false"
             android:textSize="18sp"
-            android:paddingBottom="26dp"
-            android:hint="Enter information to display to performers e.g. preferred dates, times, genres etc"
-            android:layout_marginStart="26dp"
-            android:layout_marginEnd="26dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/scrollDetails"
-            android:background="@android:color/transparent"/>
+            app:layout_constraintTop_toTopOf="@+id/scrollDetails" />
     </ScrollView>
 
 

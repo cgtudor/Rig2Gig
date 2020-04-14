@@ -157,8 +157,7 @@ public class ViewCommsFragment extends Fragment
                                                 documentSnapshot.get("sent-to-ref").toString());
                                     }
                                     if (!communication.getCommType().equals("accepted-invite")
-                                            && !communication.getCommType().equals("rejected-invite")
-                                            && !communication.getCommType().equals("left-band"))
+                                            && !communication.getCommType().equals("rejected-invite"))
                                     {
                                         communications.add(communication);
                                     }

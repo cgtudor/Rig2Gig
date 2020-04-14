@@ -1,6 +1,8 @@
 package com.gangoffive.rig2gig.account;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,20 +20,28 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gangoffive.rig2gig.advert.management.GooglePlacesAutoSuggestAdapter;
+import com.gangoffive.rig2gig.band.management.TabbedBandActivity;
+import com.gangoffive.rig2gig.musician.management.TabbedMusicianActivity;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.advert.index.ViewVenuesFragment;
+import com.gangoffive.rig2gig.utils.GenreSelectorActivity;
+import com.gangoffive.rig2gig.utils.ImageRequestHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,10 +56,14 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 /**
@@ -81,8 +95,9 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     FirebaseStorage fStorage;
-    EditText distance, name, genre;
-    Button takePhotoBtn, uploadPhotoBtn;
+    EditText distance, name;
+    TextView genre;
+    Button takePhotoBtn, uploadPhotoBtn, selectGenres;
 
     String email, userRef, phoneNumber, type, rating;
 
@@ -139,10 +154,13 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         btn = v.findViewById(R.id.submitBtn);
         takePhotoBtn = v.findViewById(R.id.takeBtn);
         uploadPhotoBtn = v.findViewById(R.id.uploadBtn);
+        selectGenres = v.findViewById(R.id.selectGenres);
+
 
         btn.setOnClickListener(this);
         takePhotoBtn.setOnClickListener(this);
         uploadPhotoBtn.setOnClickListener(this);
+        selectGenres.setOnClickListener(this);
 
         btn.setVisibility(View.INVISIBLE);
 
@@ -162,6 +180,14 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         int requestCode = 200;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(permissions, requestCode);
+        }
+
+        if(Build.VERSION.SDK_INT>Build.VERSION_CODES.M) {
+            boolean canWriteSettings = Settings.System.canWrite(getActivity());
+            if (!canWriteSettings) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                startActivity(intent);
+            }
         }
 
         return v;
@@ -238,6 +264,14 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                                 Log.d(TAG, "Document exists!");
                                 phoneNumber = document.get("phone-number").toString();
 
+                                String genresText = genre.getText().toString();
+                                ArrayList<String> selectedGenres = new ArrayList<String>(Arrays.asList(genresText.split(",")));
+                                for (int i = 0; i < selectedGenres.size(); i++)
+                                {
+                                    selectedGenres.set(i,selectedGenres.get(i).trim());
+                                }
+
+
                                 Map<String, Object> musicians = new HashMap<>();
                                 musicians.put("name", musicianName);
                                 musicians.put("index-name",musicianName.toLowerCase());
@@ -245,7 +279,7 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                                 musicians.put("user-ref", userRef);
                                 musicians.put("email-address", email);
                                 musicians.put("phone-number", phoneNumber);
-                                musicians.put("genres", genres);
+                                musicians.put("genres",selectedGenres);
                                 musicians.put("distance", musicianDistance);
                                 musicians.put("latitude", musicianAddress.getLatitude());
                                 musicians.put("longitude", musicianAddress.getLongitude());
@@ -304,6 +338,10 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                 startActivityForResult(i, REQUEST_GALLERY__PHOTO);
                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@2 " + REQUEST_GALLERY__PHOTO);
                 break;
+            case R.id.selectGenres:
+                TabbedMusicianActivity.faderBtn.performClick();
+                selectGenres();
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
         }
@@ -361,6 +399,16 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         return stream.toByteArray();
     }
 
+    public void selectGenres()
+    {
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@ HERE");
+        Intent intent =  new Intent(getActivity(), GenreSelectorActivity.class);
+        intent.putExtra("EXTRA_LAYOUT_TYPE", "Login");
+        intent.putExtra("EXTRA_GENRES", genre.getText().toString());
+        startActivityForResult(intent, 99);
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -393,6 +441,12 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                 }
                 image.setImageBitmap(bitmapImage);
             }
+        }
+
+        if (requestCode == 99 && resultCode == Activity.RESULT_OK)
+        {
+            String genresExtra = data.getStringExtra("EXTRA_SELECTED_GENRES");
+            genre.setText(genresExtra);
         }
     }
 }

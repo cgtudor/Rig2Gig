@@ -68,9 +68,16 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     private ArrayList<String> positions = new ArrayList<>(Arrays.asList(Positions.getPositions()));
     private List bandPositions = new ArrayList();
     private Drawable chosenPic;
-    SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
+    private SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter
             (this, getSupportFragmentManager(), tabTitles, fragments);
-    ViewPager viewPager;
+    private ViewPager viewPager;
+    private View.OnClickListener confirm = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            createListing.setOnClickListener(null);
+            createAdvertisement();
+        }
+    };
     private SearchView searchBar;
     private ListView listResults;
     private ArrayAdapter<String> resultsAdapter;
@@ -167,6 +174,9 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
 
     }
 
+    /**
+     * Set initial colours for confirm button
+     */
     public void setInitialColours()
     {
         createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
@@ -233,12 +243,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             description.setOnFocusChangeListener(editTextFocusListener);
         }
         createListing = findViewById(R.id.createListing);
-        createListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAdvertisement();
-            }
-        });
+        createListing.setOnClickListener(confirm);
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -321,6 +326,11 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         }
     }
 
+    /**
+     * Not used
+     * @param typedText
+     * @return false
+     */
     @Override
     public boolean onQueryTextSubmit(String typedText)
     {
@@ -477,7 +487,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
     }
 
     /**
-     * create advertisement, posting to database
+     * create advertisement, start final checks before posting to database
      */
     @Override
     public void createAdvertisement() {
@@ -490,6 +500,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             finalCheck = true;
             listingManager.getUserInfo(this);
         } else {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(MusicianAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
                             "and try again",
@@ -497,6 +508,10 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         }
     }
 
+    /**
+     * Post advert to database
+     * @param data advert data
+     */
     public void postToDatabase(Map<String, Object> data)
     {
         if (data != null)
@@ -507,6 +522,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         }
         else
         {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(MusicianAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Check your connection " +
                             "and try again",
@@ -538,6 +554,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(MusicianAdvertisementEditor.this,
@@ -548,6 +565,7 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
             });
 
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(MusicianAdvertisementEditor.this,
@@ -617,50 +635,86 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         return image;
     }
 
+    /**
+     * @return musician
+     */
     public Map<String, Object> getMusician() {
         return musician;
     }
 
+    /**
+     * @return previousListing
+     */
     public Map<String, Object> getPreviousListing() {
         return previousListing;
     }
 
+    /**
+     * @param listingManager listingManager to set
+     */
     public void setListingManager(ListingManager listingManager) {
         this.listingManager = listingManager;
     }
 
+    /**
+     * @param listing listing to set
+     */
     public void setListing(HashMap<String, Object> listing) {
         this.listing = listing;
     }
 
+    /**
+     * @param bandPositions bandPositions to set
+     */
     public void setBandPositions(List bandPositions) {
         this.bandPositions = bandPositions;
     }
 
+    /**
+     * @param tabPreserver tabPreserver to set
+     */
     public void setTabPreserver(TabStatePreserver tabPreserver) {
         this.tabPreserver = tabPreserver;
     }
 
+    /**
+     * @param musician musician to set
+     */
     public void setMusician(Map<String, Object> musician) {
         this.musician = musician;
     }
 
+    /**
+     * @param previousListing previousListing to set
+     */
     public void setPreviousListing(Map<String, Object> previousListing) {
         this.previousListing = previousListing;
     }
 
+    /**
+     * @param fAuth fAuth to set
+     */
     public void setfAuth(FirebaseAuth fAuth) {
         this.fAuth = fAuth;
     }
 
+    /**
+     * @param FSTORE FSTORE to set
+     */
     public void setFSTORE(FirebaseFirestore FSTORE) {
         this.FSTORE = FSTORE;
     }
 
+    /**
+     * @param musicianReference musicianReference to set
+     */
     public void setMusicianReference(CollectionReference musicianReference) {
         this.musicianReference = musicianReference;
     }
 
+    /**
+     * Get location of musician
+     */
     private void getMusicianLocation()
     {
         getMusicianLocation.whereEqualTo("user-ref", fAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -694,6 +748,11 @@ public class MusicianAdvertisementEditor extends AppCompatActivity  implements C
         });
     }
 
+    /**
+     * Handle menu item selection
+     * @param item item selected
+     * @return true if item selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here

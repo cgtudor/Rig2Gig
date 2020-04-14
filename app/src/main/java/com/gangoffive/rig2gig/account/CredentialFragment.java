@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig.account;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -32,6 +34,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.identityconnectors.common.security.GuardedString;
 
@@ -115,35 +119,6 @@ public class CredentialFragment extends Fragment implements View.OnClickListener
                 final String email = rEmailAddress.getText().toString().trim().toLowerCase();
                 String confirmEmail = rConfirmEmail.getText().toString().trim();
                 String password = rPassword.getText().toString().trim();
-
-//                if (TextUtils.isEmpty(email)) {
-//                    rEmailAddress.setError("Email is required!");
-//                    return;
-//                }
-//                if (TextUtils.isEmpty(confirmEmail)) {
-//                    rConfirmEmail.setError("Confirm email is required!");
-//                    return;
-//                }
-//                if (!confirmEmail.matches(email)) {
-//                    rConfirmEmail.setError("Email doesn't match!");
-//                    return;
-//                }
-//                if (TextUtils.isEmpty(firstName)) {
-//                    cFirstName.setError("Please enter a first name");
-//                    return;
-//                }
-//                if (TextUtils.isEmpty(lastName)) {
-//                    cLastName.setError("Please enter a last name");
-//                    return;
-//                }
-//                if (TextUtils.isEmpty(username)) {
-//                    cUsername.setError("Please enter a username name");
-//                    return;
-//                }
-//                if (TextUtils.isEmpty(phoneNumber)) {
-//                    cPhoneNumber.setError("Please enter a phone number");
-//                    return;
-//                }
 
                 AtomicBoolean validPass = new AtomicBoolean();
                 validPass.set(true);
@@ -269,86 +244,135 @@ public class CredentialFragment extends Fragment implements View.OnClickListener
                     return;
                 }
 
-                /*Method used to access the encrypted password and get the clear chars*/
-                encryptedPassword.access(new GuardedString.Accessor() {
+                CollectionReference emailRef = fStore.collection("users");
+                Query emailQuery = emailRef.whereEqualTo("index-email-address", email.toLowerCase());
+                emailQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                {
                     @Override
-                    public void access(char[] chars) {
-                        /**
-                         * Creating an account with Firebase from the information that the user has inputted.
-                         */
-                        fAuth.createUserWithEmailAndPassword(email, new String(chars)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    userId = fAuth.getUid();
-                                    DocumentReference documentReference = fStore.collection("users").document(userId);
-                                    Map<String, Object> user = new HashMap<>();
-                                    user.put("email-address", email);
-                                    documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            //Toast.makeText(CredentialActivity.this, "Account has been created!", Toast.LENGTH_SHORT).show();
-                                            Log.d(TAG, "onSuccess: user Profile is created for " + userId);
-                                            fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                                    if (task.isSuccessful()) {
-                                                        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2Made it here");
-                                                        //startActivity(new Intent(getApplicationContext(),CredentialActivity.class));
-                                                        userId = fAuth.getUid();
-                                                        DocumentReference documentReference = fStore.collection("users").document(userId);
-                                                        Map<String, Object> user = new HashMap<>();
-                                                        user.put("given-name", firstName);
-                                                        user.put("family-name", lastName);
-                                                        user.put("username", username);
-                                                        user.put("phone-number", phoneNumber);
-                                                        user.put("user-type", AccountPurposeActivity.userType);
-                                                        documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty()){
+                                Log.d(TAG, "email does not exists");
+                                CollectionReference emailRef = fStore.collection("users");
+                                Query emailQuery = emailRef.whereEqualTo("indexUsername", username.toLowerCase());
+                                emailQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                                {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            if (task.getResult().isEmpty())
+                                            {
+                                                Toast.makeText(getActivity(), "Account is being created please sit tight!", Toast.LENGTH_SHORT).show();
+                                                Log.d(TAG, "username does not exists");
+                                                /*Method used to access the encrypted password and get the clear chars*/
+                                                encryptedPassword.access(new GuardedString.Accessor() {
+                                                    @Override
+                                                    public void access(char[] chars) {
+                                                        /**
+                                                         * Creating an account with Firebase from the information that the user has inputted.
+                                                         */
+                                                        fAuth.createUserWithEmailAndPassword(email, new String(chars)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                                             @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                //Toast.makeText(CredentialActivity.this, "Information Added", Toast.LENGTH_SHORT).show();
-                                                                System.out.println("Added User@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                                                                if (AccountPurposeActivity.userType == "Venue")
-                                                                {
-                                                                    CreateVenueFragment.venueBtn.performClick();
-                                                                }
-                                                                else
-                                                                    {
-                                                                        CreateMusicianFragment.btn.performClick();
-                                                                    }
+                                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    userId = fAuth.getUid();
+                                                                    DocumentReference documentReference = fStore.collection("users").document(userId);
+                                                                    Map<String, Object> user = new HashMap<>();
+                                                                    user.put("email-address", email);
+                                                                    user.put("index-email-address", email.toLowerCase());
+                                                                    documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        @Override
+                                                                        public void onSuccess(Void aVoid) {
+                                                                            //Toast.makeText(CredentialActivity.this, "Account has been created!", Toast.LENGTH_SHORT).show();
+                                                                            Log.d(TAG, "onSuccess: user Profile is created for " + userId);
+                                                                            fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                                                                @Override
+                                                                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                                                                    if (task.isSuccessful()) {
+                                                                                        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2Made it here");
+                                                                                        //startActivity(new Intent(getApplicationContext(),CredentialActivity.class));
+                                                                                        userId = fAuth.getUid();
+                                                                                        DocumentReference documentReference = fStore.collection("users").document(userId);
+                                                                                        Map<String, Object> user = new HashMap<>();
+                                                                                        user.put("given-name", firstName);
+                                                                                        user.put("family-name", lastName);
+                                                                                        user.put("username", username);
+                                                                                        user.put("indexUsername", username.toLowerCase());
+                                                                                        user.put("phone-number", phoneNumber);
+                                                                                        user.put("user-type", AccountPurposeActivity.userType);
+                                                                                        documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                            @Override
+                                                                                            public void onSuccess(Void aVoid) {
+                                                                                                //Toast.makeText(CredentialActivity.this, "Information Added", Toast.LENGTH_SHORT).show();
+                                                                                                System.out.println("Added User@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                                                                                                if (AccountPurposeActivity.userType == "Venue") {
+                                                                                                    CreateVenueFragment.venueBtn.performClick();
+                                                                                                } else {
+                                                                                                    CreateMusicianFragment.btn.performClick();
+                                                                                                }
 
-                                                            }
-                                                        }).addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-                                                                //Toast.makeText(CredentialActivity.this, "Error!", Toast.LENGTH_SHORT).show();
-                                                                String uuid = fAuth.getUid();
-                                                                System.out.println("=========================" + uuid);
+                                                                                            }
+                                                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                                                            @Override
+                                                                                            public void onFailure(@NonNull Exception e) {
+                                                                                                //Toast.makeText(CredentialActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                                                                                                String uuid = fAuth.getUid();
+                                                                                                System.out.println("=========================" + uuid);
+                                                                                            }
+                                                                                        });
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            //Toast.makeText(CredentialActivity.this, "Error creating account", Toast.LENGTH_SHORT).show();
+                                                                            Log.d(TAG, "onFailure: " + e.toString());
+                                                                        }
+                                                                    });
+
+                                                                } else {
+                                                                    //Toast.makeText(CredentialFragment.class, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                                }
                                                             }
                                                         });
                                                     }
+                                                });
+                                            }
+                                            else
+                                                {
+                                                    for (DocumentSnapshot document : task.getResult()) {
+                                                        if (document.exists()) {
+                                                            String userName = document.getString("username");
+                                                            Log.d(TAG, "username already exists");
+                                                            cUsername.setError(username + " Already Exists!");
+                                                            return;
+                                                        }
+                                                    }
                                                 }
-                                            });
                                         }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            //Toast.makeText(CredentialActivity.this, "Error creating account", Toast.LENGTH_SHORT).show();
-                                            Log.d(TAG, "onFailure: " + e.toString());
-                                        }
-                                    });
-
-                                } else {
-                                    //Toast.makeText(CredentialFragment.class, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                                    }
+                                });
                             }
-                        });
+                            else
+                                {
+                                    for (DocumentSnapshot document : task.getResult()) {
+                                        if (document.exists()) {
+                                            String emailAdd = document.getString("email-address");
+                                            Log.d(TAG, "email already exists");
+                                            rEmailAddress.setError(email + " Already Exists!");
+                                            return;
+                                        }
+                                    }
+                                }
+                        }
+                        else
+                            {
+                                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@ BROKEN");
+                            }
                     }
                 });
-
-                /*Disposes of the encrypted password from the memory*/
-                encryptedConfirm.dispose();
-                encryptedPassword.dispose();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());

@@ -30,7 +30,12 @@ public class BandMemberRemoverAdapter extends BaseAdapter {
     private FirebaseStorage storage;
     private ManageBandMembersActivity bandManager;
 
-
+    /**
+     * Constructor for BandMemberRemoverAdapter
+     * @param memberNames band member names
+     * @param refs band member references
+     * @param con activity creating adapter
+     */
     public BandMemberRemoverAdapter(ArrayList memberNames, List refs, ManageBandMembersActivity con)
     {
         context = con;
@@ -46,7 +51,9 @@ public class BandMemberRemoverAdapter extends BaseAdapter {
         }
     }
 
-
+    /**
+     * @return size of names
+     */
     @Override
     public int getCount() {
         if (names != null)

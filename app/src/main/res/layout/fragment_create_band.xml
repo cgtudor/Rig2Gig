@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".band.management.CreateBandFragment">
-
     <TextView
         android:id="@+id/createBandTxt"
         android:layout_width="wrap_content"
@@ -122,7 +121,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/view13" />
 
-    <EditText
+    <TextView
         android:id="@+id/bandGenres"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -141,14 +140,15 @@
         android:id="@+id/bandEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
         android:ems="10"
         android:hint="Contact Email"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/selectGenres" />
 
     <EditText
         android:id="@+id/bandPhoneNumber"
@@ -173,5 +173,19 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/location3" />
+
+    <Button
+        android:id="@+id/selectGenres"
+        android:layout_width="140dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1.0"
+        android:background="@drawable/button_rounded_flat_blue"
+        android:text="Select genres"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.405"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

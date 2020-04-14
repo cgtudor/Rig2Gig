@@ -19,5 +19,8 @@ public interface TabbedViewReferenceInitialiser {
      */
     public void beginTabPreservation();
 
+    /**
+     * @param isMapping isMapping to set
+     */
     public void setMapping(boolean isMapping);
 }

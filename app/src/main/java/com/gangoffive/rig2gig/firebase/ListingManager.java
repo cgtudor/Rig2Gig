@@ -195,6 +195,9 @@ public class ListingManager
                 collectionPath = "users";}}
     }
 
+    /**
+     * Get firebase instances
+     */
     public void getFirebaseInstances()
     {
         db = FirebaseFirestore.getInstance();
@@ -237,6 +240,10 @@ public class ListingManager
         }
     };
 
+    /**
+     * Process successful retrieval of user data
+     * @param task get task
+     */
     public void getUserInfoOnComplete(@NonNull Task<DocumentSnapshot> task)
     {
         if (task.isSuccessful()) {
@@ -283,6 +290,10 @@ public class ListingManager
         }
     };
 
+    /**
+     * Process successful retrieval of advert data
+     * @param task get task
+     */
     public void getListingOnComplete(@NonNull Task<DocumentSnapshot> task)
     {
         if (task.isSuccessful()) {
@@ -395,6 +406,10 @@ public class ListingManager
                 .addOnFailureListener(failureListener);
     }
 
+    /**
+     * Handle successful database put
+     * @param documentReference reference of new document
+     */
     public void createAdvertisementOnComplete(DocumentReference documentReference)
     {
         listingRef = documentReference.getId();
@@ -431,6 +446,11 @@ public class ListingManager
                 .addOnFailureListener(failureListener);
     }
 
+    /**
+     * Begin process of updating document in database
+     * @param transaction database transaction
+     * @throws FirebaseFirestoreException
+     */
     public void applyEdit (Transaction transaction) throws FirebaseFirestoreException
     {
         DocumentSnapshot snapshot = transaction.get(listRef);
@@ -440,6 +460,9 @@ public class ListingManager
         }
     }
 
+    /**
+     * Handle completion of database document update
+     */
     public void editAdvertisementOnComplete ()
     {
         if (image != null)
@@ -548,81 +571,157 @@ public class ListingManager
         }
     }
 
+    /**
+     * @return storageRef
+     */
     public StorageReference getStorageRef() {
         return storageRef;
     }
 
+    /**
+     * @param db db to set
+     */
     public void setDb(FirebaseFirestore db) {
         this.db = db;
     }
 
+    /**
+     * @param storage storage to set
+     */
     public void setStorage(FirebaseStorage storage) {
         this.storage = storage;
     }
 
+    /**
+     * @param docRef docRef to set
+     */
     public void setDocRef(DocumentReference docRef) {
         this.docRef = docRef;
     }
 
+
+    /**
+     * @param listRef listRef to set
+     */
     public void setListRef(DocumentReference listRef) {
         this.listRef = listRef;
     }
 
+    /**
+     * @param storageRef storageRef to set
+     */
     public void setStorageRef(StorageReference storageRef) {
         this.storageRef = storageRef;
     }
 
+    /**
+     * @return imageRef
+     */
     public StorageReference getImageRef() {return imageRef;}
 
+    /**
+     * @param imageRef imageRef to set
+     */
     public void setImageRef(StorageReference imageRef) {
         this.imageRef = imageRef;
     }
 
+    /**
+     * @param listingImage listingImage to set
+     */
     public void setListingImage(StorageReference listingImage) {
         this.listingImage = listingImage;
     }
 
+    /**
+     * @param userInfo userInfo to set
+     */
     public void setUserInfo(Map<String, Object> userInfo) {
         this.userInfo = userInfo;
     }
 
+    /**
+     * @param listingInfo listingInfo to set
+     */
     public void setListingInfo(Map<String, Object> listingInfo) {
         this.listingInfo = listingInfo;
     }
 
+    /**
+     * @return userInfo
+     */
     public Map<String, Object> getUserInfo() {return userInfo;}
 
+    /**
+     * @return listingInfo
+     */
     public Map<String, Object> getListingInfo() {return listingInfo;}
 
+    /**
+     * @return collectionPath
+     */
     public String getCollectionPath() {return collectionPath;}
 
+    /**
+     * @return imagePath
+     */
     public String getImagePath() {return imagePath;}
 
+    /**
+     * @return needPayment
+     */
     public boolean isNeedPayment() {return needPayment;}
 
+    /**
+     * @return db
+     */
     public FirebaseFirestore getDb() {return db;}
 
+    /**
+     * @return storage
+     */
     public FirebaseStorage getStorage() {return storage;}
 
+    /**
+     * @param activity activity to set
+     */
     public void setActivity(CreateAdvertisement activity) {
         this.activity = activity;
     }
 
+    /**
+     * @return listingImage
+     */
     public StorageReference getListingImage() {return listingImage;}
 
+    /**
+     * @param image image to set
+     */
     public void setImage(Drawable image) {
         this.image = image;
     }
 
+    /**
+     * @return listRef
+     */
     public DocumentReference getListRef() {return listRef;}
 
+    /**
+     * @param bitmap bitmap to set
+     */
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
     }
 
+    /**
+     * @param calendar calendar to set
+     */
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
     }
 
+    /**
+     * @return calendar
+     */
     public Calendar getCalendar() {return calendar;}
 }

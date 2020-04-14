@@ -50,7 +50,6 @@ public class GenreSelectorActivity extends AppCompatActivity implements SearchVi
         {
             setContentView(R.layout.genre_selector);
         }
-
         gridView = findViewById(R.id.gridView);
         searchHint = findViewById(R.id.searchHint);
         searchBar = findViewById(R.id.search_bar);
@@ -90,12 +89,19 @@ public class GenreSelectorActivity extends AppCompatActivity implements SearchVi
         });
     }
 
+    /**
+     * Handle back button press
+     */
     @Override
     public void onBackPressed()
     {
         returnSelectedGenres();
     }
 
+    /**
+     * Handle if top activity has changed
+     * @param isTopResumedActivity true if currently the top activity
+     */
     @Override
     public void onTopResumedActivityChanged (boolean isTopResumedActivity)
     {
@@ -105,6 +111,9 @@ public class GenreSelectorActivity extends AppCompatActivity implements SearchVi
         }
     }
 
+    /**
+     * Setup grid view for deletable genres
+     */
     public void setupGridView()
     {
         DeleteInstrumentAdapter customAdapter = new DeleteInstrumentAdapter(selectedGenres, this);
@@ -163,6 +172,11 @@ public class GenreSelectorActivity extends AppCompatActivity implements SearchVi
         }
     }
 
+    /**
+     * Not used
+     * @param typedText typed text
+     * @return false
+     */
     @Override
     public boolean onQueryTextSubmit(String typedText)
     {
@@ -181,6 +195,9 @@ public class GenreSelectorActivity extends AppCompatActivity implements SearchVi
         return true;
     }
 
+    /**
+     * Return selected genres as string
+     */
     public void returnSelectedGenres()
     {
         String genres = selectedGenres.toString();

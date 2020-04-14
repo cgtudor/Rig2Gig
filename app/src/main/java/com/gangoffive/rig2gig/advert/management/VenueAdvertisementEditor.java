@@ -51,6 +51,13 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     private int[] fragments = {R.layout.fragment_create_venue_advertisement_image,
             R.layout.fragment_create_venue_advertisement_details};
     private Drawable chosenPic;
+    private View.OnClickListener confirm = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            createListing.setOnClickListener(null);
+            createAdvertisement();
+        }
+    };
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -139,6 +146,9 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         }
     }
 
+    /**
+     * Set initial colours of confirm button
+     */
     public void setInitialColours()
     {
         if (description != null)
@@ -194,12 +204,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             description.addTextChangedListener(textWatcher);
         }
         createListing = findViewById(R.id.createListing);
-        createListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAdvertisement();
-            }
-        });
+        createListing.setOnClickListener(confirm);
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,7 +261,6 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         }
     }
 
-
     /**
      * handles activity results
      * @param requestCode
@@ -271,7 +275,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
     }
 
     /**
-     * create advertisement, posting to database
+     * create advertisement, then begin final checks before posting to database
      */
     @Override
     public void createAdvertisement() {
@@ -284,6 +288,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             finalCheck = true;
             listingManager.getUserInfo(this);
         } else {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(VenueAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
                             "and try again",
@@ -291,6 +296,10 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         }
     }
 
+    /**
+     * Post advert to database
+     * @param data advert to be posted
+     */
     public void postToDatabase(Map<String, Object> data)
     {
         if (data != null)
@@ -301,6 +310,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         }
         else
         {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(VenueAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Check your connection " +
                             "and try again",
@@ -328,6 +338,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(VenueAdvertisementEditor.this,
@@ -337,6 +348,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
                 }
             });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(VenueAdvertisementEditor.this,
@@ -345,8 +357,6 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
                             Toast.LENGTH_SHORT).show();
                 }
             });
-
-
         }
     }
 
@@ -402,34 +412,54 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         return image;
     }
 
-    public Map<String, Object> getVenue() {
-        return venue;
-    }
+    /**
+     * @return venue
+     */
+    public Map<String, Object> getVenue() {return venue;}
 
-    public Map<String, Object> getPreviousListing() {
-        return previousListing;
-    }
+    /**
+     * @return previousListing
+     */
+    public Map<String, Object> getPreviousListing() {return previousListing;}
 
+    /**
+     * @param listingManager listingManager to set
+     */
     public void setListingManager(ListingManager listingManager) {
         this.listingManager = listingManager;
     }
 
+    /**
+     * @param listing listing to set
+     */
     public void setListing(HashMap<String, Object> listing) {
         this.listing = listing;
     }
 
+    /**
+     * @param venue venue to set
+     */
     public void setVenue(Map<String, Object> venue) {
         this.venue = venue;
     }
 
+    /**
+     * @param previousListing previousListing to set
+     */
     public void setPreviousListing(Map<String, Object> previousListing) {
         this.previousListing = previousListing;
     }
 
+    /**
+     * @param listingRef listingRef to set
+     */
     public void setListingRef(String listingRef) {
         this.listingRef = listingRef;
     }
 
+    /**
+     * get location of venue
+     */
     private void getVenueLocation()
     {
         getVenueLocation.whereEqualTo("user-ref", fAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -463,6 +493,11 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         });
     }
 
+    /**
+     * handle menu item selection
+     * @param item item selected
+     * @return true if item selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here

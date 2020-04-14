@@ -6,6 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.TabbedView.PlaceholderFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -46,7 +49,19 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintTop_toBottomOf="@id/app_bar"
         app:layout_constraintBottom_toTopOf="@id/button_holder"
-        />
+        >
+
+        <Button
+            android:id="@+id/faderBtn2"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="50dp"
+            android:layout_weight="1.0"
+            android:onClick="faderOnclick"
+            android:text="Confiwwwrm"
+            android:textColor="#800000" />
+    </androidx.viewpager.widget.ViewPager>
 
     <LinearLayout
         android:id="@+id/button_holder"
@@ -83,6 +98,19 @@
             android:textColor="#800000"
             android:onClick="confirmOnClick" />
     </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/fader2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

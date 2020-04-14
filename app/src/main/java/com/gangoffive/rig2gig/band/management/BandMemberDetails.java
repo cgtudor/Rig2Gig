@@ -52,6 +52,10 @@ public class BandMemberDetails extends AppCompatActivity implements CreateAdvert
         });
     }
 
+    /**
+     * Jandle success from database
+     * @param data map of band member data
+     */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
         if (data != null)
@@ -72,6 +76,9 @@ public class BandMemberDetails extends AppCompatActivity implements CreateAdvert
         }
     }
 
+    /**
+     * set view references
+     */
     @Override
     public void setViewReferences()
     {
@@ -106,6 +113,9 @@ public class BandMemberDetails extends AppCompatActivity implements CreateAdvert
         populateInitialFields();
     }
 
+    /**
+     * populate initial fields with band member data
+     */
     @Override
     public void populateInitialFields() {
         runOnUiThread(new Runnable() {
@@ -124,6 +134,9 @@ public class BandMemberDetails extends AppCompatActivity implements CreateAdvert
         });
     }
 
+    /**
+     * Start activity to contact band member by phone
+     */
     public void ringMember()
     {
         if (!phone.getText().equals(""))
@@ -136,6 +149,9 @@ public class BandMemberDetails extends AppCompatActivity implements CreateAdvert
         }
     }
 
+    /**
+     * Start activity to contact band member by email
+     */
     public void emailMember()
     {
         if (!email.getText().equals(""))
@@ -148,48 +164,53 @@ public class BandMemberDetails extends AppCompatActivity implements CreateAdvert
                 startActivity(intent);
             }
         }
-
     }
 
+    /**
+     * Not used
+     */
     @Override
-    public void createAdvertisement() {
+    public void createAdvertisement() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void cancelAdvertisement() {
+    public void cancelAdvertisement() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void listingDataMap() {
+    public void listingDataMap() {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public boolean validateDataMap() {
-        return false;
-    }
+    public boolean validateDataMap() {return false;}
 
-
-
+    /**
+     * Not used
+     */
     @Override
-    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {
+    public void onSuccessFromDatabase(Map<String, Object> data, Map<String, Object> listingData) {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public ImageView getImageView() {
-        return null;
-    }
+    public ImageView getImageView() {return null;}
 
+    /**
+     * Not used
+     */
     @Override
-    public void handleDatabaseResponse(Enum creationResult) {
+    public void handleDatabaseResponse(Enum creationResult) {}
 
-    }
-
+    /**
+     * Not used
+     */
     @Override
-    public void onSuccessfulImageDownload() {
-
-    }
+    public void onSuccessfulImageDownload() {}
 }

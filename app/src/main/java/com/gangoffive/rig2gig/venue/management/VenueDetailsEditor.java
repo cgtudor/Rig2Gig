@@ -40,9 +40,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class VenueDetailsEditor extends AppCompatActivity implements CreateAdvertisement, TabbedViewReferenceInitialiser {
+public class VenueDetailsEditor extends AppCompatActivity implements CreateAdvertisement,
+        TabbedViewReferenceInitialiser {
 
-    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE", "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
+    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE",
+            "android.permission.ACCESS_FINE_LOCATION", "android.permission.READ_PHONE_STATE",
+            "android.permission.SYSTEM_ALERT_WINDOW","android.permission.CAMERA"};
     private boolean mapping, tab2set;
     private Geocoder geocoder;
     private TextView name, description, email, phone;
@@ -59,6 +62,14 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                                R.layout.fragment_description_changer};
     private Drawable chosenPic;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
+    private View.OnClickListener confirm = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            createListing.setOnClickListener(null);
+            createAdvertisement();
+        }
+    };
+
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
@@ -152,6 +163,9 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         setSpinnerValue();
     }
 
+    /**
+     * set value of spinne for venue type
+     */
     public void setSpinnerValue()
     {
         for (int i = 0; i < VenueTypes.getTypes().length; i++)
@@ -164,6 +178,9 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         }
     }
 
+    /**
+     * set up venue type spinner
+     */
     public void setUpTypeSpinner()
     {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner, VenueTypes.getTypes());
@@ -230,12 +247,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
 
             }
             createListing = findViewById(R.id.createListing);
-            createListing.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    createAdvertisement();
-                }
-            });
+            createListing.setOnClickListener(confirm);
             cancel = findViewById(R.id.cancel);
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -352,11 +364,17 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         }
     }
 
+    /**
+     * Begin tab preservation process
+     */
     @Override
     public void beginTabPreservation() {
         tabPreserver.preserveTabState();
     }
 
+    /**
+     * @param isMapping isMapping to set
+     */
     @Override
     public void setMapping(boolean isMapping) {
         mapping = isMapping;
@@ -374,7 +392,6 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
         chosenPic = image.getDrawable();
     }
-
 
     /**
      * create advertisement, posting to database
@@ -403,9 +420,14 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
             }
             catch(IOException io)
             {
+                createListing.setOnClickListener(confirm);
                 System.out.println(io.getMessage());
             }
 
+        }
+        else
+        {
+            createListing.setOnClickListener(confirm);
         }
     }
 
@@ -426,6 +448,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
             });
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -436,6 +459,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                 }
             });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
 
                 @Override
@@ -516,30 +540,45 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         return image;
     }
 
+    /**
+     * @return venue
+     */
     public Map<String, Object> getVenue() {
         return venue;
     }
 
+    /**
+     * @param venue venue to set
+     */
     public void setVenue(Map<String, Object> venue) {
         this.venue = venue;
     }
 
+    /**
+     * @param tabPreserver tabPreserver to set
+     */
     public void setTabPreserver(TabStatePreserver tabPreserver) {
         this.tabPreserver = tabPreserver;
     }
 
+    /**
+     * @param listingManager listingManager to set
+     */
     public void setListingManager(ListingManager listingManager) {
         this.listingManager = listingManager;
     }
 
+    /**
+     * Handle memnu item selection
+     * @param item item selected
+     * @return true if item selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
             finish(); // close this activity and return to preview activity (if there is any)
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 }

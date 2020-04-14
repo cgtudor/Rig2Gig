@@ -31,9 +31,9 @@
 
     <TextView
         android:id="@+id/firstName"
-        android:layout_width="362dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:textAlignment="center"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,29 +41,19 @@
         app:layout_constraintTop_toBottomOf="@+id/app_bar"
         android:textColor="#000000"/>
 
-    <View
-        android:id="@+id/imageView"
-        android:layout_width="364dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="8dp"
-        android:background="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstName" />
-
     <ScrollView
         android:id="@+id/scrollDetails"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_holder"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintBottom_toTopOf="@+id/button_holder">
+        app:layout_constraintTop_toBottomOf="@+id/firstName">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/innerWindow"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/innerWindow">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/image"
@@ -71,9 +61,8 @@
                 android:layout_height="223dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="24dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:color/background_light" />
+                app:srcCompat="@android:color/background_light"
+                tools:layout_editor_absoluteY="24dp" />
 
 
             <LinearLayout
@@ -94,8 +83,9 @@
                     android:layout_marginStart="80dp"
                     android:layout_marginEnd="20dp"
                     android:layout_weight="1.0"
+                    android:background="@drawable/button_rounded_flat_blue"
                     android:text="Gallery"
-                    android:background="@drawable/transparent_button_dark_outline"/>
+                    android:textColor="#ffffff" />
 
                 <Button
                     android:id="@+id/takePhoto"
@@ -104,8 +94,9 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="80dp"
                     android:layout_weight="1.0"
+                    android:background="@drawable/button_rounded_flat_blue"
                     android:text="Camera"
-                    android:background="@drawable/transparent_button_dark_outline"/>
+                    android:textColor="#ffffff" />
             </LinearLayout>
 
             <EditText
@@ -116,11 +107,11 @@
                 android:inputType="number"
                 android:maxLength="5"
                 android:textAlignment="textEnd"
+                android:textColor="#000000"
                 android:textSize="18sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/distanceLabel"
                 app:layout_constraintEnd_toStartOf="@+id/distanceLabel2"
-                app:layout_constraintStart_toEndOf="@+id/distanceLabel"
-                android:textColor="#000000"/>
+                app:layout_constraintStart_toEndOf="@+id/distanceLabel" />
 
             <TextView
                 android:id="@+id/distanceLabel"
@@ -129,10 +120,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:text="Travel distance: "
+                android:textColor="#000000"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imageLayout"
-                android:textColor="#000000"/>
+                app:layout_constraintTop_toBottomOf="@id/imageLayout" />
 
             <TextView
                 android:id="@+id/distanceLabel2"
@@ -140,11 +131,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="miles"
+                android:textColor="#000000"
                 android:textSize="18sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/venue_description_final"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/venue_description_final"
-                android:textColor="#000000"/>
+                app:layout_constraintStart_toEndOf="@+id/venue_description_final" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

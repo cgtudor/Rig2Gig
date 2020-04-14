@@ -58,6 +58,20 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             R.layout.fragment_band_details_changer};
     private Drawable chosenPic;
     private TabStatePreserver tabPreserver = new TabStatePreserver(this);
+    private View.OnClickListener genreSelect = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            selectGenre.setOnClickListener(null);
+            selectGenres();
+        }
+    };
+    private View.OnClickListener confirm = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            createListing.setOnClickListener(null);
+            createAdvertisement();
+        }
+    };
     private View.OnFocusChangeListener editTextFocusListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
@@ -183,7 +197,6 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         {
             name.setOnFocusChangeListener(editTextFocusListener);
             name.addTextChangedListener(textWatcher);
-
         }
         location = findViewById(R.id.band_location);
         if (location != null)
@@ -223,12 +236,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         createListing = findViewById(R.id.createListing);
         createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
         createListing.setTextColor(Color.parseColor("#FFFFFF"));
-        createListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAdvertisement();
-            }
-        });
+        createListing.setOnClickListener(confirm);
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,16 +267,14 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         selectGenre = findViewById(R.id.selectGenres);
         if (selectGenre != null)
         {
-            selectGenre.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectGenres();
-                }
-            });
+            selectGenre.setOnClickListener(genreSelect);
         }
         fader = findViewById(R.id.fader);
     }
 
+    /**
+     * Start genre selector popup activity
+     */
     public void selectGenres()
     {
         Window window = getWindow();
@@ -280,6 +286,9 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         startActivityForResult(intent, 99);
     }
 
+    /**
+     * Amend text of genre button accordingly
+     */
     public void setGenreButton()
     {
         if (genres.getText().toString().equals(""))
@@ -310,7 +319,6 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             try
             {
                 List<Address> getBandCity = geocoder.getFromLocation(Double.parseDouble(band.get("latitude").toString()), Double.parseDouble(band.get("longitude").toString()), 20);
-
                 if (getBandCity != null && getBandCity.size() > 0)
                 {
                     for (Address adr : getBandCity)
@@ -318,24 +326,18 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                         if (adr.getLocality() != null)
                         {
                             runOnUiThread(new Runnable() {
-
                                 @Override
                                 public void run() {
-
                                     location.setText(adr.getLocality() + ", " + adr.getCountryCode());
-
-
                                 }
                             });
                             break;
-
                         }
                         else if (adr.getSubLocality() != null)
                         {
                             location.setText(adr.getSubLocality() + ", " + adr.getCountryCode());
                             break;
                         }
-
                     }
                 }
             }
@@ -416,6 +418,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 99)
         {
+            selectGenre.setOnClickListener(genreSelect);
             Window window = getWindow();
             window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
             fader.setVisibility(View.GONE);
@@ -439,12 +442,17 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
     @Override
     public void createAdvertisement() {
         saveTabs();
+        createListing.setOnClickListener(null);
         if (chosenPic != null)
         {
             chosenPic = image.getDrawable();
         }
         if (validateDataMap()) {
             listingManager.postDataToDatabase((HashMap)band, chosenPic, this);
+        }
+        else
+        {
+            createListing.setOnClickListener(confirm);
         }
     }
 
@@ -463,6 +471,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             });
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(BandDetailsEditor.this,
@@ -472,6 +481,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                 }
             });
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(BandDetailsEditor.this,
@@ -604,7 +614,6 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                                 Toast.LENGTH_SHORT).show();
                         return false;
                     }
-
                 }
             }
         }
@@ -650,22 +659,39 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         return image;
     }
 
+    /**
+     * @param listingManager listingManager to set
+     */
     public void setListingManager(ListingManager listingManager) {
         this.listingManager = listingManager;
     }
 
+    /**
+     * @return band
+     */
     public Map<String, Object> getBand() {
         return band;
     }
 
+    /**
+     * @param band band to set
+     */
     public void setBand(Map<String, Object> band) {
         this.band = band;
     }
 
+    /**
+     * @param tabPreserver tabPreserver to set
+     */
     public void setTabPreserver(TabStatePreserver tabPreserver) {
         this.tabPreserver = tabPreserver;
     }
 
+    /**
+     * Handle menu item selection
+     * @param item item selected
+     * @return true if item selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here

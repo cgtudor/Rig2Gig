@@ -20,7 +20,6 @@ import java.util.List;
 
 public class BandMemberAdderAdapter  extends BaseAdapter
 {
-
     private Context context;
     private ArrayList<Drawable> images;
     private ArrayList<String> names;
@@ -32,7 +31,14 @@ public class BandMemberAdderAdapter  extends BaseAdapter
     private MusicianSearchActivity bandManager;
     private FirebaseFirestore db;
 
-
+    /**
+     * Constructor for BandMemberAdderAdapter
+     * @param musicianNames names of musicians
+     * @param musicRefs musician ids
+     * @param userIds user ids
+     * @param invited list of those already invited
+     * @param con activity using adapter
+     */
     public BandMemberAdderAdapter(ArrayList musicianNames, List musicRefs, List userIds, ArrayList invited, MusicianSearchActivity con)
     {
         db = FirebaseFirestore.getInstance();
@@ -51,7 +57,9 @@ public class BandMemberAdderAdapter  extends BaseAdapter
         }
     }
 
-
+    /**
+     * @return size of names
+     */
     @Override
     public int getCount() {
         if (names != null)
@@ -123,7 +131,12 @@ public class BandMemberAdderAdapter  extends BaseAdapter
                 @Override
                 public void onClick(View v)
                 {
-                    bandManager.beginConfirmAddMember(names.get(position).toString(), position);
+                    if (!((MusicianSearchActivity)context).isInvitingMember())
+                    {
+                        ((MusicianSearchActivity)context).setInvitingMember(true);
+                        bandManager.beginConfirmAddMember(names.get(position).toString(), position);
+                    }
+
                 }
             });
         }

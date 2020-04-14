@@ -44,6 +44,14 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     private ListingManager listingManager;
     private Drawable chosenPic;
     private boolean finalCheck;
+    private View.OnClickListener confirm = new View.OnClickListener() {
+        @Override
+        public void onClick(View v)
+        {
+            createListing.setOnClickListener(null);
+            createAdvertisement();
+        }
+    };
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -190,10 +198,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         createListing = findViewById(R.id.createListing);
         createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
         createListing.setTextColor(Color.parseColor("#FFFFFF"));
-        createListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {createAdvertisement();}
-        });
+        createListing.setOnClickListener(confirm);
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,7 +254,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     }
 
     /**
-     * create advertisement, posting to database
+     * create advertisement, begin final checks before posting to database
      */
     @Override
     public void createAdvertisement() {
@@ -262,6 +267,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             finalCheck = true;
             listingManager.getUserInfo(this);
         } else {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(PerformerAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
                             "and try again",
@@ -269,6 +275,10 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         }
     }
 
+    /**
+     * Post advert to database
+     * @param data advert data
+     */
     public void postToDatabase(Map<String, Object> data)
     {
         if (data != null)
@@ -279,6 +289,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         }
         else
         {
+            createListing.setOnClickListener(confirm);
             Toast.makeText(PerformerAdvertisementEditor.this,
                     "Advertisement " + editType + " unsuccessful.  Check your connection " +
                             "and try again",
@@ -305,6 +316,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(PerformerAdvertisementEditor.this,
@@ -315,6 +327,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             });
 
         } else if (creationResult == ListingManager.CreationResult.IMAGE_FAILURE) {
+            createListing.setOnClickListener(confirm);
             runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(PerformerAdvertisementEditor.this,
@@ -335,6 +348,9 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         finish();
     }
 
+    /**
+     * Finish activity on back pressed
+     */
     @Override
     public void onBackPressed()
     {
@@ -415,37 +431,57 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     }
 
     /**
-     * get image
      * @return image
      */
     public ImageView getImageView() {
         return image;
     }
 
+    /**
+     * @return performer
+     */
     public Map<String, Object> getPerformer() {
         return band;
     }
 
+    /**
+     * @return previousListing
+     */
     public Map<String, Object> getPreviousListing() {
         return previousListing;
     }
 
+    /**
+     * @param listingManager listingManager to set
+     */
     public void setListingManager(ListingManager listingManager) {
         this.listingManager = listingManager;
     }
 
+    /**
+     * @param listing listing to set
+     */
     public void setListing(HashMap<String, Object> listing) {
         this.listing = listing;
     }
 
+    /**
+     * @param band band to set
+     */
     public void setPerformer(Map<String, Object> band) {
         this.band = band;
     }
 
+    /**
+     * @param previousListing previousListing to set
+     */
     public void setPreviousListing(Map<String, Object> previousListing) {
         this.previousListing = previousListing;
     }
 
+    /**
+     * Get location of performer
+     */
     private void getPerformerLocation()
     {
         getPerformerLocation.whereEqualTo("user-ref", fAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -479,6 +515,11 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         });
     }
 
+    /**
+     * Jandle menu item selection
+     * @param item item selected
+     * @return true if item selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here

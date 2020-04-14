@@ -237,6 +237,11 @@ public class CommsAdapter extends RecyclerView.Adapter<CommsAdapter.ViewHolder> 
                                 holder.imageViewTopButton.setVisibility(View.GONE);
                                 holder.imageViewBotButton.setVisibility(View.GONE);
                                 break;
+                            case "left-band":
+                                holder.textViewType.setText("You are no longer a band member.");
+                                holder.imageViewTopButton.setVisibility(View.GONE);
+                                holder.imageViewBotButton.setVisibility(View.GONE);
+                                break;
                             case "join-request":
                                 DocumentReference bandDocRef = db.collection("bands").document(commDoc.get("sent-from-ref").toString());
                                 bandDocRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
