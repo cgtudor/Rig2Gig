@@ -149,7 +149,7 @@ public class AddMemberConfirmationTest {
     }
 
 
-    @Test (expected = NullPointerException.class)
+    @Test
     public void testOnSuccessFromDatabaseUserStillInBand()
     {
         FirebaseFirestore db = mock(FirebaseFirestore.class);
@@ -157,7 +157,6 @@ public class AddMemberConfirmationTest {
         when(db.collection(any())).thenReturn(mock(CollectionReference.class));
         when(db.collection(any()).document(any())).thenReturn(mock(DocumentReference.class));
         when(db.collection(any()).document(any()).collection(any())).thenReturn(mock(CollectionReference.class));
-
         confirmationClass.setCheckIfInBand(true);
         Map<String,Object> testMap = new HashMap();
         confirmationClass.setBandRef("bandRef");
@@ -168,7 +167,6 @@ public class AddMemberConfirmationTest {
         confirmationClass.onSuccessFromDatabase(testMap);
         assertThat(confirmationClass.isCheckIfInBand(),is(equalTo(false)));
         assertThat(confirmationClass.isSendingInvite(),is(equalTo(false)));
-        verify(confirmationClass,times(1)).sendInvite();
     }
 
 }

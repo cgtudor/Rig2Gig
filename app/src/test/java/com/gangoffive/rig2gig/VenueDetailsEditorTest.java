@@ -85,7 +85,7 @@ public class VenueDetailsEditorTest {
     }
 
     @Test
-    public void testvalidateDataMapEmptyField()
+    public void testValidateDataMapEmptyField()
     {
         HashMap<String, Object> listing = new HashMap();
         listing.put("valid field", "valid");
@@ -95,11 +95,12 @@ public class VenueDetailsEditorTest {
     }
 
     @Test
-    public void testvalidateDataMapWithValidData()
+    public void testValidateDataMapWithValidData()
     {
         HashMap<String, Object> listing = new HashMap();
         listing.put("valid field", "valid");
         listing.put("empty field", "also valid");
+        listing.put("email-address", "valid@email.com");
         confirmationClass.setVenue(listing);
         assertThat(confirmationClass.validateDataMap(),is(equalTo(true)));
     }

@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.PatternsCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.gangoffive.rig2gig.R;
@@ -515,18 +516,28 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         for (Map.Entry element : venue.entrySet()) {
             String val = element.getValue().toString();
             if (val == null || val.trim().isEmpty()) {
-                Toast.makeText(VenueDetailsEditor.this,
-                        "Details not updated.  Ensure all fields are complete " +
-                                "and try again",
-                        Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Toast.makeText(VenueDetailsEditor.this,
+                                "Details not updated.  Ensure all fields are complete " +
+                                        "and try again",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
                 return false;
             }
         }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(venue.get("email-address").toString()).matches())
+        if (!PatternsCompat.EMAIL_ADDRESS.matcher(venue.get("email-address").toString()).matches())
         {
-            Toast.makeText(VenueDetailsEditor.this,
-                    "Details not updated.  Email address is invalid.",
-                    Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(VenueDetailsEditor.this,
+                            "Details not updated.  Email address is invalid.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
             return false;
         }
         return true;

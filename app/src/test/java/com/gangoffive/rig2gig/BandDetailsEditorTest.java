@@ -108,6 +108,7 @@ public class BandDetailsEditorTest {
         HashMap<String, Object> listing = new HashMap();
         listing.put("valid field", "valid");
         listing.put("empty field", "also valid");
+        listing.put("email", "valid@email.com");
         confirmationClass.setBand(listing);
         assertThat(confirmationClass.validateDataMap(),is(equalTo(true)));
     }

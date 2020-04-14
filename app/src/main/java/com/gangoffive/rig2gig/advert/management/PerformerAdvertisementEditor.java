@@ -396,10 +396,15 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         for (Map.Entry element : listing.entrySet()) {
             String val = element.getValue().toString();
             if (val == null || val.trim().isEmpty()) {
-                Toast.makeText(PerformerAdvertisementEditor.this,
-                        "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
-                                "and try again",
-                        Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PerformerAdvertisementEditor.this,
+                                "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
+                                        "and try again",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
                 return false;
             }
         }
@@ -421,9 +426,14 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
             if (actualNumber.length() == 0)
             {
-                Toast.makeText(PerformerAdvertisementEditor.this,
-                        "Advertisement " + editType + " unsuccessful.  Distance cannot be '0'",
-                        Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PerformerAdvertisementEditor.this,
+                                "Advertisement " + editType + " unsuccessful.  Distance cannot be '0'",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
                 return false;
             }
         }
