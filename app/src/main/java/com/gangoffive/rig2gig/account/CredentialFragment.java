@@ -346,7 +346,7 @@ public class CredentialFragment extends Fragment implements View.OnClickListener
                                                         if (document.exists()) {
                                                             String userName = document.getString("username");
                                                             Log.d(TAG, "username already exists");
-                                                            cUsername.setError(userName + " Already Exists!");
+                                                            cUsername.setError(username + " Already Exists!");
                                                             return;
                                                         }
                                                     }
@@ -361,7 +361,7 @@ public class CredentialFragment extends Fragment implements View.OnClickListener
                                         if (document.exists()) {
                                             String emailAdd = document.getString("email-address");
                                             Log.d(TAG, "email already exists");
-                                            rEmailAddress.setError(emailAdd + " Already Exists!");
+                                            rEmailAddress.setError(email + " Already Exists!");
                                             return;
                                         }
                                     }

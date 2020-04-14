@@ -85,8 +85,7 @@
             android:layout_weight="1.0"
             android:text="Cancel"
             android:textColor="#FFFFFF"
-            android:onClick="cancelOnClick"
-            android:visibility="gone"/>
+            android:onClick="cancelOnClick"/>
 
         <Button
             android:id="@+id/createListing"
