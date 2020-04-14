@@ -51,7 +51,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
     private AutoCompleteTextView location;
     private Button createListing, cancel, galleryImage, takePhoto, selectGenre;
     private ImageView image;
-    private String bandRef, type;
+    private String bandRef, type, distanceText;
     private Map<String, Object> band;
     private ListingManager listingManager;
     private int[] tabTitles;
@@ -158,9 +158,12 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
     {
         setViewReferences();
         band = data;
-        String currentGenres = band.get("genres").toString();
-        currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
-        band.put("genres",currentGenres);
+        if (band != null)
+        {
+            String currentGenres = band.get("genres").toString();
+            currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
+            band.put("genres",currentGenres);
+        }
         listingManager.getImage(this);
     }
 
@@ -349,7 +352,12 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         }
         if(distance != null && band !=null)
         {
-            distance.setText(band.get("distance").toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    distance.setText(band.get("distance").toString());
+                }
+            });
         }
         if(genres != null && band !=null)
         {
@@ -543,7 +551,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         }
         if(distance != null && distance.getText() != null && band != null)
         {
-            String distanceText = distance.getText().toString();
+            distanceText = distance.getText().toString();
             for (int i = 0; i < distanceText.length(); i++)
             {
                 char digit = distanceText.charAt(i);
@@ -557,7 +565,12 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                     distanceText = "0";
                 }
             }
-            distance.setText(distanceText);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    distance.setText(distanceText);
+                }
+            });
             band.put("distance", distanceText);
         }
         if(genres != null && band !=null)

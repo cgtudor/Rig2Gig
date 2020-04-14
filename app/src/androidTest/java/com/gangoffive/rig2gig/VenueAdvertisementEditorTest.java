@@ -77,7 +77,6 @@ public class VenueAdvertisementEditorTest {
         onView(withId(R.id.venueAdDetailsMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.venue_description_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.descriptionLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.detailView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test
@@ -111,8 +110,6 @@ public class VenueAdvertisementEditorTest {
         onView(withId(R.id.venueAdDetailsMain)).check(matches(isDisplayed()));
         onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
         onView(withId(R.id.descriptionLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.detailView)).check(matches(isDisplayed()));
-
     }
 
     @Test
@@ -136,7 +133,6 @@ public class VenueAdvertisementEditorTest {
         onView(withId(R.id.venueAdDetailsMain)).check(matches(isDisplayed()));
         onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
         onView(withId(R.id.descriptionLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.detailView)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -160,7 +156,6 @@ public class VenueAdvertisementEditorTest {
         onView(withId(R.id.venueAdDetailsMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.venue_description_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.descriptionLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.detailView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test

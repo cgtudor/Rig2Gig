@@ -111,7 +111,7 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         bandRef = getIntent().getStringExtra("EXTRA_BAND_ID");
         String listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
         type = "Band";
-        if (listingRef.equals(""))
+        if (listingRef != null && listingRef.equals(""))
         {
             editType = "creation";
         }
@@ -398,7 +398,12 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
     public void populateInitialFields() {
         if(name != null && band !=null && name.getText() != band.get("name") && name.getText() == "")
         {
-            name.setText(band.get("name").toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    name.setText(band.get("name").toString());
+                }
+            });
         }
         if (chosenPic != null && image != null)
         {

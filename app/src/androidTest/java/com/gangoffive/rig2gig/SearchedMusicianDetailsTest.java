@@ -48,7 +48,7 @@ public class SearchedMusicianDetailsTest {
         @Test
         public void testActivityInView()
         {
-            onView(withId(R.id.searchedMusicianDetailsMain)).check(matches(isDisplayed()));
+            onView(withId(R.id.searchWindowMain)).check(matches(isDisplayed()));
         }
 
         @Test

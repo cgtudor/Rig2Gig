@@ -149,7 +149,6 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
         onView(withId(R.id.linearLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.detailsTitle)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.detailsView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.nameLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.venue_name_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.locationLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -201,7 +200,6 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.takePhoto)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.linearLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.detailsTitle)).check(matches(isDisplayed()));
-        onView(withId(R.id.detailsView)).check(matches(isDisplayed()));
         onView(withId(R.id.nameLabel)).check(matches(isDisplayed()));
         onView(withId(R.id.venue_name_final)).check(matches(isDisplayed()));
         onView(withId(R.id.locationLabel)).check(matches(isDisplayed()));
@@ -227,7 +225,6 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.linearLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.detailsTitle)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.detailsView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.nameLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.venue_name_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.locationLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -263,7 +260,6 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
         onView(withId(R.id.linearLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.detailsTitle)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.detailsView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.nameLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.venue_name_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.locationLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -290,7 +286,6 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.linearLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.detailsTitle)).check(matches(isDisplayed()));
-        onView(withId(R.id.detailsView)).check(matches(isDisplayed()));
         onView(withId(R.id.nameLabel)).check(matches(isDisplayed()));
         onView(withId(R.id.venue_name_final)).check(matches(isDisplayed()));
         onView(withId(R.id.locationLabel)).check(matches(isDisplayed()));

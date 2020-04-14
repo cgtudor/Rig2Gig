@@ -637,7 +637,6 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             if (actualNumber.length() == 0)
             {
                 runOnUiThread(new Runnable() {
-
                     @Override
                     public void run() {
                         Toast.makeText(MusicianDetailsEditor.this,

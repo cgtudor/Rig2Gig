@@ -61,7 +61,7 @@ public class BandDetailsEditorTest {
             bandData.put("availability", "test availability");
             bandData.put("charge", "test charge");
             bandData.put("description", "test description");
-            bandData.put("distance", "test distance");
+            bandData.put("distance", "1");
             bandData.put("email", "test@email.com");
             bandData.put("latitude","10");
             bandData.put("longitude","6");
@@ -84,13 +84,9 @@ public class BandDetailsEditorTest {
             closeSoftKeyboard();
             onView(withId(R.id.band_location)).perform(typeText("test location edit"));
             closeSoftKeyboard();
-            onView(withId(R.id.venue_description_final)).perform(typeText("test distance edit"));
+            onView(withId(R.id.email)).perform(typeText("test@email.com"));
             closeSoftKeyboard();
-            onView(withId(R.id.genres)).perform(typeText("test genres edit"));
-            closeSoftKeyboard();
-            onView(withId(R.id.email)).perform(typeText("test email edit"));
-            closeSoftKeyboard();
-            onView(withId(R.id.phone)).perform(typeText("test phone edit"));
+            onView(withId(R.id.phone)).perform(typeText("0"));
             closeSoftKeyboard();
         }
 
@@ -98,7 +94,6 @@ public class BandDetailsEditorTest {
         {
             onView(withId(R.id.name)).perform(replaceText(""));
             onView(withId(R.id.venue_description_final)).perform(replaceText(""));
-            onView(withId(R.id.genres)).perform(replaceText(""));
             onView(withId(R.id.email)).perform(replaceText(""));
             onView(withId(R.id.phone)).perform(replaceText(""));
         }
@@ -110,10 +105,6 @@ public class BandDetailsEditorTest {
         onView(withId(R.id.name)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
         closeSoftKeyboard();
         onView(withId(R.id.band_location)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
-        closeSoftKeyboard();
-        onView(withId(R.id.venue_description_final)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
-        closeSoftKeyboard();
-        onView(withId(R.id.genres)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
         closeSoftKeyboard();
         onView(withId(R.id.email)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_DEL));
         closeSoftKeyboard();
@@ -127,13 +118,9 @@ public class BandDetailsEditorTest {
         closeSoftKeyboard();
         onView(withId(R.id.band_location)).perform(typeText("a"));
         closeSoftKeyboard();
-        onView(withId(R.id.venue_description_final)).perform(typeText("a"));
-        closeSoftKeyboard();
-        onView(withId(R.id.genres)).perform(typeText("a"));
-        closeSoftKeyboard();
         onView(withId(R.id.email)).perform(typeText("a"));
         closeSoftKeyboard();
-        onView(withId(R.id.phone)).perform(typeText("a"));
+        onView(withId(R.id.phone)).perform(typeText("0"));
         closeSoftKeyboard();
     }
 
@@ -152,7 +139,6 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.cancel)).check(matches(isDisplayed()));
             onView(withId(R.id.createListing)).check(matches(isDisplayed()));
             onView(withId(R.id.detailsImageMain)).check(matches(isDisplayed()));
-            onView(withId(R.id.imageView)).check(matches(isDisplayed()));
             onView(withId(R.id.changeImageLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.detailsImage)).check(matches(isDisplayed()));
             onView(withId(R.id.imageButtonLayout)).check(matches(isDisplayed()));
@@ -160,14 +146,13 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
             onView(withId(R.id.linearLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.detailTitle)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-            onView(withId(R.id.detailsView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.nameLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.name)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.locationLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.band_location)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.distanceLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.venue_description_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-            onView(withId(R.id.genresLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            onView(withId(R.id.selectGenres)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.genres)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.emailLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.email)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -189,7 +174,6 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.band_location)).check(matches(withText("")));
             onView(withId(R.id.distanceLabel)).check(matches(withText("Distance:")));
             onView(withId(R.id.venue_description_final)).check(matches(withText("")));
-            onView(withId(R.id.genresLabel)).check(matches(withText("Genres:")));
             onView(withId(R.id.genres)).check(matches(withText("")));
             onView(withId(R.id.emailLabel)).check(matches(withText("Email:")));
             onView(withId(R.id.email)).check(matches(withText("")));
@@ -208,7 +192,6 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.cancel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.createListing)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.detailsImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-            onView(withId(R.id.imageView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.changeImageLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.detailsImage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.imageButtonLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -216,14 +199,13 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.takePhoto)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.linearLayout)).check(matches(isDisplayed()));
             onView(withId(R.id.detailTitle)).check(matches(isDisplayed()));
-            onView(withId(R.id.detailsView)).check(matches(isDisplayed()));
             onView(withId(R.id.nameLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.name)).check(matches(isDisplayed()));
             onView(withId(R.id.locationLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.band_location)).check(matches(isDisplayed()));
             onView(withId(R.id.distanceLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
-            onView(withId(R.id.genresLabel)).check(matches(isDisplayed()));
+            onView(withId(R.id.selectGenres)).check(matches(isDisplayed()));
             onView(withId(R.id.genres)).check(matches(isDisplayed()));
             onView(withId(R.id.emailLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.email)).check(matches(isDisplayed()));
@@ -243,7 +225,6 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.cancel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.createListing)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.detailsImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-            onView(withId(R.id.imageView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.changeImageLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.detailsImage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.imageButtonLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -251,14 +232,13 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.takePhoto)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.linearLayout)).check(matches(isDisplayed()));
             onView(withId(R.id.detailTitle)).check(matches(isDisplayed()));
-            onView(withId(R.id.detailsView)).check(matches(isDisplayed()));
             onView(withId(R.id.nameLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.name)).check(matches(isDisplayed()));
             onView(withId(R.id.locationLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.band_location)).check(matches(isDisplayed()));
             onView(withId(R.id.distanceLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
-            onView(withId(R.id.genresLabel)).check(matches(isDisplayed()));
+            onView(withId(R.id.selectGenres)).check(matches(isDisplayed()));
             onView(withId(R.id.genres)).check(matches(isDisplayed()));
             onView(withId(R.id.emailLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.email)).check(matches(isDisplayed()));
@@ -278,7 +258,6 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.cancel)).check(matches(isDisplayed()));
             onView(withId(R.id.createListing)).check(matches(isDisplayed()));
             onView(withId(R.id.detailsImageMain)).check(matches(isDisplayed()));
-            onView(withId(R.id.imageView)).check(matches(isDisplayed()));
             onView(withId(R.id.changeImageLabel)).check(matches(isDisplayed()));
             onView(withId(R.id.detailsImage)).check(matches(isDisplayed()));
             onView(withId(R.id.imageButtonLayout)).check(matches(isDisplayed()));
@@ -286,14 +265,13 @@ public class BandDetailsEditorTest {
             onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
             onView(withId(R.id.linearLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.detailTitle)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-            onView(withId(R.id.detailsView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.nameLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.name)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.locationLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.band_location)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.distanceLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.venue_description_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-            onView(withId(R.id.genresLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            onView(withId(R.id.selectGenres)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.genres)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.emailLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.email)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -395,8 +373,7 @@ public class BandDetailsEditorTest {
         {
             testRule.getActivity().saveTabs();
             testRule.getActivity().setViewReferences();
-            testRule.getActivity().setBand(bandData);
-            testRule.getActivity().onSuccessFromDatabase(bandData);
+            testRule.getActivity().onSuccessFromDatabase(null);
             testRule.getActivity().saveTabs();
             testRule.getActivity().setViewReferences();
             testRule.getActivity().populateInitialFields();
@@ -405,18 +382,16 @@ public class BandDetailsEditorTest {
             enterTestData();
             onView(withId(R.id.name)).check(matches(withText("test name edit")));
             onView(withId(R.id.band_location)).check(matches(withText(endsWith("test location edit"))));
-            onView(withId(R.id.venue_description_final)).check(matches(withText("test distance edit")));
-            onView(withId(R.id.genres)).check(matches(withText("test genres edit")));
-            onView(withId(R.id.email)).check(matches(withText("test email edit")));
-            onView(withId(R.id.phone)).check(matches(withText("test phone edit")));
+            onView(withId(R.id.email)).check(matches(withText("test@email.com")));
+            onView(withId(R.id.phone)).check(matches(withText("0")));
         }
 
     @Test
     public void testDataInputSwipeAwaySwipeBack()
     {
+        testRule.getActivity().saveTabs();
         testRule.getActivity().setViewReferences();
-        testRule.getActivity().setBand(bandData);
-        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().onSuccessFromDatabase(null);
         testRule.getActivity().saveTabs();
         testRule.getActivity().setViewReferences();
         testRule.getActivity().populateInitialFields();
@@ -427,23 +402,22 @@ public class BandDetailsEditorTest {
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.name)).check(matches(withText("test name edit")));
         onView(withId(R.id.band_location)).check(matches(withText(endsWith("test location edit"))));
-        onView(withId(R.id.venue_description_final)).check(matches(withText("test distance edit")));
-        onView(withId(R.id.genres)).check(matches(withText("test genres edit")));
-        onView(withId(R.id.email)).check(matches(withText("test email edit")));
-        onView(withId(R.id.phone)).check(matches(withText("test phone edit")));
+        onView(withId(R.id.email)).check(matches(withText("test@email.com")));
+        onView(withId(R.id.phone)).check(matches(withText("0")));
     }
 
     @Test
     public void testButtonColourChangeOnValidData()
     {
         testRule.getActivity().setViewReferences();
-        testRule.getActivity().setBand(bandData);
-        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().onSuccessFromDatabase(null);
         testRule.getActivity().saveTabs();
         testRule.getActivity().setViewReferences();
         testRule.getActivity().populateInitialFields();
+        testRule.getActivity().setBand(bandData);
         testRule.getActivity().reinitialiseTabs();
         onView(withId(R.id.view_pager)).perform(swipeLeft());
+        onView(withId(R.id.email)).perform(replaceText(""));
         enterTestData();
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable) confirm.getBackground();
@@ -477,39 +451,8 @@ public class BandDetailsEditorTest {
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
         verify(manager,times(0)).postDataToDatabase(any(),any(),any());
-        onView(withText("Listing not created.  Ensure all fields are complete and try again"))
+        onView(withText("Details not updated.  Ensure all fields are complete and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testDataInputTwiceThenDeleteOneChar()
-    {
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().setBand(bandData);
-        testRule.getActivity().onSuccessFromDatabase(bandData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
-        onView(withId(R.id.view_pager)).perform(swipeLeft());
-        enterOneCharAllFields();
-        enterOneCharAllFields();
-        deleteOneCharFields();
-        onView(withId(R.id.name)).check(matches(withText("a")));
-        onView(withId(R.id.band_location)).check(matches(withText(endsWith("a"))));
-        onView(withId(R.id.venue_description_final)).check(matches(withText("a")));
-        onView(withId(R.id.genres)).check(matches(withText("a")));
-        onView(withId(R.id.email)).check(matches(withText("a")));
-        onView(withId(R.id.phone)).check(matches(withText("a")));
-        Button confirm = testRule.getActivity().findViewById(R.id.createListing);
-        ColorDrawable colour = (ColorDrawable) confirm.getBackground();
-        int intColour = colour.getColor();
-        assertEquals(-15547671, intColour);
-        ColorStateList textcolour = confirm.getTextColors();
-        intColour = textcolour.getDefaultColor();
-        assertEquals(-1, intColour);
-        onView(withId(R.id.createListing)).perform(click());
-        verify(manager,times(1)).postDataToDatabase(any(),any(),any());
     }
 
     @Test
@@ -538,7 +481,7 @@ public class BandDetailsEditorTest {
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
         verify(manager,times(0)).postDataToDatabase(any(),any(),any());
-        onView(withText("Listing not created.  Ensure all fields are complete and try again"))
+        onView(withText("Details not updated.  Ensure all fields are complete and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 }
