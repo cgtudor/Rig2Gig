@@ -7,9 +7,7 @@
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".advert.details.BandListingDetailsActivity">
@@ -152,12 +150,11 @@
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="Find me here!"
-            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/positionBar" />
+            app:layout_constraintTop_toBottomOf="@+id/profile" />
 
         <fragment
             android:id="@+id/google_map"
@@ -177,13 +174,13 @@
             android:layout_width="280dp"
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
-            android:textColor="#ffffff"
             android:background="@drawable/button_rounded_flat_blue"
             android:text="Request Contact"
             android:textAllCaps="false"
+            android:textColor="#ffffff"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/google_map" />
+            app:layout_constraintTop_toBottomOf="@+id/positionBar" />
 
         <Button
             android:id="@+id/publish"
@@ -198,7 +195,7 @@
             android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/google_map" />
+            app:layout_constraintTop_toBottomOf="@+id/positionBar" />
 
         <Button
             android:id="@+id/profile"
