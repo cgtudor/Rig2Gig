@@ -115,17 +115,17 @@
             app:iconSpaceReserved="false"
             app:fragment="com.gangoffive.rig2gig.navbar.LicencesFragment"/>-->
 
-        <!--<Preference
+        <Preference
             app:title="Privacy Policy"
             app:summary="View Our Privacy Policy"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.navbar.PrivacyPolicyFragment" />-->
+            app:fragment="com.gangoffive.rig2gig.views.PrivacyPolicyFragment" />
 
         <Preference
             app:title="Terms of Service"
             app:summary="View our Terms of Service"
             app:iconSpaceReserved="false"
-            app:fragment="com.gangoffive.rig2gig.TermsOfServiceFragment" />
+            app:fragment="com.gangoffive.rig2gig.views.TermsOfServiceFragment" />
     </PreferenceCategory>
 
 

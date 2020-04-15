@@ -1,7 +1,6 @@
 package com.gangoffive.rig2gig.account;
 
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -13,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -22,6 +24,10 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
+import com.gangoffive.rig2gig.views.PrivacyPolicyActivity;
+import com.gangoffive.rig2gig.views.PrivacyPolicyFragment;
+import com.gangoffive.rig2gig.views.TermsOfServiceActivity;
+import com.gangoffive.rig2gig.views.TermsOfServiceFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -420,6 +426,16 @@ public class LoginActivity extends AppCompatActivity{
     {
         minimise = false;
         super.onResume();
+    }
+
+    public void privacyOnClick(View view) {
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@ Privacy Clicked!");
+        startActivity(new Intent(getApplicationContext(), PrivacyPolicyActivity.class));
+    }
+
+    public void termsofserviceOnClick(View view) {
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@ Terms Clicked!");
+        startActivity(new Intent(getApplicationContext(), TermsOfServiceActivity.class));
     }
 }
 

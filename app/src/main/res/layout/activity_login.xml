@@ -175,7 +175,8 @@
             app:layout_constraintEnd_toStartOf="@+id/and"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TandC" />
+            app:layout_constraintTop_toBottomOf="@+id/TandC"
+            android:onClick="termsofserviceOnClick"/>
 
         <TextView
             android:id="@+id/and"
@@ -201,7 +202,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/and"
-            app:layout_constraintTop_toBottomOf="@+id/TandC" />
+            app:layout_constraintTop_toBottomOf="@+id/TandC"
+            android:onClick="privacyOnClick"/>
 
     <TextView
         android:id="@+id/textView4"
