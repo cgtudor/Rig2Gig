@@ -68,8 +68,7 @@
             android:layout_weight="1.0"
             android:text="Cancel"
             android:textColor="#FFFFFF"
-            style="?android:attr/borderlessButtonStyle"
-            />
+            style="?android:attr/borderlessButtonStyle"/>
 
         <Button
             android:id="@+id/createListing"

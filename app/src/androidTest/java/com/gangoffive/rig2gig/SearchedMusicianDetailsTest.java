@@ -109,7 +109,4 @@ public class SearchedMusicianDetailsTest {
             onView(withId(R.id.ok)).perform(click());
             assertTrue(testRule.getActivity().isFinishing());
         }
-
-
-
 }

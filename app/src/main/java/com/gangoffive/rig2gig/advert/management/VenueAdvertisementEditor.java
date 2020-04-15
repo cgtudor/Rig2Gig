@@ -100,7 +100,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         tabs.setupWithViewPager(viewPager);
         venueRef = getIntent().getStringExtra("EXTRA_VENUE_ID");
         listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
-        if (listingRef.equals(""))
+        if (listingRef != null && listingRef.equals(""))
         {
             editType = "creation";
         }
@@ -151,10 +151,16 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
      */
     public void setInitialColours()
     {
-        if (description != null)
+        if (createListing != null)
         {
-            if (description.getText().toString().trim().length() == 0 && createListing != null) {
+            if (previousListing == null)
+            {
                 createListing.setBackgroundColor(Color.parseColor("#a6a6a6"));
+                createListing.setTextColor(Color.parseColor("#FFFFFF"));
+            }
+            else
+            {
+                createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
                 createListing.setTextColor(Color.parseColor("#FFFFFF"));
             }
         }
@@ -175,6 +181,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             setViewReferences();
             venue = data;
             previousListing = listingData;
+            setInitialColours();
             listingManager.getImage(this);
         }
     }

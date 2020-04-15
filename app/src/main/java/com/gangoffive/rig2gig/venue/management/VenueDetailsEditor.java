@@ -139,8 +139,18 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     public void onSuccessFromDatabase(Map<String, Object> data)
     {
         setViewReferences();
+        setInitialColours();
         venue = data;
         listingManager.getImage(this);
+    }
+
+    public void setInitialColours()
+    {
+        if (createListing != null)
+        {
+            createListing.setBackgroundColor(Color.parseColor("#12c2e9"));
+            createListing.setTextColor(Color.parseColor("#FFFFFF"));
+        }
     }
 
     /**
@@ -311,7 +321,12 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
                     if(getVenueAddress != null && getVenueAddress.size() > 0)
                     {
                         String street = getVenueAddress.get(0).getAddressLine(0);
-                        location.setText(street);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                location.setText(street);
+                            }
+                        });
                     }
                 }
                 catch(IOException io)
@@ -332,8 +347,12 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
         }
         if(description != null && venue !=null)
         {
-            description.setText(venue.get("description").toString());
-
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    description.setText(venue.get("description").toString());
+                }
+            });
         }
     }
 
