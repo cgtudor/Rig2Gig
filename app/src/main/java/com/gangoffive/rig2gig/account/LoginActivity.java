@@ -1,8 +1,10 @@
 package com.gangoffive.rig2gig.account;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,7 +65,7 @@ public class LoginActivity extends AppCompatActivity{
     private CallbackManager mCallbackManager;
 
     Button loginBtn;
-    TextView registerBtn, forgotPasswordBtn;
+    TextView registerBtn, forgotPasswordBtn, loginTnC;
     EditText emailAddress, password;
     private boolean minimise;
 
@@ -88,6 +90,10 @@ public class LoginActivity extends AppCompatActivity{
         registerBtn = findViewById(R.id.loginRegisterBtn);
         forgotPasswordBtn = findViewById(R.id.forgotPasswordBtn);
         signInButton = findViewById(R.id.sign_in_button);
+        loginTnC = findViewById(R.id.TandC);
+
+        loginTnC.setGravity(Gravity.CENTER);
+
 
         /**
          * onClick for Google Sign In button.
