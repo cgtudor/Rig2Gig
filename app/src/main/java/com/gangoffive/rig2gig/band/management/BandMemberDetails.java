@@ -93,10 +93,15 @@ public class BandMemberDetails extends AppCompatActivity implements CreateAdvert
             }
         });
         email = findViewById(R.id.email);
-        email.setOnClickListener(new View.OnClickListener() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onClick(View v) {
-                emailMember();
+            public void run() {
+                email.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        emailMember();
+                    }
+                });
             }
         });
         rating = findViewById(R.id.rating);

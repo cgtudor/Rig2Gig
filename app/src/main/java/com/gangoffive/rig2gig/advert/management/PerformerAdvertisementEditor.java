@@ -110,7 +110,7 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         performerRef = getIntent().getStringExtra("EXTRA_PERFORMER_ID");
         performerType = getIntent().getStringExtra("EXTRA_PERFORMER_TYPE");
         listingRef = getIntent().getStringExtra("EXTRA_LISTING_ID");
-        if (listingRef.equals(""))
+        if (listingRef != null && listingRef.equals(""))
         {
             editType = "creation";
         }
@@ -224,7 +224,12 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
     public void populateInitialFields() {
         if(name != null && band !=null && name.getText() != band.get("name") && name.getText() == "")
         {
-            name.setText(band.get("name").toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    name.setText(band.get("name").toString());
+                }
+            });
         }
         if (chosenPic != null && image != null)
         {
@@ -396,10 +401,15 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
         for (Map.Entry element : listing.entrySet()) {
             String val = element.getValue().toString();
             if (val == null || val.trim().isEmpty()) {
-                Toast.makeText(PerformerAdvertisementEditor.this,
-                        "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
-                                "and try again",
-                        Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PerformerAdvertisementEditor.this,
+                                "Advertisement " + editType + " unsuccessful.  Ensure all fields are complete " +
+                                        "and try again",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
                 return false;
             }
         }
@@ -421,9 +431,14 @@ public class PerformerAdvertisementEditor extends AppCompatActivity implements C
             String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
             if (actualNumber.length() == 0)
             {
-                Toast.makeText(PerformerAdvertisementEditor.this,
-                        "Advertisement " + editType + " unsuccessful.  Distance cannot be '0'",
-                        Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PerformerAdvertisementEditor.this,
+                                "Advertisement " + editType + " unsuccessful.  Distance cannot be '0'",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
                 return false;
             }
         }

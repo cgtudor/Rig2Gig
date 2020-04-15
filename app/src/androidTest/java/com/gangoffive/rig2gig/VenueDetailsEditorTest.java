@@ -19,6 +19,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.pressKey;
@@ -27,10 +28,17 @@ import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.swipeRight;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.CursorMatchers.withRowString;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -57,7 +65,7 @@ public class VenueDetailsEditorTest {
         venueData.put("availability", "test availability");
         venueData.put("charge", "test charge");
         venueData.put("description", "test description");
-        venueData.put("email", "test@email.com");
+        venueData.put("email-address", "test@email.com");
         venueData.put("latitude","10");
         venueData.put("longitude","6");
         venueData.put("type", "test type");
@@ -80,8 +88,6 @@ public class VenueDetailsEditorTest {
         closeSoftKeyboard();
         onView(withId(R.id.venue_location)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_MOVE_END)).perform(typeText("test location edit"));
         closeSoftKeyboard();
-        onView(withId(R.id.type)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_MOVE_END)).perform(typeText("test type edit"));
-        closeSoftKeyboard();
         onView(withId(R.id.email)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_MOVE_END)).perform(typeText("test email edit"));
         closeSoftKeyboard();
         onView(withId(R.id.phone)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_MOVE_END)).perform(typeText("0"));
@@ -91,7 +97,6 @@ public class VenueDetailsEditorTest {
     public void deleteAllFields()
     {
         onView(withId(R.id.venue_name_final)).perform(replaceText(""));
-        onView(withId(R.id.type)).perform(replaceText(""));
         onView(withId(R.id.email)).perform(replaceText(""));
         onView(withId(R.id.phone)).perform(replaceText(""));
     }
@@ -104,8 +109,6 @@ public class VenueDetailsEditorTest {
         closeSoftKeyboard();
         onView(withId(R.id.venue_location)).perform(click()).perform(click()).perform(pressKey(KeyEvent.KEYCODE_MOVE_END)).perform(pressKey(KeyEvent.KEYCODE_DEL));
         closeSoftKeyboard();
-        onView(withId(R.id.type)).perform(click()).perform(click()).perform(pressKey(KeyEvent.KEYCODE_MOVE_END)).perform(pressKey(KeyEvent.KEYCODE_DEL));
-        closeSoftKeyboard();
         onView(withId(R.id.email)).perform(click()).perform(click()).perform(pressKey(KeyEvent.KEYCODE_MOVE_END)).perform(pressKey(KeyEvent.KEYCODE_DEL));
         closeSoftKeyboard();
         onView(withId(R.id.phone)).perform(click()).perform(click()).perform(pressKey(KeyEvent.KEYCODE_MOVE_END)).perform(pressKey(KeyEvent.KEYCODE_DEL));
@@ -117,8 +120,6 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.venue_name_final)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_MOVE_END)).perform(typeText("a"));
         closeSoftKeyboard();
         onView(withId(R.id.venue_location)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_MOVE_END)).perform(typeText("a"));
-        closeSoftKeyboard();
-        onView(withId(R.id.type)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_MOVE_END)).perform(typeText("a"));
         closeSoftKeyboard();
         onView(withId(R.id.email)).perform(click()).perform(pressKey(KeyEvent.KEYCODE_MOVE_END)).perform(typeText("a"));
         closeSoftKeyboard();
@@ -140,16 +141,14 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.button_holder)).check(matches(isDisplayed()));
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
-        onView(withId(R.id.venueAdImageMain)).check(matches(isDisplayed()));
-        onView(withId(R.id.imageView)).check(matches(isDisplayed()));
+        onView(withId(R.id.detailsImageMain)).check(matches(isDisplayed()));
         onView(withId(R.id.changeImageLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.venueAdImageMain)).check(matches(isDisplayed()));
+        onView(withId(R.id.detailsImageMain)).check(matches(isDisplayed()));
         onView(withId(R.id.imageButtonLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
         onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
         onView(withId(R.id.linearLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.detailsTitle)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.detailsView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.nameLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.venue_name_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.locationLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -174,8 +173,7 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.venue_name_final)).check(matches(withText("")));
         onView(withId(R.id.locationLabel)).check(matches(withText("Venue Location:")));
         onView(withId(R.id.venue_location)).check(matches(withText("")));
-        onView(withId(R.id.typeLabel)).check(matches(withText("Venue Type:")));
-        onView(withId(R.id.type)).check(matches(withText("")));
+        onView(withId(R.id.typeLabel)).check(matches(withText("Venue type:")));
         onView(withId(R.id.emailLabel)).check(matches(withText("Email:")));
         onView(withId(R.id.email)).check(matches(withText("")));
         onView(withId(R.id.phoneLabel)).check(matches(withText("Phone Number:")));
@@ -192,16 +190,14 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.button_holder)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.cancel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.createListing)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.venueAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.imageView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.detailsImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.changeImageLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.venueAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.detailsImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageButtonLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.galleryImage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.takePhoto)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.linearLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.detailsTitle)).check(matches(isDisplayed()));
-        onView(withId(R.id.detailsView)).check(matches(isDisplayed()));
         onView(withId(R.id.nameLabel)).check(matches(isDisplayed()));
         onView(withId(R.id.venue_name_final)).check(matches(isDisplayed()));
         onView(withId(R.id.locationLabel)).check(matches(isDisplayed()));
@@ -227,7 +223,6 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.linearLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.detailsTitle)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.detailsView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.nameLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.venue_name_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.locationLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -254,16 +249,14 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.button_holder)).check(matches(isDisplayed()));
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
-        onView(withId(R.id.venueAdImageMain)).check(matches(isDisplayed()));
-        onView(withId(R.id.imageView)).check(matches(isDisplayed()));
+        onView(withId(R.id.constraintLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.changeImageLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.venueAdImageMain)).check(matches(isDisplayed()));
+        onView(withId(R.id.detailsImageMain)).check(matches(isDisplayed()));
         onView(withId(R.id.imageButtonLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
         onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
         onView(withId(R.id.linearLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.detailsTitle)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.detailsView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.nameLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.venue_name_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.locationLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -290,7 +283,6 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.linearLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.detailsTitle)).check(matches(isDisplayed()));
-        onView(withId(R.id.detailsView)).check(matches(isDisplayed()));
         onView(withId(R.id.nameLabel)).check(matches(isDisplayed()));
         onView(withId(R.id.venue_name_final)).check(matches(isDisplayed()));
         onView(withId(R.id.locationLabel)).check(matches(isDisplayed()));
@@ -327,7 +319,6 @@ public class VenueDetailsEditorTest {
         testRule.getActivity().setViewReferences();
         testRule.getActivity().populateInitialFields();
         onView(withId(R.id.venue_name_final)).check(matches(withText("")));
-        onView(withId(R.id.type)).check(matches(withText("")));
         onView(withId(R.id.email)).check(matches(withText("")));
         onView(withId(R.id.phone)).check(matches(withText("")));
     }
@@ -343,7 +334,6 @@ public class VenueDetailsEditorTest {
         testRule.getActivity().populateInitialFields();
         testRule.getActivity().reinitialiseTabs();
         onView(withId(R.id.venue_name_final)).check(matches(withText("")));
-        onView(withId(R.id.type)).check(matches(withText("")));
         onView(withId(R.id.email)).check(matches(withText("")));
         onView(withId(R.id.phone)).check(matches(withText("")));
         onView(withId(R.id.view_pager)).perform(swipeLeft());
@@ -352,7 +342,6 @@ public class VenueDetailsEditorTest {
         testRule.getActivity().populateInitialFields();
         testRule.getActivity().reinitialiseTabs();
         onView(withId(R.id.venue_name_final)).check(matches(withText("")));
-        onView(withId(R.id.type)).check(matches(withText("")));
         onView(withId(R.id.email)).check(matches(withText("")));
         onView(withId(R.id.phone)).check(matches(withText("")));
 
@@ -406,7 +395,6 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         enterTestData();
         onView(withId(R.id.venue_name_final)).check(matches(withText("test name edit")));
-        onView(withId(R.id.type)).check(matches(withText("test type edit")));
         onView(withId(R.id.email)).check(matches(withText("test email edit")));
         onView(withId(R.id.phone)).check(matches(withText("0")));
     }
@@ -426,7 +414,6 @@ public class VenueDetailsEditorTest {
         onView(withId(R.id.view_pager)).perform(swipeRight());
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.venue_name_final)).check(matches(withText("test name edit")));
-        onView(withId(R.id.type)).check(matches(withText("test type edit")));
         onView(withId(R.id.email)).check(matches(withText("test email edit")));
         onView(withId(R.id.phone)).check(matches(withText("0")));
     }
@@ -451,7 +438,7 @@ public class VenueDetailsEditorTest {
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
-        verify(manager,times(1)).postDataToDatabase(any(),any(),any());
+        verify(manager,times(1)).getImage(testRule.getActivity());
     }
 
     @Test
@@ -469,13 +456,13 @@ public class VenueDetailsEditorTest {
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable) confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-15556887, intColour);
+        assertEquals(-5855578, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
         verify(manager,times(0)).postDataToDatabase(any(),any(),any());
-        onView(withText("Listing not created.  Ensure all fields are complete and try again"))
+        onView(withText("Details not updated.  Ensure all fields are complete and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 
@@ -494,8 +481,6 @@ public class VenueDetailsEditorTest {
         enterOneCharAllFields();
         deleteOneCharFields();
         onView(withId(R.id.venue_name_final)).check(matches(withText("a")));
-        onView(withId(R.id.venue_location)).check(matches(withText(endsWith("a"))));
-        onView(withId(R.id.type)).check(matches(withText("a")));
         onView(withId(R.id.email)).check(matches(withText("a")));
         onView(withId(R.id.phone)).check(matches(withText("0")));
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
@@ -506,7 +491,7 @@ public class VenueDetailsEditorTest {
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
-        verify(manager,times(1)).postDataToDatabase(any(),any(),any());
+        verify(manager,times(1)).getImage(testRule.getActivity());
     }
 
     @Test
@@ -522,19 +507,18 @@ public class VenueDetailsEditorTest {
         enterOneCharAllFields();
         deleteOneCharFields();
         onView(withId(R.id.venue_name_final)).check(matches(withText("")));
-        onView(withId(R.id.type)).check(matches(withText("")));
         onView(withId(R.id.email)).check(matches(withText("")));
         onView(withId(R.id.phone)).check(matches(withText("")));
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable) confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-15556887, intColour);
+        assertEquals(-5855578, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
         verify(manager,times(0)).postDataToDatabase(any(),any(),any());
-        onView(withText("Listing not created.  Ensure all fields are complete and try again"))
+        onView(withText("Details not updated.  Ensure all fields are complete and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 
@@ -562,7 +546,7 @@ public class VenueDetailsEditorTest {
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
-        verify(manager,times(1)).postDataToDatabase(any(),any(),any());
+        verify(manager,times(1)).getImage(testRule.getActivity());
     }
 
     @Test
@@ -582,13 +566,13 @@ public class VenueDetailsEditorTest {
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable) confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-15556887, intColour);
+        assertEquals(-5855578, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
         verify(manager,times(0)).postDataToDatabase(any(),any(),any());
-        onView(withText("Listing not created.  Ensure all fields are complete and try again"))
+        onView(withText("Details not updated.  Ensure all fields are complete and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 }

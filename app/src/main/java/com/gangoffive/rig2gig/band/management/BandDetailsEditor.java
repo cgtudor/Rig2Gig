@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.PatternsCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.gangoffive.rig2gig.advert.management.CreateAdvertisement;
@@ -50,7 +51,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
     private AutoCompleteTextView location;
     private Button createListing, cancel, galleryImage, takePhoto, selectGenre;
     private ImageView image;
-    private String bandRef, type;
+    private String bandRef, type, distanceText;
     private Map<String, Object> band;
     private ListingManager listingManager;
     private int[] tabTitles;
@@ -157,9 +158,12 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
     {
         setViewReferences();
         band = data;
-        String currentGenres = band.get("genres").toString();
-        currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
-        band.put("genres",currentGenres);
+        if (band != null)
+        {
+            String currentGenres = band.get("genres").toString();
+            currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
+            band.put("genres",currentGenres);
+        }
         listingManager.getImage(this);
     }
 
@@ -348,7 +352,12 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         }
         if(distance != null && band !=null)
         {
-            distance.setText(band.get("distance").toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    distance.setText(band.get("distance").toString());
+                }
+            });
         }
         if(genres != null && band !=null)
         {
@@ -542,7 +551,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         }
         if(distance != null && distance.getText() != null && band != null)
         {
-            String distanceText = distance.getText().toString();
+            distanceText = distance.getText().toString();
             for (int i = 0; i < distanceText.length(); i++)
             {
                 char digit = distanceText.charAt(i);
@@ -556,7 +565,12 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                     distanceText = "0";
                 }
             }
-            distance.setText(distanceText);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    distance.setText(distanceText);
+                }
+            });
             band.put("distance", distanceText);
         }
         if(genres != null && band !=null)
@@ -597,10 +611,14 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                     }
                     if (val.trim().isEmpty())
                     {
-                        Toast.makeText(BandDetailsEditor.this,
-                                "Details not updated.  Ensure all fields are complete " +
-                                        "and try again",
-                                Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(BandDetailsEditor.this,
+                                        "Details not updated.  Ensure all fields are complete " +
+                                                "and try again",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         return false;
                     }
                 }
@@ -608,10 +626,14 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
                 {
                     if (val == null || val.trim().isEmpty())
                     {
-                        Toast.makeText(BandDetailsEditor.this,
-                                "Details not updated.  Ensure all fields are complete " +
-                                        "and try again",
-                                Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(BandDetailsEditor.this,
+                                        "Details not updated.  Ensure all fields are complete " +
+                                                "and try again",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         return false;
                     }
                 }
@@ -635,17 +657,25 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
             String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
             if (actualNumber.length() == 0)
             {
-                Toast.makeText(BandDetailsEditor.this,
-                        "Details not updated.  Distance cannot be '0'.",
-                        Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(BandDetailsEditor.this,
+                                "Details not updated.  Distance cannot be '0'.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
                 return false;
             }
         }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(band.get("email").toString()).matches())
+        if (!PatternsCompat.EMAIL_ADDRESS.matcher(band.get("email").toString()).matches())
         {
-            Toast.makeText(BandDetailsEditor.this,
-                    "Details not updated.  Email address is invalid.",
-                    Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(BandDetailsEditor.this,
+                            "Details not updated.  Email address is invalid.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
             return false;
         }
         return true;

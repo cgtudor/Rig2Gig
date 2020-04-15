@@ -1,5 +1,6 @@
 package com.gangoffive.rig2gig;
 
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
 import com.gangoffive.rig2gig.band.management.BandMemberDetails;
@@ -14,6 +15,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertTrue;
@@ -54,25 +56,26 @@ public class BandMemberDetailsTest {
     @Test
     public void testComponentVisibility()
     {
-        onView(withId(R.id.nameLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.name)).check(matches(isDisplayed()));
+        onView(withId(R.id.name_label)).check(matches(isDisplayed()));
+        onView(withId(R.id.name)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.userNameLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.userName)).check(matches(isDisplayed()));
+        onView(withId(R.id.userName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.locationLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.location)).check(matches(isDisplayed()));
+        onView(withId(R.id.location)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.phoneLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.phone)).check(matches(isDisplayed()));
+        onView(withId(R.id.phone)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.emailLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.email)).check(matches(isDisplayed()));
+        onView(withId(R.id.email)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.ratingLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.rating)).check(matches(isDisplayed()));
+        onView(withId(R.id.rating)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.ok)).check(matches(isDisplayed()));
+        onView(withId(R.id.profile)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testTextOfComponents()
     {
-        onView(withId(R.id.nameLabel)).check(matches(withText("Name:")));
+        onView(withId(R.id.name_label)).check(matches(withText("Name:")));
         onView(withId(R.id.name)).check(matches(withText("")));
         onView(withId(R.id.userNameLabel)).check(matches(withText("User name:")));
         onView(withId(R.id.userName)).check(matches(withText("")));
@@ -84,14 +87,15 @@ public class BandMemberDetailsTest {
         onView(withId(R.id.email)).check(matches(withText("")));
         onView(withId(R.id.ratingLabel)).check(matches(withText("Rating:")));
         onView(withId(R.id.rating)).check(matches(withText("")));
-        onView(withId(R.id.ok)).check(matches(withText("OK")));
+        onView(withId(R.id.ok)).check(matches(withText("Back")));
+        onView(withId(R.id.profile)).check(matches(withText("Profile")));
     }
 
     @Test
     public void testOnSuccessFromDatabase() throws InterruptedException {
         testRule.getActivity().onSuccessFromDatabase(musicianData);
         testRule.getActivity().onSuccessFromDatabase(userData);
-        onView(withId(R.id.nameLabel)).check(matches(withText("Name:")));
+        onView(withId(R.id.name_label)).check(matches(withText("Name:")));
         onView(withId(R.id.name)).check(matches(withText("musician name")));
         onView(withId(R.id.userNameLabel)).check(matches(withText("User name:")));
         onView(withId(R.id.userName)).check(matches(withText("user username")));
@@ -103,7 +107,8 @@ public class BandMemberDetailsTest {
         onView(withId(R.id.email)).check(matches(withText("user email")));
         onView(withId(R.id.ratingLabel)).check(matches(withText("Rating:")));
         onView(withId(R.id.rating)).check(matches(withText("musician rating")));
-        onView(withId(R.id.ok)).check(matches(withText("OK")));
+        onView(withId(R.id.ok)).check(matches(withText("Back")));
+        onView(withId(R.id.profile)).check(matches(withText("Profile")));
     }
 
     @Test

@@ -69,7 +69,6 @@ public class VenueAdvertisementEditorTest {
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.venueAdImageMain)).check(matches(isDisplayed()));
         onView(withId(R.id.firstName)).check(matches(isDisplayed()));
-        onView(withId(R.id.imageView)).check(matches(isDisplayed()));
         onView(withId(R.id.image)).check(matches(isDisplayed()));
         onView(withId(R.id.imageButtonLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
@@ -77,7 +76,6 @@ public class VenueAdvertisementEditorTest {
         onView(withId(R.id.venueAdDetailsMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.venue_description_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.descriptionLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.detailView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test
@@ -103,7 +101,6 @@ public class VenueAdvertisementEditorTest {
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.venueAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.firstName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.imageView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.image)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageButtonLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.galleryImage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -111,8 +108,6 @@ public class VenueAdvertisementEditorTest {
         onView(withId(R.id.venueAdDetailsMain)).check(matches(isDisplayed()));
         onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
         onView(withId(R.id.descriptionLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.detailView)).check(matches(isDisplayed()));
-
     }
 
     @Test
@@ -128,7 +123,6 @@ public class VenueAdvertisementEditorTest {
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.venueAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.firstName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.imageView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.image)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageButtonLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.galleryImage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -136,7 +130,6 @@ public class VenueAdvertisementEditorTest {
         onView(withId(R.id.venueAdDetailsMain)).check(matches(isDisplayed()));
         onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
         onView(withId(R.id.descriptionLabel)).check(matches(isDisplayed()));
-        onView(withId(R.id.detailView)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -152,7 +145,6 @@ public class VenueAdvertisementEditorTest {
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.venueAdImageMain)).check(matches(isDisplayed()));
         onView(withId(R.id.firstName)).check(matches(isDisplayed()));
-        onView(withId(R.id.imageView)).check(matches(isDisplayed()));
         onView(withId(R.id.image)).check(matches(isDisplayed()));
         onView(withId(R.id.imageButtonLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
@@ -160,30 +152,27 @@ public class VenueAdvertisementEditorTest {
         onView(withId(R.id.venueAdDetailsMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.venue_description_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.descriptionLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.detailView)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test
-    public void testOnSuccessFromDatabaseNoAd() throws InterruptedException {
+    public void testOnSuccessFromDatabaseNoAd(){
         testRule.getActivity().onSuccessFromDatabase(venueData);
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
-        Thread.sleep(2000);
         ColorDrawable colour = (ColorDrawable)confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-15547671, intColour);
+        assertEquals(-5855578, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
     }
 
     @Test
-    public void testOnSuccessFromDatabaseExistingAd() throws InterruptedException {
+    public void testOnSuccessFromDatabaseExistingAd() {
         testRule.getActivity().onSuccessFromDatabase(venueData, adData);
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
-        Thread.sleep(1000);
         ColorDrawable colour = (ColorDrawable)confirm.getBackground();
         int intColour = colour.getColor();
-        assertEquals(-16743049, intColour);
+        assertEquals(-15547671, intColour);
         ColorStateList textcolour = confirm.getTextColors();
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
@@ -213,7 +202,7 @@ public class VenueAdvertisementEditorTest {
         Thread.sleep(1000);
         Enum result = ListingManager.CreationResult.LISTING_FAILURE;
         testRule.getActivity().handleDatabaseResponse(result);
-        onView(withText("Listing creation failed.  Check your connection and try again"))
+        onView(withText("Advertisement edit failed.  Check your connection and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 
@@ -222,7 +211,7 @@ public class VenueAdvertisementEditorTest {
     {
         Enum result = ListingManager.CreationResult.IMAGE_FAILURE;
         testRule.getActivity().handleDatabaseResponse(result);
-        onView(withText("Listing creation failed.  Check your connection and try again"))
+        onView(withText("Advertisement edit failed.  Check your connection and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 
@@ -235,8 +224,6 @@ public class VenueAdvertisementEditorTest {
         when(manager.getListingRef()).thenReturn("testRef");
         Enum result = ListingManager.CreationResult.SUCCESS;
         testRule.getActivity().handleDatabaseResponse(result);
-        onView(withText("Advertisement created successfully"))
-                .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
         assertTrue(testRule.getActivity().isFinishing());
         onView(withId(R.id.venueListingDetailsMain)).check(matches(isDisplayed()));
     }

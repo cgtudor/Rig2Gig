@@ -58,7 +58,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     private AutoCompleteTextView location;
     private Button createListing, cancel, galleryImage, takePhoto, selectGenre;
     private ImageView image;
-    private String musicianRef, type;
+    private String musicianRef, type, distanceText;
     private Map<String, Object> musician;
     private ListingManager listingManager;
     private int[] tabTitles;
@@ -167,9 +167,12 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     {
         setViewReferences();
         musician = data;
-        String currentGenres = musician.get("genres").toString();
-        currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
-        musician.put("genres",currentGenres);
+        if (musician != null)
+        {
+            String currentGenres = musician.get("genres").toString();
+            currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
+            musician.put("genres",currentGenres);
+        }
         listingManager.getImage(this);
     }
 
@@ -382,7 +385,12 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
         if(distance != null && musician !=null)
         {
-            distance.setText(musician.get("distance").toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    distance.setText(musician.get("distance").toString());
+                }
+            });
         }
         if(genres != null && musician !=null)
         {
@@ -542,7 +550,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
         if(distance != null && distance.getText() != null && musician != null)
         {
-            String distanceText = distance.getText().toString();
+            distanceText = distance.getText().toString();
             for (int i = 0; i < distanceText.length(); i++)
             {
                 char digit = distanceText.charAt(i);
@@ -556,7 +564,12 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                     distanceText = "0";
                 }
             }
-            distance.setText(distanceText);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    distance.setText(distanceText);
+                }
+            });
             musician.put("distance", distanceText);
         }
         if(genres != null && genres.getText() != null && musician != null)
@@ -589,20 +602,30 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
                     }
                     if (val.trim().isEmpty())
                     {
-                        Toast.makeText(MusicianDetailsEditor.this,
-                                "Details not updated.  Ensure all fields are complete " +
-                                        "and try again",
-                                Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MusicianDetailsEditor.this,
+                                        "Details not updated.  Ensure all fields are complete " +
+                                                "and try again",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         return false;
                     }
                 }
                 else
                 {
                     if (val == null || val.trim().isEmpty()) {
-                        Toast.makeText(MusicianDetailsEditor.this,
-                                "Details not updated.  Ensure all fields are complete " +
-                                        "and try again",
-                                Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MusicianDetailsEditor.this,
+                                        "Details not updated.  Ensure all fields are complete " +
+                                                "and try again",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         return false;
                     }
                 }
@@ -626,9 +649,14 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
             String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
             if (actualNumber.length() == 0)
             {
-                Toast.makeText(MusicianDetailsEditor.this,
-                        "Details not updated.  Distance cannot be '0'.",
-                        Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MusicianDetailsEditor.this,
+                                "Details not updated.  Distance cannot be '0'.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
                 return false;
             }
         }

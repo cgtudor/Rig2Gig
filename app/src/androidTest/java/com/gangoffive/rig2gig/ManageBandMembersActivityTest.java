@@ -144,7 +144,7 @@ public class ManageBandMembersActivityTest
     public void testTextOfComponents()
     {
         onView(allOf(isAssignableFrom(TextView.class), withParent(withResourceName("toolbar")))).check(matches(withText("Manage your band")));
-        onView(withId(R.id.addMemberText)).check(matches(withText("  Add members")));
+        onView(withId(R.id.addMemberText)).check(matches(withText("  Add members by:")));
     }
 
     @Test
@@ -256,44 +256,16 @@ public class ManageBandMembersActivityTest
     }
 
     @Test
-    public void testRemoveCancel() throws InterruptedException {
-        setupBand(1);
-        testRule.getActivity().onSuccessFromDatabase(bigBand);
-        for (Map<String,Object> musician: bigBandMembers) {
-            testRule.getActivity().onSuccessFromDatabase(musician);
-        }
-        onView(withText("Remove")).perform(click());
-        testRule.getActivity().onSuccessFromDatabase(bigBand);
-        onView(withId(R.id.confirmationMainWindow)).check(matches(isDisplayed()));
-        onView(withId(R.id.no)).perform(click());
-        onView(withId(R.id.manageMembersMain)).check(matches(isDisplayed()));
-    }
-
-
-    @Test
-    public void testSearchForMembersClickingImage()
+    public void testSearchForMembersByName()
     {
         setupBand(1);
+        testRule.getActivity().setuID("test member 0");
         testRule.getActivity().onSuccessFromDatabase(bigBand);
         for (Map<String,Object> musician: bigBandMembers) {
             testRule.getActivity().onSuccessFromDatabase(musician);
         }
-        testRule.getActivity().setUsersMusicianRef("test musician 0");
-        onView(withId(R.id.addImage)).perform(click());
-        testRule.getActivity().onSuccessFromDatabase(bigBand);
-        onView(withId(R.id.searchWindowMain)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testSearchForMembersClickingText()
-    {
-        setupBand(1);
-        testRule.getActivity().onSuccessFromDatabase(bigBand);
-        for (Map<String,Object> musician: bigBandMembers) {
-            testRule.getActivity().onSuccessFromDatabase(musician);
-        }
-        onView(withId(R.id.addMemberText)).perform(click());
-        testRule.getActivity().onSuccessFromDatabase(bigBand);
-        onView(withId(R.id.searchWindowMain)).check(matches(isDisplayed()));
+        testRule.getActivity().setUsersMusicianRef("test member 0");
+        onView(withId(R.id.add_by_name)).perform(click());
+        assertTrue(testRule.getActivity().isCheckIfInBand());
     }
 }
