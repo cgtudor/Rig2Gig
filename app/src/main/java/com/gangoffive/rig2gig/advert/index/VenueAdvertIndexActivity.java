@@ -57,7 +57,6 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
         maxDistance = receivedIntent.getStringExtra("EXTRA_MAX_DISTANCE");
         venueTypes = receivedIntent.getStringArrayListExtra("EXTRA_VENUE_TYPES");
 
-
         Bundle bundle = new Bundle();
 
         Intent intent = getIntent();
