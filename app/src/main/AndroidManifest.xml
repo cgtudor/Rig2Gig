@@ -38,6 +38,8 @@
             android:theme="@style/AppTheme.TranslucentBackground" />
         <activity android:name=".advert.index.BandRefineSearchActivity"
             android:theme="@style/AppTheme.TranslucentBackground" />
+        <activity android:name=".advert.index.MusicianRefineSearchActivity"
+            android:theme="@style/AppTheme.TranslucentBackground" />
         <activity android:name=".band.management.TabbedBandActivity" />
         <activity android:name=".musician.management.TabbedMusicianActivity" />
         <activity android:name=".account.TabbedVenueActivity" />

@@ -167,6 +167,7 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
         refreshIntent.putExtra("EXTRA_MIN_RATING", minRating);
         refreshIntent.putExtra("EXTRA_MAX_DISTANCE", maxDistance);
         refreshIntent.putStringArrayListExtra("EXTRA_VENUE_TYPES", venueTypes);
+        refreshIntent.putExtra("CURRENT_USER_TYPE", currentUserType);
         finish();
         startActivity(refreshIntent);
     }

@@ -40,6 +40,11 @@ public class BandAdvertIndexActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_band_advert_index);
 
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Band Adverts");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         tabTitles = new int[]{R.string.all, R.string.favourites};
 
         Fragment[] frags = new Fragment[2];
@@ -76,11 +81,6 @@ public class BandAdvertIndexActivity extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-
-        setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setTitle("Band Adverts");
-        /*Setting the support action bar to the newly created toolbar*/
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
