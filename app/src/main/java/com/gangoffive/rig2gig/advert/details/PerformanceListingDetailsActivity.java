@@ -1,9 +1,5 @@
 package com.gangoffive.rig2gig.advert.details;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,12 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
-import com.gangoffive.rig2gig.profile.BandProfileActivity;
-import com.gangoffive.rig2gig.firebase.GlideApp;
-import com.gangoffive.rig2gig.profile.MusicianProfileActivity;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gangoffive.rig2gig.R;
+import com.gangoffive.rig2gig.firebase.GlideApp;
+import com.gangoffive.rig2gig.profile.BandProfileActivity;
+import com.gangoffive.rig2gig.profile.MusicianProfileActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -126,6 +124,24 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
 
         /*Finding the listing by its ID in the "performer-listings" subfolder*/
         DocumentReference performerListing = db.collection("performer-listings").document(pID);
+
+        try {
+                db.collection("users").whereGreaterThan("name", "name").whereGreaterThan("lol", "lol").orderBy("lmao").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("FIRESTORE", e.toString());
+                    }
+                });
+            }
+            catch(Exception ex)
+            {
+                Log.d("FIRESTORE", ex.toString());
+            }
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
         performerListing.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
