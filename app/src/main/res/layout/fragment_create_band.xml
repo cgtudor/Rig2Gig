@@ -1,11 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/venueListingDetailsMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateBandFragment">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".band.management.CreateBandFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".band.management.CreateBandFragment">
     <TextView
         android:id="@+id/createBandTxt"
         android:layout_width="wrap_content"
@@ -18,21 +22,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/createBandBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="288dp"
-        android:background="@drawable/transparent_button_dark_outline"
-        android:padding="10dp"
-        android:text="Create Band"
-        android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view5" />
+        <Button
+            android:id="@+id/createBandBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/transparent_button_dark_outline"
+            android:padding="10dp"
+            android:text="Create Band"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view5" />
 
     <EditText
         android:id="@+id/BandName"
@@ -122,7 +125,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/view13" />
 
-    <EditText
+    <TextView
         android:id="@+id/bandGenres"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -130,7 +133,7 @@
         android:background="@android:color/transparent"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="Genres"
+        android:hint="No Genres Selected"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -141,14 +144,15 @@
         android:id="@+id/bandEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
         android:ems="10"
         android:hint="Contact Email"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/selectGenres" />
 
     <EditText
         android:id="@+id/bandPhoneNumber"
@@ -174,4 +178,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/location3" />
 
+        <Button
+            android:id="@+id/selectGenres"
+            android:layout_width="140dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1.0"
+            android:background="@drawable/button_rounded_flat_blue"
+            android:text="Select genres"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view3" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

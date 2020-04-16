@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ManageBandMembersActivity"
+    tools:context=".band.management.ManageBandMembersActivity"
     tools:showIn="@layout/activity_manage_band_members">
 
     <androidx.appcompat.widget.Toolbar
@@ -28,41 +28,87 @@
         android:layout_height="52dp"
         app:layout_constraintStart_toStartOf="@id/constraintLayout"
         app:layout_constraintTop_toBottomOf="@id/toolbar2"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@drawable/ic_add_blue_24dp" />
 
     <TextView
         android:id="@+id/addMemberText"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="52dp"
         android:gravity="center_vertical"
-        android:text="  Add members"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@id/constraintLayout"
+        android:text="  Add members by:"
+        android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/addImage"
         app:layout_constraintTop_toBottomOf="@id/toolbar2" />
 
-    <ScrollView
-        android:id="@+id/scroll"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/button_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="@id/addMemberText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar2">
+
+
+        <Button
+            android:id="@+id/add_by_email"
+            android:layout_width="0.0dip"
+            android:background="@drawable/button_rounded_flat_blue"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_height="35dp"
+            android:layout_weight="1.0"
+            android:textColor="#FFFFFF"
+            android:text="Email" />
+
+        <Button
+            android:id="@+id/add_by_name"
+            android:layout_width="0.0dip"
+            android:background="@drawable/button_rounded_flat_blue"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_height="35dp"
+            android:layout_weight="1.0"
+            android:textColor="#FFFFFF"
+            android:text="Name" />
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeContainer"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:fillViewport="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addMemberText"
-        app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         >
 
-        <GridView
-            android:id="@+id/gridView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numColumns="1"
-            android:padding="5dp"
-            app:layout_constraintBottom_toBottomOf="@+id/scroll"
-            app:layout_constraintTop_toTopOf="@+id/scroll">
-        </GridView>
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swipeContainer"
+            app:layout_constraintBottom_toBottomOf="@id/swipeContainer"
+            >
 
-    </ScrollView>
+            <GridView
+                android:id="@+id/gridView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numColumns="1"
+                android:padding="5dp"
+                android:paddingBottom="?attr/actionBarSize"
+                app:layout_constraintBottom_toBottomOf="@+id/scroll"
+                app:layout_constraintTop_toTopOf="@+id/scroll">
+            </GridView>
 
+        </ScrollView>
 
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

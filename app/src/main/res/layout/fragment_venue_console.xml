@@ -3,10 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="top"
     android:orientation="vertical"
     android:padding="10dp"
     android:scrollbars="none">
+
+    <Button
+        android:id="@+id/noInternet"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:clickable="false"
+        android:visibility="gone"
+        android:background="@color/tw__light_gray"
+        android:text="No Internet Connection."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"

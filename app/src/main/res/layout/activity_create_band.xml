@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateBandActivity">
+    tools:context=".band.management.CreateBandActivity">
 
     <TextView
         android:id="@+id/createBandTxt"

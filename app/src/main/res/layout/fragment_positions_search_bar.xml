@@ -3,19 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
+    android:id="@+id/positionsMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_constraintStart_toStartOf="parent"
     tools:context=".ui.TabbedView.PlaceholderFragment">
 
     <ScrollView
-        android:id="@+id/scroll"
+        android:id="@+id/positionsScroll"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:fillViewport="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/constraintLayout">
+        app:layout_constraintTop_toTopOf="@id/positionsMain">
 
         <GridView
             android:id="@+id/gridView"
@@ -24,8 +24,8 @@
             android:columnWidth="150dp"
             android:numColumns="3"
             android:padding="5dp"
-            app:layout_constraintTop_toTopOf="@+id/scroll"
-            app:layout_constraintBottom_toBottomOf="@+id/scroll">
+            app:layout_constraintTop_toTopOf="@+id/positionsScroll"
+            app:layout_constraintBottom_toBottomOf="@+id/positionsScroll">
 
         </GridView>
 
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scroll"
+        app:layout_constraintTop_toBottomOf="@id/positionsScroll"
         android:paddingBottom="75dp">
         <SearchView
             android:id="@+id/search_bar"
@@ -47,9 +47,11 @@
         <ListView
             android:id="@+id/list_results"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            app:layout_constraintTop_toTopOf="@id/search_bar"/>
+            android:paddingBottom="26dp"
+            app:layout_constraintTop_toTopOf="@id/search_bar"
+            app:layout_constraintBottom_toBottomOf="@id/positionsMain"/>
     </LinearLayout>
 
     <TextView

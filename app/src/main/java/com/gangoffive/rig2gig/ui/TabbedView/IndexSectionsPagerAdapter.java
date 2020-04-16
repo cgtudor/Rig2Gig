@@ -8,9 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.gangoffive.rig2gig.SavedVenuesFragment;
-import com.gangoffive.rig2gig.TabbedViewReferenceInitialiser;
-import com.gangoffive.rig2gig.ViewVenuesFragment;
+import com.gangoffive.rig2gig.utils.TabbedViewReferenceInitialiser;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to

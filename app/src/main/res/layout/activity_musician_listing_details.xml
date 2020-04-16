@@ -2,18 +2,33 @@
 <ScrollView
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
+    android:id="@+id/musicianListingDetailsMain"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MusicianListingDetailsActivity">
+        tools:context=".advert.details.MusicianListingDetailsActivity">
 
         <include android:id="@+id/toolbar" layout="@layout/toolbar" />
+
+        <Button
+            android:id="@+id/noInternet"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            android:layout_marginTop="0dp"
+            android:clickable="false"
+            android:visibility="gone"
+            android:background="@color/tw__light_gray"
+            android:text="No Internet Connection."
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
 
         <ImageView
             android:id="@+id/musicianPhoto"
@@ -156,12 +171,11 @@
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="Find me here!"
-            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/locationBar" />
+            app:layout_constraintTop_toBottomOf="@+id/profile" />
 
         <fragment
             android:id="@+id/google_map"
@@ -174,30 +188,30 @@
             app:layout_constraintHorizontal_bias="0.491"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView9"
-            tools:context=".VenueListingDetailsActivity" />
+            tools:context=".advert.details.VenueListingDetailsActivity" />
 
         <Button
             android:id="@+id/contact"
             android:layout_width="280dp"
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/button_bg_rounded_corners"
+            android:textColor="#ffffff"
+            android:background="@drawable/button_rounded_flat_blue"
             android:text="Request Contact"
             android:textAllCaps="false"
-            android:textColor="#FFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/google_map" />
+            app:layout_constraintTop_toBottomOf="@+id/locationBar" />
 
         <Button
             android:id="@+id/profile"
             android:layout_width="280dp"
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/button_bg_rounded_corners"
+            android:textColor="#ffffff"
+            android:background="@drawable/button_rounded_flat_blue"
             android:text="Profile"
             android:textAllCaps="false"
-            android:textColor="#FFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/contact" />
