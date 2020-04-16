@@ -58,7 +58,6 @@ public class VenueProfileActivity extends AppCompatActivity {
     private String venueRating;
     private int numOfVenueRatings;
     private int totaledVenueRatings;
-    private TextView venueName;
     private TextView viewer_rating_xml;
 
     @Override
@@ -71,7 +70,7 @@ public class VenueProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final ImageView venuePhoto = findViewById(R.id.venuePhoto);
-        venueName = findViewById(R.id.venueName);
+        final TextView venueName = findViewById(R.id.venueName);
         final TextView description = findViewById(R.id.description);
         final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
@@ -144,7 +143,7 @@ public class VenueProfileActivity extends AppCompatActivity {
             {
                 String currentVenueRating = task.getResult().get("venue-rating").toString();
 
-                if(currentVenueRating.equals("unrated"))
+                if(currentVenueRating.equals("Unrated"))
                 {
                     //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
                     venueRatingBar.setRating(0);
@@ -179,7 +178,7 @@ public class VenueProfileActivity extends AppCompatActivity {
 
                 layout = inflater.inflate(R.layout.rating, null);
 
-                RatingBar alertDialogRatingBar = (RatingBar) layout.findViewById(R.id.ratingBar);
+                RatingBar alertDialogRatingBar = layout.findViewById(R.id.ratingBar);
 
                 builder.setTitle("Rate Us!");
                 builder.setMessage("Thank you for rating us. It will help us improve in the future.");
@@ -225,7 +224,7 @@ public class VenueProfileActivity extends AppCompatActivity {
 
                                 venueReference.document(vID).update(updateRatingMap);
 
-                                ratingDocReference = FSTORE.collection("ratings").document(viewerRef);
+                                ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(vID);
 
                                 ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                                 {
@@ -237,13 +236,13 @@ public class VenueProfileActivity extends AppCompatActivity {
                                         if(ratedMap != null)
                                         {
                                             ratedMap.put(vID, String.valueOf(venueRating));
-                                            ratingDocReference.update("rated", ratedMap);
+                                            ratingDocReference.update(ratedMap);
                                         }
                                         else
                                         {
                                             ratedMap = new HashMap<>();
                                             ratedMap.put(vID, String.valueOf(venueRating));
-                                            ratingDocReference.update("rated", ratedMap);
+                                            ratingDocReference.update(ratedMap);
                                         }
                                     }
                                 });
@@ -283,28 +282,23 @@ public class VenueProfileActivity extends AppCompatActivity {
      */
     private void checkAlreadyRated()
     {
-        ratingDocReference = FSTORE.collection("ratings").document(viewerRef);
-                //.collection(viewerType);
-
-        //FSTORE.collection("ratings").document(vID).collection(viewerType).document(viewerRef);
+        ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(vID);
 
         ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
             {
-                HashMap<String, String> ratedMap = (HashMap<String, String>) task.getResult().get("rated");
+                Object viewerRating = task.getResult().get("rating");
 
-                if (ratedMap != null && ratedMap.containsKey(vID))//Our map isn't null and we have reviewed this Venue before.
+                if (viewerRating != null) //Our rating isn't null and we have reviewed this Venue before.
                 {
                     System.out.println(TAG + " viewerRef found in ratedMap");
-
-                    String viewerRating = ratedMap.get(vID);
 
                     System.out.println(TAG + " Setting viewer rating on profile.");
 
                     viewer_rating_xml = findViewById(R.id.viewer_rating);
-                    viewer_rating_xml.setText("You rated us " + viewerRating + " stars!");
+                    viewer_rating_xml.setText("You rated us " + viewerRating.toString() + " stars!");
                     viewer_rating_xml.setVisibility(View.VISIBLE);
                 }
                 else

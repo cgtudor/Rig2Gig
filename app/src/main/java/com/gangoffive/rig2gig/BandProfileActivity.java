@@ -114,7 +114,7 @@ public class BandProfileActivity extends AppCompatActivity {
                 .skipMemoryCache(true)
                 .into(bandPhoto);
 
-        rateMeButton = findViewById(R.id.ratingBtn);
+        rateMeButton = findViewById(R.id.rating_button);
 
         //setupRatingDialog();
         //checkAlreadyRated();

@@ -147,10 +147,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/my_venue_rating"
         android:numStars="5"
-        android:clickable="false"
         android:rating="0"
         android:progressTint="#FFD700"
-        android:stepSize="0.5"/>
+        android:stepSize="0.5"
+        android:clickable="false"
+        android:isIndicator="true"/>
 
     <TextView
         android:id="@+id/unrated"

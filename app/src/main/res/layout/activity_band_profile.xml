@@ -124,12 +124,23 @@
         app:layout_constraintTop_toBottomOf="@+id/location" />
 
     <TextView
-        android:id="@+id/my_musician_rating"
+        android:id="@+id/my_band_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Musician Rating"
+        android:text="Our Band Rating"
         android:layout_margin="10dp"
         android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/locationBar"/>
+
+    <TextView
+        android:id="@+id/my_performer_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Our Performer Rating"
+        android:layout_margin="10dp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/locationBar"/>
@@ -141,14 +152,15 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/my_musician_rating"
+        app:layout_constraintTop_toBottomOf="@id/my_band_rating"
         android:numStars="0"
         android:clickable="false"
         android:max="5"
-        android:stepSize="0.5"/>
+        android:stepSize="0.5"
+        android:isIndicator="true"/>
 
     <Button
-        android:id="@+id/ratingBtn"
+        android:id="@+id/rating_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
@@ -156,5 +168,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rating_bar"
         android:text="Rate Me!"/>
+
+    <TextView
+        android:id="@+id/viewer_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/unrated"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
