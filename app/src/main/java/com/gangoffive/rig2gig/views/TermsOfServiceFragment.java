@@ -27,7 +27,6 @@ public class TermsOfServiceFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.termsandconditions, container, false);
 
-
         mWebView = v.findViewById(R.id.tandcs);
 
         WebSettings webSettings = mWebView.getSettings();

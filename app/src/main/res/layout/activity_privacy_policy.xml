@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".views.PrivacyPolicyFragment">
 
+    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
+
     <WebView
         android:id="@+id/privacywebview"
         android:layout_width="match_parent"

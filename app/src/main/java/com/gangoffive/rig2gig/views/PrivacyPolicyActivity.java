@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig.views;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -14,13 +15,28 @@ public class PrivacyPolicyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.termsandconditions);
+        setContentView(R.layout.activity_privacy_policy);
 
-        mWebView = findViewById(R.id.tandcs);
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle("Rig2Gig Privacy Policy");
+        /*Setting the support action bar to the newly created toolbar*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mWebView = findViewById(R.id.privacywebview);
 
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
         mWebView.loadUrl("file:///android_asset/privacy.html");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

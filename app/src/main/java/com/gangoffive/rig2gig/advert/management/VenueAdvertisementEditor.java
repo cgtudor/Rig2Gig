@@ -121,7 +121,7 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
         }
 
         getVenueLocation();
-                setSupportActionBar(findViewById(R.id.toolbar));
+        setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setTitle("Venue Advert");
         /*Setting the support action bar to the newly created toolbar*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
