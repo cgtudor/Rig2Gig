@@ -190,6 +190,8 @@ public class MusicianProfileActivity extends AppCompatActivity {
                     else
                     {
                         //Else we want to show what the current rating is.
+                        ratingType.setText("My Musician Rating");
+                        ratingType.setVisibility(View.VISIBLE);
                         musicianRatingBar.setRating(Float.valueOf(currentMusicianRating));
                     }
                 }
@@ -209,6 +211,8 @@ public class MusicianProfileActivity extends AppCompatActivity {
                     else
                     {
                         //Else we want to show what the current rating is.
+                        ratingType.setText("My Performer Rating");
+                        ratingType.setVisibility(View.VISIBLE);
                         musicianRatingBar.setRating(Float.valueOf(currentPerformerRating));
                     }
                 }
