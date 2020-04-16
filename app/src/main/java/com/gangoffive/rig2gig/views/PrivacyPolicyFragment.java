@@ -29,12 +29,9 @@ public class PrivacyPolicyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.termsandconditions, container, false);
+        final View v = inflater.inflate(R.layout.activity_privacy_policy, container, false);
 
-        /*Setting the support action bar to the newly created toolbar*/
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mWebView = v.findViewById(R.id.tandcs);
+        mWebView = v.findViewById(R.id.fragmentwebview);
 
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
