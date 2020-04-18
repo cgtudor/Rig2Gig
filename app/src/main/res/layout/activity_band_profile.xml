@@ -77,27 +77,6 @@
         app:layout_constraintTop_toBottomOf="@+id/members" />
 
     <TextView
-        android:id="@+id/rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="16dp"
-        android:textColor="#000000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/membersBar" />
-
-    <View
-        android:id="@+id/ratingBar"
-        android:layout_width="280dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="8dp"
-        android:background="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.519"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rating" />
-
-    <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -105,7 +84,7 @@
         android:layout_marginTop="16dp"
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+        app:layout_constraintTop_toBottomOf="@+id/members" />
 
     <View
         android:id="@+id/descriptionBar"
@@ -143,7 +122,7 @@
         android:id="@+id/my_band_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Our Band Rating"
+        android:text=""
         android:layout_margin="10dp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -151,10 +130,10 @@
         app:layout_constraintTop_toBottomOf="@id/locationBar"/>
 
     <TextView
-        android:id="@+id/my_performer_rating"
+        android:id="@+id/my_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Our Performer Rating"
+        android:text=""
         android:layout_margin="10dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -175,14 +154,26 @@
         android:stepSize="0.5"
         android:isIndicator="true"/>
 
+    <TextView
+        android:id="@+id/unrated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Not enough ratings gathered yet"
+        android:layout_margin="0dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rating_bar"/>
+
     <Button
         android:id="@+id/rating_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rating_bar"
+        app:layout_constraintTop_toBottomOf="@+id/unrated"
         android:text="Rate Me!"/>
 
     <TextView

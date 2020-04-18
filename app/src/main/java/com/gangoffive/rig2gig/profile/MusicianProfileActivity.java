@@ -41,7 +41,7 @@ import java.util.HashMap;
 
 public class MusicianProfileActivity extends AppCompatActivity {
 
-    private String mID; //Venue ID for  profile
+    private String mID; //Musician ID for  profile
     private String viewerType; //Can be null if viewer did not open the profile from communications.
     private String viewerRef;
     private final ArrayList<String> bandArray = new ArrayList<>();
@@ -49,9 +49,6 @@ public class MusicianProfileActivity extends AppCompatActivity {
     private RatingBar musicianRatingBar;
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
     private final CollectionReference musicianReference = FSTORE.collection("musicians");
-    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    private final String USERID = fAuth.getUid();
-    private final CollectionReference userReference = FSTORE.collection("users");
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
     private DocumentReference ratingDocReference;
     private TextView viewer_rating_xml;
@@ -178,7 +175,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
                 {
                     String currentMusicianRating = task.getResult().get("musician-rating").toString();
 
-                    if(currentMusicianRating.equals("unrated"))
+                    if(currentMusicianRating.equals("Unrated"))
                     {
                         //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
                         musicianRatingBar.setRating(0);
@@ -264,7 +261,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
                                 //Here, calculate the new rating and store in Firebase.
                                 if(viewerType.equals("bands")) //If the viewer is viewing from their band.
                                 {
-                                    String currentVenueRating = task.getResult().get("musician-rating").toString();
+                                    String currentMusicianRating = task.getResult().get("musician-rating").toString();
                                     float musicianRatingCount = Float.valueOf(task.getResult().get("musician-rating-count").toString());
                                     float musicianRatingTotal = Float.valueOf(task.getResult().get("musician-rating-total").toString());
 
@@ -286,7 +283,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
                                 }
                                 else if(viewerType.equals("venues"))
                                 {
-                                    String currentVenueRating = task.getResult().get("performer-rating").toString();
+                                    String currentMusicianRating = task.getResult().get("performer-rating").toString();
                                     float performerRatingCount = Float.valueOf(task.getResult().get("performer-rating-count").toString());
                                     float performerRatingTotal = Float.valueOf(task.getResult().get("performer-rating-total").toString());
 

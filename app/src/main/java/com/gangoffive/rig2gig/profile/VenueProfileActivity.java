@@ -250,14 +250,14 @@ public class VenueProfileActivity extends AppCompatActivity {
 
                                         if(ratedMap != null)
                                         {
-                                            ratedMap.put(vID, String.valueOf(venueRating));
+                                            ratedMap.put("rating", String.valueOf(venueRating));
                                             ratingDocReference.update(ratedMap);
                                         }
                                         else
                                         {
                                             ratedMap = new HashMap<>();
-                                            ratedMap.put(vID, String.valueOf(venueRating));
-                                            ratingDocReference.update(ratedMap);
+                                            ratedMap.put("rating", String.valueOf(venueRating));
+                                            ratingDocReference.set(ratedMap);
                                         }
                                     }
                                 });
