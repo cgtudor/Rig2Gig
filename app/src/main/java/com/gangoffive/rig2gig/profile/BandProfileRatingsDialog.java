@@ -6,8 +6,6 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
-public class ProfileRatingsDialog extends AppCompatActivity
+public class BandProfileRatingsDialog extends AppCompatActivity
 {
     private int height, width;
     private Button cancel, rate;
@@ -163,6 +161,7 @@ public class ProfileRatingsDialog extends AppCompatActivity
 
                 Intent result = new Intent();
                 result.putExtra("EXTRA_HAS_RATED", true);
+                result.putExtra("EXTRA_RATING_RESULT", bandRating);
                 setResult(RESULT_OK, result);
                 finish();
             }

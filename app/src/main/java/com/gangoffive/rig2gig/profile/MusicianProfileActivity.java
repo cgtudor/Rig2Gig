@@ -2,6 +2,7 @@ package com.gangoffive.rig2gig.profile;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -17,8 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gangoffive.rig2gig.firebase.GlideApp;
@@ -52,6 +56,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
     private DocumentReference ratingDocReference;
     private TextView viewer_rating_xml;
+    private TextView fader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,140 +234,53 @@ public class MusicianProfileActivity extends AppCompatActivity {
         rateMeButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v)
-            {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MusicianProfileActivity.this);
-
-                View layout = null;
-
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-                layout = inflater.inflate(R.layout.rating, null);
-
-                RatingBar alertDialogRatingBar = layout.findViewById(R.id.ratingBar);
-
-                builder.setTitle("Rate Me!");
-                builder.setMessage("Thank you for rating me. It will help me improve in the future.");
-
-                builder.setPositiveButton("Rate!", new DialogInterface.OnClickListener()
+            public void onClick(View v) {
+                fader = findViewById(R.id.fader);
+                Window window = getWindow();
+                window.setStatusBarColor(ContextCompat.getColor(MusicianProfileActivity.this, R.color.darkerMain));
+                runOnUiThread(new Runnable()
                 {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
+                    public void run()
                     {
-                        float musicianRating = alertDialogRatingBar.getRating();
-
-                        musicianReference.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-                        {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-                            {
-                                HashMap<String, Object> updateRatingMap = new HashMap<>();
-
-                                //Here, calculate the new rating and store in Firebase.
-                                if(viewerType.equals("bands")) //If the viewer is viewing from their band.
-                                {
-                                    String currentMusicianRating = task.getResult().get("musician-rating").toString();
-                                    float musicianRatingCount = Float.valueOf(task.getResult().get("musician-rating-count").toString());
-                                    float musicianRatingTotal = Float.valueOf(task.getResult().get("musician-rating-total").toString());
-
-                                    if (musicianRatingCount + 1 >= 3) {
-                                        //After this rating, we now have enough ratings to provide a fair rating for a Venue.
-                                        //Calculate and submit new rating to Firebase changing unrated to new calculated rating.
-
-                                        updateRatingMap.put("musician-rating", (Float.valueOf(musicianRatingTotal + musicianRating) / (Float.valueOf(musicianRatingCount + 1))));
-                                        updateRatingMap.put("musician-rating-count", musicianRatingCount + 1);
-                                        updateRatingMap.put("musician-rating-total", musicianRatingTotal + musicianRating);
-                                    } else {
-                                        //Add to current rating count
-                                        //Add to current rating sum
-                                        //Update Firebase with new numbers.
-
-                                        updateRatingMap.put("musician-rating-count", musicianRatingCount + 1);
-                                        updateRatingMap.put("musician-rating-total", musicianRatingTotal + musicianRating);
-                                    }
-                                }
-                                else if(viewerType.equals("venues"))
-                                {
-                                    String currentMusicianRating = task.getResult().get("performer-rating").toString();
-                                    float performerRatingCount = Float.valueOf(task.getResult().get("performer-rating-count").toString());
-                                    float performerRatingTotal = Float.valueOf(task.getResult().get("performer-rating-total").toString());
-
-                                    if(performerRatingCount + 1 >= 3)
-                                    {
-                                        //After this rating, we now have enough ratings to provide a fair rating for a Venue.
-                                        //Calculate and submit new rating to Firebase changing unrated to new calculated rating.
-
-                                        updateRatingMap.put("performer-rating", (Float.valueOf(performerRatingTotal + musicianRating) / (Float.valueOf(performerRatingCount + 1))));
-                                        updateRatingMap.put("performer-rating-count", performerRatingCount + 1);
-                                        updateRatingMap.put("performer-rating-total", performerRatingTotal + musicianRating);
-                                    }
-                                    else
-                                    {
-                                        //Add to current rating count
-                                        //Add to current rating sum
-                                        //Update Firebase with new numbers.
-
-                                        updateRatingMap.put("performer-rating-count", performerRatingCount + 1);
-                                        updateRatingMap.put("performer-rating-total", performerRatingTotal + musicianRating);
-                                    }
-                                }
-                                else
-                                {
-                                    System.out.println(TAG + " viewerType Error! viewerType ====== " + viewerType);
-                                }
-
-                                musicianReference.document(mID).update(updateRatingMap);
-
-                                ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(mID);
-
-                                ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-                                {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task)
-                                    {
-                                        HashMap<String, Object> ratedMap = (HashMap<String, Object>) task.getResult().get("rated");
-
-                                        if(ratedMap != null)
-                                        {
-                                            ratedMap.put("rating", String.valueOf(musicianRating));
-                                            ratingDocReference.update(ratedMap);
-                                        }
-                                        else
-                                        {
-                                            ratedMap = new HashMap<>();
-                                            ratedMap.put("rating", String.valueOf(musicianRating));
-                                            ratingDocReference.set(ratedMap);
-                                        }
-                                    }
-                                });
-
-                                Toast.makeText(MusicianProfileActivity.this, "Rating Submitted!", Toast.LENGTH_SHORT).show();
-
-                                rateMeButton.setVisibility(View.GONE);
-
-                                viewer_rating_xml = findViewById(R.id.viewer_rating);
-                                viewer_rating_xml.setText("Thank you for rating me!");
-                                viewer_rating_xml.setVisibility(View.VISIBLE);
-                            }
-                        });
+                        fader.setVisibility(View.VISIBLE);
                     }
                 });
 
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-                        Toast.makeText(MusicianProfileActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                builder.setCancelable(false);
-                builder.setView(layout);
-                builder.show();
+                Intent intent = new Intent(MusicianProfileActivity.this, MusicianProfileRatingsDialog.class);
+                intent.putExtra("EXTRA_MUSICIAN_ID", mID);
+                intent.putExtra("EXTRA_VIEWER_REF", viewerRef);
+                intent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                startActivityForResult(intent, 1);
             }
         });
+    }
+
+    /**
+     * Handle activity result, namely whether the musician is confirmed to be removed
+     * @param requestCode request code
+     * @param resultCode result code
+     * @param data intent data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+        fader.setVisibility(View.GONE);
+
+        if(data != null && data.getBooleanExtra("EXTRA_HAS_RATED", true))
+        {
+            Toast.makeText(MusicianProfileActivity.this, "Rating Submitted!", Toast.LENGTH_SHORT).show();
+
+            rateMeButton.setVisibility(View.GONE);
+
+            viewer_rating_xml = findViewById(R.id.viewer_rating);
+            viewer_rating_xml.setText("Thank you! You rated me " + data.getFloatExtra("EXTRA_RATING_RESULT", 0) + " stars!");
+            viewer_rating_xml.setVisibility(View.VISIBLE);
+            getRatingFromFirebase();
+        }
     }
 
     /**

@@ -209,7 +209,9 @@
             android:value="AIzaSyB4sMbIQwQaO0qlPHRuRCxB5--Zx54ACTE" />
 
         <activity android:name=".advert.index.PerformerAdvertIndexActivity" />
-        <activity android:name=".profile.ProfileRatingsDialog"
+        <activity android:name=".profile.BandProfileRatingsDialog"
+            android:theme="@style/AppTheme.TranslucentBackground"/>
+        <activity android:name=".profile.MusicianProfileRatingsDialog"
             android:theme="@style/AppTheme.TranslucentBackground"/>
     </application>
 
