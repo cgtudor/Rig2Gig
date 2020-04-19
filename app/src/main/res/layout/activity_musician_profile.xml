@@ -161,10 +161,12 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_marginTop="10dp"
+        android:background="@drawable/button_rounded_flat_blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/unrated"
-        android:text="Rate Me!"/>
+        android:text="Rate Me!"
+        android:textColor="#FFFFFF"/>
 
     <TextView
         android:id="@+id/viewer_rating"

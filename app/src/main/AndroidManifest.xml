@@ -209,6 +209,8 @@
             android:value="AIzaSyB4sMbIQwQaO0qlPHRuRCxB5--Zx54ACTE" />
 
         <activity android:name=".advert.index.PerformerAdvertIndexActivity" />
+        <activity android:name=".profile.ProfileRatingsDialog"
+            android:theme="@style/AppTheme.TranslucentBackground"/>
     </application>
 
 </manifest>
