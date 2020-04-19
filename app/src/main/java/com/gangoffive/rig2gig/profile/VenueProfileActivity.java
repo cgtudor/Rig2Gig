@@ -1,10 +1,8 @@
 package com.gangoffive.rig2gig.profile;
 
-import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -13,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -20,8 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gangoffive.rig2gig.firebase.GlideApp;
@@ -36,12 +37,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import org.w3c.dom.Document;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class VenueProfileActivity extends AppCompatActivity {
     private String vID; //Venue ID for  profile
@@ -52,15 +48,10 @@ public class VenueProfileActivity extends AppCompatActivity {
     private Button rateMeButton;
     private RatingBar venueRatingBar;
     private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    private final String USERID = fAuth.getUid();
-    private final CollectionReference userReference = FSTORE.collection("users");
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
     private DocumentReference ratingDocReference;
-    private CollectionReference viewerRatingsReference;
-    private String venueRating;
-    private int numOfVenueRatings;
-    private int totaledVenueRatings;
     private TextView viewer_rating_xml;
+    private TextView fader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +167,37 @@ public class VenueProfileActivity extends AppCompatActivity {
     }
 
     /**
+     * Handle activity result, namely whether the musician is confirmed to be removed
+     * @param requestCode request code
+     * @param resultCode result code
+     * @param data intent data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+        fader.setVisibility(View.GONE);
+
+        if(data != null && data.getBooleanExtra("EXTRA_HAS_RATED", true))
+        {
+            Toast.makeText(VenueProfileActivity.this, "Rating Submitted!", Toast.LENGTH_SHORT).show();
+
+            rateMeButton.setVisibility(View.GONE);
+
+            viewer_rating_xml = findViewById(R.id.viewer_rating);
+            viewer_rating_xml.setText("Thank you! You rated us " + data.getFloatExtra("EXTRA_RATING_RESULT", 0) + " stars!");
+            viewer_rating_xml.setVisibility(View.VISIBLE);
+            getRatingFromFirebase();
+        }
+        else
+        {
+            Toast.makeText(VenueProfileActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
      * This method is used to set up the rating dialog for users if they have not rated a Musician yet.
      */
     private void setupRatingDialog()
@@ -183,110 +205,24 @@ public class VenueProfileActivity extends AppCompatActivity {
         rateMeButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v)
-            {
-                AlertDialog.Builder builder = new AlertDialog.Builder(VenueProfileActivity.this);
-
-                View layout = null;
-
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-                layout = inflater.inflate(R.layout.rating, null);
-
-                RatingBar alertDialogRatingBar = layout.findViewById(R.id.ratingBar);
-
-                builder.setTitle("Rate Us!");
-                builder.setMessage("Thank you for rating us. It will help us improve in the future.");
-
-                builder.setPositiveButton("Rate!", new DialogInterface.OnClickListener()
+            public void onClick(View v) {
+                fader = findViewById(R.id.fader);
+                Window window = getWindow();
+                window.setStatusBarColor(ContextCompat.getColor(VenueProfileActivity.this, R.color.darkerMain));
+                runOnUiThread(new Runnable()
                 {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
+                    public void run()
                     {
-                        float venueRating = alertDialogRatingBar.getRating();
-
-                        venueReference.document(vID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-                        {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-                            {
-                                //Here, calculate the new rating and store in Firebase.
-
-                                String currentVenueRating = task.getResult().get("venue-rating").toString();
-                                float venueRatingCount = Float.valueOf(task.getResult().get("venue-rating-count").toString());
-                                float venueRatingTotal = Float.valueOf(task.getResult().get("venue-rating-total").toString());
-
-                                HashMap<String, Object> updateRatingMap = new HashMap<>();
-
-                                if(venueRatingCount + 1 >= 3)
-                                {
-                                    //After this rating, we now have enough ratings to provide a fair rating for a Venue.
-                                    //Calculate and submit new rating to Firebase changing unrated to new calculated rating.
-
-                                    updateRatingMap.put("venue-rating", (Float.valueOf(venueRatingTotal + venueRating) / (Float.valueOf(venueRatingCount + 1))));
-                                    updateRatingMap.put("venue-rating-count", venueRatingCount + 1);
-                                    updateRatingMap.put("venue-rating-total", venueRatingTotal + venueRating);
-                                }
-                                else
-                                {
-                                    //Add to current rating count
-                                    //Add to current rating sum
-                                    //Update Firebase with new numbers.
-
-                                    updateRatingMap.put("venue-rating-count", venueRatingCount + 1);
-                                    updateRatingMap.put("venue-rating-total", venueRatingTotal + venueRating);
-                                }
-
-                                venueReference.document(vID).update(updateRatingMap);
-
-                                ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(vID);
-
-                                ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-                                {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task)
-                                    {
-                                        HashMap<String, Object> ratedMap = (HashMap<String, Object>) task.getResult().get("rated");
-
-                                        if(ratedMap != null)
-                                        {
-                                            ratedMap.put("rating", String.valueOf(venueRating));
-                                            ratingDocReference.update(ratedMap);
-                                        }
-                                        else
-                                        {
-                                            ratedMap = new HashMap<>();
-                                            ratedMap.put("rating", String.valueOf(venueRating));
-                                            ratingDocReference.set(ratedMap);
-                                        }
-                                    }
-                                });
-
-                                Toast.makeText(VenueProfileActivity.this, "Rating Submitted!", Toast.LENGTH_SHORT).show();
-
-                                rateMeButton.setVisibility(View.GONE);
-
-                                viewer_rating_xml = findViewById(R.id.viewer_rating);
-                                viewer_rating_xml.setText("Thank you for rating us!");
-                                viewer_rating_xml.setVisibility(View.VISIBLE);
-                            }
-                        });
+                        fader.setVisibility(View.VISIBLE);
                     }
                 });
 
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-                        Toast.makeText(VenueProfileActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                builder.setCancelable(false);
-                builder.setView(layout);
-                builder.show();
+                Intent intent = new Intent(VenueProfileActivity.this, VenueProfileRatingsDialog.class);
+                intent.putExtra("EXTRA_VENUE_ID", vID);
+                intent.putExtra("EXTRA_VIEWER_REF", viewerRef);
+                intent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                startActivityForResult(intent, 1);
             }
         });
     }
@@ -308,10 +244,6 @@ public class VenueProfileActivity extends AppCompatActivity {
 
                 if (viewerRating != null) //Our rating isn't null and we have reviewed this Venue before.
                 {
-                    System.out.println(TAG + " viewerRef found in ratedMap");
-
-                    System.out.println(TAG + " Setting viewer rating on profile.");
-
                     viewer_rating_xml = findViewById(R.id.viewer_rating);
                     viewer_rating_xml.setText("You rated us " + viewerRating.toString() + " stars!");
                     viewer_rating_xml.setVisibility(View.VISIBLE);

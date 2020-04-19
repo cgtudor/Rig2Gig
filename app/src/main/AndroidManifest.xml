@@ -213,6 +213,8 @@
             android:theme="@style/AppTheme.TranslucentBackground"/>
         <activity android:name=".profile.MusicianProfileRatingsDialog"
             android:theme="@style/AppTheme.TranslucentBackground"/>
+        <activity android:name=".profile.VenueProfileRatingsDialog"
+            android:theme="@style/AppTheme.TranslucentBackground"/>
     </application>
 
 </manifest>

@@ -64,7 +64,6 @@ public class BandProfileActivity extends AppCompatActivity {
 
         final ImageView bandPhoto = findViewById(R.id.bandPhoto);
         final TextView bandName = findViewById(R.id.bandName);
-        //final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
         final TextView description = findViewById(R.id.description);
         final TextView members = findViewById(R.id.members);
@@ -105,7 +104,6 @@ public class BandProfileActivity extends AppCompatActivity {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                         bandName.setText(document.get("name").toString());
-                        //rating.setText("Rating: " + document.get("rating").toString() + "/5");
                         location.setText(document.get("location").toString());
                         description.setText(document.get("description").toString());
                         memberArray.addAll((ArrayList<String>) document.get("members"));
@@ -242,9 +240,13 @@ public class BandProfileActivity extends AppCompatActivity {
             rateMeButton.setVisibility(View.GONE);
 
             viewer_rating_xml = findViewById(R.id.viewer_rating);
-            viewer_rating_xml.setText("Thank you! You rated me " + data.getFloatExtra("EXTRA_RATING_RESULT", 0) + " stars!");
+            viewer_rating_xml.setText("Thank you! You rated us " + data.getFloatExtra("EXTRA_RATING_RESULT", 0) + " stars!");
             viewer_rating_xml.setVisibility(View.VISIBLE);
             getRatingFromFirebase();
+        }
+        else
+        {
+            Toast.makeText(BandProfileActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
         }
     }
 

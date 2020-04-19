@@ -1,13 +1,11 @@
 package com.gangoffive.rig2gig.profile;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +18,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -28,20 +25,17 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gangoffive.rig2gig.firebase.GlideApp;
 import com.gangoffive.rig2gig.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MusicianProfileActivity extends AppCompatActivity {
 
@@ -280,6 +274,10 @@ public class MusicianProfileActivity extends AppCompatActivity {
             viewer_rating_xml.setText("Thank you! You rated me " + data.getFloatExtra("EXTRA_RATING_RESULT", 0) + " stars!");
             viewer_rating_xml.setVisibility(View.VISIBLE);
             getRatingFromFirebase();
+        }
+        else
+        {
+            Toast.makeText(MusicianProfileActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
         }
     }
 
