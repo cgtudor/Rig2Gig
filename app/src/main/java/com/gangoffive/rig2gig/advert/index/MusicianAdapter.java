@@ -134,7 +134,7 @@ public class MusicianAdapter extends RecyclerView.Adapter<MusicianAdapter.ViewHo
                         positions = positions.trim();
                         holder.textViewPos.setText(positions);
                         holder.textViewLoc.setText(document.get("location").toString());
-                        holder.textViewRating.setText(document.get("rating").toString());
+                        holder.textViewRating.setText(document.get("musician-rating").toString());
                         holder.textViewRatingText.setText("out of 5");
                         StorageReference bandPic = storage.getReference().child("/images/musician-listings/" + musicianListing.getListingRef() + ".jpg");
                         GlideApp.with(holder.imageViewPhoto.getContext())

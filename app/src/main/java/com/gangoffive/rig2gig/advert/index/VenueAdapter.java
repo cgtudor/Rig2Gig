@@ -121,7 +121,7 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.ViewHolder> 
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
                         holder.textViewName.setText(document.get("name").toString());
                         holder.textViewLoc.setText(document.get("location").toString());
-                        holder.textViewRating.setText(document.get("rating").toString());
+                        holder.textViewRating.setText(document.get("venue-rating").toString());
                         holder.textViewRatingText.setText("out of 5");
                         StorageReference venuePic = storage.getReference().child("/images/venue-listings/" + venueListing.getListingRef() + ".jpg");
                         GlideApp.with(holder.imageViewPhoto.getContext())

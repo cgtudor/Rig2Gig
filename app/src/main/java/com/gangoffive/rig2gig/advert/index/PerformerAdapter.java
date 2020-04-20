@@ -130,7 +130,7 @@ public class PerformerAdapter extends RecyclerView.Adapter<PerformerAdapter.View
                         genres = genres.substring(1, genres.length() - 1);
                         holder.textViewGenres.setText(genres);
                         holder.textViewLoc.setText(document.get("location").toString());
-                        holder.textViewRating.setText(document.get("rating").toString());
+                        holder.textViewRating.setText(document.get("performer-rating").toString());
                         holder.textViewRatingText.setText("out of 5");
                         StorageReference bandPic = storage.getReference().child("/images/performance-listings/" + performerListing.getListingRef() + ".jpg");
                         GlideApp.with(holder.imageViewPhoto.getContext())
