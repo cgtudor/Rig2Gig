@@ -1,11 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/venueListingDetailsMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     tools:context=".account.CreateMusicianFragment"
     android:background="@drawable/gradient">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".account.CreateMusicianFragment">
 
     <TextView
         android:id="@+id/textView4"
@@ -61,7 +66,7 @@
         android:width="280dp"
         android:background="@android:color/transparent"
         android:ems="10"
-        android:hint="Genre"
+        android:hint="No Genres Selected"
         android:inputType="textPersonName"
         android:textColor="#FFF"
         android:textColorHint="#F6F6F6"
@@ -146,55 +151,58 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/firstName5" />
 
-    <Button
-        android:id="@+id/submitBtn"
-        android:layout_width="280dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/transparent_button"
-        android:onClick="submitBtnOnClick"
-        android:text="Submit"
-        android:textAllCaps="false"
-        android:textColor="#FFF"
-        android:textColorHint="#FFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        <Button
+            android:id="@+id/submitBtn"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/transparent_button"
+            android:onClick="submitBtnOnClick"
+            android:text="Submit"
+            android:textAllCaps="false"
+            android:textColor="#FFF"
+            android:textColorHint="#FFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.488"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <Button
-        android:id="@+id/uploadBtn"
-        android:layout_width="133dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/transparent_button"
-        android:onClick="uploadBtnOnClick"
-        android:text="Upload Photo"
-        android:textAllCaps="false"
-        android:textColor="#FFF"
-        android:textColorHint="#FFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.241"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectGenres" />
+        <Button
+            android:id="@+id/uploadBtn"
+            android:layout_width="133dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/transparent_button"
+            android:onClick="uploadBtnOnClick"
+            android:text="Upload Photo"
+            android:textAllCaps="false"
+            android:textColor="#FFF"
+            android:textColorHint="#FFFF"
+            app:layout_constraintEnd_toStartOf="@+id/takeBtn"
+            app:layout_constraintHorizontal_bias="0.782"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectGenres" />
 
-    <Button
-        android:id="@+id/takeBtn"
-        android:layout_width="133dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/transparent_button"
-        android:onClick="takeBtnOnClick"
-        android:text="Take Photo"
-        android:textAllCaps="false"
-        android:textColor="#FFF"
-        android:textColorHint="#FFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.758"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectGenres" />
+        <Button
+            android:id="@+id/takeBtn"
+            android:layout_width="133dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="64dp"
+            android:background="@drawable/transparent_button"
+            android:onClick="takeBtnOnClick"
+            android:text="Take Photo"
+            android:textAllCaps="false"
+            android:textColor="#FFF"
+            android:textColorHint="#FFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/uploadBtn"
+            app:layout_constraintTop_toBottomOf="@+id/selectGenres" />
 
-    <ImageView
+        <ImageView
         android:id="@+id/imageView"
         android:layout_width="250dp"
         android:layout_height="250dp"
@@ -204,18 +212,18 @@
         app:layout_constraintTop_toBottomOf="@+id/uploadBtn"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <Button
-        android:id="@+id/selectGenres"
-        android:layout_width="140dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="16dp"
-        android:layout_weight="1.0"
-        android:background="@drawable/transparent_button"
-        android:text="Select genres"
-        android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.217"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view19" />
+        <Button
+            android:id="@+id/selectGenres"
+            android:layout_width="133dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1.0"
+            android:background="@drawable/transparent_button"
+            android:text="Select genres"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view19" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

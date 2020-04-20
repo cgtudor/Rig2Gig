@@ -133,12 +133,12 @@
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="Find us here!"
-            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionBar" />
+            app:layout_constraintTop_toBottomOf="@+id/profile" />
 
         <fragment
             android:id="@+id/google_map"
@@ -157,15 +157,16 @@
             android:id="@+id/contact"
             android:layout_width="280dp"
             android:layout_height="40dp"
-            android:textColor="#ffffff"
+            android:layout_margin="8dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/button_rounded_flat_blue"
             android:text="Request Contact"
             android:textAllCaps="false"
-            android:layout_margin="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="#ffffff"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/google_map" />
+            app:layout_constraintTop_toBottomOf="@+id/descriptionBar" />
 
         <Button
             android:id="@+id/publish"
@@ -180,7 +181,7 @@
             android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/google_map" />
+            app:layout_constraintTop_toBottomOf="@+id/descriptionBar" />
 
         <Button
             android:id="@+id/profile"

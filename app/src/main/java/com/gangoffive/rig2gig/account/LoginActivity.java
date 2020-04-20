@@ -3,6 +3,7 @@ package com.gangoffive.rig2gig.account;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -20,6 +24,10 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
+import com.gangoffive.rig2gig.views.PrivacyPolicyActivity;
+import com.gangoffive.rig2gig.views.PrivacyPolicyFragment;
+import com.gangoffive.rig2gig.views.TermsOfServiceActivity;
+import com.gangoffive.rig2gig.views.TermsOfServiceFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -63,7 +71,7 @@ public class LoginActivity extends AppCompatActivity{
     private CallbackManager mCallbackManager;
 
     Button loginBtn;
-    TextView registerBtn, forgotPasswordBtn;
+    TextView registerBtn, forgotPasswordBtn, loginTnC;
     EditText emailAddress, password;
     private boolean minimise;
 
@@ -88,6 +96,10 @@ public class LoginActivity extends AppCompatActivity{
         registerBtn = findViewById(R.id.loginRegisterBtn);
         forgotPasswordBtn = findViewById(R.id.forgotPasswordBtn);
         signInButton = findViewById(R.id.sign_in_button);
+        loginTnC = findViewById(R.id.TandC);
+
+        loginTnC.setGravity(Gravity.CENTER);
+
 
         /**
          * onClick for Google Sign In button.
@@ -414,6 +426,16 @@ public class LoginActivity extends AppCompatActivity{
     {
         minimise = false;
         super.onResume();
+    }
+
+    public void privacyOnClick(View view) {
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@ Privacy Clicked!");
+        startActivity(new Intent(getApplicationContext(), PrivacyPolicyActivity.class));
+    }
+
+    public void termsofserviceOnClick(View view) {
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@ Terms Clicked!");
+        startActivity(new Intent(getApplicationContext(), TermsOfServiceActivity.class));
     }
 }
 
