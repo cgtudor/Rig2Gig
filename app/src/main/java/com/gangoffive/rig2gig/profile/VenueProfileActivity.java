@@ -202,29 +202,29 @@ public class VenueProfileActivity extends AppCompatActivity {
      */
     private void setupRatingDialog()
     {
-        rateMeButton.setOnClickListener(new View.OnClickListener()
+        if(viewerRef != null || viewerType != null)
         {
-            @Override
-            public void onClick(View v) {
-                fader = findViewById(R.id.fader);
-                Window window = getWindow();
-                window.setStatusBarColor(ContextCompat.getColor(VenueProfileActivity.this, R.color.darkerMain));
-                runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        fader.setVisibility(View.VISIBLE);
-                    }
-                });
+            rateMeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fader = findViewById(R.id.fader);
+                    Window window = getWindow();
+                    window.setStatusBarColor(ContextCompat.getColor(VenueProfileActivity.this, R.color.darkerMain));
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            fader.setVisibility(View.VISIBLE);
+                        }
+                    });
 
-                Intent intent = new Intent(VenueProfileActivity.this, VenueProfileRatingsDialog.class);
-                intent.putExtra("EXTRA_VENUE_ID", vID);
-                intent.putExtra("EXTRA_VIEWER_REF", viewerRef);
-                intent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
-                startActivityForResult(intent, 1);
-            }
-        });
+                    Intent intent = new Intent(VenueProfileActivity.this, VenueProfileRatingsDialog.class);
+                    intent.putExtra("EXTRA_VENUE_ID", vID);
+                    intent.putExtra("EXTRA_VIEWER_REF", viewerRef);
+                    intent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                    startActivityForResult(intent, 1);
+                }
+            });
+        }
     }
 
     /**
@@ -233,29 +233,28 @@ public class VenueProfileActivity extends AppCompatActivity {
      */
     private void checkAlreadyRated()
     {
-        ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(vID);
-
-        ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        if(viewerRef != null || viewerType != null)
         {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task)
-            {
-                Object viewerRating = task.getResult().get("rating");
+            ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(vID);
 
-                if (viewerRating != null) //Our rating isn't null and we have reviewed this Venue before.
-                {
-                    viewer_rating_xml = findViewById(R.id.viewer_rating);
-                    viewer_rating_xml.setText("You rated us " + viewerRating.toString() + " stars!");
-                    viewer_rating_xml.setVisibility(View.VISIBLE);
+            ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Object viewerRating = task.getResult().get("rating");
+
+                    if (viewerRating != null) //Our rating isn't null and we have reviewed this Venue before.
+                    {
+                        viewer_rating_xml = findViewById(R.id.viewer_rating);
+                        viewer_rating_xml.setText("You rated us " + viewerRating.toString() + " stars!");
+                        viewer_rating_xml.setVisibility(View.VISIBLE);
+                    } else {
+                        //We haven't reviewed this Venue before.
+                        Button rating_button_xml = findViewById(R.id.rating_button);
+                        rating_button_xml.setVisibility(View.VISIBLE);
+                    }
                 }
-                else
-                {
-                    //We haven't reviewed this Venue before.
-                    Button rating_button_xml = findViewById(R.id.rating_button);
-                    rating_button_xml.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+            });
+        }
     }
 
     /**
