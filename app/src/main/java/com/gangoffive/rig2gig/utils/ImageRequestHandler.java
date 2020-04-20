@@ -8,13 +8,16 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import static androidx.core.app.ActivityCompat.requestPermissions;
 
 
-public class ImageRequestHandler
+public class ImageRequestHandler extends AppCompatActivity
 {
     private static final int REQUEST_GALLERY__PHOTO = 1;
     private static final int REQUEST_PHOTO = 2;

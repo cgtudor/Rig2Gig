@@ -52,7 +52,8 @@ public class BandDetailsEditorTest {
 
     @BeforeClass
     public static void setup() {
-        Looper.prepare();
+
+            Looper.prepare();
     }
 
     @Before
@@ -65,7 +66,9 @@ public class BandDetailsEditorTest {
             bandData.put("email", "test@email.com");
             bandData.put("latitude","10");
             bandData.put("longitude","6");
-            bandData.put("genres", "test genres");
+            ArrayList<String> genres = new ArrayList<>();
+            genres.add("test genre");
+            bandData.put("genres", genres);
             bandData.put("location", "test location");
             ArrayList<String> members = new ArrayList<>();
             members.add("test member");
@@ -293,45 +296,29 @@ public class BandDetailsEditorTest {
 
 
         @Test
-        public void testPopulateInitialFields() throws InterruptedException {
-            testRule.getActivity().setViewReferences();
-            testRule.getActivity().setBand(bandData);
-            testRule.getActivity().saveTabs();
-            testRule.getActivity().setViewReferences();
-            testRule.getActivity().populateInitialFields();
-            onView(withId(R.id.name)).check(matches(withText("")));
-            onView(withId(R.id.venue_description_final)).check(matches(withText("")));
-            onView(withId(R.id.genres)).check(matches(withText("")));
-            onView(withId(R.id.email)).check(matches(withText("")));
-            onView(withId(R.id.phone)).check(matches(withText("")));
+        public void testPopulateInitialFields()  {
+            testRule.getActivity().onSuccessFromDatabase(bandData);
+            testRule.getActivity().onSuccessfulImageDownload();
+            onView(withId(R.id.view_pager)).perform(swipeLeft());
+            onView(withId(R.id.name)).check(matches(withText("test name")));
+            onView(withId(R.id.venue_description_final)).check(matches(withText("1")));
+            onView(withId(R.id.genres)).check(matches(withText("test genre")));
+            onView(withId(R.id.email)).check(matches(withText("test@email.com")));
+            onView(withId(R.id.phone)).check(matches(withText("123")));
         }
 
         @Test
-        public void testReinitialiseTabs() throws InterruptedException {
+        public void testReinitialiseTabs() {
 
-            testRule.getActivity().setViewReferences();
-            testRule.getActivity().setBand(bandData);
             testRule.getActivity().onSuccessFromDatabase(bandData);
-            testRule.getActivity().saveTabs();
-            testRule.getActivity().setViewReferences();
-            testRule.getActivity().populateInitialFields();
-            testRule.getActivity().reinitialiseTabs();
-            onView(withId(R.id.name)).check(matches(withText("")));
-            onView(withId(R.id.venue_description_final)).check(matches(withText("")));
-            onView(withId(R.id.genres)).check(matches(withText("")));
-            onView(withId(R.id.email)).check(matches(withText("")));
-            onView(withId(R.id.phone)).check(matches(withText("")));
+            testRule.getActivity().onSuccessfulImageDownload();
             onView(withId(R.id.view_pager)).perform(swipeLeft());
-            testRule.getActivity().saveTabs();
-            testRule.getActivity().setViewReferences();
-            testRule.getActivity().populateInitialFields();
-            testRule.getActivity().reinitialiseTabs();
-            onView(withId(R.id.name)).check(matches(withText("")));
-            onView(withId(R.id.venue_description_final)).check(matches(withText("")));
-            onView(withId(R.id.genres)).check(matches(withText("")));
-            onView(withId(R.id.email)).check(matches(withText("")));
-            onView(withId(R.id.phone)).check(matches(withText("")));
-
+            onView(withId(R.id.view_pager)).perform(swipeRight());
+            onView(withId(R.id.name)).check(matches(withText("test name")));
+            onView(withId(R.id.venue_description_final)).check(matches(withText("1")));
+            onView(withId(R.id.genres)).check(matches(withText("test genre")));
+            onView(withId(R.id.email)).check(matches(withText("test@email.com")));
+            onView(withId(R.id.phone)).check(matches(withText("123")));
         }
 
         @Test
@@ -417,7 +404,6 @@ public class BandDetailsEditorTest {
         testRule.getActivity().setBand(bandData);
         testRule.getActivity().reinitialiseTabs();
         onView(withId(R.id.view_pager)).perform(swipeLeft());
-        onView(withId(R.id.email)).perform(replaceText(""));
         enterTestData();
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable) confirm.getBackground();
@@ -427,18 +413,14 @@ public class BandDetailsEditorTest {
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
-        verify(manager,times(1)).postDataToDatabase(any(),any(),any());
+        verify(manager,times(1)).getImage(testRule.getActivity());
     }
 
     @Test
-    public void testButtonColourChangeOnInvalidData() throws InterruptedException {
-        testRule.getActivity().setViewReferences();
+    public void testButtonColourChangeOnInvalidData() {
         testRule.getActivity().setBand(bandData);
         testRule.getActivity().onSuccessFromDatabase(bandData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
+        testRule.getActivity().onSuccessfulImageDownload();
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         enterTestData();
         deleteAllFields();
@@ -450,20 +432,15 @@ public class BandDetailsEditorTest {
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
-        verify(manager,times(0)).postDataToDatabase(any(),any(),any());
+        verify(manager,times(1)).getImage(testRule.getActivity());
         onView(withText("Details not updated.  Ensure all fields are complete and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
     }
 
     @Test
     public void testDataInputOnceThenDeleteOneChar() throws InterruptedException {
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().setBand(bandData);
-        testRule.getActivity().onSuccessFromDatabase(bandData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
+        testRule.getActivity().onSuccessFromDatabase(null);
+        testRule.getActivity().onSuccessfulImageDownload();
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         enterOneCharAllFields();
         deleteOneCharFields();
@@ -480,9 +457,7 @@ public class BandDetailsEditorTest {
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
-        verify(manager,times(0)).postDataToDatabase(any(),any(),any());
-        onView(withText("Details not updated.  Ensure all fields are complete and try again"))
-                .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+        verify(manager,times(1)).getImage(testRule.getActivity());
     }
 }
 

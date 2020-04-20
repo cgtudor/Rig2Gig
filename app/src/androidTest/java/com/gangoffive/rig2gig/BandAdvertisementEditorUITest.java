@@ -2,6 +2,7 @@ package com.gangoffive.rig2gig;
 
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.widget.Button;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
@@ -14,6 +15,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
@@ -22,6 +25,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -56,10 +60,12 @@ public class BandAdvertisementEditorUITest {
         adData.put("description","test description");
         adData.put("expiry-data","test data");
         ArrayList<String> positions = new ArrayList<>();
-        members.add("Drums");
-        members.add("Clarinet");
+        positions.add("Drums");
+        positions.add("Clarinet");
         adData.put("position",positions);
     }
+
+
 
     @Test
     public void testActivityInView()
@@ -78,8 +84,10 @@ public class BandAdvertisementEditorUITest {
         onView(withId(R.id.cancel)).check(matches(isDisplayed()));
         onView(withId(R.id.createListing)).check(matches(isDisplayed()));
         onView(withId(R.id.bandAdImageMain)).check(matches(isDisplayed()));
-        onView(withId(R.id.positionsMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.firstName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.image)).check(matches(isDisplayed()));
+        onView(withId(R.id.imageScroll)).check(matches(isDisplayed()));
+        onView(withId(R.id.innerImageConstraint)).check(matches(isDisplayed()));
         onView(withId(R.id.imageButtonLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.galleryImage)).check(matches(isDisplayed()));
         onView(withId(R.id.takePhoto)).check(matches(isDisplayed()));
@@ -97,6 +105,7 @@ public class BandAdvertisementEditorUITest {
     {
         onView(withId(R.id.title)).check(matches(withText("Advertise yourself to musicians")));
         onView(withId(R.id.cancel)).check(matches(withText("Cancel")));
+        onView(withId(R.id.firstName)).check(matches(withText("")));
         onView(withId(R.id.createListing)).check(matches(withText("Confirm")));
         onView(withId(R.id.galleryImage)).check(matches(withText("Gallery")));
         onView(withId(R.id.takePhoto)).check(matches(withText("Camera")));
@@ -116,6 +125,8 @@ public class BandAdvertisementEditorUITest {
         onView(withId(R.id.bandAdImageMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.firstName)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.image)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.imageScroll)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.innerImageConstraint)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.imageButtonLayout)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.galleryImage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.takePhoto)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
@@ -152,10 +163,16 @@ public class BandAdvertisementEditorUITest {
         onView(withId(R.id.bandAdDetailsMain)).check(matches(isDisplayed()));
         onView(withId(R.id.descriptionLabel)).check(matches(isDisplayed()));
         onView(withId(R.id.venue_description_final)).check(matches(isDisplayed()));
+        onView(withId(R.id.scrollDetails)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testSwipeLeftTwiceThenRightOnce() throws InterruptedException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + getTargetContext().getPackageName()
+                            + " android.permission.CAMERA");
+        }
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.app_bar)).check(matches(isDisplayed()));
         onView(withId(R.id.title)).check(matches(isDisplayed()));
@@ -180,6 +197,7 @@ public class BandAdvertisementEditorUITest {
         onView(withId(R.id.bandAdDetailsMain)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.descriptionLabel)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.venue_description_final)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.scrollDetails)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test
@@ -219,9 +237,8 @@ public class BandAdvertisementEditorUITest {
 
     @Test
     public void testPopulateInitialFieldsExistingAd(){
-        testRule.getActivity().setBand(bandData);
-        testRule.getActivity().setPreviousListing(adData);
-        testRule.getActivity().populateInitialFields();
+        testRule.getActivity().onSuccessFromDatabase(bandData, adData);
+        testRule.getActivity().onSuccessfulImageDownload();
         onView(withId(R.id.firstName)).check(matches(withText(bandData.get("name").toString())));
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.view_pager)).perform(swipeLeft());
@@ -232,7 +249,7 @@ public class BandAdvertisementEditorUITest {
     @Test
     public void testReinitialiseTabsNoAd(){
         testRule.getActivity().setBand(bandData);
-        testRule.getActivity().reinitialiseTabs();
+        testRule.getActivity().onSuccessfulImageDownload();
         onView(withId(R.id.firstName)).check(matches(withText(bandData.get("name").toString())));
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.view_pager)).perform(swipeLeft());

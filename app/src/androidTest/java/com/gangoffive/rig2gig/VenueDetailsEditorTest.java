@@ -56,7 +56,11 @@ public class VenueDetailsEditorTest {
 
     @BeforeClass
     public static void setup() {
-        Looper.prepare();
+
+        if (Looper.myLooper() == null)
+        {
+            Looper.prepare();
+        }
     }
 
     @Before
@@ -356,7 +360,8 @@ public class VenueDetailsEditorTest {
     }
 
     @Test
-    public void testOnDataBaseResultImageFailure() {
+    public void testOnDataBaseResultImageFailure() throws InterruptedException {
+        Thread.sleep(1000);
         Enum result = ListingManager.CreationResult.IMAGE_FAILURE;
         testRule.getActivity().handleDatabaseResponse(result);
         onView(withText("Updating details failed.  Check your connection and try again"))
@@ -467,8 +472,8 @@ public class VenueDetailsEditorTest {
     }
 
     @Test
-    public void testDataInputTwiceThenDeleteOneChar()
-    {
+    public void testDataInputTwiceThenDeleteOneChar() throws InterruptedException {
+        Thread.sleep(2000);
         testRule.getActivity().setViewReferences();
         testRule.getActivity().setVenue(venueData);
         testRule.getActivity().onSuccessFromDatabase(venueData);
@@ -495,14 +500,9 @@ public class VenueDetailsEditorTest {
     }
 
     @Test
-    public void testDataInputOnceThenDeleteOneChar() throws InterruptedException {
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().setVenue(venueData);
-        testRule.getActivity().onSuccessFromDatabase(venueData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
+    public void testDataInputOnceThenDeleteOneChar() {
+        testRule.getActivity().onSuccessFromDatabase(null);
+        testRule.getActivity().onSuccessfulImageDownload();
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         enterOneCharAllFields();
         deleteOneCharFields();
@@ -517,9 +517,8 @@ public class VenueDetailsEditorTest {
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
-        verify(manager,times(0)).postDataToDatabase(any(),any(),any());
-        onView(withText("Details not updated.  Ensure all fields are complete and try again"))
-                .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+        verify(manager,times(1)).getImage(testRule.getActivity());
+
     }
 
     @Test

@@ -65,16 +65,21 @@ public class MusicianDetailsEditorTest {
 
     @BeforeClass
     public static void setup() {
-        Looper.prepare();
+        if (Looper.myLooper() == null)
+        {
+            Looper.prepare();
+        }
     }
 
     @Before
     public void setUp() throws Exception {
         musicianData = new HashMap();
-        musicianData.put("distance", "test distance");
+        musicianData.put("distance", "0");
         musicianData.put("latitude","10");
         musicianData.put("longitude","6");
-        musicianData.put("genres", "test genres");
+        ArrayList<String> genres = new ArrayList<>();
+        genres.add("test genre");
+        musicianData.put("genres", genres);
         musicianData.put("location", "test location");
         ArrayList<String> bands = new ArrayList<>();
         bands.add("test band");
@@ -92,7 +97,7 @@ public class MusicianDetailsEditorTest {
         closeSoftKeyboard();
         onView(withId(R.id.musician_location)).perform(typeText("test location edit"));
         closeSoftKeyboard();
-        onView(withId(R.id.venue_description_final)).perform(typeText("test distance edit"));
+        onView(withId(R.id.venue_description_final)).perform(typeText("1"));
         closeSoftKeyboard();
     }
 
@@ -274,39 +279,25 @@ public class MusicianDetailsEditorTest {
 
 
     @Test
-    public void testPopulateInitialFields() throws InterruptedException {
-        testRule.getActivity().setViewReferences();
+    public void testPopulateInitialFields() {
         testRule.getActivity().setMusician(musicianData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        onView(withId(R.id.venue_name_final)).check(matches(withText("")));
-        onView(withId(R.id.venue_description_final)).check(matches(withText("")));
-        onView(withId(R.id.genres)).check(matches(withText("")));
+        testRule.getActivity().onSuccessFromDatabase(musicianData);
+        testRule.getActivity().onSuccessfulImageDownload();
+        onView(withId(R.id.venue_name_final)).check(matches(withText("test name")));
+        onView(withId(R.id.venue_description_final)).check(matches(withText("0")));
+        onView(withId(R.id.genres)).check(matches(withText("test genre")));
     }
-
     @Test
     public void testReinitialiseTabs() throws InterruptedException {
 
-        testRule.getActivity().setViewReferences();
         testRule.getActivity().setMusician(musicianData);
         testRule.getActivity().onSuccessFromDatabase(musicianData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
-        onView(withId(R.id.venue_name_final)).check(matches(withText("")));
-        onView(withId(R.id.venue_description_final)).check(matches(withText("")));
-        onView(withId(R.id.genres)).check(matches(withText("")));
+        testRule.getActivity().onSuccessfulImageDownload();
         onView(withId(R.id.view_pager)).perform(swipeLeft());
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
-        onView(withId(R.id.venue_name_final)).check(matches(withText("")));
-        onView(withId(R.id.venue_description_final)).check(matches(withText("")));
-        onView(withId(R.id.genres)).check(matches(withText("")));
-
+        onView(withId(R.id.view_pager)).perform(swipeRight());
+        onView(withId(R.id.venue_name_final)).check(matches(withText("test name")));
+        onView(withId(R.id.venue_description_final)).check(matches(withText("0")));
+        onView(withId(R.id.genres)).check(matches(withText("test genre")));
     }
 
     @Test
@@ -346,36 +337,29 @@ public class MusicianDetailsEditorTest {
     @Test
     public void testDataInput()
     {
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().setMusician(musicianData);
-        testRule.getActivity().onSuccessFromDatabase(musicianData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
+        testRule.getActivity().setMusician(null);
+        testRule.getActivity().onSuccessFromDatabase(null);
+        testRule.getActivity().onSuccessfulImageDownload();
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         enterTestData();
         onView(withId(R.id.venue_name_final)).check(matches(withText("test name edit")));
         onView(withId(R.id.musician_location)).check(matches(withText(endsWith("test location edit"))));
+        onView(withId(R.id.venue_description_final)).check(matches(withText(endsWith("1"))));
     }
 
     @Test
     public void testDataInputSwipeAwaySwipeBack()
     {
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().setMusician(musicianData);
-        testRule.getActivity().onSuccessFromDatabase(musicianData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
+        testRule.getActivity().setMusician(null);
+        testRule.getActivity().onSuccessFromDatabase(null);
+        testRule.getActivity().onSuccessfulImageDownload();
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         enterTestData();
         onView(withId(R.id.view_pager)).perform(swipeRight());
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.venue_name_final)).check(matches(withText("test name edit")));
         onView(withId(R.id.musician_location)).check(matches(withText(endsWith("test location edit"))));
+        onView(withId(R.id.venue_description_final)).check(matches(withText(endsWith("1"))));
     }
 
     @Test
@@ -403,13 +387,9 @@ public class MusicianDetailsEditorTest {
 
     @Test
     public void testButtonColourChangeOnInvalidData() throws InterruptedException {
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().setMusician(musicianData);
-        testRule.getActivity().onSuccessFromDatabase(musicianData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
+        testRule.getActivity().setMusician(null);
+        testRule.getActivity().onSuccessFromDatabase(null);
+        testRule.getActivity().onSuccessfulImageDownload();
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         enterTestData();
         deleteAllFields();
@@ -421,21 +401,13 @@ public class MusicianDetailsEditorTest {
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
-        verify(manager,times(0)).postDataToDatabase(any(),any(),any());
-        onView(withText("Details not updated.  Ensure all fields are complete and try again"))
-                .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+        verify(manager,times(1)).getImage(testRule.getActivity());
     }
-
     @Test
     public void testDataInputTwiceThenDeleteOneChar()
     {
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().setMusician(musicianData);
-        testRule.getActivity().onSuccessFromDatabase(musicianData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
+        testRule.getActivity().onSuccessFromDatabase(null);
+        testRule.getActivity().onSuccessfulImageDownload();
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         enterOneCharAllFields();
         enterOneCharAllFields();
@@ -486,13 +458,8 @@ public class MusicianDetailsEditorTest {
     @Test
     public void testGetGalleryImage()
     {
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().setMusician(musicianData);
-        testRule.getActivity().onSuccessFromDatabase(musicianData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
+        testRule.getActivity().onSuccessFromDatabase(null);
+        testRule.getActivity().onSuccessfulImageDownload();
         Intents.init();
         Matcher<Intent> expectedIntent = allOf(hasAction(Intent.ACTION_GET_CONTENT));
         intending(expectedIntent).respondWith(new Instrumentation.ActivityResult(0, null));
@@ -502,20 +469,15 @@ public class MusicianDetailsEditorTest {
     }
 
     @Test
-    public void testGalleryImageReturned()  {
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().setMusician(musicianData);
-        testRule.getActivity().onSuccessFromDatabase(musicianData);
-        testRule.getActivity().saveTabs();
-        testRule.getActivity().setViewReferences();
-        testRule.getActivity().populateInitialFields();
-        testRule.getActivity().reinitialiseTabs();
+    public void testGalleryImageReturned() throws InterruptedException {
+        testRule.getActivity().onSuccessFromDatabase(null);
+        testRule.getActivity().onSuccessfulImageDownload();
         Intent intent = new Intent();
-        Resources resources = InstrumentationRegistry.getInstrumentation().getContext().getResources();
         Uri uri = Uri.parse("android.resource://com.gangoffive.rig2gig/drawable/misc");
         intent.setData(uri);
         assertTrue(testRule.getActivity().getImageView().getDrawable() == null);
         testRule.getActivity().onActivityResult(1,-1,intent);
+        Thread.sleep(1000);
         assertTrue(testRule.getActivity().getImageView().getDrawable() != null);
     }
 }

@@ -299,9 +299,14 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         if(listResults != null)
         {
             listResults.setTextFilterEnabled(true);
-            listResults.setAdapter(resultsAdapter = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_list_item_1,
-                    positions));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    listResults.setAdapter(resultsAdapter = new ArrayAdapter<String>(BandAdvertisementEditor.this,
+                            android.R.layout.simple_list_item_1,
+                            positions));
+                }
+            });
             listResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
@@ -318,10 +323,15 @@ public class BandAdvertisementEditor extends AppCompatActivity implements Create
         if (searchBar == null)
         {
             searchBar = findViewById(R.id.search_bar);
-            searchBar.setIconifiedByDefault(false);
-            searchBar.setOnQueryTextListener(this);
-            searchBar.setSubmitButtonEnabled(false);
-            searchBar.setQueryHint("Enter band position");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    searchBar.setIconifiedByDefault(false);
+                    searchBar.setOnQueryTextListener(BandAdvertisementEditor.this);
+                    searchBar.setSubmitButtonEnabled(false);
+                    searchBar.setQueryHint("Enter band position");
+                }
+            });
         }
         if (searchBar != null)
         {
