@@ -236,7 +236,7 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
                                 venues.put("rating", venueRating);
                                 venues.put("latitude", venueAddress.getLatitude());
                                 venues.put("longitude", venueAddress.getLongitude());
-                                venues.put("venue-rating", "Unrated");
+                                venues.put("venue-rating", "N/A");
                                 venues.put("venue-rating-count", 0);
                                 venues.put("venue-rating-total", 0);
 

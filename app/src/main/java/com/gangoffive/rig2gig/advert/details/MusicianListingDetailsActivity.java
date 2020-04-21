@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,7 +74,8 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
         final ImageView musicianPhoto = findViewById(R.id.musicianPhoto);
         final TextView musicianName = findViewById(R.id.musicianName);
         final TextView description = findViewById(R.id.description);
-        final TextView rating = findViewById(R.id.rating);
+        final RatingBar ratingBar = findViewById(R.id.rating_bar);
+        final TextView unrated = findViewById(R.id.unrated);
         final TextView location = findViewById(R.id.location);
         final TextView distance = findViewById(R.id.venue_description_final);
         final TextView position = findViewById(R.id.position);
@@ -137,10 +139,19 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
                                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                                         musicianName.setText(document.get("name").toString());
-                                        rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
                                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
                                         listingOwner.append(document.get("user-ref").toString());
+
+                                        if(document.get("musician-rating").toString().equals("N/A"))
+                                        {
+                                            unrated.setVisibility(View.VISIBLE);
+                                        }
+                                        else
+                                        {
+                                            ratingBar.setRating(Float.valueOf(document.get("musician-rating").toString()));
+                                            unrated.setVisibility(View.GONE);
+                                        }
 
                                         CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
                                         sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get(source)

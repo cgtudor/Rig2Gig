@@ -65,7 +65,6 @@ public class VenueProfileActivity extends AppCompatActivity {
         final ImageView venuePhoto = findViewById(R.id.venuePhoto);
         final TextView venueName = findViewById(R.id.venueName);
         final TextView description = findViewById(R.id.description);
-        final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
         final TextView type = findViewById(R.id.type);
 
@@ -105,7 +104,6 @@ public class VenueProfileActivity extends AppCompatActivity {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                         venueName.setText(document.get("name").toString());
-                        rating.setText("Rating: " + document.get("rating").toString() + "/5");
                         location.setText(document.get("location").toString());
                         type.setText(document.get("venue-type").toString());
                         description.setText(document.get("description").toString());
@@ -149,7 +147,7 @@ public class VenueProfileActivity extends AppCompatActivity {
             {
                 String currentVenueRating = task.getResult().get("venue-rating").toString();
 
-                if(currentVenueRating.equals("Unrated"))
+                if(currentVenueRating.equals("N/A"))
                 {
                     //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
                     venueRatingBar.setRating(0);

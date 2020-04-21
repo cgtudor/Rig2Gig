@@ -189,10 +189,10 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
                                 band.put("latitude", bandAddress.getLatitude());
                                 band.put("longitude", bandAddress.getLongitude());
                                 band.put("members", Arrays.asList(TabbedBandActivity.musicianID));
-                                band.put("band-rating", "Unrated");
+                                band.put("band-rating", "N/A");
                                 band.put("band-rating-count", 0);
                                 band.put("band-rating-total", 0);
-                                band.put("performer-rating", "Unrated");
+                                band.put("performer-rating", "N/A");
                                 band.put("performer-rating-count", 0);
                                 band.put("performer-rating-total", 0);
 

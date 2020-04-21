@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -96,7 +98,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         final ImageView venuePhoto = findViewById(R.id.venuePhoto);
         final TextView venueName = findViewById(R.id.venueName);
         final TextView description = findViewById(R.id.description);
-        final TextView rating = findViewById(R.id.rating);
+        final RatingBar ratingBar = findViewById(R.id.rating_bar);
+        final TextView unrated = findViewById(R.id.unrated);
         final TextView location = findViewById(R.id.location);
         final Button contact = findViewById(R.id.contact);
         final Button publish = findViewById(R.id.publish);
@@ -168,9 +171,18 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                                         venueName.setText(document.get("name").toString());
-                                        rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
                                         listingOwner.append(document.get("user-ref").toString());
+
+                                        if(document.get("venue-rating").toString().equals("N/A"))
+                                        {
+                                            unrated.setVisibility(View.VISIBLE);
+                                        }
+                                        else
+                                        {
+                                            ratingBar.setRating(Float.valueOf(document.get("venue-rating").toString()));
+                                            unrated.setVisibility(View.GONE);
+                                        }
 
                                         CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
                                         sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get(source)

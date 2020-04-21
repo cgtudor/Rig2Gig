@@ -153,10 +153,10 @@ public class CreateMusicianAccountActivity extends AppCompatActivity {
                         musicians.put("distance", musicianDistance);
                         musicians.put("latitude", musicianAddress.getLatitude());
                         musicians.put("longitude", musicianAddress.getLongitude());
-                        musicians.put("musician-rating", "Unrated");
+                        musicians.put("musician-rating", "N/A");
                         musicians.put("musician-rating-count", 0);
                         musicians.put("musician-rating-total", 0);
-                        musicians.put("performer-rating", "Unrated");
+                        musicians.put("performer-rating", "N/A");
                         musicians.put("performer-rating-count", 0);
                         musicians.put("performer-rating-total", 0);
 

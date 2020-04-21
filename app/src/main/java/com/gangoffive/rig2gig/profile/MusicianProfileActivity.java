@@ -174,7 +174,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
                 {
                     String currentMusicianRating = task.getResult().get("musician-rating").toString();
 
-                    if(currentMusicianRating.equals("Unrated"))
+                    if(currentMusicianRating.equals("N/A"))
                     {
                         //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
                         musicianRatingBar.setRating(0);
@@ -195,7 +195,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
                 {
                     String currentPerformerRating = task.getResult().get("performer-rating").toString();
 
-                    if(currentPerformerRating.equals("Unrated"))
+                    if(currentPerformerRating.equals("N/A"))
                     {
                         //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
                         musicianRatingBar.setRating(0);

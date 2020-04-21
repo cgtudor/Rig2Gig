@@ -64,28 +64,6 @@
             app:layout_constraintTop_toBottomOf="@+id/venueName" />
 
         <TextView
-            android:id="@+id/rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="68dp"
-            android:layout_marginTop="8dp"
-            android:textColor="#000000"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/venueNameBar" />
-
-
-        <View
-            android:id="@+id/ratingBar"
-            android:layout_width="280dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="8dp"
-            android:background="#000000"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.519"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rating" />
-
-        <TextView
             android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -93,7 +71,7 @@
             android:layout_marginTop="8dp"
             android:textColor="#000000"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+            app:layout_constraintTop_toBottomOf="@+id/venueNameBar" />
 
 
         <View
@@ -128,30 +106,6 @@
             app:layout_constraintHorizontal_bias="0.519"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description" />
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Find us here!"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile" />
-
-        <fragment
-            android:id="@+id/google_map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="339dp"
-            android:layout_height="174dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.491"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView9"
-            tools:context=".advert.details.VenueListingDetailsActivity" />
 
         <Button
             android:id="@+id/contact"
@@ -196,6 +150,67 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/contact" />
+
+        <TextView
+            android:id="@+id/my_venue_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Our Venue Rating"
+            android:layout_marginTop="15dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profile"/>
+
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/my_venue_rating"
+            android:paddingTop="10dp"
+            android:numStars="5"
+            android:rating="0"
+            android:progressTint="#FFD700"
+            android:stepSize="0.5"
+            android:clickable="false"
+            android:isIndicator="true"/>
+
+        <TextView
+            android:id="@+id/unrated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Not enough ratings gathered yet"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rating_bar"/>
+
+        <TextView
+            android:id="@+id/findUsHere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Find us here!"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/unrated" />
+
+        <fragment
+            android:id="@+id/google_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="339dp"
+            android:layout_height="174dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/findUsHere"
+            tools:context=".advert.details.VenueListingDetailsActivity" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
