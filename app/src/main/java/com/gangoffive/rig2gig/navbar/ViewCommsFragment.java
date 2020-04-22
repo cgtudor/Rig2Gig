@@ -117,8 +117,7 @@ public class ViewCommsFragment extends Fragment
         communications = new ArrayList<>();
 
         Query first = colRef
-                .limit(10)
-                .orderBy("posting-date", Query.Direction.ASCENDING);
+                .orderBy("posting-date", Query.Direction.DESCENDING);
 
         first.get(source)
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
