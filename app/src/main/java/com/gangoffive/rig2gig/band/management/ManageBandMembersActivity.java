@@ -57,7 +57,7 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     private ArrayList <Map<String, Object>> musicians;
     private int membersDownloaded, position, removePosition;
     private GridView gridView;
-    private boolean firstDeletion, backClicked, stillInBand, checkIfInBand, searchingByName, searchingByEmail,
+    private boolean firstDeletion, backClicked, checkIfInBand, searchingByName, searchingByEmail,
             removingMember, removingMemberConfirmed;
     private FirebaseFirestore db;
     private AdapterView.OnItemClickListener displayDetails = new AdapterView.OnItemClickListener() {
@@ -121,7 +121,6 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         membersDownloaded = 0;
         firstDeletion = false;
         backClicked = false;
-        stillInBand = true;
         checkIfInBand = false;
         searchingByName = false;
         searchingByEmail = false;
@@ -130,8 +129,6 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         bandInfoManager.getUserInfo(this);
         swipeLayout.setRefreshing(false);
     }
-
-
 
     /**
      * Handle success from database

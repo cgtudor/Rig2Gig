@@ -738,4 +738,7 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         return super.onOptionsItemSelected(item);
     }
 
+    public TextView getFader() {
+        return fader;
+    }
 }
