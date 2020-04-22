@@ -181,7 +181,7 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     {
         for (int i = 0; i < VenueTypes.getTypes().length; i++)
         {
-            if (VenueTypes.getTypes()[i].equals(venue.get("venue-type")))
+            if (venue != null && VenueTypes.getTypes()[i].equals(venue.get("venue-type")))
             {
                 venueType.setSelection(i);
                 i = VenueTypes.getTypes().length;
@@ -196,14 +196,22 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
     {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner, VenueTypes.getTypes());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        venueType.setAdapter(adapter);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                venueType.setAdapter(adapter);
+            }
+        });
         venueType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
                 ((TextView)parentView.getChildAt(0)).setTextColor(Color.BLACK);
-                venue.put("venue-type", VenueTypes.getTypes()[position]);
+                if(venue != null)
+                {
+                    venue.put("venue-type", VenueTypes.getTypes()[position]);
+                }
             }
 
             @Override
@@ -532,34 +540,41 @@ public class VenueDetailsEditor extends AppCompatActivity implements CreateAdver
      */
     @Override
     public boolean validateDataMap() {
-        for (Map.Entry element : venue.entrySet()) {
-            String val = element.getValue().toString();
-            if (val == null || val.trim().isEmpty()) {
-                runOnUiThread(new Runnable() {
+        if( venue != null)
+        {
+            for (Map.Entry element : venue.entrySet()) {
+                String val = element.getValue().toString();
+                if (val == null || val.trim().isEmpty()) {
+                    runOnUiThread(new Runnable() {
 
-                    @Override
+                        @Override
+                        public void run() {
+                            Toast.makeText(VenueDetailsEditor.this,
+                                    "Details not updated.  Ensure all fields are complete " +
+                                            "and try again",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return false;
+                }
+            }
+            if (!PatternsCompat.EMAIL_ADDRESS.matcher(venue.get("email-address").toString()).matches())
+            {
+                runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(VenueDetailsEditor.this,
-                                "Details not updated.  Ensure all fields are complete " +
-                                        "and try again",
+                                "Details not updated.  Email address is invalid.",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
                 return false;
             }
+            return true;
         }
-        if (!PatternsCompat.EMAIL_ADDRESS.matcher(venue.get("email-address").toString()).matches())
+        else
         {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(VenueDetailsEditor.this,
-                            "Details not updated.  Email address is invalid.",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
             return false;
         }
-        return true;
     }
 
     /**

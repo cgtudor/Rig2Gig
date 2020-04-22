@@ -313,8 +313,14 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
         else
         {
-            image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
-            chosenPic = image.getDrawable();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    image = ImageRequestHandler.handleResponse(requestCode, resultCode, data, image);
+                    chosenPic = image.getDrawable();
+                }
+            });
+
         }
     }
 
@@ -590,77 +596,81 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
      */
     @Override
     public boolean validateDataMap() {
-        for (Map.Entry element : musician.entrySet()) {
-            if (!(element.getKey().equals("bands")))
-            {
-                String val = element.getValue().toString();
-                if (element.getKey().equals("genres"))
-                {
-                    if (val != null && !val.equals(""))
-                    {
-                        val = val.substring(1, val.length() - 1);
-                    }
-                    if (val.trim().isEmpty())
-                    {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(MusicianDetailsEditor.this,
-                                        "Details not updated.  Ensure all fields are complete " +
-                                                "and try again",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (val == null || val.trim().isEmpty()) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(MusicianDetailsEditor.this,
-                                        "Details not updated.  Ensure all fields are complete " +
-                                                "and try again",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        return false;
-                    }
-                }
-            }
-        }
-        if (distance != null)
+        if (musician != null)
         {
-            int leadingZeros = 0;
-            String distanceValue = distance.getText().toString();
-            while (true)
-            {
-                if (distanceValue.length() != 0 && distanceValue.length() > leadingZeros && distanceValue.charAt(leadingZeros) == '0')
+            for (Map.Entry element : musician.entrySet()) {
+                if (!(element.getKey().equals("bands")))
                 {
-                    leadingZeros++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-            String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
-            if (actualNumber.length() == 0)
-            {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MusicianDetailsEditor.this,
-                                "Details not updated.  Distance cannot be '0'.",
-                                Toast.LENGTH_SHORT).show();
+                    String val = element.getValue().toString();
+                    if (element.getKey().equals("genres"))
+                    {
+                        if (val != null && !val.equals(""))
+                        {
+                            val = val.substring(1, val.length() - 1);
+                        }
+                        if (val.trim().isEmpty())
+                        {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MusicianDetailsEditor.this,
+                                            "Details not updated.  Ensure all fields are complete " +
+                                                    "and try again",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            return false;
+                        }
                     }
-                });
-                return false;
+                    else
+                    {
+                        if (val == null || val.trim().isEmpty()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MusicianDetailsEditor.this,
+                                            "Details not updated.  Ensure all fields are complete " +
+                                                    "and try again",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            return false;
+                        }
+                    }
+                }
             }
+            if (distance != null)
+            {
+                int leadingZeros = 0;
+                String distanceValue = distance.getText().toString();
+                while (true)
+                {
+                    if (distanceValue.length() != 0 && distanceValue.length() > leadingZeros && distanceValue.charAt(leadingZeros) == '0')
+                    {
+                        leadingZeros++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
+                if (actualNumber.length() == 0)
+                {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MusicianDetailsEditor.this,
+                                    "Details not updated.  Distance cannot be '0'.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return false;
+                }
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**

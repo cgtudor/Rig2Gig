@@ -190,6 +190,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
                         ratingType.setText("My Musician Rating");
                         ratingType.setVisibility(View.VISIBLE);
                         musicianRatingBar.setRating(Float.valueOf(currentMusicianRating));
+                        unrated.setVisibility(View.INVISIBLE);
                     }
                 }
                 else if(viewerType.equals("venues"))
@@ -212,6 +213,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
                         ratingType.setText("My Performer Rating");
                         ratingType.setVisibility(View.VISIBLE);
                         musicianRatingBar.setRating(Float.valueOf(currentPerformerRating));
+                        unrated.setVisibility(View.INVISIBLE);
                     }
                 }
                 else

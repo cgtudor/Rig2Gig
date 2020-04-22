@@ -1,9 +1,5 @@
 package com.gangoffive.rig2gig.advert.details;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,12 +16,20 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.firebase.GlideApp;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
-import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.profile.VenueProfileActivity;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -53,13 +57,6 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 public class VenueListingDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 

@@ -189,6 +189,7 @@ public class BandProfileActivity extends AppCompatActivity {
                         ratingType.setText("Our Band Rating");
                         ratingType.setVisibility(View.VISIBLE);
                         bandRatingBar.setRating(Float.valueOf(currentMusicianRating));
+                        unrated.setVisibility(View.INVISIBLE);
                     }
                 }
                 else if(viewerType.equals("venues"))

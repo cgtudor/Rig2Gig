@@ -599,86 +599,93 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
      */
     @Override
     public boolean validateDataMap() {
-        for (Map.Entry element : band.entrySet()) {
-            if (!(element.getKey().toString().equals("members")))
-            {
-                String val = element.getValue().toString();
-                if (element.getKey().equals("genres"))
-                {
-                    if (val != null && !val.equals(""))
-                    {
-                        val = val.substring(1, val.length() - 1);
-                    }
-                    if (val.trim().isEmpty())
-                    {
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                Toast.makeText(BandDetailsEditor.this,
-                                        "Details not updated.  Ensure all fields are complete " +
-                                                "and try again",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (val == null || val.trim().isEmpty())
-                    {
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                Toast.makeText(BandDetailsEditor.this,
-                                        "Details not updated.  Ensure all fields are complete " +
-                                                "and try again",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        return false;
-                    }
-                }
-            }
-        }
-        if (distance != null)
+        if (band != null)
         {
-            int leadingZeros = 0;
-            String distanceValue = distance.getText().toString();
-            while (true)
-            {
-                if (distanceValue.length() != 0 && distanceValue.length() > leadingZeros && distanceValue.charAt(leadingZeros) == '0')
+            for (Map.Entry element : band.entrySet()) {
+                if (!(element.getKey().toString().equals("members")))
                 {
-                    leadingZeros++;
-                }
-                else
-                {
-                    break;
+                    String val = element.getValue().toString();
+                    if (element.getKey().equals("genres"))
+                    {
+                        if (val != null && !val.equals(""))
+                        {
+                            val = val.substring(1, val.length() - 1);
+                        }
+                        if (val.trim().isEmpty())
+                        {
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(BandDetailsEditor.this,
+                                            "Details not updated.  Ensure all fields are complete " +
+                                                    "and try again",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if (val == null || val.trim().isEmpty())
+                        {
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(BandDetailsEditor.this,
+                                            "Details not updated.  Ensure all fields are complete " +
+                                                    "and try again",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            return false;
+                        }
+                    }
                 }
             }
-            String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
-            if (actualNumber.length() == 0)
+            if (distance != null)
+            {
+                int leadingZeros = 0;
+                String distanceValue = distance.getText().toString();
+                while (true)
+                {
+                    if (distanceValue.length() != 0 && distanceValue.length() > leadingZeros && distanceValue.charAt(leadingZeros) == '0')
+                    {
+                        leadingZeros++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                String actualNumber = distanceValue.substring(leadingZeros,distanceValue.length());
+                if (actualNumber.length() == 0)
+                {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(BandDetailsEditor.this,
+                                    "Details not updated.  Distance cannot be '0'.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return false;
+                }
+            }
+            if (!PatternsCompat.EMAIL_ADDRESS.matcher(band.get("email").toString()).matches())
             {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(BandDetailsEditor.this,
-                                "Details not updated.  Distance cannot be '0'.",
+                                "Details not updated.  Email address is invalid.",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
                 return false;
             }
+            return true;
         }
-        if (!PatternsCompat.EMAIL_ADDRESS.matcher(band.get("email").toString()).matches())
+        else
         {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(BandDetailsEditor.this,
-                            "Details not updated.  Email address is invalid.",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
             return false;
         }
-        return true;
     }
 
     /**

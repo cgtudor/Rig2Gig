@@ -1,9 +1,11 @@
 package com.gangoffive.rig2gig.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -25,10 +27,9 @@ public class TermsOfServiceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.termsandconditions, container, false);
+        final View v = inflater.inflate(R.layout.activity_privacy_policy, container, false);
 
-
-        mWebView = v.findViewById(R.id.tandcs);
+        mWebView = v.findViewById(R.id.fragmentwebview);
 
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
