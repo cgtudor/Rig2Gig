@@ -39,6 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_margin="10dp"
+        android:progressTint="#FFD700"
         app:layout_constraintBottom_toTopOf="@+id/rate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"

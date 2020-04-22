@@ -25,6 +25,7 @@ import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.ViewHolder> {
@@ -32,6 +33,7 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.ViewHolder> 
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private DocumentReference docRef;
+    private final DecimalFormat decimalFormatTwo = new DecimalFormat("#.##");
 
     private ArrayList<VenueListing> venueListings;
     private Context context;
@@ -121,7 +123,16 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.ViewHolder> 
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
                         holder.textViewName.setText(document.get("name").toString());
                         holder.textViewLoc.setText(document.get("location").toString());
-                        holder.textViewRating.setText(document.get("venue-rating").toString());
+
+                        if(document.get("venue-rating").toString().equals("N/A"))
+                        {
+                            holder.textViewRating.setText(document.get("venue-rating").toString());
+                        }
+                        else
+                        {
+                            holder.textViewRating.setText(decimalFormatTwo.format(Float.valueOf(document.get("venue-rating").toString())));
+                        }
+
                         holder.textViewRatingText.setText("out of 5");
                         StorageReference venuePic = storage.getReference().child("/images/venue-listings/" + venueListing.getListingRef() + ".jpg");
                         GlideApp.with(holder.imageViewPhoto.getContext())

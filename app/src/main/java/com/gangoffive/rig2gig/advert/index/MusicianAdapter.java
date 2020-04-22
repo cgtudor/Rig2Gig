@@ -25,6 +25,7 @@ import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class MusicianAdapter extends RecyclerView.Adapter<MusicianAdapter.ViewHolder>{
@@ -32,6 +33,7 @@ public class MusicianAdapter extends RecyclerView.Adapter<MusicianAdapter.ViewHo
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private DocumentReference docRef;
+    private final DecimalFormat decimalFormatTwo = new DecimalFormat("#.##");
 
     private ArrayList<MusicianListing> musicianListings;
     private Context context;
@@ -134,7 +136,14 @@ public class MusicianAdapter extends RecyclerView.Adapter<MusicianAdapter.ViewHo
                         positions = positions.trim();
                         holder.textViewPos.setText(positions);
                         holder.textViewLoc.setText(document.get("location").toString());
-                        holder.textViewRating.setText(document.get("musician-rating").toString());
+                        if(document.get("musician-rating").toString().equals("N/A"))
+                        {
+                            holder.textViewRating.setText(document.get("musician-rating").toString());
+                        }
+                        else
+                        {
+                            holder.textViewRating.setText(decimalFormatTwo.format(Float.valueOf(document.get("musician-rating").toString())));
+                        }
                         holder.textViewRatingText.setText("out of 5");
                         StorageReference bandPic = storage.getReference().child("/images/musician-listings/" + musicianListing.getListingRef() + ".jpg");
                         GlideApp.with(holder.imageViewPhoto.getContext())

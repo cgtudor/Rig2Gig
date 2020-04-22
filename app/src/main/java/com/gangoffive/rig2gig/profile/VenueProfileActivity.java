@@ -146,19 +146,19 @@ public class VenueProfileActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
             {
                 String currentVenueRating = task.getResult().get("venue-rating").toString();
+                TextView unrated = findViewById(R.id.unrated);
 
                 if(currentVenueRating.equals("N/A"))
                 {
                     //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
                     venueRatingBar.setRating(0);
-
-                    TextView unrated = findViewById(R.id.unrated);
                     unrated.setVisibility(View.VISIBLE);
                 }
                 else
                 {
                     //Else we want to show what the current rating is.
                     venueRatingBar.setRating(Float.valueOf(currentVenueRating));
+                    unrated.setVisibility(View.INVISIBLE);
                 }
             }
         });

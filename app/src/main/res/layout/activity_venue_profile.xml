@@ -173,7 +173,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/unrated"
-            android:text="Rate Us!"
+            android:text="  Rate Venue!  "
             android:textColor="#FFFFFF"/>
 
         <TextView

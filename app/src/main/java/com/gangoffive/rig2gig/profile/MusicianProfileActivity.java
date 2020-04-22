@@ -173,6 +173,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
                 if(viewerType.equals("bands"))
                 {
                     String currentMusicianRating = task.getResult().get("musician-rating").toString();
+                    rateMeButton.setText("  Rate Musician!  ");
 
                     if(currentMusicianRating.equals("N/A"))
                     {
@@ -194,6 +195,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
                 else if(viewerType.equals("venues"))
                 {
                     String currentPerformerRating = task.getResult().get("performer-rating").toString();
+                    rateMeButton.setText("  Rate Performer!  ");
 
                     if(currentPerformerRating.equals("N/A"))
                     {
