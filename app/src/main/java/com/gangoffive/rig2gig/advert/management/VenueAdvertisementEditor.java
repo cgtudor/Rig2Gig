@@ -5,17 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import com.gangoffive.rig2gig.R;
-import com.gangoffive.rig2gig.advert.details.VenueListingDetailsActivity;
-import com.gangoffive.rig2gig.firebase.ListingManager;
-import com.gangoffive.rig2gig.utils.ImageRequestHandler;
-import com.gangoffive.rig2gig.utils.MainActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.tabs.TabLayout;
-import androidx.annotation.NonNull;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -25,13 +14,27 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
+import com.gangoffive.rig2gig.R;
+import com.gangoffive.rig2gig.advert.details.VenueListingDetailsActivity;
+import com.gangoffive.rig2gig.firebase.ListingManager;
 import com.gangoffive.rig2gig.ui.TabbedView.SectionsPagerAdapter;
+import com.gangoffive.rig2gig.utils.ImageRequestHandler;
+import com.gangoffive.rig2gig.utils.MainActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -341,7 +344,6 @@ public class VenueAdvertisementEditor extends AppCompatActivity implements Creat
             });
             Intent intent = new Intent(VenueAdvertisementEditor.this, VenueListingDetailsActivity.class);
             intent.putExtra("EXTRA_VENUE_LISTING_ID", listingManager.getListingRef());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
             finish();
         } else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE) {
