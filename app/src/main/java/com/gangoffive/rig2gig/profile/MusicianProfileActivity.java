@@ -1,6 +1,7 @@
 package com.gangoffive.rig2gig.profile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -8,12 +9,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gangoffive.rig2gig.firebase.GlideApp;
@@ -21,6 +27,7 @@ import com.gangoffive.rig2gig.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,8 +39,18 @@ import java.util.ArrayList;
 
 public class MusicianProfileActivity extends AppCompatActivity {
 
-    private String mID;
+    private String mID; //Musician ID for  profile
+    private String viewerType; //Can be null if viewer did not open the profile from communications.
+    private String viewerRef;
     private final ArrayList<String> bandArray = new ArrayList<>();
+    private Button rateMeButton;
+    private RatingBar musicianRatingBar;
+    private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
+    private final CollectionReference musicianReference = FSTORE.collection("musicians");
+    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
+    private DocumentReference ratingDocReference;
+    private TextView viewer_rating_xml;
+    private TextView fader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +63,16 @@ public class MusicianProfileActivity extends AppCompatActivity {
 
         final ImageView musicianPhoto = findViewById(R.id.musicianPhoto);
         final TextView musicianName = findViewById(R.id.musicianName);
-        final TextView rating = findViewById(R.id.rating);
+        //final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
         final TextView distance = findViewById(R.id.venue_description_final);
         final TextView bands = findViewById(R.id.bands);
 
         /*Used to get the id of the musician from the previous activity*/
         mID = getIntent().getStringExtra("EXTRA_MUSICIAN_ID");
+        /*If a user is opening the profile from communications*/
+        viewerType = getIntent().getStringExtra("EXTRA_VIEWER_TYPE"); //venues / musicians / bands
+        viewerRef = getIntent().getStringExtra("EXTRA_VIEWER_REF"); //The ID of the viewer
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -84,7 +104,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                         musicianName.setText(document.get("name").toString());
-                        rating.setText("Rating: " + document.get("rating").toString() + "/5");
+                        //rating.setText("Rating: " + document.get("rating").toString() + "/5");
                         location.setText(document.get("location").toString());
                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
                         bandArray.addAll((ArrayList<String>) document.get("bands"));
@@ -128,6 +148,182 @@ public class MusicianProfileActivity extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .skipMemoryCache(false)
                 .into(musicianPhoto);
+
+        rateMeButton = findViewById(R.id.rating_button);
+        musicianRatingBar = findViewById(R.id.rating_bar);
+
+        getRatingFromFirebase();
+        setupRatingDialog();
+        checkAlreadyRated();
+    }
+
+    /**
+     * This method is used to get the Venue's current rating from the database and create an appropriate display.
+     */
+    private void getRatingFromFirebase()
+    {
+        musicianReference.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+                TextView ratingType = findViewById(R.id.my_rating);
+                TextView unrated = findViewById(R.id.unrated);
+
+                if(viewerType.equals("bands"))
+                {
+                    String currentMusicianRating = task.getResult().get("musician-rating").toString();
+                    rateMeButton.setText("  Rate Musician!  ");
+
+                    if(currentMusicianRating.equals("N/A"))
+                    {
+                        //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
+                        musicianRatingBar.setRating(0);
+
+                        unrated.setVisibility(View.VISIBLE);
+                        ratingType.setText("My Musician Rating");
+                        ratingType.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        //Else we want to show what the current rating is.
+                        ratingType.setText("My Musician Rating");
+                        ratingType.setVisibility(View.VISIBLE);
+                        musicianRatingBar.setRating(Float.valueOf(currentMusicianRating));
+                        unrated.setVisibility(View.INVISIBLE);
+                    }
+                }
+                else if(viewerType.equals("venues"))
+                {
+                    String currentPerformerRating = task.getResult().get("performer-rating").toString();
+                    rateMeButton.setText("  Rate Performer!  ");
+
+                    if(currentPerformerRating.equals("N/A"))
+                    {
+                        //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
+                        musicianRatingBar.setRating(0);
+
+                        unrated.setVisibility(View.VISIBLE);
+                        ratingType.setText("My Performer Rating");
+                        ratingType.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        //Else we want to show what the current rating is.
+                        ratingType.setText("My Performer Rating");
+                        ratingType.setVisibility(View.VISIBLE);
+                        musicianRatingBar.setRating(Float.valueOf(currentPerformerRating));
+                        unrated.setVisibility(View.INVISIBLE);
+                    }
+                }
+                else
+                {
+                    System.out.println(TAG + " viewerType Error! viewerType ====== " + viewerType);
+                }
+            }
+        });
+    }
+
+    /**
+     * This method is used to set up the rating dialog for users if they have not rated a Musician yet.
+     */
+    private void setupRatingDialog()
+    {
+        if(viewerRef != null || viewerType != null)
+        {
+            rateMeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fader = findViewById(R.id.fader);
+                    Window window = getWindow();
+                    window.setStatusBarColor(ContextCompat.getColor(MusicianProfileActivity.this, R.color.darkerMain));
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            fader.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+                    Intent intent = new Intent(MusicianProfileActivity.this, MusicianProfileRatingsDialog.class);
+                    intent.putExtra("EXTRA_MUSICIAN_ID", mID);
+                    intent.putExtra("EXTRA_VIEWER_REF", viewerRef);
+                    intent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                    startActivityForResult(intent, 1);
+                }
+            });
+        }
+    }
+
+    /**
+     * Handle activity result, namely whether the musician is confirmed to be removed
+     * @param requestCode request code
+     * @param resultCode result code
+     * @param data intent data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+        fader.setVisibility(View.GONE);
+
+        if(data != null && data.getBooleanExtra("EXTRA_HAS_RATED", true))
+        {
+            Toast.makeText(MusicianProfileActivity.this, "Rating Submitted!", Toast.LENGTH_SHORT).show();
+
+            rateMeButton.setVisibility(View.GONE);
+
+            viewer_rating_xml = findViewById(R.id.viewer_rating);
+            viewer_rating_xml.setText("Thank you! You rated me " + data.getFloatExtra("EXTRA_RATING_RESULT", 0) + " stars!");
+            viewer_rating_xml.setVisibility(View.VISIBLE);
+            getRatingFromFirebase();
+        }
+        else
+        {
+            Toast.makeText(MusicianProfileActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * This method is used to check whether or not the user viewing the Musician has already submitted a rating.
+     */
+    private void checkAlreadyRated()
+    {
+        if(viewerRef != null || viewerType != null)
+        {
+            ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(mID);
+
+            ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Object viewerRating = task.getResult().get("rating");
+
+                    if (viewerRating != null) //Our rating isn't null and we have reviewed this Musician before.
+                    {
+                        System.out.println(TAG + " viewerRef found in ratedMap");
+
+                        System.out.println(TAG + " Setting viewer rating on profile.");
+
+                        viewer_rating_xml = findViewById(R.id.viewer_rating);
+
+                        if (viewerType.equals("bands")) {
+                            viewer_rating_xml.setText("You rated my Musician skills " + viewerRating.toString() + " stars!");
+                        } else if (viewerType.equals("venues")) {
+                            viewer_rating_xml.setText("You rated my Performance skills " + viewerRating.toString() + " stars!");
+                        } else {
+                            System.out.println(TAG + " viewerType Error! viewerType ====== " + viewerType);
+                        }
+
+                        viewer_rating_xml.setVisibility(View.VISIBLE);
+                    } else {
+                        //We haven't reviewed this Musician before.
+                        Button rating_button_xml = findViewById(R.id.rating_button);
+                        rating_button_xml.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
     }
 
     /**

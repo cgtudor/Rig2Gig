@@ -1,19 +1,28 @@
 package com.gangoffive.rig2gig.profile;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gangoffive.rig2gig.firebase.GlideApp;
@@ -21,15 +30,28 @@ import com.gangoffive.rig2gig.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import java.util.HashMap;
 
 public class VenueProfileActivity extends AppCompatActivity {
-    private String vID;
+    private String vID; //Venue ID for  profile
+    private String viewerType; //Can be null if viewer did not open the profile from communications.
+    private String viewerRef;
+    private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
+    private final CollectionReference venueReference = FSTORE.collection("venues");
+    private Button rateMeButton;
+    private RatingBar venueRatingBar;
+    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
+    private DocumentReference ratingDocReference;
+    private TextView viewer_rating_xml;
+    private TextView fader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +65,14 @@ public class VenueProfileActivity extends AppCompatActivity {
         final ImageView venuePhoto = findViewById(R.id.venuePhoto);
         final TextView venueName = findViewById(R.id.venueName);
         final TextView description = findViewById(R.id.description);
-        final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
         final TextView type = findViewById(R.id.type);
 
         /*Used to get the id of the venue from the previous activity*/
         vID = getIntent().getStringExtra("EXTRA_VENUE_ID");
+        /*If a user is opening the profile from communications*/
+        viewerType = getIntent().getStringExtra("EXTRA_VIEWER_TYPE"); //venues / musicians / bands
+        viewerRef = getIntent().getStringExtra("EXTRA_VIEWER_REF"); //The ID of the viewer
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -80,7 +104,6 @@ public class VenueProfileActivity extends AppCompatActivity {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                         venueName.setText(document.get("name").toString());
-                        rating.setText("Rating: " + document.get("rating").toString() + "/5");
                         location.setText(document.get("location").toString());
                         type.setText(document.get("venue-type").toString());
                         description.setText(document.get("description").toString());
@@ -103,6 +126,133 @@ public class VenueProfileActivity extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(venuePhoto);
+
+        rateMeButton = findViewById(R.id.rating_button);
+        venueRatingBar = findViewById(R.id.rating_bar);
+
+        getRatingFromFirebase();
+        setupRatingDialog();
+        checkAlreadyRated();
+    }
+
+    /**
+     * This method is used to get the Venue's current rating from the database and create an appropriate display.
+     */
+    private void getRatingFromFirebase()
+    {
+        venueReference.document(vID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+                String currentVenueRating = task.getResult().get("venue-rating").toString();
+                TextView unrated = findViewById(R.id.unrated);
+
+                if(currentVenueRating.equals("N/A"))
+                {
+                    //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
+                    venueRatingBar.setRating(0);
+                    unrated.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    //Else we want to show what the current rating is.
+                    venueRatingBar.setRating(Float.valueOf(currentVenueRating));
+                    unrated.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
+    /**
+     * Handle activity result, namely whether the musician is confirmed to be removed
+     * @param requestCode request code
+     * @param resultCode result code
+     * @param data intent data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+        fader.setVisibility(View.GONE);
+
+        if(data != null && data.getBooleanExtra("EXTRA_HAS_RATED", true))
+        {
+            Toast.makeText(VenueProfileActivity.this, "Rating Submitted!", Toast.LENGTH_SHORT).show();
+
+            rateMeButton.setVisibility(View.GONE);
+
+            viewer_rating_xml = findViewById(R.id.viewer_rating);
+            viewer_rating_xml.setText("Thank you! You rated us " + data.getFloatExtra("EXTRA_RATING_RESULT", 0) + " stars!");
+            viewer_rating_xml.setVisibility(View.VISIBLE);
+            getRatingFromFirebase();
+        }
+        else
+        {
+            Toast.makeText(VenueProfileActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * This method is used to set up the rating dialog for users if they have not rated a Musician yet.
+     */
+    private void setupRatingDialog()
+    {
+        if(viewerRef != null || viewerType != null)
+        {
+            rateMeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fader = findViewById(R.id.fader);
+                    Window window = getWindow();
+                    window.setStatusBarColor(ContextCompat.getColor(VenueProfileActivity.this, R.color.darkerMain));
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            fader.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+                    Intent intent = new Intent(VenueProfileActivity.this, VenueProfileRatingsDialog.class);
+                    intent.putExtra("EXTRA_VENUE_ID", vID);
+                    intent.putExtra("EXTRA_VIEWER_REF", viewerRef);
+                    intent.putExtra("EXTRA_VIEWER_TYPE", viewerType);
+                    startActivityForResult(intent, 1);
+                }
+            });
+        }
+    }
+
+    /**
+     * This method is used to check whether or not the user viewing the Musician has already submitted a rating.
+     * Here we decide whether we will show the Rate Me button or an appropriate message.
+     */
+    private void checkAlreadyRated()
+    {
+        if(viewerRef != null || viewerType != null)
+        {
+            ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(vID);
+
+            ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Object viewerRating = task.getResult().get("rating");
+
+                    if (viewerRating != null) //Our rating isn't null and we have reviewed this Venue before.
+                    {
+                        viewer_rating_xml = findViewById(R.id.viewer_rating);
+                        viewer_rating_xml.setText("You rated us " + viewerRating.toString() + " stars!");
+                        viewer_rating_xml.setVisibility(View.VISIBLE);
+                    } else {
+                        //We haven't reviewed this Venue before.
+                        Button rating_button_xml = findViewById(R.id.rating_button);
+                        rating_button_xml.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
     }
 
     /**

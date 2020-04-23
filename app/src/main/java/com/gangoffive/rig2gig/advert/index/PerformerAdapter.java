@@ -25,6 +25,7 @@ import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class PerformerAdapter extends RecyclerView.Adapter<PerformerAdapter.ViewHolder>{
@@ -32,6 +33,7 @@ public class PerformerAdapter extends RecyclerView.Adapter<PerformerAdapter.View
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private DocumentReference docRef;
+    private final DecimalFormat decimalFormatTwo = new DecimalFormat("#.##");
 
     private ArrayList<PerformerListing> performerListings;
     private Context context;
@@ -130,7 +132,16 @@ public class PerformerAdapter extends RecyclerView.Adapter<PerformerAdapter.View
                         genres = genres.substring(1, genres.length() - 1);
                         holder.textViewGenres.setText(genres);
                         holder.textViewLoc.setText(document.get("location").toString());
-                        holder.textViewRating.setText(document.get("rating").toString());
+
+                        if(document.get("performer-rating").toString().equals("N/A"))
+                        {
+                            holder.textViewRating.setText(document.get("performer-rating").toString());
+                        }
+                        else
+                        {
+                            holder.textViewRating.setText(decimalFormatTwo.format(Float.valueOf(document.get("performer-rating").toString())));
+                        }
+
                         holder.textViewRatingText.setText("out of 5");
                         StorageReference bandPic = storage.getReference().child("/images/performance-listings/" + performerListing.getListingRef() + ".jpg");
                         GlideApp.with(holder.imageViewPhoto.getContext())

@@ -228,7 +228,8 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
                 startActivity(new Intent(getActivity(), VenueDetailsEditor.class).putExtra("EXTRA_VENUE_ID", venueRef));
                 break;
             case "Create Advert":
-                startActivity(new Intent(getActivity(), VenueAdvertisementEditor.class).putExtra("EXTRA_VENUE_ID", venueRef).putExtra("EXTRA_LISTING_ID", ""));
+                startActivityForResult(new Intent(getActivity(), VenueAdvertisementEditor.class).putExtra("EXTRA_VENUE_ID", venueRef)
+                                                                                                .putExtra("EXTRA_LISTING_ID", ""), 1);
                 break;
             case "Edit Advert":
                 startActivity(new Intent(getActivity(), VenueAdvertisementEditor.class).putExtra("EXTRA_VENUE_ID", venueRef).putExtra("EXTRA_LISTING_ID", advertReference));
@@ -294,5 +295,12 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
     private void restartFragment()
     {
         getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        restartFragment();
     }
 }

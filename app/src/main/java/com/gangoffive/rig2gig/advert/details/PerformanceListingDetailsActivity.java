@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ import com.paypal.android.sdk.payments.PaymentConfirmation;
 import org.json.JSONException;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,7 +93,8 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
         final ImageView performerPhoto = findViewById(R.id.performerPhoto);
         final TextView performerName = findViewById(R.id.performerName);
         final TextView genre = findViewById(R.id.genre);
-        final TextView rating = findViewById(R.id.rating);
+        final RatingBar ratingBar = findViewById(R.id.rating_bar);
+        final TextView unrated = findViewById(R.id.unrated);
         final TextView location = findViewById(R.id.location);
         final TextView distance = findViewById(R.id.venue_description_final);
         final Button contact = findViewById(R.id.contact);
@@ -182,11 +185,20 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                                         performerName.setText(document.get("name").toString());
-                                        rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
                                         String genres = document.get("genres").toString();
                                         genres = genres.substring(1, genres.length() - 1);
                                         genre.setText(genres);
+
+                                        if(document.get("performer-rating").toString().equals("N/A"))
+                                        {
+                                            unrated.setVisibility(View.VISIBLE);
+                                        }
+                                        else
+                                        {
+                                            ratingBar.setRating(Float.valueOf(document.get("performer-rating").toString()));
+                                            unrated.setVisibility(View.GONE);
+                                        }
 
                                         if (performerType.equals("musicians")) {
                                             listingOwner.append(document.get("user-ref").toString());

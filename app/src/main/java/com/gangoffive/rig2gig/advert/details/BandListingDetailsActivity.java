@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Rating;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -94,7 +96,8 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
 
         final ImageView bandPhoto = findViewById(R.id.bandPhoto);
         final TextView bandName = findViewById(R.id.bandName);
-        final TextView rating = findViewById(R.id.rating);
+        final RatingBar ratingBar = findViewById(R.id.rating_bar);
+        final TextView unrated = findViewById(R.id.unrated);
         final TextView location = findViewById(R.id.location);
         final TextView position = findViewById(R.id.position);
         final TextView description = findViewById(R.id.description);
@@ -153,9 +156,18 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
                                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                                         bandName.setText(document.get("name").toString());
-                                        rating.setText("Rating: " + document.get("rating").toString() + "/5");
                                         location.setText(document.get("location").toString());
                                         ArrayList<String> members = (ArrayList<String>) document.get("members");
+
+                                        if(document.get("band-rating").toString().equals("N/A"))
+                                        {
+                                            unrated.setVisibility(View.VISIBLE);
+                                        }
+                                        else
+                                        {
+                                            ratingBar.setRating(Float.valueOf(document.get("band-rating").toString()));
+                                            unrated.setVisibility(View.GONE);
+                                        }
 
                                         CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
                                         sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get(source)
