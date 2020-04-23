@@ -2,6 +2,7 @@ package com.gangoffive.rig2gig;
 
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.os.Looper;
 import android.widget.TextView;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
@@ -9,15 +10,25 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
 import com.gangoffive.rig2gig.band.management.ManageBandMembersActivity;
+import com.gangoffive.rig2gig.firebase.ListingManager;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -27,16 +38,22 @@ import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withResourceName;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ManageBandMembersActivityTest
 {
@@ -44,6 +61,14 @@ public class ManageBandMembersActivityTest
     private  Map<String,Object> bigBand;
     private ArrayList<Map<String,Object>> bigBandMembers;
     private IntentsTestRule intentsTestRule = new IntentsTestRule(ManageBandMembersActivity.class);
+
+    @BeforeClass
+    public static void setupClass() {
+        if (Looper.myLooper() == null)
+        {
+            Looper.prepare();
+        }
+    }
 
     @Before
     public void setup()
@@ -269,6 +294,8 @@ public class ManageBandMembersActivityTest
             testRule.getActivity().onSuccessFromDatabase(musician);
         }
         testRule.getActivity().setUsersMusicianRef("test member 0");
+        ListingManager manager = mock(ListingManager.class);
+        testRule.getActivity().setBandInfoManager(manager);
         Intents.init();
         Matcher<Intent> intent = allOf(
                 hasExtra ("EXTRA_CURRENT_MEMBERS",testRule.getActivity().getMemberRefs()),
@@ -277,10 +304,334 @@ public class ManageBandMembersActivityTest
                 hasExtra ("EXTRA_USER_NAME","musician name 0"),
                 hasExtra ("EXTRA_USERS_MUSICIAN_ID","test member 0")
         );
-        testRule.getActivity().searchForMembers();
+        onView(withId(R.id.add_by_name)).perform(click());
+        assertTrue(testRule.getActivity().isSearchingByName());
+        assertTrue(testRule.getActivity().isCheckIfInBand());
+        verify(manager,times(1)).getUserInfo(testRule.getActivity());
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
         intended(intent);
         Intents.release();
+        onView(withId(R.id.searchWindowMain)).check(matches(isDisplayed()));
     }
 
+    @Test
+    public void testSearchForMembersByEmail()
+    {
+        setupBand(1);
+        testRule.getActivity().setuID("test member 0");
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        for (Map<String,Object> musician: bigBandMembers) {
+            testRule.getActivity().onSuccessFromDatabase(musician);
+        }
+        testRule.getActivity().setUsersMusicianRef("test member 0");
+        ListingManager manager = mock(ListingManager.class);
+        testRule.getActivity().setBandInfoManager(manager);
+        Intents.init();
+        Matcher<Intent> intent = allOf(
+                hasExtra ("EXTRA_CURRENT_MEMBERS",testRule.getActivity().getMemberRefs()),
+                hasExtra ("EXTRA_BAND_ID",null),
+                hasExtra ("EXTRA_BAND_NAME","test name"),
+                hasExtra ("EXTRA_USER_NAME","musician name 0"),
+                hasExtra ("EXTRA_USERS_MUSICIAN_ID","test member 0")
+        );
+        onView(withId(R.id.add_by_email)).perform(click());
+        assertTrue(testRule.getActivity().isSearchingByEmail());
+        assertTrue(testRule.getActivity().isCheckIfInBand());
+        verify(manager,times(1)).getUserInfo(testRule.getActivity());
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        intended(intent);
+        Intents.release();
+        onView(withId(R.id.emailSearchWindowMain)).check(matches(isDisplayed()));
+    }
 
+    @Test
+    public void testPressPhoneBackButton()
+    {
+        setupBand(1);
+        testRule.getActivity().setuID("test member 0");
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        for (Map<String,Object> musician: bigBandMembers) {
+            testRule.getActivity().onSuccessFromDatabase(musician);
+        }
+        testRule.getActivity().setUsersMusicianRef("test member 0");
+        ListingManager manager = mock(ListingManager.class);
+        testRule.getActivity().setBandInfoManager(manager);
+        pressBack();
+        assertTrue(testRule.getActivity().isBackClicked());
+        assertTrue(testRule.getActivity().isCheckIfInBand());
+        verify(manager,times(1)).getUserInfo(testRule.getActivity());
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        assertTrue(testRule.getActivity().isFinishing());
+    }
+
+    @Test
+    public void testPressMenuBarBackButton()
+    {
+        setupBand(1);
+        testRule.getActivity().setuID("test member 0");
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        for (Map<String,Object> musician: bigBandMembers) {
+            testRule.getActivity().onSuccessFromDatabase(musician);
+        }
+        testRule.getActivity().setUsersMusicianRef("test member 0");
+        ListingManager manager = mock(ListingManager.class);
+        testRule.getActivity().setBandInfoManager(manager);
+        onView(withContentDescription("Navigate up")).perform(click());
+        assertTrue(testRule.getActivity().isBackClicked());
+        assertTrue(testRule.getActivity().isCheckIfInBand());
+        verify(manager,times(1)).getUserInfo(testRule.getActivity());
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        assertTrue(testRule.getActivity().isFinishing());
+    }
+
+    @Test
+    public void testHandleDatabaseResponseSuccess() throws InterruptedException {
+        setupBand(2);
+        testRule.getActivity().setuID("test member 0");
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        for (Map<String,Object> musician: bigBandMembers) {
+            testRule.getActivity().onSuccessFromDatabase(musician);
+        }
+        testRule.getActivity().setUsersMusicianRef("test member 0");
+        ListingManager manager = mock(ListingManager.class);
+        Query firstQuery = mock(Query.class);
+        Query secondQuery = mock(Query.class);
+        Task<QuerySnapshot> taskOne = mock(Task.class);
+        Task<QuerySnapshot> taskTwo = mock(Task.class);
+        when(taskOne.addOnCompleteListener(any())).thenReturn(taskTwo);
+        when(secondQuery.get()).thenReturn(taskOne);
+        when(firstQuery.whereEqualTo(anyString(), any())).thenReturn(secondQuery);
+        CollectionReference joinedBand = mock(CollectionReference.class);
+        when(joinedBand.whereEqualTo("type", "accepted-invite")).thenReturn(firstQuery);
+        testRule.getActivity().setJoinedBand(joinedBand);
+        testRule.getActivity().setBandInfoManager(manager);
+        testRule.getActivity().setFirstDeletion(false);
+        testRule.getActivity().setRemovedRef("test member 1");
+        testRule.getActivity().setPosition(1);
+        testRule.getActivity().handleDatabaseResponse(ListingManager.CreationResult.SUCCESS);
+        verify(joinedBand,times(1)).whereEqualTo("type", "accepted-invite");
+        verify(firstQuery,times(1)).whereEqualTo(anyString(), any());
+        verify(secondQuery,times(1)).get();
+        verify(taskOne,times(1)).addOnCompleteListener(any());
+        verify(manager,times(1)).getUserInfo(testRule.getActivity());
+        assertFalse(testRule.getActivity().getNames().contains("test member 1"));
+        assertTrue(testRule.getActivity().getBand() == null);
+        assertTrue(testRule.getActivity().getGridView() == null);
+        assertTrue(testRule.getActivity().getPosition() == -1);
+        assertTrue(testRule.getActivity().getMembersDownloaded() == 0);
+    }
+
+    @Test
+    public void testHandleDatabaseResponseSuccessRemovingSelf() throws InterruptedException {
+        setupBand(2);
+        testRule.getActivity().setuID("test member 0");
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        for (Map<String,Object> musician: bigBandMembers) {
+            testRule.getActivity().onSuccessFromDatabase(musician);
+        }
+        testRule.getActivity().setUsersMusicianRef("test member 0");
+        ListingManager manager = mock(ListingManager.class);
+        Query firstQuery = mock(Query.class);
+        Query secondQuery = mock(Query.class);
+        Task<QuerySnapshot> taskOne = mock(Task.class);
+        Task<QuerySnapshot> taskTwo = mock(Task.class);
+        when(taskOne.addOnCompleteListener(any())).thenReturn(taskTwo);
+        when(secondQuery.get()).thenReturn(taskOne);
+        when(firstQuery.whereEqualTo(anyString(), any())).thenReturn(secondQuery);
+        CollectionReference joinedBand = mock(CollectionReference.class);
+        when(joinedBand.whereEqualTo("type", "accepted-invite")).thenReturn(firstQuery);
+        testRule.getActivity().setJoinedBand(joinedBand);
+        testRule.getActivity().setBandInfoManager(manager);
+        testRule.getActivity().setFirstDeletion(false);
+        testRule.getActivity().setRemovedRef("test member 0");
+        testRule.getActivity().setPosition(1);
+        testRule.getActivity().handleDatabaseResponse(ListingManager.CreationResult.SUCCESS);
+        verify(joinedBand,times(1)).whereEqualTo("type", "accepted-invite");
+        verify(firstQuery,times(1)).whereEqualTo(anyString(), any());
+        verify(secondQuery,times(1)).get();
+        verify(taskOne,times(1)).addOnCompleteListener(any());
+        assertFalse(testRule.getActivity().getNames().contains("test member 0"));
+        assertTrue(testRule.getActivity().isFinishing());
+    }
+
+    @Test
+    public void testAcceptedInvites()
+    {
+        testRule.getActivity().setRemoveeUserRef("test member 0");
+        DocumentSnapshot docSnap = mock(DocumentSnapshot.class);
+        when(docSnap.getId()).thenReturn("test doc ref");
+        Iterator<DocumentSnapshot> iterator = mock(Iterator.class);
+        when(iterator.hasNext()).thenReturn(true,false);
+        when(iterator.next()).thenReturn(docSnap);
+        List<DocumentSnapshot> docSnaps = mock(List.class);
+        when(docSnaps.iterator()).thenReturn(iterator);
+        QuerySnapshot querySnap = mock(QuerySnapshot.class);
+        when(querySnap.isEmpty()).thenReturn(false);
+        Task<QuerySnapshot> task = mock(Task.class);
+        when(task.isSuccessful()).thenReturn(true);
+        when(task.getResult()).thenReturn(querySnap);
+        when(querySnap.getDocuments()).thenReturn(docSnaps);
+        testRule.getActivity().getAcceptedInvites().onComplete(task);
+        assertTrue(testRule.getActivity().getDocRef().equals("test doc ref"));
+        verify(task,times(1)).isSuccessful();
+        verify(task,times(2)).getResult();
+        verify(querySnap,times(1)).getDocuments();
+        verify(docSnap,times(1)).getId();
+        verify(iterator,times(2)).hasNext();
+        verify(iterator,times(1)).next();
+        verify(docSnaps,times(1)).iterator();
+        verify(querySnap,times(1)).isEmpty();
+    }
+
+    @Test
+    public void testOnSuccessfulImageDownloadDoesNothing() {
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().onSuccessFromDatabase(musician1);
+        testRule.getActivity().onSuccessFromDatabase(musician2);
+        testRule.getActivity().onSuccessFromDatabase(musician3);
+        testRule.getActivity().onSuccessfulImageDownload();
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
+        onView(withId(R.id.constraintLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.toolbar2)).check(matches(isDisplayed()));
+        onView(withId(R.id.addImage)).check(matches(isDisplayed()));
+        onView(withId(R.id.addMemberText)).check(matches(isDisplayed()));
+        onView(withId(R.id.scroll)).check(matches(isDisplayed()));
+        onView(withId(R.id.gridView)).check(matches(isDisplayed()));
+        onView(withText("musician name 1")).check(matches(isDisplayed()));
+        onView(withText("musician name 2")).check(matches(isDisplayed()));
+        onView(withText("musician name 3")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testSetViewReferencesDoesNothing() {
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().onSuccessFromDatabase(musician1);
+        testRule.getActivity().onSuccessFromDatabase(musician2);
+        testRule.getActivity().onSuccessFromDatabase(musician3);
+        testRule.getActivity().setViewReferences();
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
+        onView(withId(R.id.constraintLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.toolbar2)).check(matches(isDisplayed()));
+        onView(withId(R.id.addImage)).check(matches(isDisplayed()));
+        onView(withId(R.id.addMemberText)).check(matches(isDisplayed()));
+        onView(withId(R.id.scroll)).check(matches(isDisplayed()));
+        onView(withId(R.id.gridView)).check(matches(isDisplayed()));
+        onView(withText("musician name 1")).check(matches(isDisplayed()));
+        onView(withText("musician name 2")).check(matches(isDisplayed()));
+        onView(withText("musician name 3")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testCreateAdvertisementDoesNothing() {
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().onSuccessFromDatabase(musician1);
+        testRule.getActivity().onSuccessFromDatabase(musician2);
+        testRule.getActivity().onSuccessFromDatabase(musician3);
+        testRule.getActivity().createAdvertisement();
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
+        onView(withId(R.id.constraintLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.toolbar2)).check(matches(isDisplayed()));
+        onView(withId(R.id.addImage)).check(matches(isDisplayed()));
+        onView(withId(R.id.addMemberText)).check(matches(isDisplayed()));
+        onView(withId(R.id.scroll)).check(matches(isDisplayed()));
+        onView(withId(R.id.gridView)).check(matches(isDisplayed()));
+        onView(withText("musician name 1")).check(matches(isDisplayed()));
+        onView(withText("musician name 2")).check(matches(isDisplayed()));
+        onView(withText("musician name 3")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testCancelAdvertisementDoesNothing() {
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().onSuccessFromDatabase(musician1);
+        testRule.getActivity().onSuccessFromDatabase(musician2);
+        testRule.getActivity().onSuccessFromDatabase(musician3);
+        testRule.getActivity().cancelAdvertisement();
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
+        onView(withId(R.id.constraintLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.toolbar2)).check(matches(isDisplayed()));
+        onView(withId(R.id.addImage)).check(matches(isDisplayed()));
+        onView(withId(R.id.addMemberText)).check(matches(isDisplayed()));
+        onView(withId(R.id.scroll)).check(matches(isDisplayed()));
+        onView(withId(R.id.gridView)).check(matches(isDisplayed()));
+        onView(withText("musician name 1")).check(matches(isDisplayed()));
+        onView(withText("musician name 2")).check(matches(isDisplayed()));
+        onView(withText("musician name 3")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testListingDataMapDoesNothing() {
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().onSuccessFromDatabase(musician1);
+        testRule.getActivity().onSuccessFromDatabase(musician2);
+        testRule.getActivity().onSuccessFromDatabase(musician3);
+        testRule.getActivity().listingDataMap();
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
+        onView(withId(R.id.constraintLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.toolbar2)).check(matches(isDisplayed()));
+        onView(withId(R.id.addImage)).check(matches(isDisplayed()));
+        onView(withId(R.id.addMemberText)).check(matches(isDisplayed()));
+        onView(withId(R.id.scroll)).check(matches(isDisplayed()));
+        onView(withId(R.id.gridView)).check(matches(isDisplayed()));
+        onView(withText("musician name 1")).check(matches(isDisplayed()));
+        onView(withText("musician name 2")).check(matches(isDisplayed()));
+        onView(withText("musician name 3")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testValidateDataMapDoesNothing() {
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().onSuccessFromDatabase(musician1);
+        testRule.getActivity().onSuccessFromDatabase(musician2);
+        testRule.getActivity().onSuccessFromDatabase(musician3);
+        assertTrue(testRule.getActivity().validateDataMap() == false);
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
+        onView(withId(R.id.constraintLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.toolbar2)).check(matches(isDisplayed()));
+        onView(withId(R.id.addImage)).check(matches(isDisplayed()));
+        onView(withId(R.id.addMemberText)).check(matches(isDisplayed()));
+        onView(withId(R.id.scroll)).check(matches(isDisplayed()));
+        onView(withId(R.id.gridView)).check(matches(isDisplayed()));
+        onView(withText("musician name 1")).check(matches(isDisplayed()));
+        onView(withText("musician name 2")).check(matches(isDisplayed()));
+        onView(withText("musician name 3")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testOnSuccessFromDatabaseSecondVariantDoesNothing() {
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().onSuccessFromDatabase(musician1);
+        testRule.getActivity().onSuccessFromDatabase(musician2);
+        testRule.getActivity().onSuccessFromDatabase(musician3);
+        testRule.getActivity().onSuccessFromDatabase(null,null);
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
+        onView(withId(R.id.constraintLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.toolbar2)).check(matches(isDisplayed()));
+        onView(withId(R.id.addImage)).check(matches(isDisplayed()));
+        onView(withId(R.id.addMemberText)).check(matches(isDisplayed()));
+        onView(withId(R.id.scroll)).check(matches(isDisplayed()));
+        onView(withId(R.id.gridView)).check(matches(isDisplayed()));
+        onView(withText("musician name 1")).check(matches(isDisplayed()));
+        onView(withText("musician name 2")).check(matches(isDisplayed()));
+        onView(withText("musician name 3")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testGetImageViewDoesNothing() {
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().onSuccessFromDatabase(musician1);
+        testRule.getActivity().onSuccessFromDatabase(musician2);
+        testRule.getActivity().onSuccessFromDatabase(musician3);
+        assertTrue(testRule.getActivity().getImageView() == null);
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
+        onView(withId(R.id.constraintLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.toolbar2)).check(matches(isDisplayed()));
+        onView(withId(R.id.addImage)).check(matches(isDisplayed()));
+        onView(withId(R.id.addMemberText)).check(matches(isDisplayed()));
+        onView(withId(R.id.scroll)).check(matches(isDisplayed()));
+        onView(withId(R.id.gridView)).check(matches(isDisplayed()));
+        onView(withText("musician name 1")).check(matches(isDisplayed()));
+        onView(withText("musician name 2")).check(matches(isDisplayed()));
+        onView(withText("musician name 3")).check(matches(isDisplayed()));
+    }
 }

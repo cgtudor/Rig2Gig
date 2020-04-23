@@ -106,29 +106,32 @@ public class EmailSearchActivity extends AppCompatActivity implements SearchView
      */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
-        if (!((List)data.get("members")).contains(usersMusicianRef))
+        if(data != null)
         {
-            Intent intent = new Intent(this, NavBarActivity.class);
-            startActivity(intent);
-            finish();
-        }
-        else
-        {
-            members = (ArrayList)data.get("members");
-            if (submittingQuery)
+            if (!((List)data.get("members")).contains(usersMusicianRef))
             {
-                submittingQuery = false;
-                queryUserDatabase();
+                Intent intent = new Intent(this, NavBarActivity.class);
+                startActivity(intent);
+                finish();
             }
-            if(confirmingAdd)
+            else
             {
-                confirmingAdd = false;
-                confirmAddMember();
-            }
-            if(backClicked)
-            {
-                backClicked = false;
-                goBack();
+                members = (ArrayList)data.get("members");
+                if (submittingQuery)
+                {
+                    submittingQuery = false;
+                    queryUserDatabase();
+                }
+                if(confirmingAdd)
+                {
+                    confirmingAdd = false;
+                    confirmAddMember();
+                }
+                if(backClicked)
+                {
+                    backClicked = false;
+                    goBack();
+                }
             }
         }
     }
