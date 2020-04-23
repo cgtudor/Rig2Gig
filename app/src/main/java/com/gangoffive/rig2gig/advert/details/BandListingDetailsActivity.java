@@ -1,12 +1,8 @@
 package com.gangoffive.rig2gig.advert.details;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Rating;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -20,10 +16,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.gangoffive.rig2gig.profile.BandProfileActivity;
-import com.gangoffive.rig2gig.firebase.GlideApp;
+import com.bumptech.glide.signature.ObjectKey;
 import com.gangoffive.rig2gig.R;
+import com.gangoffive.rig2gig.firebase.GlideApp;
+import com.gangoffive.rig2gig.profile.BandProfileActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -61,6 +61,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BandListingDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private static HashMap<String, ObjectKey> signatures = new HashMap<>();
 
     private String bID;
     private final Date expiry = new Date();
@@ -304,12 +306,26 @@ public class BandListingDetailsActivity extends AppCompatActivity implements OnM
         StorageReference bandPic = storage.getReference().child("/images/band-listings/" + bID + ".jpg");
 
         /*Using Glide to load the picture from the reference directly into the ImageView*/
-
-        GlideApp.with(this)
-                .load(bandPic)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .skipMemoryCache(false)
-                .into(bandPhoto);
+        if(isConnected)
+        {
+            ObjectKey signature = new ObjectKey(String.valueOf(System.currentTimeMillis()));
+            signatures.put(bID, signature);
+            GlideApp.with(this)
+                    .load(bandPic)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .skipMemoryCache(false)
+                    .signature(signature)
+                    .into(bandPhoto);
+        }
+        else
+        {
+            GlideApp.with(this)
+                    .load(bandPic)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .skipMemoryCache(false)
+                    .signature(signatures.get(bID))
+                    .into(bandPhoto);
+        }
     }
 
     /**
