@@ -375,7 +375,12 @@ public class BandDetailsEditor extends AppCompatActivity implements CreateAdvert
         }
         if(phone != null && band !=null)
         {
-            phone.setText(band.get("phone-number").toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    phone.setText(band.get("phone-number").toString());
+                }
+            });
         }
     }
 

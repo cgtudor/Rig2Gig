@@ -550,4 +550,8 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     public boolean isCheckIfInBand() {
         return checkIfInBand;
     }
+
+    public List getMemberRefs() {
+        return memberRefs;
+    }
 }

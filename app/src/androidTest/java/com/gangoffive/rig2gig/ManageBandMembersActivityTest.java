@@ -4,6 +4,7 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.widget.TextView;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
@@ -31,13 +32,18 @@ import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withResourceName;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
 
 public class ManageBandMembersActivityTest
 {
     private Map<String,Object> bandData, musician1, musician2, musician3;
     private  Map<String,Object> bigBand;
     private ArrayList<Map<String,Object>> bigBandMembers;
+    private IntentsTestRule intentsTestRule = new IntentsTestRule(ManageBandMembersActivity.class);
 
     @Before
     public void setup()
@@ -237,8 +243,6 @@ public class ManageBandMembersActivityTest
         testRule.getActivity().onSuccessFromDatabase(bigBand);
         intended(expectedIntent);
         Intents.release();
-
-
     }
 
     @Test
@@ -265,7 +269,18 @@ public class ManageBandMembersActivityTest
             testRule.getActivity().onSuccessFromDatabase(musician);
         }
         testRule.getActivity().setUsersMusicianRef("test member 0");
-        onView(withId(R.id.add_by_name)).perform(click());
-        assertTrue(testRule.getActivity().isCheckIfInBand());
+        Intents.init();
+        Matcher<Intent> intent = allOf(
+                hasExtra ("EXTRA_CURRENT_MEMBERS",testRule.getActivity().getMemberRefs()),
+                hasExtra ("EXTRA_BAND_ID",null),
+                hasExtra ("EXTRA_BAND_NAME","test name"),
+                hasExtra ("EXTRA_USER_NAME","musician name 0"),
+                hasExtra ("EXTRA_USERS_MUSICIAN_ID","test member 0")
+        );
+        testRule.getActivity().searchForMembers();
+        intended(intent);
+        Intents.release();
     }
+
+
 }
