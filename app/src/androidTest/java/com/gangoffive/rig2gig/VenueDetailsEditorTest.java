@@ -349,20 +349,23 @@ public class VenueDetailsEditorTest {
     }
 
     @Test
-    public void testOnDataBaseResultListingFailure() {
+    public void testOnDataBaseResultListingFailure() throws InterruptedException {
+        Thread.sleep(2000);
         Enum result = ListingManager.CreationResult.LISTING_FAILURE;
         testRule.getActivity().handleDatabaseResponse(result);
         onView(withText("Updating details failed.  Check your connection and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+        Thread.sleep(2000);
     }
 
     @Test
     public void testOnDataBaseResultImageFailure() throws InterruptedException {
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         Enum result = ListingManager.CreationResult.IMAGE_FAILURE;
         testRule.getActivity().handleDatabaseResponse(result);
         onView(withText("Updating details failed.  Check your connection and try again"))
                 .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+        Thread.sleep(2000);
     }
 
     @Test

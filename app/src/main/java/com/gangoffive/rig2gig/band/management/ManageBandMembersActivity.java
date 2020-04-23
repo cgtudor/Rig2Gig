@@ -338,9 +338,15 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     {
         if (!firstDeletion && creationResult == ListingManager.CreationResult.SUCCESS)
         {
-            Toast.makeText(ManageBandMembersActivity.this,
-                    names.get(position) + " has been removed",
-                    Toast.LENGTH_LONG).show();
+            String name = names.get(position).toString();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ManageBandMembersActivity.this,
+                            name + " has been removed",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
             updateJoinedCommunication();
             if(removedRef.equals(usersMusicianRef))
             {
@@ -360,10 +366,15 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         }
         else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE)
         {
-            Toast.makeText(ManageBandMembersActivity.this,
-                    "Failed to remove " + names.get(position) +" from band.  Check your " +
-                            "connection and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ManageBandMembersActivity.this,
+                            "Failed to remove " + names.get(position) +" from band.  Check your " +
+                                    "connection and try again",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
             memberRefs.add(position,removedRef);
         }
         firstDeletion = false;
@@ -625,5 +636,21 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
 
     public GridView getGridView() {
         return gridView;
+    }
+
+    public SwipeRefreshLayout getSwipeLayout() {
+        return swipeLayout;
+    }
+
+    public boolean isFirstDeletion() {
+        return firstDeletion;
+    }
+
+    public boolean isRemovingMember() {
+        return removingMember;
+    }
+
+    public void setNames(ArrayList names) {
+        this.names = names;
     }
 }

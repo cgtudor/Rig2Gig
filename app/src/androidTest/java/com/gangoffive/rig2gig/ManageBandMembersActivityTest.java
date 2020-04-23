@@ -1,6 +1,8 @@
 package com.gangoffive.rig2gig;
 
+import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Looper;
 import android.widget.TextView;
@@ -9,6 +11,7 @@ import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
+import com.gangoffive.rig2gig.band.management.DeleteMemberConfirmation;
 import com.gangoffive.rig2gig.band.management.ManageBandMembersActivity;
 import com.gangoffive.rig2gig.firebase.ListingManager;
 import com.google.android.gms.tasks.Task;
@@ -30,11 +33,13 @@ import java.util.Map;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -386,6 +391,7 @@ public class ManageBandMembersActivityTest
 
     @Test
     public void testHandleDatabaseResponseSuccess() throws InterruptedException {
+        Thread.sleep(2000);
         setupBand(2);
         testRule.getActivity().setuID("test member 0");
         testRule.getActivity().onSuccessFromDatabase(bigBand);
@@ -415,10 +421,74 @@ public class ManageBandMembersActivityTest
         verify(taskOne,times(1)).addOnCompleteListener(any());
         verify(manager,times(1)).getUserInfo(testRule.getActivity());
         assertFalse(testRule.getActivity().getNames().contains("test member 1"));
+        onView(withText("musician name 1 has been removed"))
+                .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
         assertTrue(testRule.getActivity().getBand() == null);
         assertTrue(testRule.getActivity().getGridView() == null);
         assertTrue(testRule.getActivity().getPosition() == -1);
         assertTrue(testRule.getActivity().getMembersDownloaded() == 0);
+        Thread.sleep(2000);
+
+    }
+
+    @Test
+    public void testHandleDatabaseResponseFailureScenarioOne() throws InterruptedException {
+        Thread.sleep(2000);
+        setupBand(2);
+        testRule.getActivity().setuID("test member 0");
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        for (Map<String,Object> musician: bigBandMembers) {
+            testRule.getActivity().onSuccessFromDatabase(musician);
+        }
+        testRule.getActivity().setUsersMusicianRef("test member 0");
+        testRule.getActivity().setFirstDeletion(true);
+        testRule.getActivity().setRemovedRef("test member 1");
+        testRule.getActivity().setPosition(1);
+        testRule.getActivity().getMemberRefs().remove(1);
+        testRule.getActivity().handleDatabaseResponse(ListingManager.CreationResult.LISTING_FAILURE);
+        assertTrue(testRule.getActivity().getMemberRefs().get(1).equals("test member 1"));
+        onView(withText("Failed to remove musician name 1 from band.  Check your connection and try again"))
+                .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+        Thread.sleep(2000);
+    }
+
+    @Test
+    public void testHandleDatabaseResponseFailureScenarioTwo() throws InterruptedException {
+        Thread.sleep(2000);
+        setupBand(2);
+        testRule.getActivity().setuID("test member 0");
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        for (Map<String,Object> musician: bigBandMembers) {
+            testRule.getActivity().onSuccessFromDatabase(musician);
+        }
+        testRule.getActivity().setUsersMusicianRef("test member 0");
+        testRule.getActivity().setRemovedRef("test member 1");
+        testRule.getActivity().setPosition(1);
+        testRule.getActivity().setFirstDeletion(true);
+        testRule.getActivity().handleDatabaseResponse(ListingManager.CreationResult.SUCCESS);
+        assertTrue(testRule.getActivity().getMemberRefs().get(1).equals("test member 1"));
+
+    }
+
+    @Test
+    public void testHandleDatabaseResponseFailureScenarioThree() throws InterruptedException {
+        Thread.sleep(2000);
+        setupBand(2);
+        testRule.getActivity().setuID("test member 0");
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        for (Map<String,Object> musician: bigBandMembers) {
+            testRule.getActivity().onSuccessFromDatabase(musician);
+        }
+        testRule.getActivity().setUsersMusicianRef("test member 0");
+        testRule.getActivity().setFirstDeletion(false);
+        testRule.getActivity().setRemovedRef("test member 1");
+        testRule.getActivity().setPosition(1);
+        testRule.getActivity().getMemberRefs().remove(1);
+        testRule.getActivity().handleDatabaseResponse(ListingManager.CreationResult.LISTING_FAILURE);
+        assertTrue(testRule.getActivity().getMemberRefs().get(1).equals("test member 1"));
+        onView(withText("Failed to remove musician name 1 from band.  Check your connection and try again"))
+                .inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+        Thread.sleep(2000);
     }
 
     @Test
@@ -444,7 +514,7 @@ public class ManageBandMembersActivityTest
         testRule.getActivity().setBandInfoManager(manager);
         testRule.getActivity().setFirstDeletion(false);
         testRule.getActivity().setRemovedRef("test member 0");
-        testRule.getActivity().setPosition(1);
+        testRule.getActivity().setPosition(0);
         testRule.getActivity().handleDatabaseResponse(ListingManager.CreationResult.SUCCESS);
         verify(joinedBand,times(1)).whereEqualTo("type", "accepted-invite");
         verify(firstQuery,times(1)).whereEqualTo(anyString(), any());
@@ -452,6 +522,7 @@ public class ManageBandMembersActivityTest
         verify(taskOne,times(1)).addOnCompleteListener(any());
         assertFalse(testRule.getActivity().getNames().contains("test member 0"));
         assertTrue(testRule.getActivity().isFinishing());
+
     }
 
     @Test
@@ -481,6 +552,15 @@ public class ManageBandMembersActivityTest
         verify(iterator,times(1)).next();
         verify(docSnaps,times(1)).iterator();
         verify(querySnap,times(1)).isEmpty();
+    }
+
+    @Test
+    public void testUpdateReceiverCommSuccess()
+    {
+        Task<QuerySnapshot> task = mock(Task.class);
+        when(task.isSuccessful()).thenReturn(true);
+        testRule.getActivity().getUpdateReceiverComm().onComplete(task);
+        verify(task,times(1)).isSuccessful();
     }
 
     @Test
@@ -633,5 +713,53 @@ public class ManageBandMembersActivityTest
         onView(withText("musician name 1")).check(matches(isDisplayed()));
         onView(withText("musician name 2")).check(matches(isDisplayed()));
         onView(withText("musician name 3")).check(matches(isDisplayed()));
+    }
+
+
+
+    @Test
+    public void testSwipeToRefresh() {
+        testRule.getActivity().onSuccessFromDatabase(bandData);
+        testRule.getActivity().onSuccessFromDatabase(musician1);
+        testRule.getActivity().onSuccessFromDatabase(musician2);
+        testRule.getActivity().onSuccessFromDatabase(musician3);
+        ListingManager manager = mock(ListingManager.class);
+        testRule.getActivity().setBandInfoManager(manager);
+        onView(withId(R.id.swipeContainer)).perform(swipeDown());
+        assertTrue(testRule.getActivity().getPosition() == -1);
+        assertTrue(testRule.getActivity().getMembersDownloaded() == 0);
+        assertTrue(testRule.getActivity().isFirstDeletion() == false);
+        assertTrue(testRule.getActivity().isBackClicked() == false);
+        assertTrue(testRule.getActivity().isCheckIfInBand() == false);
+        assertTrue(testRule.getActivity().isSearchingByName() == false);
+        assertTrue(testRule.getActivity().isSearchingByEmail() == false);
+        assertTrue(testRule.getActivity().isRemovingMember() == false);
+        assertTrue(testRule.getActivity().getBand() == null);
+        assertTrue(testRule.getActivity().getSwipeLayout().isRefreshing() == false);
+        verify(manager,times(1)).getUserInfo(testRule.getActivity());
+    }
+
+    @Test
+    public void testEmptyBand() throws InterruptedException {
+        setupBand(0);
+        testRule.getActivity().setNames(new ArrayList<String>());
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        assertFalse(testRule.getActivity().getGridView() == null);
+    }
+
+    @Test
+    public void testOnActivityResultRemoveMember() throws InterruptedException {
+        setupBand(1);
+        testRule.getActivity().setuID("test member 1");
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        for (Map<String,Object> musician: bigBandMembers) {
+            testRule.getActivity().onSuccessFromDatabase(musician);
+        }
+        testRule.getActivity().setUsersMusicianRef("test member 0");
+        testRule.getActivity().setRemovedRef("test member 0");
+        onView(withId(R.id.remove)).perform(click());
+        testRule.getActivity().onSuccessFromDatabase(bigBand);
+        onView(withId(R.id.yes)).perform(click());
+        Thread.sleep(2000);
     }
 }
