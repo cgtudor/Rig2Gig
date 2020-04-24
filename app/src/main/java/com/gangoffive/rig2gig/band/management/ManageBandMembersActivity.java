@@ -44,7 +44,7 @@ import java.util.Map;
 
 public class ManageBandMembersActivity extends AppCompatActivity implements CreateAdvertisement {
 
-    private String bandRef, type, removedRef, uID, userName, usersMusicianRef, removeMember, removeeUserRef, listingRef;
+    private String bandRef, type, removedRef, uID, userName, usersMusicianRef, removeMember, removeeUserRef, listingRef, docRef;
     private Button addByEmail, addByName;
     private SwipeRefreshLayout swipeLayout;
     private TextView fader;
@@ -57,9 +57,10 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     private ArrayList <Map<String, Object>> musicians;
     private int membersDownloaded, position, removePosition;
     private GridView gridView;
-    private boolean firstDeletion, backClicked, stillInBand, checkIfInBand, searchingByName, searchingByEmail,
+    private boolean firstDeletion, backClicked, checkIfInBand, searchingByName, searchingByEmail,
             removingMember, removingMemberConfirmed;
     private FirebaseFirestore db;
+    private CollectionReference joinedBand;
     private AdapterView.OnItemClickListener displayDetails = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View v,
                                 int position, long id) {
@@ -121,7 +122,6 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         membersDownloaded = 0;
         firstDeletion = false;
         backClicked = false;
-        stillInBand = true;
         checkIfInBand = false;
         searchingByName = false;
         searchingByEmail = false;
@@ -130,8 +130,6 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         bandInfoManager.getUserInfo(this);
         swipeLayout.setRefreshing(false);
     }
-
-
 
     /**
      * Handle success from database
@@ -319,6 +317,9 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     {
         removedRef = (String)memberRefs.get(position);
         removeeUserRef = musicians.get(position).get("user-ref").toString();
+        joinedBand = db.collection("communications")
+                .document(removeeUserRef)
+                .collection("received");
         memberRefs.remove(position);
         band.put("members",memberRefs);
         firstDeletion = true;
@@ -337,9 +338,15 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
     {
         if (!firstDeletion && creationResult == ListingManager.CreationResult.SUCCESS)
         {
-            Toast.makeText(ManageBandMembersActivity.this,
-                    names.get(position) + " has been removed",
-                    Toast.LENGTH_LONG).show();
+            String name = names.get(position).toString();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ManageBandMembersActivity.this,
+                            name + " has been removed",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
             updateJoinedCommunication();
             if(removedRef.equals(usersMusicianRef))
             {
@@ -359,10 +366,15 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         }
         else if (creationResult == ListingManager.CreationResult.LISTING_FAILURE)
         {
-            Toast.makeText(ManageBandMembersActivity.this,
-                    "Failed to remove " + names.get(position) +" from band.  Check your " +
-                            "connection and try again",
-                    Toast.LENGTH_LONG).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ManageBandMembersActivity.this,
+                            "Failed to remove " + names.get(position) +" from band.  Check your " +
+                                    "connection and try again",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
             memberRefs.add(position,removedRef);
         }
         firstDeletion = false;
@@ -442,43 +454,43 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
      * Update joined communication in database, allowing removed member to be reinvited
      */
     public void updateJoinedCommunication() {
-        CollectionReference joinedBand = db.collection("communications")
-                .document(removeeUserRef)
-                .collection("received");
         joinedBand.whereEqualTo("type", "accepted-invite")
                 .whereEqualTo("band-ref", bandRef)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            QuerySnapshot query = task.getResult();
-                            if (!query.isEmpty()) {
-                                List<DocumentSnapshot> documentSnapshots = task.getResult().getDocuments();
-                                for (DocumentSnapshot documentSnapshot : documentSnapshots) {
-                                    String docRef = documentSnapshot.getId();
-                                    DocumentReference receiverCommDoc = db.collection("communications")
-                                            .document(removeeUserRef)
-                                            .collection("received")
-                                            .document(docRef);
-                                    receiverCommDoc.update("type", "left-band")
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Log.d("FIRESTORE", "Updated communication document with leaving band");
-                                                    } else {
-                                                        Log.d("FIRESTORE", "Failed to update communication document with leaving band: " + task.getException());
-                                                    }
-                                                }
-                                            });
-
-                                }
-                            }
-                        }
-                    }
-                });
+                .addOnCompleteListener(acceptedInvites);
     }
+
+    private OnCompleteListener acceptedInvites = new OnCompleteListener<QuerySnapshot>() {
+        @Override
+        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            if (task.isSuccessful()) {
+                QuerySnapshot query = task.getResult();
+                if (!query.isEmpty()) {
+                    List<DocumentSnapshot> documentSnapshots = task.getResult().getDocuments();
+                    for (DocumentSnapshot documentSnapshot : documentSnapshots) {
+                        docRef = documentSnapshot.getId();
+                        DocumentReference receiverCommDoc = db.collection("communications")
+                                .document(removeeUserRef)
+                                .collection("received")
+                                .document(docRef);
+                        receiverCommDoc.update("type", "left-band")
+                                .addOnCompleteListener(updateReceiverComm);
+                    }
+                }
+            }
+        }
+    };
+
+    private OnCompleteListener updateReceiverComm = new OnCompleteListener<Void>() {
+        @Override
+        public void onComplete(@NonNull Task<Void> task) {
+            if (task.isSuccessful()) {
+                Log.d("FIRESTORE", "Updated communication document with leaving band");
+            } else {
+                Log.d("FIRESTORE", "Failed to update communication document with leaving band: " + task.getException());
+            }
+        }
+    };
 
     /**
      * @param usersMusicianRef user musician reference to set
@@ -552,5 +564,93 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
      */
     public boolean isCheckIfInBand() {
         return checkIfInBand;
+    }
+
+    public List getMemberRefs() {
+        return memberRefs;
+    }
+
+    public boolean isBackClicked() {
+        return backClicked;
+    }
+
+    public void setBandInfoManager(ListingManager bandInfoManager) {
+        this.bandInfoManager = bandInfoManager;
+    }
+
+    public boolean isSearchingByName() {
+        return searchingByName;
+    }
+
+    public boolean isSearchingByEmail() {
+        return searchingByEmail;
+    }
+
+    public void setFirstDeletion(boolean firstDeletion) {
+        this.firstDeletion = firstDeletion;
+    }
+
+    public void setRemovedRef(String removedRef) {
+        this.removedRef = removedRef;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setJoinedBand(CollectionReference joinedBand) {
+        this.joinedBand = joinedBand;
+    }
+
+    public OnCompleteListener getAcceptedInvites() {
+        return acceptedInvites;
+    }
+
+    public OnCompleteListener getUpdateReceiverComm() {
+        return updateReceiverComm;
+    }
+
+    public String getDocRef() {
+        return docRef;
+    }
+
+    public void setRemoveeUserRef(String removeeUserRef) {
+        this.removeeUserRef = removeeUserRef;
+    }
+
+    public Map<String, Object> getBand() {
+        return band;
+    }
+
+    public ArrayList getNames() {
+        return names;
+    }
+
+    public int getMembersDownloaded() {
+        return membersDownloaded;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public GridView getGridView() {
+        return gridView;
+    }
+
+    public SwipeRefreshLayout getSwipeLayout() {
+        return swipeLayout;
+    }
+
+    public boolean isFirstDeletion() {
+        return firstDeletion;
+    }
+
+    public boolean isRemovingMember() {
+        return removingMember;
+    }
+
+    public void setNames(ArrayList names) {
+        this.names = names;
     }
 }
