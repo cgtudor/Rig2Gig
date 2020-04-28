@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.gangoffive.rig2gig.account.AccountPurposeActivity;
 import com.gangoffive.rig2gig.firebase.GlideApp;
 import com.gangoffive.rig2gig.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -161,41 +162,78 @@ public class BandProfileActivity extends AppCompatActivity {
      */
     private void getRatingFromFirebase()
     {
-        bandReference.document(bID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        if(viewerType != null || viewerRef != null)
         {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            bandReference.document(bID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
             {
-                TextView ratingType = findViewById(R.id.my_rating);
-                TextView unrated = findViewById(R.id.unrated);
-
-                if(viewerType.equals("musicians"))
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
-                    String currentMusicianRating = task.getResult().get("band-rating").toString();
-                    rateMeButton.setText("  Rate Band!  ");
+                    TextView ratingType = findViewById(R.id.my_rating);
+                    TextView unrated = findViewById(R.id.unrated);
 
-                    if(currentMusicianRating.equals("N/A"))
+                    if(viewerType.equals("musicians"))
                     {
-                        //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
-                        bandRatingBar.setRating(0);
+                        String currentMusicianRating = task.getResult().get("band-rating").toString();
+                        rateMeButton.setText("  Rate Band!  ");
 
-                        unrated.setVisibility(View.VISIBLE);
-                        ratingType.setText("Our Band Rating");
-                        ratingType.setVisibility(View.VISIBLE);
+                        if(currentMusicianRating.equals("N/A"))
+                        {
+                            //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
+                            bandRatingBar.setRating(0);
+
+                            unrated.setVisibility(View.VISIBLE);
+                            ratingType.setText("Our Band Rating");
+                            ratingType.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            //Else we want to show what the current rating is.
+                            ratingType.setText("Our Band Rating");
+                            ratingType.setVisibility(View.VISIBLE);
+                            bandRatingBar.setRating(Float.valueOf(currentMusicianRating));
+                            unrated.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                    else if(viewerType.equals("venues"))
+                    {
+                        String currentPerformerRating = task.getResult().get("performer-rating").toString();
+                        rateMeButton.setText("  Rate Performer!  ");
+
+                        if(currentPerformerRating.equals("N/A"))
+                        {
+                            //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
+                            bandRatingBar.setRating(0);
+
+                            unrated.setVisibility(View.VISIBLE);
+                            ratingType.setText("Our Performer Rating");
+                            ratingType.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            //Else we want to show what the current rating is.
+                            ratingType.setText("Our Performer Rating");
+                            ratingType.setVisibility(View.VISIBLE);
+                            bandRatingBar.setRating(Float.valueOf(currentPerformerRating));
+                        }
                     }
                     else
                     {
-                        //Else we want to show what the current rating is.
-                        ratingType.setText("Our Band Rating");
-                        ratingType.setVisibility(View.VISIBLE);
-                        bandRatingBar.setRating(Float.valueOf(currentMusicianRating));
-                        unrated.setVisibility(View.INVISIBLE);
+                        System.out.println(TAG + " viewerType Error! viewerType ====== " + viewerType);
                     }
                 }
-                else if(viewerType.equals("venues"))
+            });
+        }
+        else if(AccountPurposeActivity.userType.equals("Venue"))
+        {
+            bandReference.document(bID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
                     String currentPerformerRating = task.getResult().get("performer-rating").toString();
-                    rateMeButton.setText("  Rate Performer!  ");
+                    TextView ratingType = findViewById(R.id.my_rating);
+                    TextView unrated = findViewById(R.id.unrated);
 
                     if(currentPerformerRating.equals("N/A"))
                     {
@@ -203,23 +241,51 @@ public class BandProfileActivity extends AppCompatActivity {
                         bandRatingBar.setRating(0);
 
                         unrated.setVisibility(View.VISIBLE);
-                        ratingType.setText("Our Performer Rating");
+                        ratingType.setText("My Performer Rating");
                         ratingType.setVisibility(View.VISIBLE);
                     }
                     else
                     {
                         //Else we want to show what the current rating is.
-                        ratingType.setText("Our Performer Rating");
+                        ratingType.setText("My Performer Rating");
                         ratingType.setVisibility(View.VISIBLE);
                         bandRatingBar.setRating(Float.valueOf(currentPerformerRating));
+                        unrated.setVisibility(View.INVISIBLE);
                     }
                 }
-                else
+            });
+        }
+        else
+        {
+            bandReference.document(bID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
-                    System.out.println(TAG + " viewerType Error! viewerType ====== " + viewerType);
+                    String currentBandRating = task.getResult().get("band-rating").toString();
+                    TextView ratingType = findViewById(R.id.my_rating);
+                    TextView unrated = findViewById(R.id.unrated);
+
+                    if(currentBandRating.equals("N/A"))
+                    {
+                        //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
+                        bandRatingBar.setRating(0);
+
+                        unrated.setVisibility(View.VISIBLE);
+                        ratingType.setText("Our Band Rating");
+                        ratingType.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        //Else we want to show what the current rating is.
+                        ratingType.setText("Our Band Rating");
+                        ratingType.setVisibility(View.VISIBLE);
+                        bandRatingBar.setRating(Float.valueOf(currentBandRating));
+                        unrated.setVisibility(View.INVISIBLE);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**

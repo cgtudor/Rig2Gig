@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.gangoffive.rig2gig.account.AccountPurposeActivity;
 import com.gangoffive.rig2gig.firebase.GlideApp;
 import com.gangoffive.rig2gig.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -162,41 +163,79 @@ public class MusicianProfileActivity extends AppCompatActivity {
      */
     private void getRatingFromFirebase()
     {
-        musicianReference.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        if(viewerType != null || viewerRef != null)
         {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            musicianReference.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
             {
-                TextView ratingType = findViewById(R.id.my_rating);
-                TextView unrated = findViewById(R.id.unrated);
-
-                if(viewerType.equals("bands"))
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
-                    String currentMusicianRating = task.getResult().get("musician-rating").toString();
-                    rateMeButton.setText("  Rate Musician!  ");
+                    TextView ratingType = findViewById(R.id.my_rating);
+                    TextView unrated = findViewById(R.id.unrated);
 
-                    if(currentMusicianRating.equals("N/A"))
+                    if(viewerType.equals("bands"))
                     {
-                        //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
-                        musicianRatingBar.setRating(0);
+                        String currentMusicianRating = task.getResult().get("musician-rating").toString();
+                        rateMeButton.setText("  Rate Musician!  ");
 
-                        unrated.setVisibility(View.VISIBLE);
-                        ratingType.setText("My Musician Rating");
-                        ratingType.setVisibility(View.VISIBLE);
+                        if(currentMusicianRating.equals("N/A"))
+                        {
+                            //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
+                            musicianRatingBar.setRating(0);
+
+                            unrated.setVisibility(View.VISIBLE);
+                            ratingType.setText("My Musician Rating");
+                            ratingType.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            //Else we want to show what the current rating is.
+                            ratingType.setText("My Musician Rating");
+                            ratingType.setVisibility(View.VISIBLE);
+                            musicianRatingBar.setRating(Float.valueOf(currentMusicianRating));
+                            unrated.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                    else if(viewerType.equals("venues"))
+                    {
+                        String currentPerformerRating = task.getResult().get("performer-rating").toString();
+                        rateMeButton.setText("  Rate Performer!  ");
+
+                        if(currentPerformerRating.equals("N/A"))
+                        {
+                            //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
+                            musicianRatingBar.setRating(0);
+
+                            unrated.setVisibility(View.VISIBLE);
+                            ratingType.setText("My Performer Rating");
+                            ratingType.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            //Else we want to show what the current rating is.
+                            ratingType.setText("My Performer Rating");
+                            ratingType.setVisibility(View.VISIBLE);
+                            musicianRatingBar.setRating(Float.valueOf(currentPerformerRating));
+                            unrated.setVisibility(View.INVISIBLE);
+                        }
                     }
                     else
                     {
-                        //Else we want to show what the current rating is.
-                        ratingType.setText("My Musician Rating");
-                        ratingType.setVisibility(View.VISIBLE);
-                        musicianRatingBar.setRating(Float.valueOf(currentMusicianRating));
-                        unrated.setVisibility(View.INVISIBLE);
+                        System.out.println(TAG + " viewerType Error! viewerType ====== " + viewerType);
                     }
                 }
-                else if(viewerType.equals("venues"))
+            });
+        }
+        else if(AccountPurposeActivity.userType.equals("Venue"))
+        {
+            musicianReference.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
                     String currentPerformerRating = task.getResult().get("performer-rating").toString();
-                    rateMeButton.setText("  Rate Performer!  ");
+                    TextView ratingType = findViewById(R.id.my_rating);
+                    TextView unrated = findViewById(R.id.unrated);
 
                     if(currentPerformerRating.equals("N/A"))
                     {
@@ -216,12 +255,39 @@ public class MusicianProfileActivity extends AppCompatActivity {
                         unrated.setVisibility(View.INVISIBLE);
                     }
                 }
-                else
+            });
+        }
+        else
+        {
+            musicianReference.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
-                    System.out.println(TAG + " viewerType Error! viewerType ====== " + viewerType);
+                    String currentMusicianRating = task.getResult().get("musician-rating").toString();
+                    TextView ratingType = findViewById(R.id.my_rating);
+                    TextView unrated = findViewById(R.id.unrated);
+
+                    if(currentMusicianRating.equals("N/A"))
+                    {
+                        //We want to display an appropriate message to the user explaining there aren't enough ratings yet.
+                        musicianRatingBar.setRating(0);
+
+                        unrated.setVisibility(View.VISIBLE);
+                        ratingType.setText("My Musician Rating");
+                        ratingType.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        //Else we want to show what the current rating is.
+                        ratingType.setText("My Musician Rating");
+                        ratingType.setVisibility(View.VISIBLE);
+                        musicianRatingBar.setRating(Float.valueOf(currentMusicianRating));
+                        unrated.setVisibility(View.INVISIBLE);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**
