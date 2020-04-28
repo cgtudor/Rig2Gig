@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.firebase.GlideApp;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
@@ -51,7 +52,6 @@ import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import org.json.JSONException;
-import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -59,6 +59,8 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class VenueListingDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private static HashMap<String, ObjectKey> signatures = new HashMap<>();
 
     private String vID;
     private String currentUserType;
@@ -389,11 +391,26 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
 
         /*Using Glide to load the picture from the reference directly into the ImageView*/
 
-        GlideApp.with(this)
+        if(isConnected)
+        {
+            ObjectKey signature = new ObjectKey(String.valueOf(System.currentTimeMillis()));
+            signatures.put(vID, signature);
+            GlideApp.with(this)
                 .load(venuePic)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .skipMemoryCache(false)
+                .signature(signature)
                 .into(venuePhoto);
+        }
+        else
+        {
+            GlideApp.with(this)
+                    .load(venuePic)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .skipMemoryCache(false)
+                    .signature(signatures.get(vID))
+                    .into(venuePhoto);
+        }
     }
 
     /**

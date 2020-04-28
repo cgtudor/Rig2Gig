@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.firebase.GlideApp;
 import com.gangoffive.rig2gig.profile.BandProfileActivity;
@@ -53,12 +54,13 @@ import com.paypal.android.sdk.payments.PaymentConfirmation;
 import org.json.JSONException;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
 public class PerformanceListingDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private static HashMap<String, ObjectKey> signatures = new HashMap<>();
 
     private String pID;
     private final Date expiry = new Date();
@@ -340,11 +342,26 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
         StorageReference performerPic = storage.getReference().child("/images/performance-listings/" + pID + ".jpg");
 
         /*Using Glide to load the picture from the reference directly into the ImageView*/
-        GlideApp.with(this)
-                .load(performerPic)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .skipMemoryCache(false)
-                .into(performerPhoto);
+        if(isConnected)
+        {
+            ObjectKey signature = new ObjectKey(String.valueOf(System.currentTimeMillis()));
+            signatures.put(pID, signature);
+            GlideApp.with(this)
+                    .load(performerPic)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .skipMemoryCache(false)
+                    .signature(signature)
+                    .into(performerPhoto);
+        }
+        else
+        {
+            GlideApp.with(this)
+                    .load(performerPic)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .skipMemoryCache(false)
+                    .signature(signatures.get(pID))
+                    .into(performerPhoto);
+        }
     }
 
     /**

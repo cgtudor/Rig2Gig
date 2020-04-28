@@ -1,8 +1,5 @@
 package com.gangoffive.rig2gig.advert.details;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -18,10 +15,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
+import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.firebase.GlideApp;
 import com.gangoffive.rig2gig.profile.MusicianProfileActivity;
-import com.gangoffive.rig2gig.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -48,6 +49,8 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class MusicianListingDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private static HashMap<String, ObjectKey> signatures = new HashMap<>();
 
     private String mID;
     private String currentBandId = "";
@@ -301,12 +304,26 @@ public class MusicianListingDetailsActivity extends AppCompatActivity implements
         StorageReference musicianPic = storage.getReference().child("/images/musician-listings/" + mID + ".jpg");
 
         /*Using Glide to load the picture from the reference directly into the ImageView*/
-
-        GlideApp.with(this)
-                .load(musicianPic)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .skipMemoryCache(false)
-                .into(musicianPhoto);
+        if(isConnected)
+        {
+            ObjectKey signature = new ObjectKey(String.valueOf(System.currentTimeMillis()));
+            signatures.put(mID, signature);
+            GlideApp.with(this)
+                    .load(musicianPic)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .skipMemoryCache(false)
+                    .signature(signature)
+                    .into(musicianPhoto);
+        }
+        else
+        {
+            GlideApp.with(this)
+                    .load(musicianPic)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .skipMemoryCache(false)
+                    .signature(signatures.get(mID))
+                    .into(musicianPhoto);
+        }
     }
 
     /**
