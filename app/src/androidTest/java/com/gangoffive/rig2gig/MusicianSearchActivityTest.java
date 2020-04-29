@@ -49,9 +49,5 @@ public class MusicianSearchActivityTest {
         onView(allOf(isAssignableFrom(TextView.class), withParent(withResourceName("toolbar")))).check(matches(withText("Invite musicians")));
     }
 
-/*    @Test
-    public void testTypeTextInSearchView() throws InterruptedException {
-        onView(withId(R.id.search_bar)).perform(typeText("a"));
-        onView(withId(R.id.search_bar)).check(matches(withText("a")));
-    }*/
+
 }

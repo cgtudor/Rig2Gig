@@ -6,6 +6,8 @@ import androidx.test.espresso.Root;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
+//based on Toast Matcher found on http://www.qaautomated.com/2016/01/how-to-test-toast-message-using-espresso.html
+
 public class ToastMatcher extends TypeSafeMatcher<Root> {
 
     @Override
