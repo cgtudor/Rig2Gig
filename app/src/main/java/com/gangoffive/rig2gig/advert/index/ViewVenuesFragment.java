@@ -33,9 +33,12 @@ import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ViewVenuesFragment extends Fragment
 {
+    private boolean inTestMode;
+
     private static final String TAG = "ViewVenuesFragment";
 
     private String currentUserType;
@@ -197,6 +200,21 @@ public class ViewVenuesFragment extends Fragment
                         }
                     }
                 });
+    }
+
+    public void onSuccessFromDatabase(ArrayList<Map<String,Object>> venueAdverts) {
+        for(Map<String,Object> venueAdvert : venueAdverts){
+
+
+            VenueListing venueListing = new VenueListing(
+                    venueAdvert.getId(),
+                    venueAdvert.get("venue-ref").toString());
+
+            venueListings.add(venueListing);
+            lastVisible = documentSnapshot;
+        }
+
+        adapter.notifyItemInserted(venueListings.size() - 1);
     }
 
     @Override

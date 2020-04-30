@@ -19,6 +19,7 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private int[] tabTitles;
+    Fragment viewAdvertFragment, savedAdvertFragment;
     private int[] fragments = {R.layout.fragment_view_venues,
             R.layout.fragment_saved_venues};
 
@@ -44,11 +45,11 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
             }
         }
 
-        Fragment viewAdvertFragment = new ViewVenuesFragment();
+        viewAdvertFragment = new ViewVenuesFragment();
         viewAdvertFragment.setArguments(bundle);
         frags[0] = viewAdvertFragment;
 
-        Fragment savedAdvertFragment = new SavedVenuesFragment();
+        savedAdvertFragment = new SavedVenuesFragment();
         savedAdvertFragment.setArguments(bundle);
         frags[1] = savedAdvertFragment;
 
@@ -84,5 +85,13 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
     {
         finish();
         startActivity(getIntent());
+    }
+
+    public Fragment getViewAdvertFragment() {
+        return viewAdvertFragment;
+    }
+
+    public Fragment getSavedAdvertFragment() {
+        return savedAdvertFragment;
     }
 }
