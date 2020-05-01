@@ -8,9 +8,15 @@ import androidx.appcompat.widget.Toolbar;
 import com.gangoffive.rig2gig.R;
 import com.google.android.material.navigation.NavigationView;
 
+/**
+ * This class is used to create a concrete navigation bar for venue type accounts.
+ */
 public class ConcreteVenueNavBar extends NavBarCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
-    public ConcreteVenueNavBar()
+    /**
+     * Default constructor.
+     */
+    ConcreteVenueNavBar()
     {
 
     }

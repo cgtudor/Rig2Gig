@@ -19,12 +19,14 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-
+/**
+ * This class is used to display the contents of the SettingsFragment using Preferences.
+ */
 public class SettingsFragment extends PreferenceFragmentCompat
 {
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    private final String USERID = fAuth.getUid();
+    private final FirebaseAuth FAUTH = FirebaseAuth.getInstance();
+    private final String USERID = FAUTH.getUid();
     private final DocumentReference USERDOCUMENT = FSTORE.collection("users").document(USERID);
 
     /**
@@ -45,7 +47,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
         }
 
         Preference button = getPreferenceManager().findPreference("ChangePassword");
-        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+        {
+            /**
+             * This method is used to call the executeDialog() method when the ChangePassword preference is clicked.
+             * @param preference Represents the preference that has been clicked.
+             * @return Returns true upon the preference being clicked.
+             */
             @Override
             public boolean onPreferenceClick(Preference preference)
             {
@@ -54,9 +62,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
             }
         });
         Preference logout = getPreferenceManager().findPreference("Logout");
-        logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+        {
+            /**
+             * This method is used to call the fbLogout() method when the logout preference is clicked.
+             * @param preference Represents the preference that has been clicked.
+             * @return Returns true upon the preference being clicked.
+             */
             @Override
-            public boolean onPreferenceClick(Preference preference) {
+            public boolean onPreferenceClick(Preference preference)
+            {
                 fbLogout();
                 return true;
             }
@@ -70,6 +85,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
     {
         USERDOCUMENT.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
+            /**
+             * This method is used to determine the completion of a get request of Firebase.
+             * @param task References the result of the get request.
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
             {
@@ -113,6 +132,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         changePasswordDialog.show(getFragmentManager(), "Dialog");
     }
 
+    /**
+     * This class is used to logout of the app and Firebase.
+     */
     private void fbLogout()
     {
         FirebaseAuth fAuth = FirebaseAuth.getInstance();

@@ -44,11 +44,9 @@ public class VenueProfileActivity extends AppCompatActivity {
     private String viewerType; //Can be null if viewer did not open the profile from communications.
     private String viewerRef;
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private final CollectionReference venueReference = FSTORE.collection("venues");
+    private final CollectionReference VENUEREFERENCE = FSTORE.collection("venues");
     private Button rateMeButton;
     private RatingBar venueRatingBar;
-    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
     private DocumentReference ratingDocReference;
     private TextView viewer_rating_xml;
     private TextView fader;
@@ -95,7 +93,12 @@ public class VenueProfileActivity extends AppCompatActivity {
         DocumentReference venue = db.collection("venues").document(vID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        venue.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        venue.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            /**
+             * This method is used to determine the completion of a get request of Firebase.
+             * @param task References the result of the get request.
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -140,8 +143,12 @@ public class VenueProfileActivity extends AppCompatActivity {
      */
     private void getRatingFromFirebase()
     {
-        venueReference.document(vID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        VENUEREFERENCE.document(vID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
+            /**
+             * This method is used to determine the completion of a get request of Firebase.
+             * @param task References the result of the get request.
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
             {
@@ -165,10 +172,10 @@ public class VenueProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Handle activity result, namely whether the musician is confirmed to be removed
-     * @param requestCode request code
-     * @param resultCode result code
-     * @param data intent data
+     * Handle activity result, namely whether the venue has been rated or not by the viewer.
+     * @param requestCode Represents the request code sent by the starting activity.
+     * @param resultCode Represents the result code.
+     * @param data Represents the intent passed back from the completed activity.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
@@ -196,19 +203,28 @@ public class VenueProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * This method is used to set up the rating dialog for users if they have not rated a Musician yet.
+     * This method is used to set up the rating dialog for users if they have not rated a Venue yet.
      */
     private void setupRatingDialog()
     {
         if(viewerRef != null || viewerType != null)
         {
-            rateMeButton.setOnClickListener(new View.OnClickListener() {
+            rateMeButton.setOnClickListener(new View.OnClickListener()
+            {
+                /**
+                 * This method is used to handle the click of the rateMeButton.
+                 * @param v Represents the view.
+                 */
                 @Override
                 public void onClick(View v) {
                     fader = findViewById(R.id.fader);
                     Window window = getWindow();
                     window.setStatusBarColor(ContextCompat.getColor(VenueProfileActivity.this, R.color.darkerMain));
-                    runOnUiThread(new Runnable() {
+                    runOnUiThread(new Runnable()
+                    {
+                        /**
+                         * This UI Thread is used to create the fade effect behind the dialog popup. Used in a separate thread for testing purposes.
+                         */
                         @Override
                         public void run() {
                             fader.setVisibility(View.VISIBLE);
@@ -226,7 +242,7 @@ public class VenueProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * This method is used to check whether or not the user viewing the Musician has already submitted a rating.
+     * This method is used to check whether or not the user viewing the Venue has already submitted a rating.
      * Here we decide whether we will show the Rate Me button or an appropriate message.
      */
     private void checkAlreadyRated()
@@ -235,9 +251,15 @@ public class VenueProfileActivity extends AppCompatActivity {
         {
             ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(vID);
 
-            ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            {
+                /**
+                 * This method is used to determine the completion of a get request of Firebase.
+                 * @param task References the result of the get request.
+                 */
                 @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                {
                     Object viewerRating = task.getResult().get("rating");
 
                     if (viewerRating != null) //Our rating isn't null and we have reviewed this Venue before.
@@ -245,7 +267,9 @@ public class VenueProfileActivity extends AppCompatActivity {
                         viewer_rating_xml = findViewById(R.id.viewer_rating);
                         viewer_rating_xml.setText("You rated us " + viewerRating.toString() + " stars!");
                         viewer_rating_xml.setVisibility(View.VISIBLE);
-                    } else {
+                    }
+                    else
+                    {
                         //We haven't reviewed this Venue before.
                         Button rating_button_xml = findViewById(R.id.rating_button);
                         rating_button_xml.setVisibility(View.VISIBLE);
@@ -292,9 +316,15 @@ public class VenueProfileActivity extends AppCompatActivity {
         DocumentReference venue = db.collection("venues").document(vID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        venue.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        venue.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
+                /**
+                 * This method is used to determine the completion of a get request of Firebase.
+                 * @param task References the result of the get request.
+                 */
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {

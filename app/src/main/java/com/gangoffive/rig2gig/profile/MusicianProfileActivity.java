@@ -47,7 +47,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
     private Button rateMeButton;
     private RatingBar musicianRatingBar;
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private final CollectionReference musicianReference = FSTORE.collection("musicians");
+    private final CollectionReference MUSICIANREFERENCE = FSTORE.collection("musicians");
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
     private DocumentReference ratingDocReference;
     private TextView viewer_rating_xml;
@@ -64,7 +64,6 @@ public class MusicianProfileActivity extends AppCompatActivity {
 
         final ImageView musicianPhoto = findViewById(R.id.musicianPhoto);
         final TextView musicianName = findViewById(R.id.musicianName);
-        //final TextView rating = findViewById(R.id.rating);
         final TextView location = findViewById(R.id.location);
         final TextView distance = findViewById(R.id.venue_description_final);
         final TextView bands = findViewById(R.id.bands);
@@ -96,16 +95,21 @@ public class MusicianProfileActivity extends AppCompatActivity {
         DocumentReference musician = db.collection("musicians").document(mID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        musician.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        musician.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            /**
+             * This method is used to determine the completion of a get request of Firebase.
+             * @param task References the result of the get request.
+             */
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+            {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                         musicianName.setText(document.get("name").toString());
-                        //rating.setText("Rating: " + document.get("rating").toString() + "/5");
                         location.setText(document.get("location").toString());
                         distance.setText("Distance willing to travel: " + document.get("distance").toString() + " miles");
                         bandArray.addAll((ArrayList<String>) document.get("bands"));
@@ -113,7 +117,12 @@ public class MusicianProfileActivity extends AppCompatActivity {
                         for(String band : bandArray)
                         {
                             db.collection("bands").document(band)
-                                    .get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    .get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                            {
+                                /**
+                                 * This method is used to determine the completion of a get request of Firebase.
+                                 * @param task References the result of the get request.
+                                 */
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if(task.isSuccessful())
@@ -159,14 +168,18 @@ public class MusicianProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * This method is used to get the Venue's current rating from the database and create an appropriate display.
+     * This method is used to get the Musician's current rating from the database and create an appropriate display.
      */
     private void getRatingFromFirebase()
     {
         if(viewerType != null || viewerRef != null)
         {
-            musicianReference.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            MUSICIANREFERENCE.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
             {
+                /**
+                 * This method is used to determine the completion of a get request of Firebase.
+                 * @param task References the result of the get request.
+                 */
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
@@ -228,8 +241,12 @@ public class MusicianProfileActivity extends AppCompatActivity {
         }
         else if(AccountPurposeActivity.userType.equals("Venue"))
         {
-            musicianReference.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            MUSICIANREFERENCE.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
             {
+                /**
+                 * This method is used to determine the completion of a get request of Firebase.
+                 * @param task References the result of the get request.
+                 */
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
@@ -259,8 +276,12 @@ public class MusicianProfileActivity extends AppCompatActivity {
         }
         else
         {
-            musicianReference.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            MUSICIANREFERENCE.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
             {
+                /**
+                 * This method is used to determine the completion of a get request of Firebase.
+                 * @param task References the result of the get request.
+                 */
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
@@ -291,19 +312,28 @@ public class MusicianProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * This method is used to set up the rating dialog for users if they have not rated a Musician yet.
+     * This method is used to set up the rating dialog for users if they have not rated the Musician yet.
      */
     private void setupRatingDialog()
     {
         if(viewerRef != null || viewerType != null)
         {
-            rateMeButton.setOnClickListener(new View.OnClickListener() {
+            rateMeButton.setOnClickListener(new View.OnClickListener()
+            {
+                /**
+                 * This method is used to handle the click of the rateMeButton.
+                 * @param v Represents the view.
+                 */
                 @Override
                 public void onClick(View v) {
                     fader = findViewById(R.id.fader);
                     Window window = getWindow();
                     window.setStatusBarColor(ContextCompat.getColor(MusicianProfileActivity.this, R.color.darkerMain));
-                    runOnUiThread(new Runnable() {
+                    runOnUiThread(new Runnable()
+                    {
+                        /**
+                         * This UI Thread is used to create the fade effect behind the dialog popup. Used in a separate thread for testing purposes.
+                         */
                         @Override
                         public void run() {
                             fader.setVisibility(View.VISIBLE);
@@ -321,10 +351,10 @@ public class MusicianProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Handle activity result, namely whether the musician is confirmed to be removed
-     * @param requestCode request code
-     * @param resultCode result code
-     * @param data intent data
+     * Handle activity result, namely whether the musician has been rated or not by the viewer.
+     * @param requestCode Represents the request code sent by the starting activity.
+     * @param resultCode Represents the result code.
+     * @param data Represents the intent passed back from the completed activity.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
@@ -353,6 +383,7 @@ public class MusicianProfileActivity extends AppCompatActivity {
 
     /**
      * This method is used to check whether or not the user viewing the Musician has already submitted a rating.
+     * Here we decide whether we will show the Rate Me button or an appropriate message.
      */
     private void checkAlreadyRated()
     {
@@ -360,7 +391,12 @@ public class MusicianProfileActivity extends AppCompatActivity {
         {
             ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(mID);
 
-            ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            {
+                /**
+                 * This method is used to determine the completion of a get request of Firebase.
+                 * @param task References the result of the get request.
+                 */
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     Object viewerRating = task.getResult().get("rating");
@@ -424,7 +460,12 @@ public class MusicianProfileActivity extends AppCompatActivity {
         DocumentReference musician = db.collection("musicians").document(mID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        musician.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        musician.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            /**
+             * This method is used to determine the completion of a get request of Firebase.
+             * @param task References the result of the get request.
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {

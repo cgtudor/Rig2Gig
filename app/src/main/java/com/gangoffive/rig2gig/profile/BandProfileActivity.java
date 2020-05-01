@@ -43,11 +43,11 @@ public class BandProfileActivity extends AppCompatActivity {
     private String bID; //Band ID for  profile
     private String viewerType; //Can be null if viewer did not open the profile from communications.
     private String viewerRef;
-    private final ArrayList<String> memberArray = new ArrayList<>();
+    private final ArrayList<String> MEMBERARRAY = new ArrayList<>();
     private Button rateMeButton;
     private RatingBar bandRatingBar;
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private final CollectionReference bandReference = FSTORE.collection("bands");
+    private final CollectionReference BANDREFERENCE = FSTORE.collection("bands");
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
     private DocumentReference ratingDocReference;
     private TextView viewer_rating_xml;
@@ -107,10 +107,10 @@ public class BandProfileActivity extends AppCompatActivity {
                         bandName.setText(document.get("name").toString());
                         location.setText(document.get("location").toString());
                         description.setText(document.get("description").toString());
-                        memberArray.addAll((ArrayList<String>) document.get("members"));
+                        MEMBERARRAY.addAll((ArrayList<String>) document.get("members"));
                         members.setText("Members: ");
 
-                        for(String member : memberArray)
+                        for(String member : MEMBERARRAY)
                         {
                             db.collection("musicians").document(member)
                                     .get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -158,14 +158,18 @@ public class BandProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * This method is used to get the Venue's current rating from the database and create an appropriate display.
+     * This method is used to get the Band's current rating from the database and create an appropriate display.
      */
     private void getRatingFromFirebase()
     {
         if(viewerType != null || viewerRef != null)
         {
-            bandReference.document(bID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            BANDREFERENCE.document(bID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
             {
+                /**
+                 * This method is used to determine the completion of a get request of Firebase.
+                 * @param task References the result of the get request.
+                 */
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
@@ -226,8 +230,12 @@ public class BandProfileActivity extends AppCompatActivity {
         }
         else if(AccountPurposeActivity.userType.equals("Venue"))
         {
-            bandReference.document(bID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            BANDREFERENCE.document(bID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
             {
+                /**
+                 * This method is used to determine the completion of a get request of Firebase.
+                 * @param task References the result of the get request.
+                 */
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
@@ -257,8 +265,12 @@ public class BandProfileActivity extends AppCompatActivity {
         }
         else
         {
-            bandReference.document(bID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+            BANDREFERENCE.document(bID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
             {
+                /**
+                 * This method is used to determine the completion of a get request of Firebase.
+                 * @param task References the result of the get request.
+                 */
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
@@ -289,10 +301,10 @@ public class BandProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Handle activity result, namely whether the musician is confirmed to be removed
-     * @param requestCode request code
-     * @param resultCode result code
-     * @param data intent data
+     * Handle activity result, namely whether the musician has been rated or not by the viewer.
+     * @param requestCode Represents the request code sent by the starting activity.
+     * @param resultCode Represents the result code.
+     * @param data Represents the intent passed back from the completed activity.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
@@ -328,6 +340,10 @@ public class BandProfileActivity extends AppCompatActivity {
         {
             rateMeButton.setOnClickListener(new View.OnClickListener()
             {
+                /**
+                 * This method is used to handle the click of the rateMeButton.
+                 * @param v Represents the view.
+                 */
                 @Override
                 public void onClick(View v) {
                     fader = findViewById(R.id.fader);
@@ -335,6 +351,9 @@ public class BandProfileActivity extends AppCompatActivity {
                     window.setStatusBarColor(ContextCompat.getColor(BandProfileActivity.this, R.color.darkerMain));
                     runOnUiThread(new Runnable()
                     {
+                        /**
+                         * This UI Thread is used to create the fade effect behind the dialog popup. Used in a separate thread for testing purposes.
+                         */
                         @Override
                         public void run()
                         {
@@ -353,7 +372,8 @@ public class BandProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * This method is used to check whether or not the user viewing the Musician has already submitted a rating.
+     * This method is used to check whether or not the user viewing the Band has already submitted a rating.
+     * Here we decide whether we will show the Rate Me button or an appropriate message.
      */
     private void checkAlreadyRated()
     {
@@ -364,6 +384,10 @@ public class BandProfileActivity extends AppCompatActivity {
 
             ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
             {
+                /**
+                 * This method is used to determine the completion of a get request of Firebase.
+                 * @param task References the result of the get request.
+                 */
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task)
                 {
@@ -437,7 +461,12 @@ public class BandProfileActivity extends AppCompatActivity {
         DocumentReference band = db.collection("bands").document(bID);
 
         /*Retrieving information from the reference, listeners allow use to change what we do in case of success/failure*/
-        band.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        band.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        {
+            /**
+             * This method is used to determine the completion of a get request of Firebase.
+             * @param task References the result of the get request.
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
