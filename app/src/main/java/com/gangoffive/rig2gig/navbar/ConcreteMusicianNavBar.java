@@ -16,7 +16,7 @@ public class ConcreteMusicianNavBar extends NavBarCompatActivity
     /**
      * Default constructor.
      */
-    ConcreteMusicianNavBar()
+    public ConcreteMusicianNavBar()
     {
 
     }

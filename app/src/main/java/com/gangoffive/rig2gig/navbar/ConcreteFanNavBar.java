@@ -15,7 +15,7 @@ public class ConcreteFanNavBar extends NavBarCompatActivity
     /**
      * Default constructor.
      */
-    ConcreteFanNavBar()
+    public ConcreteFanNavBar()
     {
 
     }

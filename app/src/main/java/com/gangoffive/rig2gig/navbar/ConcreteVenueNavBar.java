@@ -16,7 +16,7 @@ public class ConcreteVenueNavBar extends NavBarCompatActivity implements Navigat
     /**
      * Default constructor.
      */
-    ConcreteVenueNavBar()
+    public ConcreteVenueNavBar()
     {
 
     }
