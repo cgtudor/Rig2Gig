@@ -7,6 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".ui.TabbedView.PlaceholderFragment">
 
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -18,6 +22,7 @@
         android:focusableInTouchMode="true"
 
 
+
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -25,8 +30,8 @@
             android:gravity="center"
             android:minHeight="?actionBarSize"
             android:padding="@dimen/appbar_padding"
-            android:text="@string/app_name"
-            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+            android:text="Create A Band"
+            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"/>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
@@ -34,8 +39,9 @@
             android:layout_height="wrap_content"
             android:background="#12c2e9" />
 
-
     </com.google.android.material.appbar.AppBarLayout>
+
+    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
@@ -43,8 +49,21 @@
         android:layout_height="0dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintTop_toBottomOf="@id/app_bar"
-        app:layout_constraintBottom_toTopOf="@id/button_holder"
-        />
+        app:layout_constraintBottom_toTopOf="@id/button_holder">
+
+        <Button
+            android:id="@+id/fakeFaderBtn"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="50dp"
+            android:layout_weight="1.0"
+            android:background="#a6a6a6"
+            android:onClick="fakeFaderOnClick"
+            android:text="INVIS"
+            android:textColor="#FFFFFF"
+            android:visibility="gone"/>
+    </androidx.viewpager.widget.ViewPager>
 
     <LinearLayout
         android:id="@+id/button_holder"
@@ -79,8 +98,22 @@
             android:layout_weight="1.0"
             android:text="Confirm"
             android:textColor="#FFFFFF"
-            android:onClick="confirmOnClick"/>
+            android:onClick="confirmOnClick"
+            android:background="#a6a6a6"/>
+
     </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/fader1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

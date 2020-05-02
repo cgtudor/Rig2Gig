@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
@@ -7,7 +8,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/detailsTitle"
+        android:id="@+id/detailTitle"
         android:layout_width="236dp"
         android:layout_height="32dp"
         android:layout_marginTop="24dp"
@@ -19,143 +20,186 @@
         app:layout_constraintTop_toTopOf="parent"
         android:textColor="#000000"/>
 
-    <View
-        android:id="@+id/detailsView"
-        android:layout_width="280dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="8dp"
-        android:background="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+    <ScrollView
+        android:id="@+id/scrollDetails"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailsTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/detailTitle">
 
-    <TextView
-        android:id="@+id/nameLabel"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Band Name:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailsTitle"
-        android:textColor="#000000"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/locationLabel"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Band Location:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameLabel"
-        android:textColor="#000000"/>
+            <TextView
+                android:id="@+id/nameLabel"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Band Name:"
+                android:textColor="#000000"
+                app:layout_constraintBaseline_toBaselineOf="@+id/name"
+                app:layout_constraintEnd_toStartOf="@+id/name"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/distanceLabel"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Distance:"
-        android:textColor="#000000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/locationLabel" />
+            <TextView
+                android:id="@+id/locationLabel"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Band Location:"
+                android:textColor="#000000"
+                app:layout_constraintBaseline_toBaselineOf="@+id/band_location"
+                app:layout_constraintEnd_toStartOf="@+id/band_location"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/genresLabel"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Genres:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/distanceLabel"
-        android:textColor="#000000"/>
+            <TextView
+                android:id="@+id/distanceLabel"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Distance:"
+                android:textColor="#000000"
+                app:layout_constraintBaseline_toBaselineOf="@+id/venue_description_final"
+                app:layout_constraintEnd_toStartOf="@+id/venue_description_final"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Enter band name"
-        app:layout_constraintBaseline_toBaselineOf="@+id/nameLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nameLabel" />
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:gravity="start|top"
+                android:hint="Enter band name"
+                android:inputType="textMultiLine"
+                android:maxLength="100"
+                android:singleLine="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <AutoCompleteTextView
-        android:id="@+id/band_location"
-        android:layout_width="225dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter your Town/City (Barnsley, UK)"
-        android:layout_marginTop="10dp"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/locationLabel" />
+            <AutoCompleteTextView
+                android:id="@+id/band_location"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="Enter your Town/City (Barnsley, UK)"
+                android:inputType="textMultiLine"
+                android:singleLine="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name" />
 
-    <EditText
-        android:id="@+id/venue_description_final"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Distance willing to travel"
-        app:layout_constraintBaseline_toBaselineOf="@+id/distanceLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/distanceLabel" />
+            <EditText
+                android:id="@+id/venue_description_final"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:inputType="number"
+                android:maxLength="5"
+                android:textAlignment="textStart"
+                app:layout_constraintStart_toStartOf="@+id/band_location"
+                app:layout_constraintTop_toBottomOf="@+id/band_location" />
 
-    <EditText
-        android:id="@+id/genres"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Preferred genres"
-        app:layout_constraintBaseline_toBaselineOf="@+id/genresLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/genresLabel" />
+            <TextView
+                android:id="@+id/milesLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="miles"
+                android:textColor="#000000"
+                app:layout_constraintBaseline_toBaselineOf="@+id/venue_description_final"
+                app:layout_constraintStart_toEndOf="@+id/venue_description_final" />
 
-    <TextView
-        android:id="@+id/emailLabel"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Email:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/genresLabel" />
+            <TextView
+                android:id="@+id/genres"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="start|top"
+                android:hint="No genres selected"
+                android:inputType="textMultiLine"
+                android:maxLength="500"
+                android:singleLine="false"
+                android:textColor="#000000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/phone" />
 
-    <EditText
-        android:id="@+id/email"
-        android:ems="10"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Enter email"
-        app:layout_constraintBaseline_toBaselineOf="@+id/emailLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/emailLabel"/>
+            <Button
+                android:id="@+id/selectGenres"
+                android:layout_width="130dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/button_rounded_flat_blue"
+                android:text="Select Genres"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/phone" />
 
-    <TextView
-        android:id="@+id/phoneLabel"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Phone Number:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailLabel" />
+            <TextView
+                android:id="@+id/emailLabel"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Email:"
+                android:textColor="#000000"
+                app:layout_constraintBaseline_toBaselineOf="@+id/email"
+                app:layout_constraintEnd_toStartOf="@+id/email"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/phone"
-        android:ems="10"
-        android:layout_width="220dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Enter email"
-        app:layout_constraintBaseline_toBaselineOf="@+id/phoneLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/phoneLabel" />
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="start|top"
+                android:hint="Enter email"
+                android:inputType="textMultiLine"
+                android:maxLength="200"
+                android:singleLine="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/venue_description_final" />
 
+            <TextView
+                android:id="@+id/phoneLabel"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Phone Number:"
+                android:textColor="#000000"
+                app:layout_constraintBaseline_toBaselineOf="@+id/phone"
+                app:layout_constraintEnd_toStartOf="@+id/phone"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/phone"
+                android:layout_width="220dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:hint="Enter phone number"
+                android:inputType="phone"
+                android:maxLength="20"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/email" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

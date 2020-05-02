@@ -1,133 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bandMemberDetails"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/border"
-    tools:context=".SearchedMusicianDetails">
+    tools:context=".advert.management.SearchedMusicianDetails">
 
-    <TextView
-        android:id="@+id/nameLabel"
-        android:layout_width="66dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="20dp"
-        android:text="Name:"
-        android:textAlignment="viewStart"
-        android:textColor="#111111" />
+    <ScrollView
+        android:id="@+id/scrollDetails"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/ok"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="171dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="20dp"
-        android:layout_toEndOf="@+id/nameLabel"
-        android:text=""
-        android:textAlignment="viewStart"
-        android:textColor="#111111" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/userNameLabel"
-        android:layout_width="66dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/nameLabel"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="User name:"
-        android:textAlignment="viewStart"
-        android:textColor="#111111" />
+            <TextView
+                android:id="@+id/name_label"
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="Name:"
+                android:textAlignment="viewStart"
+                android:textColor="#111111"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/userName"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_below="@+id/venue_name_final"
-        android:layout_alignBottom="@+id/userNameLabel"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/nameLabel"
-        android:text=""
-        android:textAlignment="viewStart"
-        android:textColor="#111111" />
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="171dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp"
+                android:text=""
+                android:textAlignment="viewStart"
+                android:textColor="#111111"
+                app:layout_constraintStart_toEndOf="@id/name_label"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@+id/name_label"/>
 
-    <TextView
-        android:id="@+id/locationLabel"
-        android:layout_width="66dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/userNameLabel"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="Location:"
-        android:textAlignment="viewStart"
-        android:textColor="#111111" />
+            <TextView
+                android:id="@+id/userNameLabel"
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="User name:"
+                android:textAlignment="viewStart"
+                android:textColor="#111111"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name"/>
 
-    <TextView
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_below="@+id/userName"
-        android:layout_alignBottom="@+id/locationLabel"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/nameLabel"
-        android:text=""
-        android:textAlignment="viewStart"
-        android:textColor="#111111" />
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="0dp"
+                android:text=""
+                android:textAlignment="viewStart"
+                android:textColor="#111111"
+                app:layout_constraintStart_toEndOf="@id/userNameLabel"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                app:layout_constraintBaseline_toBaselineOf="@+id/userNameLabel"/>
 
-    <TextView
-        android:id="@+id/ratingLabel"
-        android:layout_width="66dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/locationLabel"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="Rating:"
-        android:textAlignment="viewStart"
-        android:textColor="#111111" />
+            <TextView
+                android:id="@+id/locationLabel"
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="Location:"
+                android:textAlignment="viewStart"
+                android:textColor="#111111"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userName"/>
 
-    <TextView
-        android:id="@+id/rating"
-        android:layout_width="171dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/location"
-        android:layout_alignBottom="@+id/ratingLabel"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/nameLabel"
-        android:text=""
-        android:textAlignment="viewStart"
-        android:textColor="#111111" />
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/nameLabel"
+                android:text=""
+                android:textAlignment="viewStart"
+                android:textColor="#111111"
+                app:layout_constraintStart_toEndOf="@id/locationLabel"
+                app:layout_constraintTop_toBottomOf="@id/userName"
+                app:layout_constraintBaseline_toBaselineOf="@+id/locationLabel"/>
+
+            <TextView
+                android:id="@+id/ratingLabel"
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="Rating:"
+                android:textAlignment="viewStart"
+                android:textColor="#111111"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/location"/>
+
+            <TextView
+                android:id="@+id/rating"
+                android:layout_width="171dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/nameLabel"
+                android:text=""
+                android:textAlignment="viewStart"
+                android:textColor="#111111"
+                app:layout_constraintStart_toEndOf="@id/ratingLabel"
+                app:layout_constraintTop_toBottomOf="@id/location"
+                app:layout_constraintBaseline_toBaselineOf="@+id/ratingLabel"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
     <Button
         android:id="@+id/ok"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_width="130dp"
+        android:layout_height="35dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
-        android:text="OK" />
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_rounded_flat_blue"
+        android:text="OK"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF" />
 
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,11 +9,27 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".VenueListingDetailsActivity">
+        tools:context=".advert.details.VenueListingDetailsActivity">
 
         <include
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
+
+        <Button
+            android:id="@+id/noInternet"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            android:layout_marginTop="0dp"
+            android:clickable="false"
+            android:visibility="gone"
+            android:background="@color/tw__light_gray"
+            android:text="No Internet Connection."
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
 
         <ImageView
             android:id="@+id/venuePhoto"
@@ -48,28 +64,6 @@
             app:layout_constraintTop_toBottomOf="@+id/venueName" />
 
         <TextView
-            android:id="@+id/rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="68dp"
-            android:layout_marginTop="8dp"
-            android:textColor="#000000"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/venueNameBar" />
-
-
-        <View
-            android:id="@+id/ratingBar"
-            android:layout_width="280dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="8dp"
-            android:background="#000000"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.519"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rating" />
-
-        <TextView
             android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,7 +71,7 @@
             android:layout_marginTop="8dp"
             android:textColor="#000000"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+            app:layout_constraintTop_toBottomOf="@+id/venueNameBar" />
 
 
         <View
@@ -113,16 +107,97 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description" />
 
+        <Button
+            android:id="@+id/contact"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:layout_margin="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_rounded_flat_blue"
+            android:text="Request Contact"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionBar" />
+
+        <Button
+            android:id="@+id/publish"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:textColor="#ffffff"
+            android:background="@drawable/button_rounded_flat_blue"
+            android:onClick="onBuyPressed"
+            android:visibility="gone"
+            android:text="Publish!"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionBar" />
+
+        <Button
+            android:id="@+id/profile"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="56dp"
+            android:textColor="#ffffff"
+            android:background="@drawable/button_rounded_flat_blue"
+            android:visibility="visible"
+            android:text="Profile"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionBar" />
+
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/my_venue_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Our Venue Rating"
+            android:layout_marginTop="15dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profile"/>
+
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/my_venue_rating"
+            android:paddingTop="10dp"
+            android:numStars="5"
+            android:rating="0"
+            android:progressTint="#FFD700"
+            android:stepSize="0.5"
+            android:clickable="false"
+            android:isIndicator="true"/>
+
+        <TextView
+            android:id="@+id/unrated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Not enough ratings gathered yet"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rating_bar"/>
+
+        <TextView
+            android:id="@+id/findUsHere"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Find us here!"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionBar" />
+            app:layout_constraintTop_toBottomOf="@+id/unrated" />
 
         <fragment
             android:id="@+id/google_map"
@@ -134,37 +209,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.491"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView9"
-            tools:context=".VenueListingDetailsActivity" />
-
-        <Button
-            android:id="@+id/contact"
-            android:layout_width="280dp"
-            android:layout_height="40dp"
-            android:background="@drawable/button_bg_rounded_corners"
-            android:text="Request Contact"
-            android:textAllCaps="false"
-            android:textColor="#FFF"
-            android:layout_margin="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/google_map" />
-
-        <Button
-            android:id="@+id/publish"
-            android:layout_width="280dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="64dp"
-            android:background="@drawable/button_bg_rounded_corners"
-            android:onClick="onBuyPressed"
-            android:visibility="gone"
-            android:text="Publish!"
-            android:textAllCaps="false"
-            android:textColor="#FFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/google_map" />
+            app:layout_constraintTop_toBottomOf="@+id/findUsHere"
+            tools:context=".advert.details.VenueListingDetailsActivity" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

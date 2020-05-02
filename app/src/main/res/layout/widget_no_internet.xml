@@ -1,0 +1,19 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/no_connection"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:alpha="0.8"
+    android:background="@android:color/transparent" >
+
+    <Button
+        android:id="@+id/noInternet"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:clickable="false"
+        android:visibility="gone"
+        android:background="@color/tw__light_gray"
+        android:text="No Internet Connection."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white" />
+</RelativeLayout>

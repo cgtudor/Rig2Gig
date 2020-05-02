@@ -1,5 +1,8 @@
 package com.gangoffive.rig2gig;
 
+import com.gangoffive.rig2gig.band.management.BandDetailsEditor;
+import com.gangoffive.rig2gig.firebase.ListingManager;
+import com.gangoffive.rig2gig.utils.TabStatePreserver;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -105,6 +108,7 @@ public class BandDetailsEditorTest {
         HashMap<String, Object> listing = new HashMap();
         listing.put("valid field", "valid");
         listing.put("empty field", "also valid");
+        listing.put("email", "valid@email.com");
         confirmationClass.setBand(listing);
         assertThat(confirmationClass.validateDataMap(),is(equalTo(true)));
     }

@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.gangoffive.rig2gig">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <!--For card.io card scanning-->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- For card.io card scanning -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-feature android:name="android.hardware.camera" android:required = "false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 
-    <!--For most things, including card.io and paypal-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" /> <!-- For most things, including card.io and paypal -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
 
     <uses-feature
         android:name="android.hardware.camera.any"
@@ -26,66 +31,78 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TabbedBandActivity"></activity>
-        <activity android:name=".TabbedMusicianActivity" />
-        <activity android:name=".TabbedVenueActivity" />
+        <activity android:name=".views.TermsOfServiceActivity"></activity>
+        <activity android:name=".views.PrivacyPolicyActivity" />
+        <activity android:name=".views.TermsOfServiceFragment" />
+        <activity android:name=".band.management.TabbedBandActivity" />
+        <activity android:name=".musician.management.TabbedMusicianActivity" />
+        <activity android:name=".account.TabbedVenueActivity" />
         <activity
-            android:name=".SearchedMusicianDetails"
+            android:name=".advert.management.SearchedMusicianDetails"
             android:theme="@style/AppTheme.TranslucentBackground" />
         <activity
-            android:name=".BandMemberDetails"
+            android:name=".utils.GenreSelectorActivity"
             android:theme="@style/AppTheme.TranslucentBackground" />
         <activity
-            android:name=".MusicianSearchActivity"
+            android:name=".utils.PositionSelectorActivity"
+            android:theme="@style/AppTheme.TranslucentBackground" />
+        <activity
+            android:name=".utils.VenueTypeSelectorActivity"
+            android:theme="@style/AppTheme.TranslucentBackground" />
+        <activity
+            android:name=".band.management.BandMemberDetails"
+            android:theme="@style/AppTheme.TranslucentBackground" />
+        <activity
+            android:name=".band.management.MusicianSearchActivity"
             android:label="@string/title_activity_musician_search"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".VenueAdvertIndexActivity"
+            android:name=".band.management.EmailSearchActivity"
+            android:label="@string/title_activity_email_search"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".advert.index.VenueAdvertIndexActivity"
             android:label="@string/title_activity_venue_advert_index"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service android:name=".NotificationService" />
+        <service android:name=".utils.NotificationService" />
 
-        <activity android:name=".VenueProfileActivity" />
-        <activity android:name=".MusicianProfileActivity" />
-        <activity android:name=".BandProfileActivity" />
+        <activity android:name=".profile.VenueProfileActivity" />
+        <activity android:name=".profile.MusicianProfileActivity" />
+        <activity android:name=".profile.BandProfileActivity" />
+        <activity android:name=".account.CreateMusicianAccountActivity" />
 
-        <activity android:name=".CreateMusicianAccountActivity" />
+        <service android:name=".utils.NotificationService" />
+        <service android:name=".utils.NotificationService" />
 
-        <service android:name=".NotificationService" />
-        <service android:name=".NotificationService" />
+        <activity android:name=".comms.LaunchCommsActivity" />
 
-        <activity android:name=".LaunchCommsActivity" />
-
-        <service android:name=".NotificationService" />
-
+        <service android:name=".utils.NotificationService" />
         <service
-            android:name=".FirebaseNotificationService"
+            android:name=".firebase.FirebaseNotificationService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".AccountPurposeActivity" />
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".account.AccountPurposeActivity" />
+        <activity android:name=".utils.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".utils.MainActivity" />
         <!--
  Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.
         -->
-
         <!--
  Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.
         -->
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notifications_active_black_24dp" />
@@ -97,45 +114,46 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".NavBarActivity" />
-        <activity android:name=".VenueActivity" />
-        <activity android:name=".MyBandActivity" />
-        <activity android:name=".CreateBandActivity" />
-        <activity android:name=".BandListingDetailsActivity" />
-        <activity android:name=".MusicianListingDetailsActivity" />
-        <activity android:name=".VenueListingDetailsActivity" />
+        <activity android:name=".account.LoginActivity" />
+        <activity android:name=".navbar.NavBarActivity" />
+        <activity android:name=".venue.management.VenueActivity" />
+        <activity android:name=".band.management.MyBandActivity" />
+        <activity android:name=".band.management.CreateBandActivity" />
+        <activity android:name=".advert.details.BandListingDetailsActivity" />
+        <activity android:name=".advert.details.MusicianListingDetailsActivity" />
+        <activity android:name=".advert.details.VenueListingDetailsActivity" />
         <activity
-            android:name=".ManageBandMembersActivity"
+            android:name=".band.management.ManageBandMembersActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".DeleteMemberConfirmation"
+            android:name=".band.management.DeleteMemberConfirmation"
             android:theme="@style/AppTheme.TranslucentBackground" />
         <activity
-            android:name=".AddMemberConfirmation"
+            android:name=".band.management.AddMemberConfirmation"
             android:theme="@style/AppTheme.TranslucentBackground" />
         <activity
-            android:name=".BandAdvertisementEditor"
+            android:name=".advert.management.BandAdvertisementEditor"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name=".MusicianAdvertisementEditor"
+            android:name=".advert.management.MusicianAdvertisementEditor"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name=".PerformerAdvertisementEditor"
+            android:name=".advert.management.PerformerAdvertisementEditor"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".musician.management.MusicianDetailsEditor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MusicianDetailsEditor"
+            android:name=".band.management.BandDetailsEditor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".BandDetailsEditor"
+            android:name=".advert.management.VenueAdvertisementEditor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".VenueAdvertisementEditor"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".VenueDetailsEditor"
+            android:name=".venue.management.VenueDetailsEditor"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- <intent-filter> -->
         <!-- <action android:name="android.intent.action.MAIN" /> -->
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
@@ -143,25 +161,25 @@
         <!-- android:theme="@style/AppTheme" -->
         <!-- android:windowSoftInputMode="adjustResize"/> -->
         <activity
-            android:name=".PerformanceListingDetailsActivity"
+            android:name=".advert.details.PerformanceListingDetailsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".CredentialActivity" />
-        <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".account.CredentialActivity" />
+        <activity android:name=".account.ForgotPasswordActivity" />
+        <activity android:name=".account.RegisterActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".ConcreteFanNavBar"
-            android:parentActivityName=".NavBarActivity" />
+            android:name=".navbar.ConcreteFanNavBar"
+            android:parentActivityName=".navbar.NavBarActivity" />
         <activity
-            android:name=".ConcreteMusicianNavBar"
-            android:parentActivityName=".NavBarActivity" />
+            android:name=".navbar.ConcreteMusicianNavBar"
+            android:parentActivityName=".navbar.NavBarActivity" />
         <activity
-            android:name=".ConcreteVenueNavBar"
-            android:parentActivityName=".NavBarActivity" />
+            android:name=".navbar.ConcreteVenueNavBar"
+            android:parentActivityName=".navbar.NavBarActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -183,17 +201,20 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".BandConsoleActivity" />
-
-        <activity android:name=".BandAdvertIndexActivity"/>
-        <activity android:name=".MusicianAdvertIndexActivity"/>
-		
-        <!--Google Maps meta data-->
+        <activity android:name=".navbar.BandConsoleActivity" />
+        <activity android:name=".advert.index.BandAdvertIndexActivity" />
+        <activity android:name=".advert.index.MusicianAdvertIndexActivity" /> <!-- Google Maps meta data -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB4sMbIQwQaO0qlPHRuRCxB5--Zx54ACTE"/>
+            android:value="AIzaSyB4sMbIQwQaO0qlPHRuRCxB5--Zx54ACTE" />
 
-        <activity android:name=".PerformerAdvertIndexActivity"/>
+        <activity android:name=".advert.index.PerformerAdvertIndexActivity" />
+        <activity android:name=".profile.BandProfileRatingsDialog"
+            android:theme="@style/AppTheme.TranslucentBackground"/>
+        <activity android:name=".profile.MusicianProfileRatingsDialog"
+            android:theme="@style/AppTheme.TranslucentBackground"/>
+        <activity android:name=".profile.VenueProfileRatingsDialog"
+            android:theme="@style/AppTheme.TranslucentBackground"/>
     </application>
 
 </manifest>

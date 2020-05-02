@@ -1,8 +1,6 @@
 package com.gangoffive.rig2gig.ui.TabbedView;
 
-import android.app.Activity;
 import android.content.Context;
-import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -10,7 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.gangoffive.rig2gig.TabbedViewReferenceInitialiser;
+import com.gangoffive.rig2gig.utils.TabbedViewReferenceInitialiser;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to

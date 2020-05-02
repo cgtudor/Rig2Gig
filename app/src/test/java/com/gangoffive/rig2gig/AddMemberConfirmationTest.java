@@ -1,6 +1,8 @@
 package com.gangoffive.rig2gig;
 
 
+import com.gangoffive.rig2gig.band.management.AddMemberConfirmation;
+import com.gangoffive.rig2gig.firebase.ListingManager;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -37,10 +39,10 @@ public class AddMemberConfirmationTest {
     {
         confirmationClass = new AddMemberConfirmation()
         {    @Override
-            public String getUserId()
-            {
-                return("testUserId");
-            }};
+        public String getUserId()
+        {
+            return("testUserId");
+        }};
         received = mock(CollectionReference.class);
         task = mock(Task.class);
         firebaseAuth = mock(FirebaseAuth.class);
@@ -137,8 +139,8 @@ public class AddMemberConfirmationTest {
         confirmationClass.setBandName("testBandName");
         HashMap actual = confirmationClass.generateLoggedInvite();
         assertThat(actual.get("type"),is(equalTo("join-request")));
-        assertThat(actual.get("band-ref"),is(equalTo("testBandRef")));
-        assertThat(actual.get("musician-ref"),is(equalTo("testMusicianRef")));
+        assertThat(actual.get("sent-from-ref"),is(equalTo("testBandRef")));
+        assertThat(actual.get("sent-to-ref"),is(equalTo("testMusicianRef")));
         assertThat(actual.get("notification-title"),is(equalTo("You have been invited to join a band!")));
         assertThat(actual.get("notification-message"),
                 is(equalTo(confirmationClass.getInviterName() +
@@ -147,7 +149,7 @@ public class AddMemberConfirmationTest {
     }
 
 
-    @Test (expected = NullPointerException.class)
+    @Test
     public void testOnSuccessFromDatabaseUserStillInBand()
     {
         FirebaseFirestore db = mock(FirebaseFirestore.class);
@@ -155,7 +157,6 @@ public class AddMemberConfirmationTest {
         when(db.collection(any())).thenReturn(mock(CollectionReference.class));
         when(db.collection(any()).document(any())).thenReturn(mock(DocumentReference.class));
         when(db.collection(any()).document(any()).collection(any())).thenReturn(mock(CollectionReference.class));
-
         confirmationClass.setCheckIfInBand(true);
         Map<String,Object> testMap = new HashMap();
         confirmationClass.setBandRef("bandRef");
@@ -166,7 +167,6 @@ public class AddMemberConfirmationTest {
         confirmationClass.onSuccessFromDatabase(testMap);
         assertThat(confirmationClass.isCheckIfInBand(),is(equalTo(false)));
         assertThat(confirmationClass.isSendingInvite(),is(equalTo(false)));
-        verify(confirmationClass,times(1)).sendInvite();
     }
 
 }

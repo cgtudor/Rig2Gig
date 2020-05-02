@@ -144,11 +144,16 @@
     <string name="change_password_dialog_title">Confirm to send a change password email.</string>
     <string name="change_password_confirm">Confirm</string>
     <string name="change_password_cancel">Cancel</string>
-
+    <string name="title_activity_email_search">EmailSearchActivity</string>
     <string name="title_activity_musician_search">MusicianSearchActivity</string>
     <string name="title_activity_venue_advert_index">VenueAdvertIndexActivity</string>
 
     //Carter: no idea where to put things in here so I'll put here
     <string name="all">All</string>
     <string name="favourites">Favourites</string>
+
+    <string name="NoAccount">Don\'t Have An Account? <u>Register Here</u></string>
+    <string name="LoginTnC">By Creating An Account, You Agree With Our</string>
+    <string name="terms"><u>Terms Of Service</u></string>
+    <string name="privacy"><u>Privacy Policy</u></string>
 </resources>

@@ -1,11 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/venueListingDetailsMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateVenueFragment"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".account.CreateVenueFragment"
     android:background="@drawable/gradient">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="account.CreateVenueFragment">
 
     <EditText
         android:id="@+id/venue_description"
@@ -102,7 +107,6 @@
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/view8" />
 
-
     <Button
         android:id="@+id/submitBtn"
         android:layout_width="280dp"
@@ -118,56 +122,60 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <Button
-        android:id="@+id/uploadBtn"
-        android:layout_width="133dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/transparent_button"
-        android:text="Upload Photo"
-        android:textAllCaps="false"
-        android:textColor="#FFF"
-        android:textColorHint="#FFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.241"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        <Button
+            android:id="@+id/uploadBtn"
+            android:layout_width="133dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/transparent_button"
+            android:text="Upload Photo"
+            android:textAllCaps="false"
+            android:textColor="#FFF"
+            android:textColorHint="#FFFF"
+            app:layout_constraintEnd_toStartOf="@+id/takeBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <Button
-        android:id="@+id/takeBtn"
-        android:layout_width="133dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/transparent_button"
-        android:text="Take Photo"
-        android:textAllCaps="false"
-        android:textColor="#FFF"
-        android:textColorHint="#FFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.758"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        <Button
+            android:id="@+id/takeBtn"
+            android:layout_width="133dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="68dp"
+            android:background="@drawable/transparent_button"
+            android:text="Take Photo"
+            android:textAllCaps="false"
+            android:textColor="#FFF"
+            android:textColorHint="#FFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/uploadBtn"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Venue Type"
-        android:textColor="#FFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.195"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view8" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Venue Type"
+            android:textColor="#FFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.18"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view8" />
 
-    <ImageView
-        android:id="@+id/imageViewVenue"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uploadBtn"
-        tools:srcCompat="@tools:sample/avatars" />
+        <ImageView
+            android:id="@+id/imageViewVenue"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/uploadBtn"
+            tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".utils.MainActivity">
 
     <!--Musician Nav-Bar layout-->
     <androidx.drawerlayout.widget.DrawerLayout
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context=".MainActivity">
+        tools:context=".utils.MainActivity">
 
         <LinearLayout
             android:layout_width="match_parent"

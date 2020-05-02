@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".band.management.EmailSearchActivity"
+    tools:showIn="@layout/activity_email_search_activity">
+
+    <androidx.appcompat.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        app:layout_constraintStart_toStartOf="@id/constraint"
+        app:layout_constraintTop_toTopOf="@id/constraint"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        />
+    <SearchView
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/constraint"
+        app:layout_constraintTop_toBottomOf="@id/toolbar2" />
+
+    <Button
+        android:id="@+id/invite"
+        android:layout_width="150dp"
+        android:background="@drawable/button_rounded_flat_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_bar"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_height="35dp"
+        android:layout_weight="1.0"
+        android:textColor="#FFFFFF"
+        android:visibility="gone"
+        android:text="Invite to band" />
+
+    <TextView
+        android:id="@+id/infoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_bar"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text=""
+        android:textAlignment="viewStart"
+        android:textColor="#000000" />
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="@id/constraint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/invite">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="367dp"
+                android:layout_height="223dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                app:srcCompat="@android:color/background_light" />
+
+            <TextView
+                android:id="@+id/nameLabel"
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="Name:"
+                android:textAlignment="viewStart"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="171dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_toEndOf="@+id/nameLabel"
+                android:text=""
+                android:textAlignment="viewStart"
+                android:textColor="#111111" />
+
+            <TextView
+                android:id="@+id/userNameLabel"
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nameLabel"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="User name:"
+                android:textAlignment="viewStart"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_below="@+id/venue_name_final"
+                android:layout_alignBottom="@+id/userNameLabel"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/nameLabel"
+                android:text=""
+                android:textAlignment="viewStart"
+                android:textColor="#111111" />
+
+            <TextView
+                android:id="@+id/locationLabel"
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/userNameLabel"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="Location:"
+                android:textAlignment="viewStart"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_below="@+id/userName"
+                android:layout_alignBottom="@+id/locationLabel"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/nameLabel"
+                android:text=""
+                android:textAlignment="viewStart"
+                android:textColor="#111111" />
+
+            <TextView
+                android:id="@+id/ratingLabel"
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/locationLabel"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="Rating:"
+                android:textAlignment="viewStart"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/rating"
+                android:layout_width="171dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/location"
+                android:layout_alignBottom="@+id/ratingLabel"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/nameLabel"
+                android:text=""
+                android:textAlignment="viewStart"
+                android:textColor="#111111" />
+        </RelativeLayout>
+
+    </ScrollView>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,11 @@
 package com.gangoffive.rig2gig;
 
+import com.gangoffive.rig2gig.advert.management.VenueAdvertisementEditor;
+import com.gangoffive.rig2gig.firebase.ListingManager;
+
 import org.junit.Before;
 import org.junit.Test;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
