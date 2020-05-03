@@ -1,12 +1,10 @@
 package com.gangoffive.rig2gig.navbar;
 
-import com.gangoffive.rig2gig.navbar.ConcreteFanNavBar;
-import com.gangoffive.rig2gig.navbar.ConcreteMusicianNavBar;
-import com.gangoffive.rig2gig.navbar.ConcreteVenueNavBar;
-
 import java.util.HashMap;
 
-
+/**
+ * This class is used to help the NavBarCompatActivity to choose which concrete nav bar to create based upon the logged in user type.
+ */
 public class NavigationContext
 {
     private HashMap<String, Class> navBarAlgorithmMap;

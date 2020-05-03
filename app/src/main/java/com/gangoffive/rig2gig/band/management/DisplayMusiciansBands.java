@@ -31,6 +31,9 @@ import com.google.firebase.firestore.Source;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is used to display the musician's bands on a Card View.
+ */
 public class DisplayMusiciansBands extends Fragment
 {
     private RecyclerView recyclerView;
@@ -38,14 +41,14 @@ public class DisplayMusiciansBands extends Fragment
 
     private String TAG = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
 
-    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    private final String USERID = fAuth.getUid();
+    private final FirebaseAuth FAUTH = FirebaseAuth.getInstance();
+    private final String USERID = FAUTH.getUid();
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference musiciansRef = db.collection("musicians");
+    private final CollectionReference MUSICIANSREF = db.collection("musicians");
     private List<DocumentSnapshot> musicians;
 
-    private CollectionReference bandRef = db.collection("bands");
+    private final CollectionReference BANDREF = db.collection("bands");
     private List<DocumentSnapshot> bandsList;
 
     private ArrayList<MusiciansBands> musiciansBands;
@@ -53,6 +56,13 @@ public class DisplayMusiciansBands extends Fragment
 
     private String musicianId;
 
+    /**
+     * This method is used to create the view of the page upon loading the class.
+     * @param inflater The inflater is used to read the passed xml file.
+     * @param container The views base class.
+     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     * @return Returns a View of the fragment_my_bands layout.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -70,10 +80,14 @@ public class DisplayMusiciansBands extends Fragment
 
         musiciansBands = new ArrayList<>();
 
-        Query first = musiciansRef;
+        Query first = MUSICIANSREF;
 
         first.whereEqualTo("user-ref", USERID).get(source).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
         {
+            /**
+             * This method is used to determine the completion of a get request of Firebase.
+             * @param task References the result of the get request.
+             */
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task)
             {
@@ -97,8 +111,12 @@ public class DisplayMusiciansBands extends Fragment
                         {
                             for(String b : bands)
                             {
-                                bandRef.document(b).get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+                                BANDREF.document(b).get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                                 {
+                                    /**
+                                     * This method is used to determine the completion of a get request of Firebase.
+                                     * @param task References the result of the get request.
+                                     */
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task)
                                     {

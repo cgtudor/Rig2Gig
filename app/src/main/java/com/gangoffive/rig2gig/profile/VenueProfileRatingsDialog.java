@@ -6,7 +6,6 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
+/**
+ * This class is used to create a custom dialog popup.
+ */
 public class VenueProfileRatingsDialog extends AppCompatActivity
 {
     private int height, width;
@@ -29,9 +31,13 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
     private String viewerType;
     private String viewerRef;
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private final CollectionReference venueReference = FSTORE.collection("venues");
+    private final CollectionReference VENUEREFERENCE = FSTORE.collection("venues");
     private DocumentReference ratingDocReference;
 
+    /**
+     * This method is used to create the view upon creation of the class.
+     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -52,6 +58,10 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
 
         rate.setOnClickListener(new View.OnClickListener()
         {
+            /**
+             * This method is used to handle the click of the rate Button.
+             * @param v Represents the view.
+             */
             @Override
             public void onClick(View v)
             {
@@ -62,6 +72,10 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener()
         {
+            /**
+             * This method is used to handle the click of the cancel Button.
+             * @param v Represents the view.
+             */
             @Override
             public void onClick(View v)
             {
@@ -70,20 +84,26 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
         });
     }
 
+    /**
+     * This method is used to get the user's rating from the rating bar and post it to Firebase.
+     */
     private void ratingPost()
     {
         RatingBar alertDialogRatingBar = findViewById(R.id.ratingBar);
 
         float venueRating = alertDialogRatingBar.getRating();
 
-        venueReference.document(vID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        VENUEREFERENCE.document(vID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
+            /**
+             * This method is used to determine the completion of a get request of Firebase.
+             * @param task References the result of the get request.
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
             {
                 //Here, calculate the new rating and store in Firebase.
 
-                String currentVenueRating = task.getResult().get("venue-rating").toString();
                 float venueRatingCount = Float.valueOf(task.getResult().get("venue-rating-count").toString());
                 float venueRatingTotal = Float.valueOf(task.getResult().get("venue-rating-total").toString());
 
@@ -108,12 +128,16 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
                     updateRatingMap.put("venue-rating-total", venueRatingTotal + venueRating);
                 }
 
-                venueReference.document(vID).update(updateRatingMap);
+                VENUEREFERENCE.document(vID).update(updateRatingMap);
 
                 ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(vID);
 
                 ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                 {
+                    /**
+                     * This method is used to determine the completion of a get request of Firebase.
+                     * @param task References the result of the get request.
+                     */
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task)
                     {
@@ -143,7 +167,7 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
     }
 
     /**
-     * Handle on back pressed
+     * Handle on back pressed.
      */
     @Override
     public void onBackPressed()
@@ -152,8 +176,8 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
     }
 
     /**
-     * Handle if top activity changes
-     * @param isTopResumedActivity false if no longer the top activty
+     * If dialog popup is cancelled or clicked off of, then treat as though no rating has occurred.
+     * @param isTopResumedActivity false if no longer the top activity.
      */
     @Override
     public void onTopResumedActivityChanged (boolean isTopResumedActivity)
@@ -165,7 +189,7 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
     }
 
     /**
-     * Finish activity if band member is not deleted
+     * Finish activity if rating dialog is cancelled or clicked off of.
      */
     public void returnNotRated()
     {

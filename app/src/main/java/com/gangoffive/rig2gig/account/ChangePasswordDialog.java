@@ -19,6 +19,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * This class is used to display a dialog popup when the change password label in settings is clicked.
+ */
 public class ChangePasswordDialog extends DialogFragment
 {
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
@@ -40,6 +43,11 @@ public class ChangePasswordDialog extends DialogFragment
 
         builder.setPositiveButton(R.string.change_password_confirm, new DialogInterface.OnClickListener()
         {
+            /**
+             * This method is used to call the send email method when the confirm button is clicked.
+             * @param dialog References the dialog interface.
+             * @param which References the button clicked.
+             */
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
@@ -49,6 +57,11 @@ public class ChangePasswordDialog extends DialogFragment
 
         builder.setNegativeButton(R.string.change_password_cancel, new DialogInterface.OnClickListener()
         {
+            /**
+             * This method is used to produce a toast when the cancel button is clicked.
+             * @param dialog References the dialog interface.
+             * @param which References the button clicked.
+             */
             @Override
             public void onClick(DialogInterface dialog, int which)
             {

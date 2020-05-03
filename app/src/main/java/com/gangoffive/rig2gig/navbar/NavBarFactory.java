@@ -9,6 +9,9 @@ import com.gangoffive.rig2gig.band.management.DisplayMusiciansBands;
 
 import java.util.HashMap;
 
+/**
+ * This class is used to help the concrete nav bar activity classes to choose which fragment to open from the navigation drawer.
+ */
 public class NavBarFactory
 {
     private HashMap<String, Fragment> fragmentMap;
@@ -19,15 +22,11 @@ public class NavBarFactory
     NavBarFactory()
     {
         fragmentMap = new HashMap<>();
-
         fragmentMap.put("My Profile", new MyProfileFragment());
-
         fragmentMap.put("Notifications", new ViewCommsFragment());
         fragmentMap.put("Settings", new SettingsFragment());
-
         fragmentMap.put("Venue Console", new VenueConsoleFragment());
         fragmentMap.put("Musician Console", new MusicianConsoleFragment());
-
         fragmentMap.put("My Bands", new DisplayMusiciansBands());
     }
 

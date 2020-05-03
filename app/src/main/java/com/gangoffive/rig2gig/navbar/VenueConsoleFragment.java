@@ -33,20 +33,23 @@ import com.google.firebase.firestore.Source;
 
 import java.util.List;
 
+/**
+ * This class is used to create the venue console fragment.
+ */
 public class VenueConsoleFragment extends Fragment implements View.OnClickListener
 {
     private List<DocumentSnapshot> venueAdverts;
     private List<DocumentSnapshot> venues;
 
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    private final String USERID = fAuth.getUid();
+    private final FirebaseAuth FAUTH = FirebaseAuth.getInstance();
+    private final String USERID = FAUTH.getUid();
 
-    private final CollectionReference venueReference = FSTORE.collection("venues");
-    private final Query getVenues = venueReference;
+    private final CollectionReference VENUEREFERENCE = FSTORE.collection("venues");
+    private final Query GETVENUES = VENUEREFERENCE;
 
-    private final CollectionReference venueAdvertsReference = FSTORE.collection("venue-listings");
-    private final Query getVenueAdverts = venueAdvertsReference;
+    private final CollectionReference VENUEADVERTSREFERENCE = FSTORE.collection("venue-listings");
+    private final Query GETVENUEADVERTS = VENUEADVERTSREFERENCE;
 
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
 
@@ -68,7 +71,7 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
     {
         view = inflater.inflate(R.layout.fragment_venue_console, container, false);
 
-        final Button noInternet = view.findViewById(R.id.noInternet);
+        final Button NOINTERNET = view.findViewById(R.id.noInternet);
 
         ConnectivityManager cm =
                 (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -77,32 +80,32 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
-        noInternet.setVisibility(isConnected ? View.GONE : View.VISIBLE);
+        NOINTERNET.setVisibility(isConnected ? View.GONE : View.VISIBLE);
 
-        final CardView card_view_view_performers = view.findViewById(R.id.card_view_view_performers);
-        final CardView card_view_edit_venue = view.findViewById(R.id.card_view_edit_venue);
-        final CardView card_view_create_advert = view.findViewById(R.id.card_view_create_advert);
-        final CardView card_view_edit_advert = view.findViewById(R.id.card_view_edit_advert);
-        final CardView card_view_view_advert = view.findViewById(R.id.card_view_view_advert);
-        final CardView card_view_delete_advert = view.findViewById(R.id.card_view_delete_advert);
+        final CardView CARD_VIEW_VIEW_PERFORMERS = view.findViewById(R.id.card_view_view_performers);
+        final CardView CARD_VIEW_EDIT_VENUE = view.findViewById(R.id.card_view_edit_venue);
+        final CardView CARD_VIEW_CREATE_ADVERT = view.findViewById(R.id.card_view_create_advert);
+        final CardView CARD_VIEW_EDIT_ADVERT = view.findViewById(R.id.card_view_edit_advert);
+        final CardView CARD_VIEW_VIEW_ADVERT = view.findViewById(R.id.card_view_view_advert);
+        final CardView CARD_VIEW_DELETE_ADVERT = view.findViewById(R.id.card_view_delete_advert);
 
-        card_view_view_performers.setOnClickListener(this);
-        card_view_edit_venue.setOnClickListener(this);
-        card_view_create_advert.setOnClickListener(this);
-        card_view_edit_advert.setOnClickListener(this);
-        card_view_view_advert.setOnClickListener(this);
-        card_view_delete_advert.setOnClickListener(this);
+        CARD_VIEW_VIEW_PERFORMERS.setOnClickListener(this);
+        CARD_VIEW_EDIT_VENUE.setOnClickListener(this);
+        CARD_VIEW_CREATE_ADVERT.setOnClickListener(this);
+        CARD_VIEW_EDIT_ADVERT.setOnClickListener(this);
+        CARD_VIEW_VIEW_ADVERT.setOnClickListener(this);
+        CARD_VIEW_DELETE_ADVERT.setOnClickListener(this);
 
         if(!isConnected)
         {
-            card_view_edit_venue.setAlpha(0.5f);
-            card_view_create_advert.setAlpha(0.5f);
-            card_view_edit_advert.setAlpha(0.5f);
-            card_view_delete_advert.setAlpha(0.5f);
-            card_view_edit_venue.setClickable(false);
-            card_view_create_advert.setClickable(false);
-            card_view_edit_advert.setClickable(false);
-            card_view_delete_advert.setClickable(false);
+            CARD_VIEW_EDIT_VENUE.setAlpha(0.5f);
+            CARD_VIEW_CREATE_ADVERT.setAlpha(0.5f);
+            CARD_VIEW_EDIT_ADVERT.setAlpha(0.5f);
+            CARD_VIEW_DELETE_ADVERT.setAlpha(0.5f);
+            CARD_VIEW_EDIT_VENUE.setClickable(false);
+            CARD_VIEW_CREATE_ADVERT.setClickable(false);
+            CARD_VIEW_EDIT_ADVERT.setClickable(false);
+            CARD_VIEW_DELETE_ADVERT.setClickable(false);
         }
 
         databaseQuery();
@@ -126,8 +129,12 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
 
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 
-        getVenues.whereEqualTo("user-ref", USERID).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        GETVENUES.whereEqualTo("user-ref", USERID).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
+            /**
+             * This method is used to query Firebase.
+             * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+             */
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
             {
@@ -139,8 +146,12 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
 
                     DocumentSnapshot venue = venues.get(0);
 
-                    getVenueAdverts.whereEqualTo("venue-ref", venue.getId()).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+                    GETVENUEADVERTS.whereEqualTo("venue-ref", venue.getId()).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
                     {
+                        /**
+                         * This method is used to query Firebase.
+                         * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+                         */
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots)
                         {
@@ -197,6 +208,10 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
                         }
                     }).addOnFailureListener(new OnFailureListener()
                     {
+                        /**
+                         * Upon failure when querying the database, display the error to the console.
+                         * @param e Represents the exception that has occurred.
+                         */
                         @Override
                         public void onFailure(@NonNull Exception e)
                         {
@@ -259,8 +274,12 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
 
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 
-        getVenueAdverts.whereEqualTo("venue-ref", venueRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        GETVENUEADVERTS.whereEqualTo("venue-ref", venueRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
+            /**
+             * This method is used to query Firebase.
+             * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+             */
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
             {
@@ -270,7 +289,7 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
                 {
                     Log.d(TAG, "DELETEADVERT ------------------ get successful with advert");
 
-                    venueAdvertsReference.document(venueAdverts.get(0).getId()).delete();
+                    VENUEADVERTSREFERENCE.document(venueAdverts.get(0).getId()).delete();
                     restartFragment();
                 }
                 else
@@ -280,6 +299,10 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
             }
         }).addOnFailureListener(new OnFailureListener()
         {
+            /**
+             * Upon failure when querying the database, display the error to the console.
+             * @param e Represents the exception that has occurred.
+             */
             @Override
             public void onFailure(@NonNull Exception e)
             {
@@ -297,6 +320,12 @@ public class VenueConsoleFragment extends Fragment implements View.OnClickListen
         getFragmentManager().beginTransaction().detach(this).attach(this).commit();
     }
 
+    /**
+     * Upon starting an activity awaiting a result, this method handles what this activity does upon receiving such a result.
+     * @param requestCode Represents the request code sent by the starting activity.
+     * @param resultCode Represents the result code.
+     * @param data Represents the intent passed back from the completed activity.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {

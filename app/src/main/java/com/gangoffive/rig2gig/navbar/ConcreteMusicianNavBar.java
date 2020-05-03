@@ -8,8 +8,14 @@ import androidx.appcompat.widget.Toolbar;
 import com.gangoffive.rig2gig.R;
 import com.google.android.material.navigation.NavigationView;
 
+/**
+ * This class is used to create a concrete navigation bar for musician type accounts.
+ */
 public class ConcreteMusicianNavBar extends NavBarCompatActivity
 {
+    /**
+     * Default constructor.
+     */
     public ConcreteMusicianNavBar()
     {
 

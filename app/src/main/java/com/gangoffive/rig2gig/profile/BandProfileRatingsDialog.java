@@ -20,6 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
+/**
+ * This class is used to create a custom dialog popup.
+ */
 public class BandProfileRatingsDialog extends AppCompatActivity
 {
     private int height, width;
@@ -29,9 +32,13 @@ public class BandProfileRatingsDialog extends AppCompatActivity
     private String viewerRef;
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private final CollectionReference bandReference = FSTORE.collection("bands");
+    private final CollectionReference BANDREFERENCE = FSTORE.collection("bands");
     private DocumentReference ratingDocReference;
 
+    /**
+     * This method is used to create the view upon creation of the class.
+     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -52,6 +59,10 @@ public class BandProfileRatingsDialog extends AppCompatActivity
 
         rate.setOnClickListener(new View.OnClickListener()
         {
+            /**
+             * This method is used to handle the click of the rate Button.
+             * @param v Represents the view.
+             */
             @Override
             public void onClick(View v)
             {
@@ -62,6 +73,10 @@ public class BandProfileRatingsDialog extends AppCompatActivity
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener()
         {
+            /**
+             * This method is used to handle the click of the cancel Button.
+             * @param v Represents the view.
+             */
             @Override
             public void onClick(View v)
             {
@@ -70,14 +85,21 @@ public class BandProfileRatingsDialog extends AppCompatActivity
         });
     }
 
+    /**
+     * This method is used to get the user's rating from the rating bar and post it to Firebase.
+     */
     private void ratingPost()
     {
         RatingBar alertDialogRatingBar = findViewById(R.id.ratingBar);
 
         float bandRating = alertDialogRatingBar.getRating();
 
-        bandReference.document(bID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        BANDREFERENCE.document(bID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
+            /**
+             * This method is used to determine the completion of a get request of Firebase.
+             * @param task References the result of the get request.
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
             {
@@ -134,12 +156,16 @@ public class BandProfileRatingsDialog extends AppCompatActivity
                     System.out.println(TAG + " viewerType Error! viewerType ====== " + viewerType);
                 }
 
-                bandReference.document(bID).update(updateRatingMap);
+                BANDREFERENCE.document(bID).update(updateRatingMap);
 
                 ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(bID);
 
                 ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                 {
+                    /**
+                     * This method is used to determine the completion of a get request of Firebase.
+                     * @param task References the result of the get request.
+                     */
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task)
                     {
@@ -169,7 +195,7 @@ public class BandProfileRatingsDialog extends AppCompatActivity
     }
 
     /**
-     * Handle on back pressed
+     * Handle on back pressed.
      */
     @Override
     public void onBackPressed()
@@ -178,8 +204,8 @@ public class BandProfileRatingsDialog extends AppCompatActivity
     }
 
     /**
-     * Handle if top activity changes
-     * @param isTopResumedActivity false if no longer the top activty
+     * If dialog popup is cancelled or clicked off of, then treat as though no rating has occurred.
+     * @param isTopResumedActivity false if no longer the top activity.
      */
     @Override
     public void onTopResumedActivityChanged (boolean isTopResumedActivity)
@@ -191,7 +217,7 @@ public class BandProfileRatingsDialog extends AppCompatActivity
     }
 
     /**
-     * Finish activity if band member is not deleted
+     * Finish activity if rating dialog is cancelled or clicked off of.
      */
     public void returnNotRated()
     {

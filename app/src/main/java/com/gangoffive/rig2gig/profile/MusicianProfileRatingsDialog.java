@@ -21,6 +21,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
+/**
+ * This class is used to create a custom dialog popup.
+ */
 public class MusicianProfileRatingsDialog extends AppCompatActivity
 {
     private int height, width;
@@ -30,9 +33,13 @@ public class MusicianProfileRatingsDialog extends AppCompatActivity
     private String viewerRef;
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private final CollectionReference musicianReference = FSTORE.collection("musicians");
+    private final CollectionReference MUSICIANREFERENCE = FSTORE.collection("musicians");
     private DocumentReference ratingDocReference;
 
+    /**
+     * This method is used to create the view upon creation of the class.
+     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -53,6 +60,10 @@ public class MusicianProfileRatingsDialog extends AppCompatActivity
 
         rate.setOnClickListener(new View.OnClickListener()
         {
+            /**
+             * This method is used to handle the click of the rate Button.
+             * @param v Represents the view.
+             */
             @Override
             public void onClick(View v)
             {
@@ -63,6 +74,10 @@ public class MusicianProfileRatingsDialog extends AppCompatActivity
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener()
         {
+            /**
+             * This method is used to handle the click of the cancel Button.
+             * @param v Represents the view.
+             */
             @Override
             public void onClick(View v)
             {
@@ -71,14 +86,21 @@ public class MusicianProfileRatingsDialog extends AppCompatActivity
         });
     }
 
+    /**
+     * This method is used to get the user's rating from the rating bar and post it to Firebase.
+     */
     private void ratingPost()
     {
         RatingBar alertDialogRatingBar = findViewById(R.id.ratingBar);
 
         float musicianRating = alertDialogRatingBar.getRating();
 
-        musicianReference.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
+        MUSICIANREFERENCE.document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
+            /**
+             * This method is used to determine the completion of a get request of Firebase.
+             * @param task References the result of the get request.
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
             {
@@ -87,7 +109,6 @@ public class MusicianProfileRatingsDialog extends AppCompatActivity
                 //Here, calculate the new rating and store in Firebase.
                 if(viewerType.equals("bands")) //If the viewer is viewing from their band.
                 {
-                    String currentMusicianRating = task.getResult().get("musician-rating").toString();
                     float musicianRatingCount = Float.valueOf(task.getResult().get("musician-rating-count").toString());
                     float musicianRatingTotal = Float.valueOf(task.getResult().get("musician-rating-total").toString());
 
@@ -137,12 +158,16 @@ public class MusicianProfileRatingsDialog extends AppCompatActivity
                     System.out.println(TAG + " viewerType Error! viewerType ====== " + viewerType);
                 }
 
-                musicianReference.document(mID).update(updateRatingMap);
+                MUSICIANREFERENCE.document(mID).update(updateRatingMap);
 
                 ratingDocReference = FSTORE.collection("ratings").document(viewerRef).collection(viewerType).document(mID);
 
                 ratingDocReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
                 {
+                    /**
+                     * This method is used to determine the completion of a get request of Firebase.
+                     * @param task References the result of the get request.
+                     */
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task)
                     {
@@ -172,7 +197,7 @@ public class MusicianProfileRatingsDialog extends AppCompatActivity
     }
 
     /**
-     * Handle on back pressed
+     * Handle on back pressed.
      */
     @Override
     public void onBackPressed()
@@ -181,8 +206,8 @@ public class MusicianProfileRatingsDialog extends AppCompatActivity
     }
 
     /**
-     * Handle if top activity changes
-     * @param isTopResumedActivity false if no longer the top activty
+     * If dialog popup is cancelled or clicked off of, then treat as though no rating has occurred.
+     * @param isTopResumedActivity false if no longer the top activity.
      */
     @Override
     public void onTopResumedActivityChanged (boolean isTopResumedActivity)
@@ -194,7 +219,7 @@ public class MusicianProfileRatingsDialog extends AppCompatActivity
     }
 
     /**
-     * Finish activity if band member is not deleted
+     * Finish activity if rating dialog is cancelled or clicked off of.
      */
     public void returnNotRated()
     {

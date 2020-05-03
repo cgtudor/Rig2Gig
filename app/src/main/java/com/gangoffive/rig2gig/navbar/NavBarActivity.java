@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.gangoffive.rig2gig.account.AccountPurposeActivity;
 
+/**
+ * This class is used to select a concrete nav bar based upon the logged in user type.
+ */
 public class NavBarActivity extends AppCompatActivity
 {
     /**
@@ -29,9 +32,6 @@ public class NavBarActivity extends AppCompatActivity
                 String extra = getIntent().getStringExtra("TARGET_FRAGMENT");
                 fragIntent.putExtra("OPEN_FRAGMENT", extra);
             }
-
-            //Decide which navbar to display.
-
 
             startActivity(fragIntent);
         }
