@@ -23,6 +23,8 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
     private int[] fragments = {R.layout.fragment_view_venues,
             R.layout.fragment_saved_venues};
 
+    private boolean  backClicked;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +70,7 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
+        backClicked = true;
         finish();
     }
 
@@ -87,11 +90,7 @@ public class VenueAdvertIndexActivity extends AppCompatActivity {
         startActivity(getIntent());
     }
 
-    public Fragment getViewAdvertFragment() {
-        return viewAdvertFragment;
-    }
-
-    public Fragment getSavedAdvertFragment() {
-        return savedAdvertFragment;
+    public boolean isBackClicked() {
+        return backClicked;
     }
 }

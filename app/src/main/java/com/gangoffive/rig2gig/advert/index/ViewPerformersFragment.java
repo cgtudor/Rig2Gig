@@ -68,7 +68,7 @@ public class ViewPerformersFragment extends Fragment
 
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 
-        swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
+        swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.viewSwipeContainer);
 
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -90,7 +90,7 @@ public class ViewPerformersFragment extends Fragment
                 getResources().getColor(android.R.color.holo_blue_dark),
                 getResources().getColor(android.R.color.holo_orange_dark));
 
-        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) v.findViewById(R.id.viewRecyclerView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);

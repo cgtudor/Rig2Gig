@@ -37,8 +37,6 @@ import java.util.Map;
 
 public class ViewVenuesFragment extends Fragment
 {
-    private boolean inTestMode;
-
     private static final String TAG = "ViewVenuesFragment";
 
     private String currentUserType;
@@ -73,7 +71,7 @@ public class ViewVenuesFragment extends Fragment
 
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 
-        swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
+        swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.viewSwipeContainer);
 
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -95,7 +93,7 @@ public class ViewVenuesFragment extends Fragment
                 getResources().getColor(android.R.color.holo_blue_dark),
                 getResources().getColor(android.R.color.holo_orange_dark));
 
-        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) v.findViewById(R.id.viewRecyclerView);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -200,21 +198,6 @@ public class ViewVenuesFragment extends Fragment
                         }
                     }
                 });
-    }
-
-    public void onSuccessFromDatabase(ArrayList<Map<String,Object>> venueAdverts) {
-        for(Map<String,Object> venueAdvert : venueAdverts){
-
-
-            VenueListing venueListing = new VenueListing(
-                    venueAdvert.getId(),
-                    venueAdvert.get("venue-ref").toString());
-
-            venueListings.add(venueListing);
-            lastVisible = documentSnapshot;
-        }
-
-        adapter.notifyItemInserted(venueListings.size() - 1);
     }
 
     @Override
