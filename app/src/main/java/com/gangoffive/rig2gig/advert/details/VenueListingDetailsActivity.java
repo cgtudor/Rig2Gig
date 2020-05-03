@@ -310,11 +310,11 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                 unrated.setVisibility(View.GONE);
             }
 
-            if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()) && expiryDate.compareTo(Timestamp.now()) > 0) {
+            if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test") && expiryDate.compareTo(Timestamp.now()) > 0) {
                 getSupportActionBar().setTitle("My Advert");
                 contact.setClickable(false);
                 contact.setVisibility(View.GONE);
-            } else if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()) && expiryDate.compareTo(Timestamp.now()) < 0) {
+            } else if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test") && expiryDate.compareTo(Timestamp.now()) < 0) {
                 getSupportActionBar().setTitle("My Advert Preview");
                 contact.setClickable(false);
                 contact.setVisibility(View.INVISIBLE);
@@ -329,7 +329,9 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                 });
             }
 
-            CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
+            CollectionReference sentMessages = db.collection("communications")
+                    .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                    .collection("sent");
             sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get(source)
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override

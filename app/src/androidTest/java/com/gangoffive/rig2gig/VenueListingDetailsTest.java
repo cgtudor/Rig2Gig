@@ -45,7 +45,7 @@ public class VenueListingDetailsTest {
         when(venueDoc.exists()).thenReturn(true);
         when(venueDoc.get("name")).thenReturn("test");
         when(venueDoc.get("location")).thenReturn("test");
-        when(venueDoc.get("user-ref")).thenReturn("test");
+        when(venueDoc.get("user-ref")).thenReturn("test-ref");
         when(venueDoc.get("venue-rating")).thenReturn("N/A");
         when(venueTask.getResult()).thenReturn(venueDoc);
         testRule.getActivity().onSuccessVenueData(venueTask, new Timestamp(calendar.getTime()));
