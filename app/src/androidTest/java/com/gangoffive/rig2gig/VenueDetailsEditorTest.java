@@ -10,7 +10,12 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
 import com.gangoffive.rig2gig.firebase.ListingManager;
+import com.gangoffive.rig2gig.utils.TabStatePreserver;
 import com.gangoffive.rig2gig.venue.management.VenueDetailsEditor;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -37,6 +42,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
@@ -50,6 +56,11 @@ public class VenueDetailsEditorTest {
     private HashMap<String, Object> venueData;
     private Activity activty;
     private ListingManager manager;
+    private VenueDetailsEditor confirmationClass, mockClass;
+    private FirebaseAuth firebaseAuth;
+    private CollectionReference received;
+    private Task<DocumentReference> task;
+    private HashMap request;
 
     @Rule
     public ActivityTestRule<VenueDetailsEditor> testRule = new ActivityTestRule(VenueDetailsEditor.class);
@@ -65,6 +76,24 @@ public class VenueDetailsEditorTest {
 
     @Before
     public void setUp() throws Exception {
+        confirmationClass = new VenueDetailsEditor()
+        {
+            @Override
+            public void setViewReferences() {}
+
+            @Override
+            public void populateInitialFields() {}
+
+            @Override
+            public void saveTabs() {}
+
+        };
+
+        received = mock(CollectionReference.class);
+        task = mock(Task.class);
+        firebaseAuth = mock(FirebaseAuth.class);
+        request = mock(HashMap.class);
+        mockClass = mock(VenueDetailsEditor.class);
         venueData = new HashMap();
         venueData.put("availability", "test availability");
         venueData.put("charge", "test charge");
@@ -546,5 +575,45 @@ public class VenueDetailsEditorTest {
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
         verify(manager,times(0)).postDataToDatabase(any(),any(),any());
+    }
+
+    @Test
+    public void testOnSuccessFromDatabaseNoAdvert()
+    {
+        ListingManager manager = mock(ListingManager.class);
+        confirmationClass.setListingManager(manager);
+        confirmationClass.onSuccessFromDatabase(venueData);
+        assertThat(confirmationClass.getVenue(),is(equalTo(venueData)));
+        verify(manager,times(1)).getImage(any());
+    }
+
+    @Test
+    public void testBeginTabPreservation()
+    {
+        TabStatePreserver tabPreserver = mock(TabStatePreserver.class);
+        confirmationClass.setTabPreserver(tabPreserver);
+        confirmationClass.beginTabPreservation();
+        verify(tabPreserver,times(1)).preserveTabState();
+    }
+
+    @Test
+    public void testValidateDataMapEmptyField()
+    {
+        HashMap<String, Object> listing = new HashMap();
+        listing.put("valid field", "valid");
+        listing.put("empty field", "");
+        confirmationClass.setVenue(listing);
+        assertThat(confirmationClass.validateDataMap(),is(equalTo(false)));
+    }
+
+    @Test
+    public void testValidateDataMapWithValidData()
+    {
+        HashMap<String, Object> listing = new HashMap();
+        listing.put("valid field", "valid");
+        listing.put("empty field", "also valid");
+        listing.put("email-address", "valid@email.com");
+        confirmationClass.setVenue(listing);
+        assertThat(confirmationClass.validateDataMap(),is(equalTo(true)));
     }
 }

@@ -391,7 +391,7 @@ public class ManageBandMembersActivityTest
 
     @Test
     public void testHandleDatabaseResponseSuccess() throws InterruptedException {
-        Thread.sleep(2000);
+        Thread.sleep(4000);
         setupBand(2);
         testRule.getActivity().setuID("test member 0");
         testRule.getActivity().onSuccessFromDatabase(bigBand);

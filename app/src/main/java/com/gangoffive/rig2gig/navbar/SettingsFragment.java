@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.facebook.login.LoginManager;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.account.AccountPurposeActivity;
 import com.gangoffive.rig2gig.account.ChangePasswordDialog;
@@ -139,6 +140,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     {
         FirebaseAuth fAuth = FirebaseAuth.getInstance();
         fAuth.signOut();
+        LoginManager.getInstance().logOut();
         startActivity(new Intent(getContext(), LoginActivity.class));
     }
 }

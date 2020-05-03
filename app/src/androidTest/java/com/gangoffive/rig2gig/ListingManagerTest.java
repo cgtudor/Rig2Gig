@@ -7,6 +7,7 @@ import com.gangoffive.rig2gig.advert.management.CreateAdvertisement;
 import com.gangoffive.rig2gig.firebase.ListingManager;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,8 +36,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ListingManagerTest{
-
+public class ListingManagerTest {
     static HashMap<String, Object> userData, listingData;
 
     public void mockFirebase(ListingManager manager)
@@ -366,7 +366,7 @@ public class ListingManagerTest{
         DocumentReference mockDoc = mock(DocumentReference.class);
         when(mockDoc.getId()).thenReturn("testRef");
         StorageReference parentRef = mock(StorageReference.class);
-        
+
         manager.setListingImage(parentRef);
         manager.setImage(null);
         manager.createAdvertisementOnComplete(mockDoc);
@@ -431,7 +431,7 @@ public class ListingManagerTest{
         verify(mockUp,times(1)).addOnFailureListener(any());
     }
 
-    @Test
+/*    @Test
     public void testImageToByteArray()
     {
         ListingManager manager = dummyConstructor("testRef", "Venue", "testRef");
@@ -452,7 +452,7 @@ public class ListingManagerTest{
         manager.setBitmap(mockBitmap);
         manager.imageToByteArray(null);
         verify(mockBitmap,times(0)).compress(any(),anyInt(),any());
-    }
+    }*/
 
     @Test
     public void testGetExpiryDatePaymentNeeded()

@@ -199,14 +199,17 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
                             {
                                 if (document.exists())
                                 {
-                                    if (!currentMemberRefs.contains(document.getId()))
+                                    if(currentMemberRefs != null)
                                     {
-                                        searchRefs.add(document.getId());
-                                        userRefs.add(document.getData().get("user-ref").toString());
-                                        searchNames.add(document.getData().get("name").toString());
-                                        if (!musicians.contains(document.getData().get("name").toString()))
+                                        if (!currentMemberRefs.contains(document.getId()))
                                         {
-                                            musicians.add(document.getData().get("name").toString());
+                                            searchRefs.add(document.getId());
+                                            userRefs.add(document.getData().get("user-ref").toString());
+                                            searchNames.add(document.getData().get("name").toString());
+                                            if (!musicians.contains(document.getData().get("name").toString()))
+                                            {
+                                                musicians.add(document.getData().get("name").toString());
+                                            }
                                         }
                                     }
                                 }
@@ -317,51 +320,54 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
      */
     @Override
     public void onSuccessFromDatabase(Map<String, Object> data) {
-        if (checkIfInBand)
+        if(data != null)
         {
-            checkIfInBand = false;
-            if (!((List)data.get("bands")).contains(bandRef))
+            if (checkIfInBand)
             {
-                Intent intent = new Intent(this, NavBarActivity.class);
-                startActivity(intent);
-                finish();
+                checkIfInBand = false;
+                if (!((List)data.get("bands")).contains(bandRef))
+                {
+                    Intent intent = new Intent(this, NavBarActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if (backClicked)
+                {
+                    goBack();
+                }
+                else if (generatingResults)
+                {
+                    generatingResults = false;
+                    generateResults();
+                }
+                else if (confirmingAdd)
+                {
+                    confirmingAdd = false;
+                    confirmAddMember();
+                }
             }
-            if (backClicked)
+
+            else if (backClicked)
             {
+                if (!((List)data.get("bands")).contains(bandRef))
+                {
+                    stillInBand = false;
+                }
                 goBack();
             }
-            if (generatingResults)
+            else if (membersDownloaded != gridRefs.size() - 1)
             {
-                generatingResults = false;
-                generateResults();
+                names.add(data.get("name").toString());
+                userRefs.add(data.get("user-ref").toString());
+                membersDownloaded++;
+                musicianManagers.get(membersDownloaded).getUserInfo(this);
             }
-            if (confirmingAdd)
+            else
             {
-                confirmingAdd = false;
-                confirmAddMember();
+                names.add(data.get("name").toString());
+                userRefs.add(data.get("user-ref").toString());
+                checkInvitesSent();
             }
-        }
-
-        else if (backClicked)
-        {
-            if (!((List)data.get("bands")).contains(bandRef))
-            {
-                stillInBand = false;
-            }
-            goBack();
-        }
-        else if (membersDownloaded != gridRefs.size() - 1)
-        {
-            names.add(data.get("name").toString());
-            userRefs.add(data.get("user-ref").toString());
-            membersDownloaded++;
-            musicianManagers.get(membersDownloaded).getUserInfo(this);
-        }
-        else
-        {
-            names.add(data.get("name").toString());
-            userRefs.add(data.get("user-ref").toString());
-            checkInvitesSent();
         }
     }
 
@@ -397,11 +403,21 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
      */
     public void confirmAddMember()
     {
-        searchBar.clearFocus();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                searchBar.clearFocus();
+            }
+        });
         fader = findViewById(R.id.fader);
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.darkerMain));
-        fader.setVisibility(View.VISIBLE);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                fader.setVisibility(View.VISIBLE);
+            }
+        });
         Intent intent =  new Intent(this, AddMemberConfirmation.class);
         intent.putExtra("EXTRA_NAME", confirmMember);
         intent.putExtra("EXTRA_POSITION", confirmPosition);
@@ -424,7 +440,11 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         invitingMember = false;
-        gridView.setOnItemClickListener(viewDetails);
+        if(gridView != null)
+        {
+            gridView.setOnItemClickListener(viewDetails);
+        }
+
         listResults.setOnItemClickListener(viewResults);
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
@@ -585,4 +605,144 @@ public class MusicianSearchActivity extends AppCompatActivity implements SearchV
      */
     @Override
     public void onSuccessfulImageDownload() {}
+
+    public SearchView getSearchBar() {
+        return searchBar;
+    }
+
+    public int getMembersDownloaded() {
+        return membersDownloaded;
+    }
+
+    public int getInvitesChecked() {
+        return invitesChecked;
+    }
+
+    public ArrayList<String> getMusicians() {
+        return musicians;
+    }
+
+    public ArrayList<String> getSearchRefs() {
+        return searchRefs;
+    }
+
+    public ArrayList<String> getSearchNames() {
+        return searchNames;
+    }
+
+    public ArrayList<String> getNames() {
+        return names;
+    }
+
+    public ArrayList<String> getGridRefs() {
+        return gridRefs;
+    }
+
+    public ArrayList<String> getUserRefs() {
+        return userRefs;
+    }
+
+    public ArrayList<Boolean> getInvitesSent() {
+        return invitesSent;
+    }
+
+    public ArrayList<ListingManager> getMusicianManagers() {
+        return musicianManagers;
+    }
+
+    public ListView getListResults() {
+        return listResults;
+    }
+
+    public String getResultsName() {
+        return resultsName;
+    }
+
+    public boolean isGeneratingResults() {
+        return generatingResults;
+    }
+
+    public ListingManager getMusicManager() {
+        return musicManager;
+    }
+
+    public boolean isCheckIfInBand() {
+        return checkIfInBand;
+    }
+
+    public void setMusicians(ArrayList<String> musicians) {
+        this.musicians = musicians;
+    }
+
+    public void setCurrentMemberRefs(ArrayList<String> currentMemberRefs) {
+        this.currentMemberRefs = currentMemberRefs;
+    }
+
+    public void setSearchRefs(ArrayList<String> searchRefs) {
+        this.searchRefs = searchRefs;
+    }
+
+    public void setSearchNames(ArrayList<String> searchNames) {
+        this.searchNames = searchNames;
+    }
+
+    public void setNames(ArrayList<String> names) {
+        this.names = names;
+    }
+
+    public void setGridRefs(ArrayList<String> gridRefs) {
+        this.gridRefs = gridRefs;
+    }
+
+    public void setUserRefs(ArrayList<String> userRefs) {
+        this.userRefs = userRefs;
+    }
+
+    public void setMusicManager(ListingManager musicManager) {
+        this.musicManager = musicManager;
+    }
+
+    public boolean isBackClicked() {
+        return backClicked;
+    }
+
+    public boolean isStillInBand() {
+        return stillInBand;
+    }
+
+    public boolean isConfirmingAdd() {
+        return confirmingAdd;
+    }
+
+    public void setBandRef(String bandRef) {
+        this.bandRef = bandRef;
+    }
+
+    public void setCheckIfInBand(boolean checkIfInBand) {
+        this.checkIfInBand = checkIfInBand;
+    }
+
+    public void setGeneratingResults(boolean generatingResults) {
+        this.generatingResults = generatingResults;
+    }
+
+    public int getConfirmPosition() {
+        return confirmPosition;
+    }
+
+    public String getConfirmMember() {
+        return confirmMember;
+    }
+
+    public void setBandName(String bandName) {
+        this.bandName = bandName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setUsersMusicianRef(String usersMusicianRef) {
+        this.usersMusicianRef = usersMusicianRef;
+    }
 }
