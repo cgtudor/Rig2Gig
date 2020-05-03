@@ -14,6 +14,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.gangoffive.rig2gig.band.management.BandDetailsEditor;
 import com.gangoffive.rig2gig.firebase.ListingManager;
+import com.gangoffive.rig2gig.utils.TabStatePreserver;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -36,6 +37,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.*;
 import static org.mockito.AdditionalMatchers.not;
@@ -48,9 +51,11 @@ public class BandDetailsEditorTest {
     private HashMap<String, Object> bandData;
     private Activity activty;
     private ListingManager manager;
+    private BandDetailsEditor confirmationClass, mockClass;
 
     @Rule
     public ActivityTestRule<BandDetailsEditor> testRule = new ActivityTestRule(BandDetailsEditor.class);
+
 
     @BeforeClass
     public static void setup() {
@@ -62,6 +67,20 @@ public class BandDetailsEditorTest {
 
     @Before
     public void setUp() throws Exception {
+        confirmationClass = new BandDetailsEditor()
+        {
+            @Override
+            public void setViewReferences() {}
+
+            @Override
+            public void populateInitialFields() {}
+
+            @Override
+            public void saveTabs() {}
+
+        };
+
+        mockClass = mock(BandDetailsEditor.class);
         bandData = new HashMap();
         bandData.put("availability", "test availability");
         bandData.put("charge", "test charge");
@@ -306,10 +325,14 @@ public class BandDetailsEditorTest {
 
 
     @Test
-    public void testPopulateInitialFields()  {
+    public void testPopulateInitialFields() throws InterruptedException {
+        Thread.sleep(2000);
         testRule.getActivity().onSuccessFromDatabase(bandData);
+        Thread.sleep(2000);
         testRule.getActivity().onSuccessfulImageDownload();
+        Thread.sleep(2000);
         onView(withId(R.id.view_pager)).perform(swipeLeft());
+        Thread.sleep(2000);
         onView(withId(R.id.name)).check(matches(withText("test name")));
         onView(withId(R.id.venue_description_final)).check(matches(withText("1")));
         onView(withId(R.id.genres)).check(matches(withText("test genre")));
@@ -485,6 +508,46 @@ public class BandDetailsEditorTest {
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.selectGenres)).perform(click());
         onView(withId(R.id.genresMain)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testOnSuccessFromDatabaseNoAdvert()
+    {
+        ListingManager manager = mock(ListingManager.class);
+        confirmationClass.setListingManager(manager);
+        confirmationClass.onSuccessFromDatabase(bandData);
+        assertThat(confirmationClass.getBand(),is(equalTo(bandData)));
+        verify(manager,times(1)).getImage(any());
+    }
+
+    @Test
+    public void testBeginTabPreservation()
+    {
+        TabStatePreserver tabPreserver = mock(TabStatePreserver.class);
+        confirmationClass.setTabPreserver(tabPreserver);
+        confirmationClass.beginTabPreservation();
+        verify(tabPreserver,times(1)).preserveTabState();
+    }
+
+    @Test
+    public void testvalidateDataMapEmptyField()
+    {
+        HashMap<String, Object> listing = new HashMap();
+        listing.put("valid field", "valid");
+        listing.put("empty field", "");
+        confirmationClass.setBand(listing);
+        assertThat(confirmationClass.validateDataMap(),is(equalTo(false)));
+    }
+
+    @Test
+    public void testvalidateDataMapWithValidData()
+    {
+        HashMap<String, Object> listing = new HashMap();
+        listing.put("valid field", "valid");
+        listing.put("empty field", "also valid");
+        listing.put("email", "valid@email.com");
+        confirmationClass.setBand(listing);
+        assertThat(confirmationClass.validateDataMap(),is(equalTo(true)));
     }
 }
 

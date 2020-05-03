@@ -25,15 +25,6 @@ import static org.mockito.Mockito.verify;
 public class BandDetailsEditorTest {
 
     private BandDetailsEditor confirmationClass, mockClass;
-    private int expectedPosition;
-    private String expectedName, expectedMusicianRef, expectedBandRef, expectedUserRef,
-            expectedBandName, expectedInviterName, expectedUsersMusicianRef;
-    private boolean expectedSendingInvite, expectedCheckIfInBand;
-    private ListingManager expectedMusicManager;
-    private FirebaseAuth firebaseAuth;
-    private CollectionReference received;
-    private Task<DocumentReference> task;
-    private HashMap request;
     private HashMap<String, Object> bandData;
 
     @Before
@@ -52,10 +43,6 @@ public class BandDetailsEditorTest {
 
         };
 
-        received = mock(CollectionReference.class);
-        task = mock(Task.class);
-        firebaseAuth = mock(FirebaseAuth.class);
-        request = mock(HashMap.class);
         mockClass = mock(BandDetailsEditor.class);
         bandData = new HashMap();
         bandData.put("availability","test availability");

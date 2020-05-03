@@ -18,6 +18,11 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.gangoffive.rig2gig.firebase.ListingManager;
 import com.gangoffive.rig2gig.musician.management.MusicianDetailsEditor;
+import com.gangoffive.rig2gig.utils.TabStatePreserver;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -46,6 +51,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.StringEndsWith.endsWith;
@@ -59,12 +65,18 @@ public class MusicianDetailsEditorTest {
     private HashMap<String, Object> musicianData;
     private Activity activty;
     private ListingManager manager;
+    private MusicianDetailsEditor confirmationClass, mockClass;
+    private FirebaseAuth firebaseAuth;
+    private CollectionReference received;
+    private Task<DocumentReference> task;
+    private HashMap request;
 
     @Rule
     public ActivityTestRule<MusicianDetailsEditor> testRule = new ActivityTestRule(MusicianDetailsEditor.class);
 
     @BeforeClass
     public static void setup() {
+
         if (Looper.myLooper() == null)
         {
             Looper.prepare();
@@ -73,6 +85,23 @@ public class MusicianDetailsEditorTest {
 
     @Before
     public void setUp() throws Exception {
+        confirmationClass = new MusicianDetailsEditor()
+        {
+            @Override
+            public void setViewReferences() {}
+
+            @Override
+            public void populateInitialFields() {}
+
+            @Override
+            public void saveTabs() {}
+
+        };
+        received = mock(CollectionReference.class);
+        task = mock(Task.class);
+        firebaseAuth = mock(FirebaseAuth.class);
+        request = mock(HashMap.class);
+        mockClass = mock(MusicianDetailsEditor.class);
         musicianData = new HashMap();
         musicianData.put("distance", "0");
         musicianData.put("latitude","10");
@@ -479,5 +508,44 @@ public class MusicianDetailsEditorTest {
         testRule.getActivity().onActivityResult(1,-1,intent);
         Thread.sleep(1000);
         assertTrue(testRule.getActivity().getImageView().getDrawable() != null);
+    }
+
+    @Test
+    public void testOnSuccessFromDatabaseNoAdvert()
+    {
+        ListingManager manager = mock(ListingManager.class);
+        confirmationClass.setListingManager(manager);
+        confirmationClass.onSuccessFromDatabase(musicianData);
+        assertThat(confirmationClass.getMusician(),is(equalTo(musicianData)));
+        verify(manager,times(1)).getImage(any());
+    }
+
+    @Test
+    public void testBeginTabPreservation()
+    {
+        TabStatePreserver tabPreserver = mock(TabStatePreserver.class);
+        confirmationClass.setTabPreserver(tabPreserver);
+        confirmationClass.beginTabPreservation();
+        verify(tabPreserver,times(1)).preserveTabState();
+    }
+
+    @Test
+    public void testvalidateDataMapEmptyField()
+    {
+        HashMap<String, Object> listing = new HashMap();
+        listing.put("valid field", "valid");
+        listing.put("empty field", "");
+        confirmationClass.setMusician(listing);
+        assertThat(confirmationClass.validateDataMap(),is(equalTo(false)));
+    }
+
+    @Test
+    public void testvalidateDataMapWithValidData()
+    {
+        HashMap<String, Object> listing = new HashMap();
+        listing.put("valid field", "valid");
+        listing.put("empty field", "also valid");
+        confirmationClass.setMusician(listing);
+        assertThat(confirmationClass.validateDataMap(),is(equalTo(true)));
     }
 }
