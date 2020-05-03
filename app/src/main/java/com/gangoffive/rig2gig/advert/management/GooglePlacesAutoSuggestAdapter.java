@@ -11,6 +11,9 @@ import java.util.ArrayList;
 
 /**
  * This class is used to suggest addresses based upon user input.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.2b
  */
 public class GooglePlacesAutoSuggestAdapter extends ArrayAdapter implements Filterable
 {
@@ -23,6 +26,7 @@ public class GooglePlacesAutoSuggestAdapter extends ArrayAdapter implements Filt
      * Constructor used to set up  context and resource variables.
      * @param context References the passed in environment.
      * @param resourceId References the passed in resource.
+     * @since #0.2b
      */
     public GooglePlacesAutoSuggestAdapter(Context context, int resourceId)
     {
@@ -36,6 +40,7 @@ public class GooglePlacesAutoSuggestAdapter extends ArrayAdapter implements Filt
      * @param context References the passed in environment.
      * @param resource References the passed in resource.
      * @param textViewResourceId References the passed in Text View.
+     * @since #0.2b
      */
     public GooglePlacesAutoSuggestAdapter(@NonNull Context context, int resource, int textViewResourceId)
     {
@@ -45,6 +50,7 @@ public class GooglePlacesAutoSuggestAdapter extends ArrayAdapter implements Filt
     /**
      * This method is used to get the count of the results ArrayList.
      * @return Returns the size of the results ArrayList as an int.
+     * @since #0.2b
      */
     @Override
     public int getCount()
@@ -56,6 +62,7 @@ public class GooglePlacesAutoSuggestAdapter extends ArrayAdapter implements Filt
      * This method is used to get an address item from the results ArrayList.
      * @param position References the position of the selected item in the results ArrayList.
      * @return Returns a selected address as a String.
+     * @since #0.2b
      */
     @Override
     public String getItem(int position)
@@ -66,6 +73,7 @@ public class GooglePlacesAutoSuggestAdapter extends ArrayAdapter implements Filt
     /**
      * Filter will populate Result in AutoCompleteTextView.
      * @return Returns the created filter.
+     * @since #0.2b
      */
     @Override
     public Filter getFilter()
@@ -76,6 +84,7 @@ public class GooglePlacesAutoSuggestAdapter extends ArrayAdapter implements Filt
              * This method is sued to perform the filtering of optional addresses.
              * @param constraint Represents the characters to match.
              * @return Returns the filter results.
+             * @since #0.2b
              */
             @Override
             protected FilterResults performFiltering(CharSequence constraint)
@@ -97,6 +106,7 @@ public class GooglePlacesAutoSuggestAdapter extends ArrayAdapter implements Filt
              * This method is used to publish the results of the filtered addresses.
              * @param constraint Represents the characters to match.
              * @param results Represents the results passed in from the filtering method.
+             * @since #0.2b
              */
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results)

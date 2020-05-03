@@ -39,6 +39,9 @@ import java.util.List;
 
 /**
  * This class is used to display the band console activity.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.2b
  */
 public class BandConsoleActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -66,6 +69,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         /**
          * This method is used to query Firebase.
          * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+         * @since #0.2b
          */
         @Override
         public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -117,6 +121,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         /**
          * Upon failure when querying the database, display the error to the console.
          * @param e Represents the exception that has occurred.
+         * @since #0.2b
          */
         @Override
         public void onFailure(@NonNull Exception e)
@@ -130,6 +135,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         /**
          * This method is used to query Firebase.
          * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+         * @since #0.2b
          */
         @Override
         public void onSuccess(QuerySnapshot queryDocumentSnapshots)
@@ -180,6 +186,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
      * Upon creation of the BandConsoleActivity, create the activity_band_console layout.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
      * @return Returns a View of the activity_band_console layout.
+     * @since #0.2b
      */
     @Nullable
     @Override
@@ -276,6 +283,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     /**
      * This method queries the database collecting all venues and venue adverts. These lists are then processed
      * to set up variables for possible button clicks where extras need to be sent with intents.
+     * @since #0.2b
      */
     private void databaseQuery()
     {
@@ -314,6 +322,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     /**
      * This method determines the activity/fragment that will be created based upon the button clicked using the card view's tag.
      * @param v This is the detected button that has been clicked. Used to create the appropriate activity/fragment.
+     * @since #0.2b
      */
     @Override
     public void onClick(View v)
@@ -371,6 +380,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * This method is used to find the logged in venue's advert and delete it from the database.
+     * @since #0.2b
      */
     private void deleteBandAdvert()
     {
@@ -424,6 +434,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * This method is used to find the logged in venue's advert and delete it from the database.
+     * @since #0.2b
      */
     private void deletePerformerAdvert()
     {
@@ -476,6 +487,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     /**
      * This method is used to reload the activity layout once the advert has been deleted.
      * This is so the appropriate layout is given to the user based upon whether they have an advert or not.
+     * @since #0.2b
      */
     private void restartActivity()
     {
@@ -485,6 +497,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     /**
      * This method is used to handle the back button being pressed on the toolbar.
      * @return Returns true after being pressed.
+     * @since #0.2b
      */
     @Override
     public boolean onSupportNavigateUp()
@@ -495,6 +508,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * This method is used to handle the back button being pressed by the user.
+     * @since #0.2b
      */
     @Override
     public void onBackPressed()
@@ -507,6 +521,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
      * @param requestCode Represents the request code sent by the starting activity.
      * @param resultCode Represents the result code.
      * @param data Represents the intent passed back from the completed activity.
+     * @since #0.2b
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
@@ -515,16 +530,31 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         recreate();
     }
 
+    /**
+     * Gets the performerSuccessListener. Used for testing purposes.
+     * @return Returns the performerSuccessListener of type OnSuccessListener.
+     * @since #0.2b
+     */
     public OnSuccessListener getPerformerSuccessListener()
     {
         return performerSuccessListener;
     }
 
+    /**
+     * Gets the performerFailureListener. Used for testing purposes.
+     * @return Returns the failureListener of type OnFailureListener.
+     * @since #0.2b
+     */
     public OnFailureListener getPerformerFailurelistener()
     {
         return failureListener;
     }
 
+    /**
+     * Gets the bandSuccessListener. Used for testing purposes.
+     * @return Returns the bandSuccessListener of type OnSuccessListener.
+     * @since #0.2b
+     */
     public OnSuccessListener getBandSuccessListener()
     {
         return bandSuccessListener;

@@ -21,6 +21,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * This class is used to display a dialog popup when the change password label in settings is clicked.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.1b
  */
 public class ChangePasswordDialog extends DialogFragment
 {
@@ -33,6 +36,7 @@ public class ChangePasswordDialog extends DialogFragment
      * This method details the alert dialog.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
      * @return returns the created dialog.
+     * @since #0.1b
      */
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState)
@@ -47,6 +51,7 @@ public class ChangePasswordDialog extends DialogFragment
              * This method is used to call the send email method when the confirm button is clicked.
              * @param dialog References the dialog interface.
              * @param which References the button clicked.
+             * @since #0.1b
              */
             @Override
             public void onClick(DialogInterface dialog, int which)
@@ -61,6 +66,7 @@ public class ChangePasswordDialog extends DialogFragment
              * This method is used to produce a toast when the cancel button is clicked.
              * @param dialog References the dialog interface.
              * @param which References the button clicked.
+             * @since #0.1b
              */
             @Override
             public void onClick(DialogInterface dialog, int which)
@@ -77,11 +83,17 @@ public class ChangePasswordDialog extends DialogFragment
     /**
      * This method is used to grab the logged in user's email from the database and send a reset password email to them.
      * @param dialog This parameter represents the context.
+     * @since #0.1b
      */
     private void sendEmail(DialogInterface dialog)
     {
         USERDOCUMENT.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
+            /**
+             * This method is used to determine the completion of a get request of Firebase.
+             * @param task References the result of the get request.
+             * @since #0.1b
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
             {
@@ -95,6 +107,11 @@ public class ChangePasswordDialog extends DialogFragment
                         String email = document.get("email-address").toString().trim();
                         fAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>()
                         {
+                            /**
+                             * This method is used to determine the completion of a get request of Firebase.
+                             * @param task References the result of the get request.
+                             * @since #0.1b
+                             */
                             @Override
                             public void onComplete(@NonNull Task<Void> task)
                             {
