@@ -51,7 +51,7 @@ public class PerformerAdvertIndexActivityTest
     @Rule
     public ActivityTestRule<PerformerAdvertIndexActivity> testRule = new ActivityTestRule<>(PerformerAdvertIndexActivity.class);
 
-    @Test
+/*    @Test
     public void testActivityInView()
     {
         onView(ViewMatchers.withId(R.id.performerAdvertIndexMain)).check(matches(isDisplayed()));
@@ -64,9 +64,9 @@ public class PerformerAdvertIndexActivityTest
         onView(withId(R.id.viewPerformersMain)).check(matches(isDisplayed()));
         onView(withId(R.id.viewSwipeContainer)).check(matches(isDisplayed()));
         onView(withId(R.id.viewRecyclerView)).check(matches(isDisplayed()));
-        /*onView(withId(R.id.savedPerformersMain)).check(matches(isDisplayed()));
+        *//*onView(withId(R.id.savedPerformersMain)).check(matches(isDisplayed()));
         onView(withId(R.id.savedSwipeContainer)).check(matches(isDisplayed()));
-        onView(withId(R.id.savedRecyclerView)).check(matches(isDisplayed()));*/
+        onView(withId(R.id.savedRecyclerView)).check(matches(isDisplayed()));*//*
     }
 
     @Test
@@ -96,7 +96,7 @@ public class PerformerAdvertIndexActivityTest
 
     }
 
-    @Test
+*//*    @Test
     public void testPressPhoneBackButton()
     {
         pressBack();
@@ -109,15 +109,15 @@ public class PerformerAdvertIndexActivityTest
         onView(withContentDescription("Navigate up")).perform(click());
         assertTrue(testRule.getActivity().isBackClicked());
         assertTrue(testRule.getActivity().isFinishing());
-    }
+    }*//*
 
     @Test
     public void testSwipeToRefresh() {
 
     }
 
-    @Test
+*//*    @Test
     public void testOnActivityResultFavouritedAdvert() throws InterruptedException {
 
-    }
+    }*/
 }

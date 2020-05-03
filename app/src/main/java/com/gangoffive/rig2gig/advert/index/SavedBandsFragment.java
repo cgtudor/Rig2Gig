@@ -160,7 +160,7 @@ public class SavedBandsFragment extends Fragment
         callingFirebase = true;
 
         Query next;
-        String uID = FirebaseAuth.getInstance().getUid();
+        String uID = FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test";
         Timestamp currentDate = Timestamp.now();
 
         if(lastVisible == null) {

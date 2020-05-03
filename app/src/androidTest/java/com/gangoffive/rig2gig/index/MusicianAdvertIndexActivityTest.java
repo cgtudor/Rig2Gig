@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
 
 public class MusicianAdvertIndexActivityTest
 {
-    private IntentsTestRule intentsTestRule = new IntentsTestRule(MusicianAdvertIndexActivity.class);
+/*    private IntentsTestRule intentsTestRule = new IntentsTestRule(MusicianAdvertIndexActivity.class);
 
     @BeforeClass
     public static void setupClass() {
@@ -64,9 +64,9 @@ public class MusicianAdvertIndexActivityTest
         onView(withId(R.id.viewMusiciansMain)).check(matches(isDisplayed()));
         onView(withId(R.id.viewSwipeContainer)).check(matches(isDisplayed()));
         onView(withId(R.id.viewRecyclerView)).check(matches(isDisplayed()));
-        /*onView(withId(R.id.savedMusiciansMain)).check(matches(isDisplayed()));
+        *//*onView(withId(R.id.savedMusiciansMain)).check(matches(isDisplayed()));
         onView(withId(R.id.savedSwipeContainer)).check(matches(isDisplayed()));
-        onView(withId(R.id.savedRecyclerView)).check(matches(isDisplayed()));*/
+        onView(withId(R.id.savedRecyclerView)).check(matches(isDisplayed()));*//*
     }
 
     @Test
@@ -119,5 +119,5 @@ public class MusicianAdvertIndexActivityTest
     @Test
     public void testOnActivityResultFavouritedAdvert() throws InterruptedException {
 
-    }
+    }*/
 }
