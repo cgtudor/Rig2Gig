@@ -17,6 +17,8 @@ public class PerformerAdvertIndexActivity extends AppCompatActivity {
     private int[] fragments = {R.layout.fragment_view_performers,
             R.layout.fragment_saved_performers};
 
+    private boolean  backClicked;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +39,12 @@ public class PerformerAdvertIndexActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    public void onBackPressed()
+    {
+        backClicked = true;
+        finish();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
@@ -51,5 +59,9 @@ public class PerformerAdvertIndexActivity extends AppCompatActivity {
     {
         finish();
         startActivity(getIntent());
+    }
+
+    public boolean isBackClicked() {
+        return backClicked;
     }
 }
