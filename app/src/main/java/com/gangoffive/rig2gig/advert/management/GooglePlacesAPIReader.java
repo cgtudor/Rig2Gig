@@ -13,6 +13,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+/**
+ * This class is used to read information from the Google Places API
+ */
 public class GooglePlacesAPIReader
 {
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
@@ -21,7 +24,7 @@ public class GooglePlacesAPIReader
      * Method makes a HTTP request to Google API, fetches all responses in StringBuilder.
      * Converts into a String then parses String data in Json and all
      * addresses in ArrayList and returns the ArrayList.
-     * @param input
+     * @param input References the entered address by the user.
      * @return
      */
     public ArrayList<String> autoComplete(String input)

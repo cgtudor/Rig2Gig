@@ -14,6 +14,9 @@ import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.utils.DefaultGoBack;
 import com.google.android.material.navigation.NavigationView;
 
+/**
+ * Abstract class used to set up shared variables and methods between all three concrete nav bar classes.
+ */
 public abstract class NavBarCompatActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     protected DrawerLayout drawer;
@@ -21,6 +24,9 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
     protected String visibleFragmentName;
     protected Fragment visibleFragment;
 
+    /**
+     * Default constructor.
+     */
     public NavBarCompatActivity()
     {
 
@@ -55,16 +61,12 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
     }
 
     /**
-     * This method is used to handle the back button.
+     * This method is used to handle the back button and maintain track of the currently visible nav bar fragment to stop re-loading of the currently visible fragment.
      */
     @Override
     public void onBackPressed()
     {
-        System.out.println("CURRENT FRAGMENT =================== " + getSupportFragmentManager().findFragmentByTag(visibleFragmentName));
-
         int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-
-        System.out.println("BACK STACK ENTRY COUNT ============= " + backStackEntryCount);
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if ((fragment instanceof DefaultGoBack) && ((DefaultGoBack) fragment).onBackPressed()) {
@@ -86,24 +88,13 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
         }
         else if(backStackEntryCount > 1)
         {
-            //System.out.println("BACK STACK ENTRY COUNT ============= " + backStackEntryCount);
             int index = backStackEntryCount - 2;
             FragmentManager.BackStackEntry backStackEntry = getSupportFragmentManager().getBackStackEntryAt(index);
-
-            System.out.println(backStackEntry.getName());
 
             visibleFragmentName = backStackEntry.getName();
             visibleFragment = getSupportFragmentManager().findFragmentByTag(visibleFragmentName);
 
             super.onBackPressed();
-
-            System.out.println(backStackEntryCount);
-            System.out.println(backStackEntry.getClass().getSimpleName());
-
-
-
-            System.out.println("VISIBLE FRAGMENT NAME AFTER BACK ================= " + visibleFragmentName);
-            System.out.println("VISIBLE FRAGMENT SIMPLE NAME AFTER BACK ========== " + visibleFragment);
         }
     }
 

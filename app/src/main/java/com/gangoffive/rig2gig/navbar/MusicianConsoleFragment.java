@@ -38,6 +38,9 @@ import com.google.firebase.firestore.Source;
 
 import java.util.List;
 
+/**
+ * This class is used to create the musician console fragment.
+ */
 public class MusicianConsoleFragment extends Fragment implements View.OnClickListener
 {
     private List<DocumentSnapshot> performerAdverts;
@@ -45,17 +48,17 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
     private List<DocumentSnapshot> musicians;
 
     private final FirebaseFirestore FSTORE = FirebaseFirestore.getInstance();
-    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    private final String USERID = fAuth.getUid();
+    private final FirebaseAuth FAUTH = FirebaseAuth.getInstance();
+    private final String USERID = FAUTH.getUid();
 
-    private final CollectionReference musicianReference = FSTORE.collection("musicians");
-    private final Query getMusicians = musicianReference;
+    private final CollectionReference MUSICIANREFERENCE = FSTORE.collection("musicians");
+    private final Query GETMUSICIANS = MUSICIANREFERENCE;
 
-    private final CollectionReference performerAdvertsReference = FSTORE.collection("performer-listings");
-    private final Query getPerformerAdverts = performerAdvertsReference;
+    private final CollectionReference PERFORMERADVERTSREFERENCE = FSTORE.collection("performer-listings");
+    private final Query GETPERFORMERADVERTS = PERFORMERADVERTSREFERENCE;
 
-    private final CollectionReference musicianAdvertsReference= FSTORE.collection("musician-listings");
-    private final Query getMusicianAdverts = musicianAdvertsReference;
+    private final CollectionReference MUSICIANADVERTSREFERENCE= FSTORE.collection("musician-listings");
+    private final Query GETMUSICIANADVERTS = MUSICIANADVERTSREFERENCE;
 
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
 
@@ -66,11 +69,11 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
     private String musicianAdvertReference;
 
     /**
-     * Upon creation of the VenueConsoleFragment, create the fragment_venue_console layout.
+     * Upon creation of the MusicianConsoleFragment, create the fragment_musician_console layout.
      * @param inflater The inflater is used to read the passed xml file.
      * @param container The views base class.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
-     * @return Returns a View of the fragment_venue_console layout.
+     * @return Returns a View of the fragment_musician_console layout.
      */
     @Nullable
     @Override
@@ -78,7 +81,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
     {
         view = inflater.inflate(R.layout.fragment_musician_console, container, false);
 
-        final Button noInternet = view.findViewById(R.id.noInternet);
+        final Button NOINTERNET = view.findViewById(R.id.noInternet);
 
         ConnectivityManager cm =
                 (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -87,66 +90,66 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
-        noInternet.setVisibility(isConnected ? View.GONE : View.VISIBLE);
+        NOINTERNET.setVisibility(isConnected ? View.GONE : View.VISIBLE);
 
         //General Section.
-        final CardView card_view_view_venues = view.findViewById(R.id.card_view_view_Venues);
-        final CardView card_view_view_bands = view.findViewById(R.id.card_view_view_Bands);
-        final CardView card_view_edit_musician = view.findViewById(R.id.card_view_edit_musician);
-        final CardView card_view_create_band = view.findViewById(R.id.card_view_create_band);
+        final CardView CARD_VIEW_VIEW_VENUES = view.findViewById(R.id.card_view_view_Venues);
+        final CardView CCARD_VIEW_VIEW_BANDS = view.findViewById(R.id.card_view_view_Bands);
+        final CardView CARD_VIEW_EDIT_MUSICIAN = view.findViewById(R.id.card_view_edit_musician);
+        final CardView CARD_VIEW_CREATE_BAND = view.findViewById(R.id.card_view_create_band);
 
 
-        card_view_view_venues.setOnClickListener(this);
-        card_view_edit_musician.setOnClickListener(this);
-        card_view_view_bands.setOnClickListener(this);
-        card_view_create_band.setOnClickListener(this);
+        CARD_VIEW_VIEW_VENUES.setOnClickListener(this);
+        CARD_VIEW_EDIT_MUSICIAN.setOnClickListener(this);
+        CCARD_VIEW_VIEW_BANDS.setOnClickListener(this);
+        CARD_VIEW_CREATE_BAND.setOnClickListener(this);
 
         //Performer Section.
-        final CardView card_view_create_advert = view.findViewById(R.id.card_view_create_performer_advert);
-        final CardView card_view_edit_advert = view.findViewById(R.id.card_view_edit_performer_advert);
-        final CardView card_view_view_advert = view.findViewById(R.id.card_view_view_performer_advert);
-        final CardView card_view_delete_advert = view.findViewById(R.id.card_view_delete_performer_advert);
+        final CardView CARD_VIEW_CREATE_ADVERT = view.findViewById(R.id.card_view_create_performer_advert);
+        final CardView CARD_VIEW_EDIT_ADVERT = view.findViewById(R.id.card_view_edit_performer_advert);
+        final CardView CARD_VIEW_VIEW_ADVERT = view.findViewById(R.id.card_view_view_performer_advert);
+        final CardView CARD_VIEW_DELETE_ADVERT = view.findViewById(R.id.card_view_delete_performer_advert);
 
-        card_view_create_advert.setOnClickListener(this);
-        card_view_edit_advert.setOnClickListener(this);
-        card_view_view_advert.setOnClickListener(this);
-        card_view_delete_advert.setOnClickListener(this);
+        CARD_VIEW_CREATE_ADVERT.setOnClickListener(this);
+        CARD_VIEW_EDIT_ADVERT.setOnClickListener(this);
+        CARD_VIEW_VIEW_ADVERT.setOnClickListener(this);
+        CARD_VIEW_DELETE_ADVERT.setOnClickListener(this);
 
         //Band Section
 
-        final CardView card_view_create_band_musician_advert = view.findViewById(R.id.card_view_create_band_musician_advert);
-        final CardView card_view_view_band_musician_advert = view.findViewById(R.id.card_view_view_band_musician_advert);
-        final CardView card_view_edit_band_musician_advert = view.findViewById(R.id.card_view_edit_band_musician_advert);
-        final CardView card_view_delete_band_musician_advert = view.findViewById(R.id.card_view_delete_band_musician_advert);
+        final CardView CARD_VIEW_CREATE_BAND_MUSICIAN_ADVERT = view.findViewById(R.id.card_view_create_band_musician_advert);
+        final CardView CARD_VIEW_VIEW_BAND_MUSICIAN_ADVERT = view.findViewById(R.id.card_view_view_band_musician_advert);
+        final CardView CARD_VIEW_EDIT_BAND_MUSICIAN_ADVERT = view.findViewById(R.id.card_view_edit_band_musician_advert);
+        final CardView CARD_VIEW_DELETE_BAND_MUSICIAN_ADVERT = view.findViewById(R.id.card_view_delete_band_musician_advert);
 
-        card_view_create_band_musician_advert.setOnClickListener(this);
-        card_view_view_band_musician_advert.setOnClickListener(this);
-        card_view_edit_band_musician_advert.setOnClickListener(this);
-        card_view_delete_band_musician_advert.setOnClickListener(this);
+        CARD_VIEW_CREATE_BAND_MUSICIAN_ADVERT.setOnClickListener(this);
+        CARD_VIEW_VIEW_BAND_MUSICIAN_ADVERT.setOnClickListener(this);
+        CARD_VIEW_EDIT_BAND_MUSICIAN_ADVERT.setOnClickListener(this);
+        CARD_VIEW_DELETE_BAND_MUSICIAN_ADVERT.setOnClickListener(this);
 
         if(!isConnected)
         {
             //General Section
-            card_view_edit_musician.setAlpha(0.5f);
-            card_view_create_band.setAlpha(0.5f);
-            card_view_edit_musician.setClickable(false);
-            card_view_create_band.setClickable(false);
+            CARD_VIEW_EDIT_MUSICIAN.setAlpha(0.5f);
+            CARD_VIEW_CREATE_BAND.setAlpha(0.5f);
+            CARD_VIEW_EDIT_MUSICIAN.setClickable(false);
+            CARD_VIEW_CREATE_BAND.setClickable(false);
 
             //Performer Section
-            card_view_create_advert.setAlpha(0.5f);
-            card_view_edit_advert.setAlpha(0.5f);
-            card_view_delete_advert.setAlpha(0.5f);
-            card_view_create_advert.setClickable(false);
-            card_view_edit_advert.setClickable(false);
-            card_view_delete_advert.setClickable(false);
+            CARD_VIEW_CREATE_ADVERT.setAlpha(0.5f);
+            CARD_VIEW_EDIT_ADVERT.setAlpha(0.5f);
+            CARD_VIEW_DELETE_ADVERT.setAlpha(0.5f);
+            CARD_VIEW_CREATE_ADVERT.setClickable(false);
+            CARD_VIEW_EDIT_ADVERT.setClickable(false);
+            CARD_VIEW_DELETE_ADVERT.setClickable(false);
 
             //Band Section
-            card_view_create_band_musician_advert.setAlpha(0.5f);
-            card_view_edit_band_musician_advert.setAlpha(0.5f);
-            card_view_delete_band_musician_advert.setAlpha(0.5f);
-            card_view_create_band_musician_advert.setClickable(false);
-            card_view_edit_band_musician_advert.setClickable(false);
-            card_view_delete_band_musician_advert.setClickable(false);
+            CARD_VIEW_CREATE_BAND_MUSICIAN_ADVERT.setAlpha(0.5f);
+            CARD_VIEW_EDIT_BAND_MUSICIAN_ADVERT.setAlpha(0.5f);
+            CARD_VIEW_DELETE_BAND_MUSICIAN_ADVERT.setAlpha(0.5f);
+            CARD_VIEW_CREATE_BAND_MUSICIAN_ADVERT.setClickable(false);
+            CARD_VIEW_EDIT_BAND_MUSICIAN_ADVERT.setClickable(false);
+            CARD_VIEW_DELETE_BAND_MUSICIAN_ADVERT.setClickable(false);
         }
 
         databaseQuery();
@@ -169,8 +172,12 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
 
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 
-        getMusicians.whereEqualTo("user-ref", USERID).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        GETMUSICIANS.whereEqualTo("user-ref", USERID).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
+            /**
+             * This method is used to query Firebase.
+             * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+             */
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
             {
@@ -200,8 +207,12 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                     editProfileLayout = view.findViewById(R.id.card_view_create_band);
                     editProfileLayout.setVisibility(View.VISIBLE);
 
-                    getPerformerAdverts.whereEqualTo("performer-ref", musician.getId()).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+                    GETPERFORMERADVERTS.whereEqualTo("performer-ref", musician.getId()).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
                     {
+                        /**
+                         * This method is used to query Firebase.
+                         * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+                         */
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots)
                         {
@@ -238,6 +249,10 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                         }
                     }).addOnFailureListener(new OnFailureListener()
                     {
+                        /**
+                         * Upon failure when querying the database, display the error to the console.
+                         * @param e Represents the exception that has occurred.
+                         */
                         @Override
                         public void onFailure(@NonNull Exception e)
                         {
@@ -245,8 +260,12 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                         }
                     });
 
-                    getMusicianAdverts.whereEqualTo("musician-ref", musicianRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+                    GETMUSICIANADVERTS.whereEqualTo("musician-ref", musicianRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
                     {
+                        /**
+                         * This method is used to query Firebase.
+                         * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+                         */
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots)
                         {
@@ -361,8 +380,12 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
 
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 
-        getPerformerAdverts.whereEqualTo("performer-ref", musicianRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        GETPERFORMERADVERTS.whereEqualTo("performer-ref", musicianRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
+            /**
+             * This method is used to query Firebase.
+             * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+             */
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
             {
@@ -372,7 +395,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                 {
                     Log.d(TAG, "DELETEADVERT ------------------ get successful with advert");
 
-                    performerAdvertsReference.document(performerAdverts.get(0).getId()).delete();
+                    PERFORMERADVERTSREFERENCE.document(performerAdverts.get(0).getId()).delete();
                     restartFragment();
                 }
                 else
@@ -382,6 +405,10 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
             }
         }).addOnFailureListener(new OnFailureListener()
         {
+            /**
+             * Upon failure when querying the database, display the error to the console.
+             * @param e Represents the exception that has occurred.
+             */
             @Override
             public void onFailure(@NonNull Exception e)
             {
@@ -390,6 +417,9 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
         });
     }
 
+    /**
+     * This method is used to delete the existing musician advert from Firebase.
+     */
     private void deleteMusicianAdvert()
     {
         ConnectivityManager cm =
@@ -401,8 +431,12 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
 
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 
-        getMusicianAdverts.whereEqualTo("musician-ref", musicianRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
+        GETMUSICIANADVERTS.whereEqualTo("musician-ref", musicianRef).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
         {
+            /**
+             * This method is used to query Firebase.
+             * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+             */
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots)
             {
@@ -412,12 +446,16 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
                 {
                     Log.d(TAG, "DELETEADVERT ------------------ get successful with advert");
 
-                    musicianAdvertsReference.document(musicianAdverts.get(0).getId()).delete();
+                    MUSICIANADVERTSREFERENCE.document(musicianAdverts.get(0).getId()).delete();
                     restartFragment();
                 }
             }
         }).addOnFailureListener(new OnFailureListener()
         {
+            /**
+             * Upon failure when querying the database, display the error to the console.
+             * @param e Represents the exception that has occurred.
+             */
             @Override
             public void onFailure(@NonNull Exception e)
             {
@@ -435,6 +473,12 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
         getFragmentManager().beginTransaction().detach(this).attach(this).commit();
     }
 
+    /**
+     * Upon starting an activity awaiting a result, this method handles what this activity does upon receiving such a result.
+     * @param requestCode Represents the request code sent by the starting activity.
+     * @param resultCode Represents the result code.
+     * @param data Represents the intent passed back from the completed activity.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {

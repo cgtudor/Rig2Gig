@@ -27,10 +27,13 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+/**
+ * This class is used to help display a musicians band on a card.
+ */
 public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAdapter.AdapterViewHolder>
 {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private final FirebaseFirestore DB = FirebaseFirestore.getInstance();
+    private final FirebaseStorage STORAGE = FirebaseStorage.getInstance();
     private DocumentReference docRef;
     private Context context;
 
@@ -38,22 +41,37 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
 
     private MusiciansBandsAdapter.OnItemClickListener listener;
 
+    /**
+     * This interface is used to force the implementation of the onItemClick method for all relevant classes.
+     */
     public interface OnItemClickListener
     {
         void onItemClick(int position);
     }
 
+    /**
+     * Constructor that sets up the listener variable with the passed in listener.
+     * @param listener References the listener to be used by the class.
+     */
     public void setOnItemClickListener(MusiciansBandsAdapter.OnItemClickListener listener)
     {
         this.listener = listener;
     }
 
+    /**
+     * This inner class is used to produce the Card View.
+     */
     public static class AdapterViewHolder extends RecyclerView.ViewHolder
     {
         public String listingReference;
         public ImageView imageView;
         public TextView textView;
 
+        /**
+         * Constructor used to setup imageView and textView variables.
+         * @param itemView Represents the view.
+         * @param listener Represents the passed in musician adapter.
+         */
         public AdapterViewHolder(@NonNull View itemView, MusiciansBandsAdapter.OnItemClickListener listener)
         {
             super(itemView);
@@ -62,6 +80,10 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
 
             itemView.setOnClickListener(new View.OnClickListener()
             {
+                /**
+                 * This method is used to handle the click on a Card.
+                 * @param v Represents the view.
+                 */
                 @Override
                 public void onClick(View v) {
                     if (listener != null)
@@ -78,12 +100,23 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
         }
     }
 
+    /**
+     * Constructor used to initialise the musiciansBandsArrayList and the context.
+     * @param musicianBandsList
+     * @param context
+     */
     public MusiciansBandsAdapter(ArrayList<MusiciansBands> musicianBandsList, Context context)
     {
         this.musiciansBandsArrayList = musicianBandsList;
         this.context = context;
     }
 
+    /**
+     * This method is used to create the view holder uponc reation of the class.
+     * @param parent Represents the parent o fthe class.
+     * @param viewType Represents the viewType.
+     * @return Returns the created adapter view holder.
+     */
     @NonNull
     @Override
     public AdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -93,6 +126,11 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
         return new AdapterViewHolder(view, listener);
     }
 
+    /**
+     * This method is used to load an image from Firebase for the Card.
+     * @param holder Represents the adapter view holder.
+     * @param position Represents the position in the ArrayList of the selected card.
+     */
     @Override
     public void onBindViewHolder(@NonNull AdapterViewHolder holder, int position)
     {
@@ -109,10 +147,14 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
 
         holder.listingReference = currentBand.getReference();
 
-        docRef = db.collection("bands").document(currentBand.getReference());
+        docRef = DB.collection("bands").document(currentBand.getReference());
 
         docRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
         {
+            /**
+             * This method is used to determine the completion of a get request of Firebase.
+             * @param task References the result of the get request.
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
             {
@@ -125,7 +167,7 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
                         Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
                         holder.textView.setText(document.get("name").toString());
-                        StorageReference bandPic = storage.getReference().child("/images/bands/" + currentBand.getReference() + ".jpg");
+                        StorageReference bandPic = STORAGE.getReference().child("/images/bands/" + currentBand.getReference() + ".jpg");
                         GlideApp.with(holder.imageView.getContext())
                                 .load(bandPic)
                                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
@@ -137,6 +179,10 @@ public class MusiciansBandsAdapter extends RecyclerView.Adapter<MusiciansBandsAd
         });
     }
 
+    /**
+     * This method is used to get the size of the musiciansBandsArrayList.
+     * @return Returns the size of the musiciansBandsArrayList as an int.
+     */
     @Override
     public int getItemCount()
     {
