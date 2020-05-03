@@ -61,6 +61,121 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     private String bandName;
     private String performerReference; //The band's performer advert.
 
+    private final OnSuccessListener performerSuccessListener = new OnSuccessListener<QuerySnapshot>()
+    {
+        /**
+         * This method is used to query Firebase.
+         * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+         */
+        @Override
+        public void onSuccess(QuerySnapshot queryDocumentSnapshots)
+        {
+            performerAdverts = queryDocumentSnapshots.getDocuments();
+
+            CardView editProfileLayout;
+            LinearLayout textView;
+
+            textView = findViewById(R.id.performer_advert_title);
+            textView.setVisibility(View.VISIBLE);
+
+            if(!performerAdverts.isEmpty())
+            {
+                Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful with advert");
+
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        CardView editProfileLayout;
+
+                        editProfileLayout = findViewById(R.id.card_view_edit_performer_advert);
+                        editProfileLayout.setVisibility(View.VISIBLE);
+
+                        editProfileLayout = findViewById(R.id.card_view_view_performer_advert);
+                        editProfileLayout.setVisibility(View.VISIBLE);
+
+                        editProfileLayout = findViewById(R.id.card_view_delete_performer_advert);
+                        editProfileLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                performerReference = performerAdverts.get(0).getId();
+            }
+            else
+            {
+                Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful without advert");
+
+                editProfileLayout = findViewById(R.id.card_view_create_performer_advert);
+                editProfileLayout.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+
+    private final OnFailureListener failureListener = new OnFailureListener()
+    {
+        /**
+         * Upon failure when querying the database, display the error to the console.
+         * @param e Represents the exception that has occurred.
+         */
+        @Override
+        public void onFailure(@NonNull Exception e)
+        {
+            Log.d(TAG, e.toString());
+        }
+    };
+
+    private final OnSuccessListener bandSuccessListener = new OnSuccessListener<QuerySnapshot>()
+    {
+        /**
+         * This method is used to query Firebase.
+         * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+         */
+        @Override
+        public void onSuccess(QuerySnapshot queryDocumentSnapshots)
+        {
+            bandAdverts = queryDocumentSnapshots.getDocuments();
+
+            CardView editProfileLayout;
+            LinearLayout textView;
+
+            textView = findViewById(R.id.band_advert_title);
+            textView.setVisibility(View.VISIBLE);
+
+            if(!bandAdverts.isEmpty())
+            {
+                Log.d(TAG, "DATABASEQUERY BAND ------------------ get successful with advert");
+
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        CardView editProfileLayout;
+
+                        editProfileLayout = findViewById(R.id.card_view_view_band_advert);
+                        editProfileLayout.setVisibility(View.VISIBLE);
+
+                        editProfileLayout = findViewById(R.id.card_view_edit_band_band_advert);
+                        editProfileLayout.setVisibility(View.VISIBLE);
+
+                        editProfileLayout = findViewById(R.id.card_view_delete_band_advert);
+                        editProfileLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                bandRef = bandAdverts.get(0).getId();
+            }
+            else
+            {
+                Log.d(TAG, "DATABASEQUERY BAND ------------------ get successful with advert");
+
+                editProfileLayout = findViewById(R.id.card_view_create_band_advert);
+                editProfileLayout.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+
     /**
      * Upon creation of the BandConsoleActivity, create the activity_band_console layout.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
@@ -191,100 +306,9 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         editProfileLayout = findViewById(R.id.card_view_manage_members);
         editProfileLayout.setVisibility(View.VISIBLE);
 
-        GETPERFORMERADVERTS.whereEqualTo("performer-ref", displayMusicianBandsReference).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
-        {
-            /**
-             * This method is used to query Firebase.
-             * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
-             */
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots)
-            {
-                performerAdverts = queryDocumentSnapshots.getDocuments();
+        GETPERFORMERADVERTS.whereEqualTo("performer-ref", displayMusicianBandsReference).get(source).addOnSuccessListener(performerSuccessListener).addOnFailureListener(failureListener);
 
-                CardView editProfileLayout;
-                LinearLayout textView;
-
-                textView = findViewById(R.id.performer_advert_title);
-                textView.setVisibility(View.VISIBLE);
-
-                if(!performerAdverts.isEmpty())
-                {
-                    Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful with advert");
-
-                    editProfileLayout = findViewById(R.id.card_view_edit_performer_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_view_performer_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_delete_performer_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    performerReference = performerAdverts.get(0).getId();
-                }
-                else
-                {
-                    Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful without advert");
-
-                    editProfileLayout = findViewById(R.id.card_view_create_performer_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener()
-        {
-            /**
-             * Upon failure when querying the database, display the error to the console.
-             * @param e Represents the exception that has occurred.
-             */
-            @Override
-            public void onFailure(@NonNull Exception e)
-            {
-                Log.d(TAG, e.toString());
-            }
-        });
-
-        GETBANDADVERTS.whereEqualTo("band-ref", displayMusicianBandsReference).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
-        {
-            /**
-             * This method is used to query Firebase.
-             * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
-             */
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots)
-            {
-                bandAdverts = queryDocumentSnapshots.getDocuments();
-
-                CardView editProfileLayout;
-                LinearLayout textView;
-
-                textView = findViewById(R.id.band_advert_title);
-                textView.setVisibility(View.VISIBLE);
-
-                if(!bandAdverts.isEmpty())
-                {
-                    Log.d(TAG, "DATABASEQUERY BAND ------------------ get successful with advert");
-
-                    editProfileLayout = findViewById(R.id.card_view_view_band_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_edit_band_band_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_delete_band_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    bandRef = bandAdverts.get(0).getId();
-                }
-                else
-                {
-                    Log.d(TAG, "DATABASEQUERY BAND ------------------ get successful with advert");
-
-                    editProfileLayout = findViewById(R.id.card_view_create_band_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        GETBANDADVERTS.whereEqualTo("band-ref", displayMusicianBandsReference).get(source).addOnSuccessListener(bandSuccessListener);
     }
 
     /**
@@ -489,5 +513,20 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     {
         super.onActivityResult(requestCode, resultCode, data);
         recreate();
+    }
+
+    public OnSuccessListener getPerformerSuccessListener()
+    {
+        return performerSuccessListener;
+    }
+
+    public OnFailureListener getPerformerFailurelistener()
+    {
+        return failureListener;
+    }
+
+    public OnSuccessListener getBandSuccessListener()
+    {
+        return bandSuccessListener;
     }
 }
