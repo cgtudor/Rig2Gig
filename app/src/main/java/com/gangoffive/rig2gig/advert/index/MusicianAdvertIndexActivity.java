@@ -20,6 +20,8 @@ public class MusicianAdvertIndexActivity extends AppCompatActivity {
     private int[] fragments = {R.layout.fragment_view_musicians,
             R.layout.fragment_saved_musicians};
 
+    private boolean  backClicked;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,7 @@ public class MusicianAdvertIndexActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
+        backClicked = true;
         finish();
     }
 
@@ -74,5 +77,9 @@ public class MusicianAdvertIndexActivity extends AppCompatActivity {
     {
         finish();
         startActivity(getIntent());
+    }
+
+    public boolean isBackClicked() {
+        return backClicked;
     }
 }

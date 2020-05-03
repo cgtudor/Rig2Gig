@@ -19,6 +19,8 @@ public class BandAdvertIndexActivity extends AppCompatActivity {
     private int[] fragments = {R.layout.fragment_view_bands,
             R.layout.fragment_saved_bands};
 
+    private boolean  backClicked;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,7 @@ public class BandAdvertIndexActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
+        backClicked = true;
         finish();
     }
 
@@ -59,5 +62,9 @@ public class BandAdvertIndexActivity extends AppCompatActivity {
     {
         finish();
         startActivity(getIntent());
+    }
+
+    public boolean isBackClicked() {
+        return backClicked;
     }
 }

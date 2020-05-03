@@ -58,7 +58,7 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
     private AutoCompleteTextView location;
     private Button createListing, cancel, galleryImage, takePhoto, selectGenre;
     private ImageView image;
-    private String musicianRef, type, distanceText;
+    private String musicianRef, type, distanceText, currentGenres;
     private Map<String, Object> musician;
     private ListingManager listingManager;
     private int[] tabTitles;
@@ -400,12 +400,17 @@ public class MusicianDetailsEditor extends AppCompatActivity implements CreateAd
         }
         if(genres != null && musician !=null)
         {
-            String currentGenres = musician.get("genres").toString();
+            currentGenres = musician.get("genres").toString();
             if (currentGenres.charAt(0) == '[')
             {
                 currentGenres = currentGenres.substring(1, currentGenres.length() - 1);
             }
-            genres.setText(currentGenres);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    genres.setText(currentGenres);
+                }
+            });
             setGenreButton();
         }
     }
