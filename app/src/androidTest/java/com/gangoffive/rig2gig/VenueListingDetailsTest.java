@@ -379,20 +379,24 @@ public class VenueListingDetailsTest {
         when(venueDoc.get("location")).thenReturn("test");
         when(venueDoc.get("latitude")).thenReturn("50");
         when(venueDoc.get("longitude")).thenReturn("50");
-        when(venueDoc.get("user-ref")).thenReturn("test-ref-ref");
+        when(venueDoc.get("user-ref")).thenReturn("test-ref-ref-f");
         when(venueDoc.get("venue-rating")).thenReturn("N/A");
         when(venueTask.getResult()).thenReturn(venueDoc);
         when(adTask.isSuccessful()).thenReturn(true);
         when(venueTask.isSuccessful()).thenReturn(true);
+        Task<DocumentSnapshot> starTask = mock(Task.class);
+        DocumentSnapshot starDoc = mock(DocumentSnapshot.class);
+        when(starDoc.exists()).thenReturn(true);
+        when(starTask.getResult()).thenReturn(starDoc);
         testRule.getActivity().onSuccessVenueData(venueTask, new Timestamp(calendar.getTime()));
         testRule.getActivity().onSuccessItemsAd(adTask);
         testRule.getActivity().onSuccessItemsVenue(venueTask);
         testRule.getActivity().onSuccessMapAd(adTask);
         testRule.getActivity().onSuccessMapVenue(venueTask);
-        testRule.getActivity().onSuccessFavouriteVenues(venueTask);
+        testRule.getActivity().onSuccessFavouriteVenues(starTask);
         Thread.sleep(2000);
 
-        assertEquals(testRule.getActivity().getDrawable(R.drawable.ic_full_star).getConstantState(), testRule.getActivity().getActivityMenu().findItem(R.id.saveButton).getIcon().getConstantState());
+        assertEquals(testRule.getActivity().getDrawable(R.drawable.ic_empty_star).getConstantState(), testRule.getActivity().getActivityMenu().findItem(R.id.saveButton).getIcon().getConstantState());
     }
 
     @Test
@@ -404,7 +408,7 @@ public class VenueListingDetailsTest {
         calendar.add(Calendar.DAY_OF_YEAR,1);
         when(adDoc.exists()).thenReturn(true);
         when(adDoc.get("expiry-date")).thenReturn(new Timestamp(calendar.getTime()));
-        when(adDoc.get("venue-ref")).thenReturn("test-ref");
+        when(adDoc.get("venue-ref")).thenReturn("test-ref-nf");
         when(adDoc.get("description")).thenReturn("test");
         when(adTask.getResult()).thenReturn(adDoc);
         testRule.getActivity().onSuccessAdData(adTask);
@@ -415,7 +419,7 @@ public class VenueListingDetailsTest {
         when(venueDoc.get("location")).thenReturn("test");
         when(venueDoc.get("latitude")).thenReturn("50");
         when(venueDoc.get("longitude")).thenReturn("50");
-        when(venueDoc.get("user-ref")).thenReturn("test-ref-ref");
+        when(venueDoc.get("user-ref")).thenReturn("test-ref-ref-nf");
         when(venueDoc.get("venue-rating")).thenReturn("N/A");
         when(venueTask.getResult()).thenReturn(venueDoc);
         when(adTask.isSuccessful()).thenReturn(true);
@@ -424,13 +428,15 @@ public class VenueListingDetailsTest {
         DocumentSnapshot starDoc = mock(DocumentSnapshot.class);
         when(starDoc.exists()).thenReturn(false);
         when(starTask.getResult()).thenReturn(starDoc);
+        Thread.sleep(2000);
         testRule.getActivity().onSuccessVenueData(venueTask, new Timestamp(calendar.getTime()));
         testRule.getActivity().onSuccessItemsAd(adTask);
         testRule.getActivity().onSuccessItemsVenue(venueTask);
         testRule.getActivity().onSuccessMapAd(adTask);
         testRule.getActivity().onSuccessMapVenue(venueTask);
-        testRule.getActivity().onSuccessFavouriteVenues(starTask);
         Thread.sleep(2000);
+        testRule.getActivity().onSuccessFavouriteVenues(starTask);
+        Thread.sleep(5000);
 
         assertEquals(testRule.getActivity().getDrawable(R.drawable.ic_empty_star).getConstantState(), testRule.getActivity().getActivityMenu().findItem(R.id.saveButton).getIcon().getConstantState());
     }

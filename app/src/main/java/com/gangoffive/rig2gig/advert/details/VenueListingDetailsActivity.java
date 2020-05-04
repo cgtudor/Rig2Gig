@@ -674,6 +674,16 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                 }
             });
         }
+        else
+        {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MenuItem star = activityMenu.findItem(R.id.saveButton);
+                    star.setIcon(R.drawable.ic_empty_star);
+                }
+            });
+        }
     }
 
     @Override
