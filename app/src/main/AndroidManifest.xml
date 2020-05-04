@@ -26,7 +26,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -44,12 +44,6 @@
             android:name=".utils.GenreSelectorActivity"
             android:theme="@style/AppTheme.TranslucentBackground" />
         <activity
-            android:name=".utils.PositionSelectorActivity"
-            android:theme="@style/AppTheme.TranslucentBackground" />
-        <activity
-            android:name=".utils.VenueTypeSelectorActivity"
-            android:theme="@style/AppTheme.TranslucentBackground" />
-        <activity
             android:name=".band.management.BandMemberDetails"
             android:theme="@style/AppTheme.TranslucentBackground" />
         <activity
@@ -65,12 +59,9 @@
             android:label="@string/title_activity_venue_advert_index"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service android:name=".utils.NotificationService" />
-
         <activity android:name=".profile.VenueProfileActivity" />
         <activity android:name=".profile.MusicianProfileActivity" />
         <activity android:name=".profile.BandProfileActivity" />
-        <activity android:name=".account.CreateMusicianAccountActivity" />
 
         <service android:name=".utils.NotificationService" />
         <service android:name=".utils.NotificationService" />
@@ -116,9 +107,6 @@
 
         <activity android:name=".account.LoginActivity" />
         <activity android:name=".navbar.NavBarActivity" />
-        <activity android:name=".venue.management.VenueActivity" />
-        <activity android:name=".band.management.MyBandActivity" />
-        <activity android:name=".band.management.CreateBandActivity" />
         <activity android:name=".advert.details.BandListingDetailsActivity" />
         <activity android:name=".advert.details.MusicianListingDetailsActivity" />
         <activity android:name=".advert.details.VenueListingDetailsActivity" />
@@ -163,7 +151,6 @@
         <activity
             android:name=".advert.details.PerformanceListingDetailsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".account.CredentialActivity" />
         <activity android:name=".account.ForgotPasswordActivity" />
         <activity android:name=".account.RegisterActivity" />
         <activity android:name=".account.SignedInCredentialFragment" />

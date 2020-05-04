@@ -2,7 +2,6 @@ package com.gangoffive.rig2gig.musician.management;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -13,7 +12,6 @@ import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,17 +19,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import com.gangoffive.rig2gig.band.management.DeleteMemberConfirmation;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.utils.GenreSelectorActivity;
-import com.gangoffive.rig2gig.utils.PositionSelectorActivity;
 import com.gangoffive.rig2gig.utils.TabStatePreserver;
 import com.gangoffive.rig2gig.utils.TabbedViewReferenceInitialiser;
 import com.gangoffive.rig2gig.advert.management.CreateAdvertisement;
