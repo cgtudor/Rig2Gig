@@ -39,6 +39,9 @@ import java.util.List;
 
 /**
  * This class is used to display the band console activity.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.2b
  */
 public class BandConsoleActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -61,10 +64,137 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     private String bandName;
     private String performerReference; //The band's performer advert.
 
+    private final OnSuccessListener performerSuccessListener = new OnSuccessListener<QuerySnapshot>()
+    {
+        /**
+         * This method is used to query Firebase.
+         * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+         * @since #0.2b
+         */
+        @Override
+        public void onSuccess(QuerySnapshot queryDocumentSnapshots)
+        {
+            performerAdverts = queryDocumentSnapshots.getDocuments();
+
+            CardView editProfileLayout;
+            LinearLayout textView;
+
+            textView = findViewById(R.id.performer_advert_title);
+            textView.setVisibility(View.VISIBLE);
+
+            if(!performerAdverts.isEmpty())
+            {
+                Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful with advert");
+
+                runOnUiThread(new Runnable()
+                {
+                    /**
+                     * New thread used here to set Card Views visible. Used for testing purposes.
+                     * @since #0.3b
+                     */
+                    @Override
+                    public void run()
+                    {
+                        CardView editProfileLayout;
+
+                        editProfileLayout = findViewById(R.id.card_view_edit_performer_advert);
+                        editProfileLayout.setVisibility(View.VISIBLE);
+
+                        editProfileLayout = findViewById(R.id.card_view_view_performer_advert);
+                        editProfileLayout.setVisibility(View.VISIBLE);
+
+                        editProfileLayout = findViewById(R.id.card_view_delete_performer_advert);
+                        editProfileLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                performerReference = performerAdverts.get(0).getId();
+            }
+            else
+            {
+                Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful without advert");
+
+                editProfileLayout = findViewById(R.id.card_view_create_performer_advert);
+                editProfileLayout.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+
+    private final OnFailureListener failureListener = new OnFailureListener()
+    {
+        /**
+         * Upon failure when querying the database, display the error to the console.
+         * @param e Represents the exception that has occurred.
+         * @since #0.2b
+         */
+        @Override
+        public void onFailure(@NonNull Exception e)
+        {
+            Log.d(TAG, e.toString());
+        }
+    };
+
+    private final OnSuccessListener bandSuccessListener = new OnSuccessListener<QuerySnapshot>()
+    {
+        /**
+         * This method is used to query Firebase.
+         * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
+         * @since #0.2b
+         */
+        @Override
+        public void onSuccess(QuerySnapshot queryDocumentSnapshots)
+        {
+            bandAdverts = queryDocumentSnapshots.getDocuments();
+
+            CardView editProfileLayout;
+            LinearLayout textView;
+
+            textView = findViewById(R.id.band_advert_title);
+            textView.setVisibility(View.VISIBLE);
+
+            if(!bandAdverts.isEmpty())
+            {
+                Log.d(TAG, "DATABASEQUERY BAND ------------------ get successful with advert");
+
+                runOnUiThread(new Runnable()
+                {
+                    /**
+                     * New thread used here to set Card Views visible. Used for testing purposes.
+                     * @since #0.3b
+                     */
+                    @Override
+                    public void run()
+                    {
+                        CardView editProfileLayout;
+
+                        editProfileLayout = findViewById(R.id.card_view_view_band_advert);
+                        editProfileLayout.setVisibility(View.VISIBLE);
+
+                        editProfileLayout = findViewById(R.id.card_view_edit_band_band_advert);
+                        editProfileLayout.setVisibility(View.VISIBLE);
+
+                        editProfileLayout = findViewById(R.id.card_view_delete_band_advert);
+                        editProfileLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                bandRef = bandAdverts.get(0).getId();
+            }
+            else
+            {
+                Log.d(TAG, "DATABASEQUERY BAND ------------------ get successful with advert");
+
+                editProfileLayout = findViewById(R.id.card_view_create_band_advert);
+                editProfileLayout.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+
     /**
      * Upon creation of the BandConsoleActivity, create the activity_band_console layout.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
      * @return Returns a View of the activity_band_console layout.
+     * @since #0.2b
      */
     @Nullable
     @Override
@@ -161,6 +291,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     /**
      * This method queries the database collecting all venues and venue adverts. These lists are then processed
      * to set up variables for possible button clicks where extras need to be sent with intents.
+     * @since #0.2b
      */
     private void databaseQuery()
     {
@@ -191,105 +322,15 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
         editProfileLayout = findViewById(R.id.card_view_manage_members);
         editProfileLayout.setVisibility(View.VISIBLE);
 
-        GETPERFORMERADVERTS.whereEqualTo("performer-ref", displayMusicianBandsReference).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
-        {
-            /**
-             * This method is used to query Firebase.
-             * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
-             */
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots)
-            {
-                performerAdverts = queryDocumentSnapshots.getDocuments();
+        GETPERFORMERADVERTS.whereEqualTo("performer-ref", displayMusicianBandsReference).get(source).addOnSuccessListener(performerSuccessListener).addOnFailureListener(failureListener);
 
-                CardView editProfileLayout;
-                LinearLayout textView;
-
-                textView = findViewById(R.id.performer_advert_title);
-                textView.setVisibility(View.VISIBLE);
-
-                if(!performerAdverts.isEmpty())
-                {
-                    Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful with advert");
-
-                    editProfileLayout = findViewById(R.id.card_view_edit_performer_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_view_performer_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_delete_performer_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    performerReference = performerAdverts.get(0).getId();
-                }
-                else
-                {
-                    Log.d(TAG, "DATABASEQUERY PERFORMER ------------------ get successful without advert");
-
-                    editProfileLayout = findViewById(R.id.card_view_create_performer_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener()
-        {
-            /**
-             * Upon failure when querying the database, display the error to the console.
-             * @param e Represents the exception that has occurred.
-             */
-            @Override
-            public void onFailure(@NonNull Exception e)
-            {
-                Log.d(TAG, e.toString());
-            }
-        });
-
-        GETBANDADVERTS.whereEqualTo("band-ref", displayMusicianBandsReference).get(source).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>()
-        {
-            /**
-             * This method is used to query Firebase.
-             * @param queryDocumentSnapshots References the documents found in Firebase upon a successful query.
-             */
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots)
-            {
-                bandAdverts = queryDocumentSnapshots.getDocuments();
-
-                CardView editProfileLayout;
-                LinearLayout textView;
-
-                textView = findViewById(R.id.band_advert_title);
-                textView.setVisibility(View.VISIBLE);
-
-                if(!bandAdverts.isEmpty())
-                {
-                    Log.d(TAG, "DATABASEQUERY BAND ------------------ get successful with advert");
-
-                    editProfileLayout = findViewById(R.id.card_view_view_band_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_edit_band_band_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    editProfileLayout = findViewById(R.id.card_view_delete_band_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-
-                    bandRef = bandAdverts.get(0).getId();
-                }
-                else
-                {
-                    Log.d(TAG, "DATABASEQUERY BAND ------------------ get successful with advert");
-
-                    editProfileLayout = findViewById(R.id.card_view_create_band_advert);
-                    editProfileLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        GETBANDADVERTS.whereEqualTo("band-ref", displayMusicianBandsReference).get(source).addOnSuccessListener(bandSuccessListener);
     }
 
     /**
      * This method determines the activity/fragment that will be created based upon the button clicked using the card view's tag.
      * @param v This is the detected button that has been clicked. Used to create the appropriate activity/fragment.
+     * @since #0.2b
      */
     @Override
     public void onClick(View v)
@@ -347,6 +388,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * This method is used to find the logged in venue's advert and delete it from the database.
+     * @since #0.2b
      */
     private void deleteBandAdvert()
     {
@@ -400,6 +442,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * This method is used to find the logged in venue's advert and delete it from the database.
+     * @since #0.2b
      */
     private void deletePerformerAdvert()
     {
@@ -452,6 +495,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     /**
      * This method is used to reload the activity layout once the advert has been deleted.
      * This is so the appropriate layout is given to the user based upon whether they have an advert or not.
+     * @since #0.2b
      */
     private void restartActivity()
     {
@@ -461,6 +505,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
     /**
      * This method is used to handle the back button being pressed on the toolbar.
      * @return Returns true after being pressed.
+     * @since #0.2b
      */
     @Override
     public boolean onSupportNavigateUp()
@@ -471,6 +516,7 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * This method is used to handle the back button being pressed by the user.
+     * @since #0.2b
      */
     @Override
     public void onBackPressed()
@@ -483,11 +529,42 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
      * @param requestCode Represents the request code sent by the starting activity.
      * @param resultCode Represents the result code.
      * @param data Represents the intent passed back from the completed activity.
+     * @since #0.2b
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
         recreate();
+    }
+
+    /**
+     * Gets the performerSuccessListener. Used for testing purposes.
+     * @return Returns the performerSuccessListener of type OnSuccessListener.
+     * @since #0.2b
+     */
+    public OnSuccessListener getPerformerSuccessListener()
+    {
+        return performerSuccessListener;
+    }
+
+    /**
+     * Gets the performerFailureListener. Used for testing purposes.
+     * @return Returns the failureListener of type OnFailureListener.
+     * @since #0.2b
+     */
+    public OnFailureListener getPerformerFailurelistener()
+    {
+        return failureListener;
+    }
+
+    /**
+     * Gets the bandSuccessListener. Used for testing purposes.
+     * @return Returns the bandSuccessListener of type OnSuccessListener.
+     * @since #0.2b
+     */
+    public OnSuccessListener getBandSuccessListener()
+    {
+        return bandSuccessListener;
     }
 }

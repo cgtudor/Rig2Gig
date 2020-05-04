@@ -16,6 +16,9 @@ import com.google.android.material.navigation.NavigationView;
 
 /**
  * Abstract class used to set up shared variables and methods between all three concrete nav bar classes.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.1b
  */
 public abstract class NavBarCompatActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -26,6 +29,7 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
 
     /**
      * Default constructor.
+     * @since #0.1b
      */
     public NavBarCompatActivity()
     {
@@ -36,6 +40,7 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
      * This method is used to determine which option has been selected in the navigation drawer.
      * @param menuItem The menuItem variable passed in will contain the users clicked option in the navigation drawer.
      * @return Returns a new view of the selected navigation drawer option.
+     * @since #0.1b
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
@@ -62,6 +67,7 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
 
     /**
      * This method is used to handle the back button and maintain track of the currently visible nav bar fragment to stop re-loading of the currently visible fragment.
+     * @since #0.1b
      */
     @Override
     public void onBackPressed()
@@ -100,6 +106,7 @@ public abstract class NavBarCompatActivity extends AppCompatActivity implements 
 
     /**
      * This method is used to handle resuming an activity.
+     * @since #0.1b
      */
     @Override
     public void onResume()

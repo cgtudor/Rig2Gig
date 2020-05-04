@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.facebook.login.LoginManager;
 import com.gangoffive.rig2gig.R;
 import com.gangoffive.rig2gig.account.AccountPurposeActivity;
 import com.gangoffive.rig2gig.account.ChangePasswordDialog;
@@ -21,6 +22,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * This class is used to display the contents of the SettingsFragment using Preferences.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.1b
  */
 public class SettingsFragment extends PreferenceFragmentCompat
 {
@@ -33,6 +37,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
      * Upon loading the SettingsFragment, this method is called to setup the page with the required preferences from the specified file.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
      * @param rootKey This is the root of the preference hierarchy.
+     * @since #0.1b
      */
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
@@ -80,6 +85,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     /**
      * This method is used to read from the Firebase Firestore database and pull user account details to display in the account section of the Settings Page.
+     * @since #0.1b
      */
     private void setupPreferences()
     {
@@ -88,6 +94,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             /**
              * This method is used to determine the completion of a get request of Firebase.
              * @param task References the result of the get request.
+             * @since #0.1b
              */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
@@ -125,6 +132,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     /**
      * This method is used to instantiate and execute the alert dialog created in the ChangePasswordDialog class.
+     * @since #0.1b
      */
     private void executeDialog()
     {
@@ -134,11 +142,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     /**
      * This class is used to logout of the app and Firebase.
+     * @since #0.1b
      */
     private void fbLogout()
     {
         FirebaseAuth fAuth = FirebaseAuth.getInstance();
         fAuth.signOut();
+        LoginManager.getInstance().logOut();
         startActivity(new Intent(getContext(), LoginActivity.class));
     }
 }

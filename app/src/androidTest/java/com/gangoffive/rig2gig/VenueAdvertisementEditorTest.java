@@ -2,6 +2,7 @@ package com.gangoffive.rig2gig;
 
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Looper;
 import android.widget.Button;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
@@ -10,6 +11,7 @@ import com.gangoffive.rig2gig.advert.management.VenueAdvertisementEditor;
 import com.gangoffive.rig2gig.firebase.ListingManager;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import java.util.HashMap;
@@ -22,20 +24,49 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class VenueAdvertisementEditorTest {
 
     private HashMap<String, Object> venueData, adData;
+    private VenueAdvertisementEditor confirmationClass, mockClass;
 
     @Rule
     public ActivityTestRule<VenueAdvertisementEditor> testRule = new ActivityTestRule<VenueAdvertisementEditor>(VenueAdvertisementEditor.class);
-    
+
+    @BeforeClass
+    public static void setup() {
+
+        if (Looper.myLooper() == null)
+        {
+            Looper.prepare();
+        }
+    }
+
     @Before
     public void setUp() throws Exception {
+        confirmationClass = new VenueAdvertisementEditor()
+        {
+            @Override
+            public void setViewReferences() {}
+
+            @Override
+            public void setInitialColours(){}
+
+            @Override
+            public void populateInitialFields() {}
+
+        };
+        mockClass = mock(VenueAdvertisementEditor.class);
         venueData = new HashMap();
         venueData.put("email-address","test email");
         venueData.put("location","test location");
@@ -235,6 +266,52 @@ public class VenueAdvertisementEditorTest {
         assertTrue(testRule.getActivity().isFinishing());
     }
 
+    @Test
+    public void testOnSuccessFromDatabaseNoAdvert()
+    {
+        ListingManager manager = mock(ListingManager.class);
+        confirmationClass.setListingManager(manager);
+        confirmationClass.onSuccessFromDatabase(venueData);
+        assertThat(confirmationClass.getVenue(),is(equalTo(venueData)));
+        verify(manager,times(1)).getImage(any());
+    }
 
+    @Test
+    public void testOnSuccessFromDatabaseWithAdvert()
+    {
+        ListingManager manager = mock(ListingManager.class);
+        confirmationClass.setListingManager(manager);
+        confirmationClass.onSuccessFromDatabase(venueData, adData);
+        assertThat(confirmationClass.getVenue(),is(equalTo(venueData)));
+        assertThat(confirmationClass.getPreviousListing(),is(equalTo(adData)));
+        verify(manager,times(1)).getImage(any());
+    }
+
+    @Test
+    public void testOnSuccessfulImageDownload()
+    {
+        mockClass.onSuccessfulImageDownload();
+    }
+
+    @Test
+    public void testvalidateDataMapEmptyField()
+    {
+        HashMap<String, Object> listing = new HashMap();
+        listing.put("valid field", "valid");
+        listing.put("empty field", "");
+        confirmationClass.setListing(listing);
+        assertThat(confirmationClass.validateDataMap(),is(equalTo(false)));
+    }
+
+
+    @Test
+    public void testvalidateDataMapWithValidData()
+    {
+        HashMap<String, Object> listing = new HashMap();
+        listing.put("valid field", "valid");
+        listing.put("empty field", "also valid");
+        confirmationClass.setListing(listing);
+        assertThat(confirmationClass.validateDataMap(),is(equalTo(true)));
+    }
 
 }

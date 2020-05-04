@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import com.gangoffive.rig2gig.advert.management.CreateAdvertisement;
 import com.gangoffive.rig2gig.firebase.ListingManager;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -60,7 +61,7 @@ public class ListingManagerTest{
             @Override
             public void getFirebaseInstances()
             {
-                //FirebaseApp mockApp = mock(FirebaseApp.class);
+                FirebaseApp mockApp = mock(FirebaseApp.class);
                 FirebaseFirestore mockStore = mock(FirebaseFirestore.class);
                 when(mockStore.collection(any())).thenReturn(mock(CollectionReference.class));
                 setDb(mockStore);

@@ -22,6 +22,9 @@ import java.util.HashMap;
 
 /**
  * This class is used to create a custom dialog popup.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.2b
  */
 public class VenueProfileRatingsDialog extends AppCompatActivity
 {
@@ -37,6 +40,7 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
     /**
      * This method is used to create the view upon creation of the class.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     * @since #0.2b
      */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -61,6 +65,7 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
             /**
              * This method is used to handle the click of the rate Button.
              * @param v Represents the view.
+             * @since #0.2b
              */
             @Override
             public void onClick(View v)
@@ -75,6 +80,7 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
             /**
              * This method is used to handle the click of the cancel Button.
              * @param v Represents the view.
+             * @since #0.2b
              */
             @Override
             public void onClick(View v)
@@ -86,6 +92,7 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
 
     /**
      * This method is used to get the user's rating from the rating bar and post it to Firebase.
+     * @since #0.2b
      */
     private void ratingPost()
     {
@@ -98,6 +105,7 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
             /**
              * This method is used to determine the completion of a get request of Firebase.
              * @param task References the result of the get request.
+             * @since #0.2b
              */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
@@ -137,6 +145,7 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
                     /**
                      * This method is used to determine the completion of a get request of Firebase.
                      * @param task References the result of the get request.
+                     * @since #0.2b
                      */
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task)
@@ -168,6 +177,7 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
 
     /**
      * Handle on back pressed.
+     * @since #0.2b
      */
     @Override
     public void onBackPressed()
@@ -178,6 +188,7 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
     /**
      * If dialog popup is cancelled or clicked off of, then treat as though no rating has occurred.
      * @param isTopResumedActivity false if no longer the top activity.
+     * @since #0.2b
      */
     @Override
     public void onTopResumedActivityChanged (boolean isTopResumedActivity)
@@ -190,6 +201,7 @@ public class VenueProfileRatingsDialog extends AppCompatActivity
 
     /**
      * Finish activity if rating dialog is cancelled or clicked off of.
+     * @since #0.2b
      */
     public void returnNotRated()
     {

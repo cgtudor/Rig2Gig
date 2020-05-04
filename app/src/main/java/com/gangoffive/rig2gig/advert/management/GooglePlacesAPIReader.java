@@ -14,7 +14,10 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * This class is used to read information from the Google Places API
+ * This class is used to read information from the Google Places API.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.2b
  */
 public class GooglePlacesAPIReader
 {
@@ -25,7 +28,8 @@ public class GooglePlacesAPIReader
      * Converts into a String then parses String data in Json and all
      * addresses in ArrayList and returns the ArrayList.
      * @param input References the entered address by the user.
-     * @return
+     * @return Returns an ArrayList<String> of all suggested addresses.
+     * @since #0.2b
      */
     public ArrayList<String> autoComplete(String input)
     {

@@ -10,12 +10,16 @@ import com.gangoffive.rig2gig.account.AccountPurposeActivity;
 
 /**
  * This class is used to select a concrete nav bar based upon the logged in user type.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.1b
  */
 public class NavBarActivity extends AppCompatActivity
 {
     /**
      * This method is used to create the navigation bar.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     * @since #0.1b
      */
     @Override
     protected void onCreate(Bundle savedInstanceState)

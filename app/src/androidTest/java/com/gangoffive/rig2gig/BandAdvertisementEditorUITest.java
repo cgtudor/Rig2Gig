@@ -3,12 +3,14 @@ package com.gangoffive.rig2gig;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.os.Looper;
 import android.widget.Button;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
 import com.gangoffive.rig2gig.advert.management.BandAdvertisementEditor;
 import com.gangoffive.rig2gig.firebase.ListingManager;
+import com.gangoffive.rig2gig.utils.TabStatePreserver;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,20 +28,55 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class BandAdvertisementEditorUITest {
 
     private HashMap<String, Object> bandData, adData;
+    private BandAdvertisementEditor confirmationClass, mockClass;
 
     @Rule
     public ActivityTestRule<BandAdvertisementEditor> testRule = new ActivityTestRule<BandAdvertisementEditor>(BandAdvertisementEditor.class);
 
     @Before
     public void setUp() throws Exception {
+        if (Looper.myLooper() == null)
+        {
+            Looper.prepare();
+        }
+        confirmationClass = new BandAdvertisementEditor()
+        {
+            @Override
+            public void setViewReferences() {}
+
+            @Override
+            public void setInitialColours() {}
+
+            @Override
+            public void setupGridView() {}
+
+            @Override
+            public void setSearchHintInvisible() {}
+
+            @Override
+            public void initialiseSearchBar() {}
+
+            @Override
+            public void populateInitialFields() {}
+
+            @Override
+            public void saveTabs() {}
+        };
+        mockClass = mock(BandAdvertisementEditor.class);
         bandData = new HashMap();
         bandData.put("availability","test availability");
         bandData.put("charge","test charge");
@@ -305,6 +342,87 @@ public class BandAdvertisementEditorUITest {
         assertTrue(testRule.getActivity().isFinishing());
     }
 
+    @Test
+    public void testOnSuccessFromDatabaseNoAdvert()
+    {
+        ListingManager manager = mock(ListingManager.class);
+        confirmationClass.setListingManager(manager);
+        confirmationClass.onSuccessFromDatabase(bandData);
+        assertThat(confirmationClass.getBand(),is(equalTo(bandData)));
+        verify(manager,times(1)).getImage(any());
+    }
 
+    @Test
+    public void testOnSuccessFromDatabaseWithAdvert()
+    {
+        ListingManager manager = mock(ListingManager.class);
+        confirmationClass.setListingManager(manager);
+        confirmationClass.onSuccessFromDatabase(bandData, adData);
+        assertThat(confirmationClass.getBand(),is(equalTo(bandData)));
+        assertThat(confirmationClass.getPreviousListing(),is(equalTo(adData)));
+        verify(manager,times(1)).getImage(any());
+    }
+
+    @Test
+    public void testOnSuccessfulImageDownload()
+    {
+        mockClass.onSuccessfulImageDownload();
+    }
+
+    @Test
+    public void testvalidateDataMapEmptyField()
+    {
+        ArrayList<String> positions = new ArrayList<>();
+        positions.add("Drums");
+        confirmationClass.setBandPositions(positions);
+        HashMap<String, Object> listing = new HashMap();
+        listing.put("valid field", "valid");
+        listing.put("empty field", "");
+        confirmationClass.setListing(listing);
+        assertThat(confirmationClass.validateDataMap(),is(equalTo(false)));
+    }
+
+    @Test
+    public void testvalidateDataMapNullPositions()
+    {
+        ArrayList<String> positions = null;
+        confirmationClass.setBandPositions(positions);
+        HashMap<String, Object> listing = new HashMap();
+        listing.put("valid field", "valid");
+        confirmationClass.setListing(listing);
+        assertThat(confirmationClass.validateDataMap(),is(equalTo(false)));
+    }
+
+    @Test
+    public void testvalidateDataMapEmptyPositions()
+    {
+        ArrayList<String> positions = new ArrayList<>();
+        confirmationClass.setBandPositions(positions);
+        HashMap<String, Object> listing = new HashMap();
+        listing.put("valid field", "valid");
+        confirmationClass.setListing(listing);
+        assertThat(confirmationClass.validateDataMap(),is(equalTo(false)));
+    }
+
+    @Test
+    public void testvalidateDataMapWithValidData()
+    {
+        ArrayList<String> positions = new ArrayList<>();
+        positions.add("Drums");
+        confirmationClass.setBandPositions(positions);
+        HashMap<String, Object> listing = new HashMap();
+        listing.put("valid field", "valid");
+        listing.put("empty field", "also valid");
+        confirmationClass.setListing(listing);
+        assertThat(confirmationClass.validateDataMap(),is(equalTo(true)));
+    }
+
+    @Test
+    public void testBeginTabPreservation()
+    {
+        TabStatePreserver tabPreserver = mock(TabStatePreserver.class);
+        confirmationClass.setTabPreserver(tabPreserver);
+        confirmationClass.beginTabPreservation();
+    }
 
 }

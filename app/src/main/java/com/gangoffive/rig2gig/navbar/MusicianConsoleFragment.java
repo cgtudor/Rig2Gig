@@ -40,6 +40,9 @@ import java.util.List;
 
 /**
  * This class is used to create the musician console fragment.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.1b
  */
 public class MusicianConsoleFragment extends Fragment implements View.OnClickListener
 {
@@ -74,6 +77,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
      * @param container The views base class.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
      * @return Returns a View of the fragment_musician_console layout.
+     * @since #0.1b
      */
     @Nullable
     @Override
@@ -160,6 +164,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
     /**
      * This method queries the database collecting all venues and venue adverts. These lists are then processed
      * to set up variables for possible button clicks where extras need to be sent with intents.
+     * @since #0.1b
      */
     private void databaseQuery()
     {
@@ -313,6 +318,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
     /**
      * This method determines the activity/fragment that will be created based upon the button clicked using the card view's tag.
      * @param v This is the detected button that has been clicked. Used to create the appropriate activity/fragment.
+     * @since #0.1b
      */
     @Override
     public void onClick(View v)
@@ -368,6 +374,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
 
     /**
      * This method is used to find the logged in venue's advert and delete it from the database.
+     * @since #0.1b
      */
     private void deletePerformerAdvert()
     {
@@ -419,6 +426,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
 
     /**
      * This method is used to delete the existing musician advert from Firebase.
+     * @since #0.1b
      */
     private void deleteMusicianAdvert()
     {
@@ -467,6 +475,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
     /**
      * This method is used to reload the fragment layout once the advert has been deleted.
      * This is so the appropriate layout is given to the user based upon whether they have an advert or not.
+     * @since #0.1b
      */
     private void restartFragment()
     {
@@ -478,6 +487,7 @@ public class MusicianConsoleFragment extends Fragment implements View.OnClickLis
      * @param requestCode Represents the request code sent by the starting activity.
      * @param resultCode Represents the result code.
      * @param data Represents the intent passed back from the completed activity.
+     * @since #0.1b
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)

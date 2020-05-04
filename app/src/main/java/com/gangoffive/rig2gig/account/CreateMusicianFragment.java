@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.gangoffive.rig2gig.advert.management.GooglePlacesAutoSuggestAdapter;
 import com.gangoffive.rig2gig.band.management.TabbedBandActivity;
+import com.gangoffive.rig2gig.musician.management.SignedInTabbedMusicianActivity;
 import com.gangoffive.rig2gig.musician.management.TabbedMusicianActivity;
 import com.gangoffive.rig2gig.navbar.NavBarActivity;
 import com.gangoffive.rig2gig.R;
@@ -301,6 +302,7 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                                                         Intent intent = new Intent(getActivity(), NavBarActivity.class);
                                                         startActivity(intent);
                                                         Toast.makeText(getActivity(), "Musician Account Created!", Toast.LENGTH_SHORT).show();
+                                                        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@ made it here mus account");
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
@@ -339,7 +341,7 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@2 " + REQUEST_GALLERY__PHOTO);
                 break;
             case R.id.selectGenres:
-                TabbedMusicianActivity.faderBtn.performClick();
+                SignedInTabbedMusicianActivity.faderBtn.performClick();
                 selectGenres();
                 break;
             default:

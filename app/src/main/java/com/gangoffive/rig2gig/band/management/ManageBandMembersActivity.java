@@ -239,6 +239,10 @@ public class ManageBandMembersActivity extends AppCompatActivity implements Crea
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (gridView == null)
+                {
+                    gridView = (GridView) findViewById( R.id.gridView);
+                }
                 gridView.setAdapter(customAdapter);
             }
         });

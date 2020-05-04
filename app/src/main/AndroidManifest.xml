@@ -166,6 +166,10 @@
         <activity android:name=".account.CredentialActivity" />
         <activity android:name=".account.ForgotPasswordActivity" />
         <activity android:name=".account.RegisterActivity" />
+        <activity android:name=".account.SignedInCredentialFragment" />
+        <activity android:name=".musician.management.SignedInTabbedMusicianActivity" />
+        <activity android:name=".account.SignedInTabbedVenueActivity" />
+        <activity android:name=".account.SignedInAccountPurpose" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

@@ -10,11 +10,15 @@ import com.google.android.material.navigation.NavigationView;
 
 /**
  * This class is used to create a concrete navigation bar for venue type accounts.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.1b
  */
 public class ConcreteVenueNavBar extends NavBarCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     /**
      * Default constructor.
+     * @since #0.1b
      */
     public ConcreteVenueNavBar()
     {
@@ -24,6 +28,7 @@ public class ConcreteVenueNavBar extends NavBarCompatActivity implements Navigat
     /**
      * This method is used to create the navigation bar.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     * @since #0.1b
      */
     @Override
     protected void onCreate(Bundle savedInstanceState)

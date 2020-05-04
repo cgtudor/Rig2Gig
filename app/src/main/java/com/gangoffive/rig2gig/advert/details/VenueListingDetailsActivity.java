@@ -70,6 +70,18 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
     private final StringBuilder listingOwner = new StringBuilder("");
     private GoogleMap googleMap;
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
+    private Menu activityMenu;
+
+    private ImageView venuePhoto;
+    private TextView venueName;
+    private TextView description;
+    private RatingBar ratingBar;
+    private TextView unrated;
+    private TextView location;
+    private Button contact;
+    private Button publish;
+    private Button profile;
+    private Button noInternet;
 
     /*Firestore & Cloud Storage initialization*/
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -86,6 +98,17 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_listing_details);
 
+        venuePhoto = findViewById(R.id.venuePhoto);
+        venueName = findViewById(R.id.venueName);
+        description = findViewById(R.id.description);
+        ratingBar = findViewById(R.id.rating_bar);
+        unrated = findViewById(R.id.unrated);
+        location = findViewById(R.id.location);
+        contact = findViewById(R.id.contact);
+        publish = findViewById(R.id.publish);
+        profile = findViewById(R.id.profile);
+        noInternet = findViewById(R.id.noInternet);
+
         Intent intent = new Intent(this, PayPalService.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, paypalConfig);
         startService(intent);
@@ -94,22 +117,12 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final ImageView venuePhoto = findViewById(R.id.venuePhoto);
-        final TextView venueName = findViewById(R.id.venueName);
-        final TextView description = findViewById(R.id.description);
-        final RatingBar ratingBar = findViewById(R.id.rating_bar);
-        final TextView unrated = findViewById(R.id.unrated);
-        final TextView location = findViewById(R.id.location);
-        final Button contact = findViewById(R.id.contact);
-        final Button publish = findViewById(R.id.publish);
-        final Button profile = findViewById(R.id.profile);
-
         //Initialising the Google Map. See onMapReady().
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
         mapFragment.getMapAsync(this);
 
         /*Used to get the id of the listing from the previous activity*/
-        vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");
+        vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID") != null ? getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID") : "test";
 
         if (getIntent().getStringExtra("CURRENT_USER_TYPE") != null) {
             currentUserType = getIntent().getStringExtra("CURRENT_USER_TYPE");
@@ -124,8 +137,6 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
-
-        final Button noInternet = findViewById(R.id.noInternet);
 
         ConnectivityManager cm =
                 (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -145,89 +156,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
-
-                        Timestamp expiryDate = (Timestamp) document.get("expiry-date");
-
-                        profile.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                startActivity(new Intent(VenueListingDetailsActivity.this, VenueProfileActivity.class).putExtra("EXTRA_VENUE_ID", document.get("venue-ref").toString()));
-                            }
-                        });
-
-                        /*Find the venue reference by looking for the venue ID in the "venues" subfolder*/
-                        DocumentReference venue = db.collection("venues").document(document.get("venue-ref").toString());
-
-                        venue.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
-
-                                        venueName.setText(document.get("name").toString());
-                                        location.setText(document.get("location").toString());
-                                        listingOwner.append(document.get("user-ref").toString());
-
-                                        if(document.get("venue-rating").toString().equals("N/A"))
-                                        {
-                                            unrated.setVisibility(View.VISIBLE);
-                                        }
-                                        else
-                                        {
-                                            ratingBar.setRating(Float.valueOf(document.get("venue-rating").toString()));
-                                            unrated.setVisibility(View.GONE);
-                                        }
-
-                                        CollectionReference sentMessages = db.collection("communications").document(FirebaseAuth.getInstance().getUid()).collection("sent");
-                                        sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get(source)
-                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                        if (task.isSuccessful()) {
-                                                            QuerySnapshot query = task.getResult();
-                                                            if (!query.isEmpty()) {
-                                                                contact.setAlpha(.5f);
-                                                                contact.setClickable(false);
-                                                                contact.setText("Contact request sent");
-                                                            }
-                                                        } else {
-                                                            Log.e("FIREBASE", "Sent messages failed with ", task.getException());
-                                                        }
-                                                    }
-                                                });
-                                        Log.d("AUTH CHECK", "LISTING OWNER: " + listingOwner.toString() + "\nCURRENT USER: " + FirebaseAuth.getInstance().getUid());
-                                        if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()) && expiryDate.compareTo(Timestamp.now()) > 0) {
-                                            getSupportActionBar().setTitle("My Advert");
-                                            contact.setClickable(false);
-                                            contact.setVisibility(View.GONE);
-                                        } else if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid()) && expiryDate.compareTo(Timestamp.now()) < 0) {
-                                            getSupportActionBar().setTitle("My Advert Preview");
-                                            contact.setClickable(false);
-                                            contact.setVisibility(View.INVISIBLE);
-                                            publish.setVisibility(View.VISIBLE);
-                                            publish.setClickable(true);
-                                        } else {
-                                            getSupportActionBar().setTitle(venueName.getText().toString());
-                                        }
-                                    } else {
-                                        Log.d("FIRESTORE", "No such document");
-                                    }
-                                } else {
-                                    Log.d("FIRESTORE", "get failed with ", task.getException());
-                                }
-                            }
-                        });
-                        expiry.setTime(expiryDate.toDate().getTime());
-                        venueRef.append(document.get("venue-ref").toString());
-                        description.setText(document.get("description").toString());
-                    } else {
-                        Log.d("FIRESTORE", "No such document");
-                    }
+                    onSuccessAdData(task);
                 } else {
                     Log.d("FIRESTORE", "get failed with ", task.getException());
                 }
@@ -243,66 +172,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                QuerySnapshot musicians = task.getResult();
-                                if (!musicians.isEmpty()) {
-                                    DocumentSnapshot musician = musicians.getDocuments().get(0);
-
-                                    HashMap<String, Object> request = new HashMap<>();
-                                    request.put("type", "contact-request");
-                                    request.put("posting-date", Timestamp.now());
-                                    request.put("sent-from", FirebaseAuth.getInstance().getUid());
-                                    request.put("sent-from-type", "musicians");
-                                    request.put("sent-from-ref", musician.getId());
-                                    request.put("sent-to-type", "venues");
-                                    request.put("sent-to-ref", venueRef.toString());
-                                    request.put("notification-title", "Someone is interested in your advert!");
-                                    request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
-
-                                    CollectionReference received = db.collection("communications")
-                                            .document(listingOwner.toString())
-                                            .collection("received");
-                                    received.add(request)
-                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
-                                                        Toast.makeText(VenueListingDetailsActivity.this, "Contact request sent!", Toast.LENGTH_SHORT).show();
-                                                        contact.setAlpha(.5f);
-                                                        contact.setClickable(false);
-                                                        contact.setText("Contact request sent");
-                                                    } else {
-                                                        Log.d("FIRESTORE", "Contact request failed with ", task.getException());
-                                                    }
-                                                }
-                                            });
-
-                                    HashMap<String, Object> requestSent = new HashMap<>();
-                                    requestSent.put("type", "contact-request");
-                                    requestSent.put("posting-date", Timestamp.now());
-                                    requestSent.put("sent-to", listingOwner.toString());
-                                    requestSent.put("sent-from-type", "musicians");
-                                    requestSent.put("sent-from-ref", musician.getId());
-                                    requestSent.put("sent-to-type", "venues");
-                                    requestSent.put("sent-to-ref", venueRef.toString());
-                                    requestSent.put("notification-title", "Someone is interested in your advert!");
-                                    requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
-                                    CollectionReference sent = db.collection("communications")
-                                            .document(FirebaseAuth.getInstance().getUid())
-                                            .collection("sent");
-
-                                    sent.add(requestSent)
-                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
-                                                    } else {
-                                                        Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
-                                                    }
-                                                }
-                                            });
-                                }
+                                onSuccessMusicianContact(task);
                             }
                         }
                     });
@@ -312,66 +182,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                QuerySnapshot musicians = task.getResult();
-                                if (!musicians.isEmpty()) {
-                                    DocumentSnapshot musician = musicians.getDocuments().get(0);
-
-                                    HashMap<String, Object> request = new HashMap<>();
-                                    request.put("type", "contact-request");
-                                    request.put("posting-date", Timestamp.now());
-                                    request.put("sent-from", FirebaseAuth.getInstance().getUid());
-                                    request.put("sent-from-type", "bands");
-                                    request.put("sent-from-ref", bandId);
-                                    request.put("sent-to-type", "venues");
-                                    request.put("sent-to-ref", venueRef.toString());
-                                    request.put("notification-title", "Someone is interested in your advert!");
-                                    request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
-
-                                    CollectionReference received = db.collection("communications")
-                                            .document(listingOwner.toString())
-                                            .collection("received");
-                                    received.add(request)
-                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Log.d("FIRESTORE", "Contact request added with info " + task.getResult().toString());
-                                                        Toast.makeText(VenueListingDetailsActivity.this, "Contact request sent!", Toast.LENGTH_SHORT).show();
-                                                        contact.setAlpha(.5f);
-                                                        contact.setClickable(false);
-                                                        contact.setText("Contact request sent");
-                                                    } else {
-                                                        Log.d("FIRESTORE", "Contact request failed with ", task.getException());
-                                                    }
-                                                }
-                                            });
-
-                                    HashMap<String, Object> requestSent = new HashMap<>();
-                                    requestSent.put("type", "contact-request");
-                                    requestSent.put("posting-date", Timestamp.now());
-                                    requestSent.put("sent-to", listingOwner.toString());
-                                    requestSent.put("sent-from-type", "bands");
-                                    requestSent.put("sent-from-ref", bandId);
-                                    requestSent.put("sent-to-type", "venues");
-                                    requestSent.put("sent-to-ref", venueRef.toString());
-                                    requestSent.put("notification-title", "Someone is interested in your advert!");
-                                    requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
-                                    CollectionReference sent = db.collection("communications")
-                                            .document(FirebaseAuth.getInstance().getUid())
-                                            .collection("sent");
-
-                                    sent.add(requestSent)
-                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
-                                                    } else {
-                                                        Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
-                                                    }
-                                                }
-                                            });
-                                }
+                                onSuccessBandContact(task);
                             }
                         }
                     });
@@ -411,6 +222,273 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                     .signature(signatures.get(vID))
                     .into(venuePhoto);
         }
+    }
+
+    public void onSuccessAdData(Task<DocumentSnapshot> task)
+    {
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        DocumentSnapshot document = task.getResult();
+        if (document.exists()) {
+            Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+
+            Timestamp expiryDate = (Timestamp) document.get("expiry-date");
+
+            profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(VenueListingDetailsActivity.this, VenueProfileActivity.class).putExtra("EXTRA_VENUE_ID", document.get("venue-ref").toString()));
+                }
+            });
+
+            /*Find the venue reference by looking for the venue ID in the "venues" subfolder*/
+            DocumentReference venue = db.collection("venues").document(document.get("venue-ref").toString());
+
+            venue.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        onSuccessVenueData(task, (Timestamp) document.get("expiry-date"));
+                    } else {
+                        Log.d("FIRESTORE", "get failed with ", task.getException());
+                    }
+                }
+            });
+            expiry.setTime(expiryDate.toDate().getTime());
+            venueRef.append(document.get("venue-ref").toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    description.setText(document.get("description").toString());
+                }
+            });
+        } else {
+            Log.d("FIRESTORE", "No such document");
+        }
+    }
+
+    public void onSuccessVenueData(Task<DocumentSnapshot> task, Timestamp expiryDate)
+    {
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        DocumentSnapshot document = task.getResult();
+        if (document.exists()) {
+            Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    venueName.setText(document.get("name").toString());
+                    location.setText(document.get("location").toString());
+                }
+            });
+
+            listingOwner.append(document.get("user-ref").toString());
+
+            if(document.get("venue-rating").toString().equals("N/A"))
+            {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        unrated.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+            else
+            {
+                ratingBar.setRating(Float.valueOf(document.get("venue-rating").toString()));
+                unrated.setVisibility(View.GONE);
+            }
+
+            if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test") && expiryDate.compareTo(Timestamp.now()) > 0) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getSupportActionBar().setTitle("My Advert");
+                        contact.setClickable(false);
+                        contact.setVisibility(View.GONE);
+                    }
+                });
+            } else if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test") && expiryDate.compareTo(Timestamp.now()) < 0) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getSupportActionBar().setTitle("My Advert Preview");
+                        contact.setClickable(false);
+                        contact.setVisibility(View.INVISIBLE);
+                        publish.setVisibility(View.VISIBLE);
+                        publish.setClickable(true);
+                    }
+                });
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getSupportActionBar().setTitle(venueName.getText().toString());
+                    }
+                });
+            }
+
+            CollectionReference sentMessages = db.collection("communications")
+                    .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                    .collection("sent");
+            sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get(source)
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot query = task.getResult();
+                                if (!query.isEmpty()) {
+                                    contact.setAlpha(.5f);
+                                    contact.setClickable(false);
+                                    contact.setText("Contact request sent");
+                                }
+                            } else {
+                                Log.e("FIREBASE", "Sent messages failed with ", task.getException());
+                            }
+                        }
+                    });
+            Log.d("AUTH CHECK", "LISTING OWNER: " + listingOwner.toString() + "\nCURRENT USER: " + FirebaseAuth.getInstance().getUid());
+        } else {
+            Log.d("FIRESTORE", "No such document");
+        }
+    }
+
+    public void onSuccessMusicianContact(Task<QuerySnapshot> task)
+    {
+        QuerySnapshot musicians = task.getResult();
+        if (!musicians.isEmpty()) {
+            DocumentSnapshot musician = musicians.getDocuments().get(0);
+
+            HashMap<String, Object> request = new HashMap<>();
+            request.put("type", "contact-request");
+            request.put("posting-date", Timestamp.now());
+            request.put("sent-from", FirebaseAuth.getInstance().getUid());
+            request.put("sent-from-type", "musicians");
+            request.put("sent-from-ref", musician.getId());
+            request.put("sent-to-type", "venues");
+            request.put("sent-to-ref", venueRef.toString());
+            request.put("notification-title", "Someone is interested in your advert!");
+            request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
+
+            CollectionReference received = db.collection("communications")
+                    .document(listingOwner.toString())
+                    .collection("received");
+            received.add(request)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                            if (task.isSuccessful()) {
+                                onSuccessAddRequest();
+                            } else {
+                                Log.d("FIRESTORE", "Contact request failed with ", task.getException());
+                            }
+                        }
+                    });
+
+            HashMap<String, Object> requestSent = new HashMap<>();
+            requestSent.put("type", "contact-request");
+            requestSent.put("posting-date", Timestamp.now());
+            requestSent.put("sent-to", listingOwner.toString());
+            requestSent.put("sent-from-type", "musicians");
+            requestSent.put("sent-from-ref", musician.getId());
+            requestSent.put("sent-to-type", "venues");
+            requestSent.put("sent-to-ref", venueRef.toString());
+            requestSent.put("notification-title", "Someone is interested in your advert!");
+            requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
+            CollectionReference sent = db.collection("communications")
+                    .document(FirebaseAuth.getInstance().getUid())
+                    .collection("sent");
+
+            sent.add(requestSent)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
+                            } else {
+                                Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void onSuccessBandContact(Task<QuerySnapshot> task)
+    {
+        QuerySnapshot musicians = task.getResult();
+        if (!musicians.isEmpty()) {
+            DocumentSnapshot musician = musicians.getDocuments().get(0);
+
+            HashMap<String, Object> request = new HashMap<>();
+            request.put("type", "contact-request");
+            request.put("posting-date", Timestamp.now());
+            request.put("sent-from", FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test");
+            request.put("sent-from-type", "bands");
+            request.put("sent-from-ref", bandId);
+            request.put("sent-to-type", "venues");
+            request.put("sent-to-ref", venueRef.toString());
+            request.put("notification-title", "Someone is interested in your advert!");
+            request.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
+
+            CollectionReference received = db.collection("communications")
+                    .document(listingOwner.toString())
+                    .collection("received");
+            received.add(request)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                            if (task.isSuccessful()) {
+                                onSuccessAddRequest();
+                            } else {
+                                Log.d("FIRESTORE", "Contact request failed with ", task.getException());
+                            }
+                        }
+                    });
+
+            HashMap<String, Object> requestSent = new HashMap<>();
+            requestSent.put("type", "contact-request");
+            requestSent.put("posting-date", Timestamp.now());
+            requestSent.put("sent-to", listingOwner.toString());
+            requestSent.put("sent-from-type", "bands");
+            requestSent.put("sent-from-ref", bandId);
+            requestSent.put("sent-to-type", "venues");
+            requestSent.put("sent-to-ref", venueRef.toString());
+            requestSent.put("notification-title", "Someone is interested in your advert!");
+            requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
+            CollectionReference sent = db.collection("communications")
+                    .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                    .collection("sent");
+
+            sent.add(requestSent)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("FIRESTORE", "Contact request sent with info " + task.getResult().toString());
+                            } else {
+                                Log.d("FIRESTORE", "Contact request sending failed with ", task.getException());
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void onSuccessAddRequest() {
+        Toast.makeText(VenueListingDetailsActivity.this, "Contact request sent!", Toast.LENGTH_SHORT).show();
+        contact.setAlpha(.5f);
+        contact.setClickable(false);
+        contact.setText("Contact request sent");
     }
 
     /**
@@ -474,7 +552,9 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.listing_menu, menu);
 
-        vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID");
+        activityMenu = menu;
+
+        vID = getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID") != null ? getIntent().getStringExtra("EXTRA_VENUE_LISTING_ID") : "test";
 
         /*Firestore & Cloud Storage initialization*/
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -495,55 +575,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
-
-                        /*Find the performer reference by looking for the performer ID in the "performers" subfolder*/
-                        DocumentReference performer = db.collection("venues").document(document.get("venue-ref").toString());
-
-                        performer.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
-
-                                        if (document.get("user-ref").toString().equals(FirebaseAuth.getInstance().getUid())) {
-                                            MenuItem star = menu.findItem(R.id.saveButton);
-                                            star.setIcon(R.drawable.ic_full_star);
-                                            star.setVisible(false);
-                                        } else {
-                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                            CollectionReference favVenues = db.collection("favourite-ads")
-                                                    .document(FirebaseAuth.getInstance().getUid())
-                                                    .collection("venue-listings");
-                                            favVenues.document(vID).get(source)
-                                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                            if (task.isSuccessful()) {
-                                                                DocumentSnapshot document = task.getResult();
-                                                                if (document.exists()) {
-                                                                    MenuItem star = menu.findItem(R.id.saveButton);
-                                                                    star.setIcon(R.drawable.ic_full_star);
-                                                                }
-                                                            }
-                                                        }
-                                                    });
-                                        }
-                                    } else {
-                                        Log.d("FIRESTORE", "No such document");
-                                    }
-                                } else {
-                                    Log.d("FIRESTORE", "get failed with ", task.getException());
-                                }
-                            }
-                        });
-                    } else {
-                        Log.d("FIRESTORE", "No such document");
-                    }
+                    onSuccessItemsAd(task);
                 } else {
                     Log.d("FIRESTORE", "get failed with ", task.getException());
                 }
@@ -551,6 +583,107 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         });
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void onSuccessItemsAd(Task<DocumentSnapshot> task)
+    {
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        DocumentSnapshot document = task.getResult();
+        if (document.exists()) {
+            Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+
+            /*Find the performer reference by looking for the performer ID in the "performers" subfolder*/
+            DocumentReference performer = db.collection("venues").document(document.get("venue-ref").toString());
+
+            performer.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        onSuccessItemsVenue(task);
+                    } else {
+                        Log.d("FIRESTORE", "get failed with ", task.getException());
+                    }
+                }
+            });
+        } else {
+            Log.d("FIRESTORE", "No such document");
+        }
+    }
+
+    public void onSuccessItemsVenue(Task<DocumentSnapshot> task)
+    {
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+        DocumentSnapshot document = task.getResult();
+        if (document.exists()) {
+            Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
+
+            if (document.get("user-ref").toString().equals(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")) {
+                MenuItem star = activityMenu.findItem(R.id.saveButton);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        star.setIcon(R.drawable.ic_full_star);
+                        star.setVisible(false);
+                    }
+                });
+
+            } else {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                CollectionReference favVenues = db.collection("favourite-ads")
+                        .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                        .collection("venue-listings");
+                favVenues.document(vID).get(source)
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    onSuccessFavouriteVenues(task);
+                                }
+                            }
+                        });
+            }
+        } else {
+            Log.d("FIRESTORE", "No such document");
+        }
+    }
+
+    public void onSuccessFavouriteVenues(Task<DocumentSnapshot> task)
+    {
+        DocumentSnapshot document = task.getResult();
+        if (document.exists()) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MenuItem star = activityMenu.findItem(R.id.saveButton);
+                    star.setIcon(R.drawable.ic_full_star);
+                }
+            });
+        }
+        else
+        {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MenuItem star = activityMenu.findItem(R.id.saveButton);
+                    star.setIcon(R.drawable.ic_empty_star);
+                }
+            });
+        }
     }
 
     @Override
@@ -577,46 +710,14 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             listing.put("venue-ref", venueRef.toString());
 
             CollectionReference favVenues = db.collection("favourite-ads")
-                    .document(FirebaseAuth.getInstance().getUid())
+                    .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
                     .collection("venue-listings");
             favVenues.document(vID).get(source)
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    favVenues.document(vID)
-                                            .delete()
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Log.d("FIRESTORE", "Favourite successfully deleted!");
-                                                    item.setIcon(R.drawable.ic_empty_star);
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.w("FIRESTORE", "Error deleting document", e);
-                                                }
-                                            });
-                                } else {
-                                    favVenues.document(vID)
-                                            .set(listing)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Log.d("FIRESTORE", "Favourite successful");
-                                                        Toast.makeText(VenueListingDetailsActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
-                                                        item.setIcon(R.drawable.ic_full_star);
-                                                    } else {
-                                                        Log.d("FIRESTORE", "Task failed with ", task.getException());
-                                                    }
-                                                }
-                                            });
-                                }
+                                onSuccessItemSelectedAd(task, item, listing);
                             } else {
                                 Log.d("FIRESTORE", "Failed with: ", task.getException());
                             }
@@ -624,6 +725,66 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                     });
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onSuccessItemSelectedAd(Task<DocumentSnapshot> task, MenuItem item, HashMap<String, Object> listing)
+    {
+        CollectionReference favVenues = db.collection("favourite-ads")
+                .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                .collection("venue-listings");
+        DocumentSnapshot document = task.getResult();
+        if (document.exists()) {
+            favVenues.document(vID)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            onSuccessUnfavourited(item);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("FIRESTORE", "Error deleting document", e);
+                        }
+                    });
+        } else {
+            favVenues.document(vID)
+                    .set(listing)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                onSuccessFavourited(item);
+                            } else {
+                                Log.d("FIRESTORE", "Task failed with ", task.getException());
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void onSuccessFavourited(MenuItem item)
+    {
+        Log.d("FIRESTORE", "Favourite successful");
+        Toast.makeText(VenueListingDetailsActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                item.setIcon(R.drawable.ic_full_star);
+            }
+        });
+    }
+
+    public void onSuccessUnfavourited(MenuItem item)
+    {
+        Log.d("FIRESTORE", "Favourite successfully deleted!");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                item.setIcon(R.drawable.ic_empty_star);
+            }
+        });
     }
 
     @Override
@@ -645,44 +806,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    Log.d(TAG, "Google Map get location successful");
-
-                    DocumentSnapshot document = task.getResult();
-
-                    if (document.exists()) {
-                        Log.d(TAG, "Venue Document exists");
-
-
-
-                        final DocumentReference venue = db.collection("venues").document(document.get("venue-ref").toString());
-
-                        venue.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                Log.d(TAG, "Google Map get venue successful");
-
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "Google Map get venue completed");
-
-                                    DocumentSnapshot document = task.getResult();
-
-                                    String venueName = document.get("name").toString();
-                                    LatLng venueLocation = new LatLng(Double.parseDouble(document.get("latitude").toString()), Double.parseDouble(document.get("longitude").toString()));
-                                    googleMap.addMarker(new MarkerOptions().position(venueLocation).title(venueName));
-                                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(venueLocation, 16));
-                                } else {
-                                    Log.d(TAG, "Google Map get venue failed");
-                                }
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "Google Map get venue unsuccessful");
-                            }
-                        });
-                    } else {
-                        Log.d(TAG, "Venue Document does not exist");
-                    }
+                    onSuccessMapAd(task);
                 } else {
                     Log.d(TAG, "Google Map get location unsuccessful");
                 }
@@ -693,6 +817,64 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                 Log.d(TAG, "Google Map get location failed.");
             }
         });
+    }
+
+    public void onSuccessMapAd(Task<DocumentSnapshot> task)
+    {
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        Source source = isConnected ? Source.SERVER : Source.CACHE;
+
+        Log.d(TAG, "Google Map get location successful");
+
+        DocumentSnapshot document = task.getResult();
+
+        if (document.exists()) {
+            Log.d(TAG, "Venue Document exists");
+            final DocumentReference venue = db.collection("venues").document(document.get("venue-ref").toString());
+
+            venue.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    onSuccessMapVenue(task);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "Google Map get venue unsuccessful");
+                }
+            });
+        } else {
+            Log.d(TAG, "Venue Document does not exist");
+        }
+    }
+
+    public void onSuccessMapVenue(Task<DocumentSnapshot> task)
+    {
+        Log.d(TAG, "Google Map get venue successful");
+
+        if (task.isSuccessful()) {
+            Log.d(TAG, "Google Map get venue completed");
+
+            DocumentSnapshot document = task.getResult();
+            String venueName = document.get("name") != null ? document.get("name").toString() : "test";
+
+            LatLng venueLocation = new LatLng(Double.parseDouble(document.get("latitude") != null ? document.get("latitude").toString() : "-1.0"),
+                    Double.parseDouble(document.get("longitude") != null ? document.get("longitude").toString() : "50.0"));
+            runOnUiThread(new Runnable(){
+                public void run(){
+                    googleMap.addMarker(new MarkerOptions().position(venueLocation).title(venueName));
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(venueLocation, 16));
+                }
+            });
+        } else {
+            Log.d(TAG, "Google Map get venue failed");
+        }
     }
 
     public void onBuyPressed (View pressed){
@@ -765,4 +947,13 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         stopService(new Intent(this, PayPalService.class));
         super.onDestroy();
     }
+
+    public Menu getActivityMenu() {
+        return activityMenu;
+    }
+
+    public static PayPalConfiguration getPaypalConfig() {
+        return paypalConfig;
+    }
+
 }
