@@ -182,15 +182,6 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(permissions, requestCode);
         }
-
-        if(Build.VERSION.SDK_INT>Build.VERSION_CODES.M) {
-            boolean canWriteSettings = Settings.System.canWrite(getActivity());
-            if (!canWriteSettings) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                startActivity(intent);
-            }
-        }
-
         return v;
     }
 
