@@ -63,12 +63,7 @@
         <activity android:name=".profile.MusicianProfileActivity" />
         <activity android:name=".profile.BandProfileActivity" />
 
-        <service android:name=".utils.NotificationService" />
-        <service android:name=".utils.NotificationService" />
-
         <activity android:name=".comms.LaunchCommsActivity" />
-
-        <service android:name=".utils.NotificationService" />
         <service
             android:name=".firebase.FirebaseNotificationService"
             android:exported="false">
@@ -152,7 +147,6 @@
             android:name=".advert.details.PerformanceListingDetailsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".account.ForgotPasswordActivity" />
-        <activity android:name=".account.RegisterActivity" />
         <activity android:name=".account.SignedInCredentialFragment" />
         <activity android:name=".musician.management.SignedInTabbedMusicianActivity" />
         <activity android:name=".account.SignedInTabbedVenueActivity" />
