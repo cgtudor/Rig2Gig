@@ -9,11 +9,15 @@ import com.google.android.material.navigation.NavigationView;
 
 /**
  * This class is used to create a concrete navigation bar for fan type accounts.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.1b
  */
 public class ConcreteFanNavBar extends NavBarCompatActivity
 {
     /**
      * Default constructor.
+     * @since #0.1b
      */
     public ConcreteFanNavBar()
     {
@@ -23,6 +27,7 @@ public class ConcreteFanNavBar extends NavBarCompatActivity
     /**
      * This method is used to create the navigation bar.
      * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     * @since #0.1b
      */
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -98,6 +98,7 @@ public class VenueProfileActivity extends AppCompatActivity {
             /**
              * This method is used to determine the completion of a get request of Firebase.
              * @param task References the result of the get request.
+             * @since #0.2b
              */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -140,6 +141,7 @@ public class VenueProfileActivity extends AppCompatActivity {
 
     /**
      * This method is used to get the Venue's current rating from the database and create an appropriate display.
+     * @since #0.2b
      */
     private void getRatingFromFirebase()
     {
@@ -148,6 +150,7 @@ public class VenueProfileActivity extends AppCompatActivity {
             /**
              * This method is used to determine the completion of a get request of Firebase.
              * @param task References the result of the get request.
+             * @since #0.2b
              */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task)
@@ -176,6 +179,7 @@ public class VenueProfileActivity extends AppCompatActivity {
      * @param requestCode Represents the request code sent by the starting activity.
      * @param resultCode Represents the result code.
      * @param data Represents the intent passed back from the completed activity.
+     * @since #0.2b
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
@@ -204,6 +208,7 @@ public class VenueProfileActivity extends AppCompatActivity {
 
     /**
      * This method is used to set up the rating dialog for users if they have not rated a Venue yet.
+     * @since #0.2b
      */
     private void setupRatingDialog()
     {
@@ -214,6 +219,7 @@ public class VenueProfileActivity extends AppCompatActivity {
                 /**
                  * This method is used to handle the click of the rateMeButton.
                  * @param v Represents the view.
+                 * @since #0.2b
                  */
                 @Override
                 public void onClick(View v) {
@@ -224,6 +230,7 @@ public class VenueProfileActivity extends AppCompatActivity {
                     {
                         /**
                          * This UI Thread is used to create the fade effect behind the dialog popup. Used in a separate thread for testing purposes.
+                         * @since #0.2b
                          */
                         @Override
                         public void run() {
@@ -244,6 +251,7 @@ public class VenueProfileActivity extends AppCompatActivity {
     /**
      * This method is used to check whether or not the user viewing the Venue has already submitted a rating.
      * Here we decide whether we will show the Rate Me button or an appropriate message.
+     * @since #0.2b
      */
     private void checkAlreadyRated()
     {
@@ -256,6 +264,7 @@ public class VenueProfileActivity extends AppCompatActivity {
                 /**
                  * This method is used to determine the completion of a get request of Firebase.
                  * @param task References the result of the get request.
+                 * @since #0.2b
                  */
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task)
@@ -282,6 +291,7 @@ public class VenueProfileActivity extends AppCompatActivity {
     /**
      * Overriding the up navigation to call onBackPressed
      * @return true
+     * @since #0.2b
      */
     @Override
     public boolean onSupportNavigateUp() {
@@ -324,6 +334,7 @@ public class VenueProfileActivity extends AppCompatActivity {
                 /**
                  * This method is used to determine the completion of a get request of Firebase.
                  * @param task References the result of the get request.
+                 * @since #0.2b
                  */
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();

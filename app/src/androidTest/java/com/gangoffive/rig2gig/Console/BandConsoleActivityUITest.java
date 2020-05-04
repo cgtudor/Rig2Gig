@@ -21,11 +21,26 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * This test class is used to test and maintain the integrity of the BandConsoleActivity UI.
+ * @author Ben souch
+ * @version #0.3b
+ * @since #0.3b
+ */
 public class BandConsoleActivityUITest
 {
+    /**
+     * Rule created to generate an object of the class we are testing.
+     * @since #0.3b
+     */
     @Rule
     public ActivityTestRule<BandConsoleActivity> testRule = new ActivityTestRule<BandConsoleActivity>(BandConsoleActivity.class);
 
+    /**
+     * testComponentVisibilityPerformerHasAd() is used to test that, given a Band has a Performer advert, the UI
+     * makes the correct Card Views visible.
+     * @since #0.3b
+     */
     @Test
     public void testComponentVisibilityPerformerHasAd()
     {
@@ -51,6 +66,11 @@ public class BandConsoleActivityUITest
         onView(withId(R.id.card_view_delete_performer_advert)).check(matches(isDisplayed()));
     }
 
+    /**
+     * testComponentVisibilityPerformerNoAd() is used to test that, given a Band does not have a Performer advert,
+     * the UI makes the correct Card Views visible.
+     * @since #0.3b
+     */
     @Test
     public void testComponentVisibilityPerformerNoAd()
     {
@@ -74,6 +94,11 @@ public class BandConsoleActivityUITest
         onView(withId(R.id.card_view_create_performer_advert)).check(matches(isDisplayed()));
     }
 
+    /**
+     * testComponentVisibilityBandHasAd() is used to test that, given a Band has an advert directed towards
+     * Musicians, the UI makes the correct Card Views visible.
+     * @since #0.3b
+     */
     @Test
     public void testComponentVisibilityBandHasAd()
     {
@@ -99,6 +124,11 @@ public class BandConsoleActivityUITest
         onView(withId(R.id.card_view_delete_band_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
+    /**
+     * testComponentVisibilityBandNoAd() is used to test that, given a Band does not have an advert directed
+     * towards Musicians, the UI makes the correct Card Views visible.
+     * @since #0.3b
+     */
     @Test
     public void testComponentVisibilityBandNoAd()
     {
