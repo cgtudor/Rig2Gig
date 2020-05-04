@@ -133,6 +133,10 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         return fragment;
     }
 
+    /**
+     * When the onCreate is called previous states from the activity can be restored.
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +146,14 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         }
     }
 
+    /**
+     * This method instantiate all necessary Firebase features, also finds all the views from the XML
+     * as well as setting onClicks.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
@@ -185,6 +197,10 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         return v;
     }
 
+    /**
+     * Gets the address of the user from the input using the GeoCoderAPI
+     * @return
+     */
     private Address getAddress()
     {
         String musicianName = autoCompleteTextView.getText().toString();
@@ -211,6 +227,11 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         }
     }
 
+    /**
+     * onClick gets all the input from the users and then create a Musician account based on the information
+     * provided.
+     * @param v
+     */
     public void onClick(View v)
     {
         switch (v.getId()) {
@@ -340,6 +361,11 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         }
     }
 
+    /**
+     * Checking the locality isn't null.
+     * @param musicianAddress
+     * @return
+     */
     private String checkLocality(Address musicianAddress)
     {
         if(musicianAddress.getLocality() != null)
@@ -384,6 +410,11 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         void onFragmentInteraction(Uri uri);
     }
 
+    /**
+     * Converting an image to byte array
+     * @param image
+     * @return
+     */
     public byte[] imageToByteArray(Drawable image)
     {
         Bitmap bitmap = ((BitmapDrawable) image).getBitmap();
@@ -392,6 +423,9 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         return stream.toByteArray();
     }
 
+    /**
+     * Calling the GebreSelectorActivity for the pop out window
+     */
     public void selectGenres()
     {
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@ HERE");
@@ -401,7 +435,13 @@ public class CreateMusicianFragment extends Fragment implements View.OnClickList
         startActivityForResult(intent, 99);
     }
 
-
+    /**
+     * Which request code is passed in depends on the outcome. Either launch the camera, load an image
+     * from gallery or setting the text for selected genres.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {

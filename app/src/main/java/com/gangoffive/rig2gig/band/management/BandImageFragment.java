@@ -89,6 +89,10 @@ public class BandImageFragment extends Fragment implements View.OnClickListener 
         return v;
     }
 
+    /**
+     * Gets the image taken or uploaded by the user and saves it to the storage
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId())
@@ -152,6 +156,11 @@ public class BandImageFragment extends Fragment implements View.OnClickListener 
         }
     }
 
+    /**
+     * Converting an image to byte array.
+     * @param image
+     * @return
+     */
     public byte[] imageToByteArray(Drawable image) {
         Bitmap bitmap = ((BitmapDrawable) image).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -159,6 +168,12 @@ public class BandImageFragment extends Fragment implements View.OnClickListener 
         return stream.toByteArray();
     }
 
+    /**
+     * Getting the request code and setting the image to bitmap
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {

@@ -118,7 +118,6 @@ public class LoginActivity extends AppCompatActivity{
         /**
          * Initialisation of Facebook login button.
          */
-
         mCallbackManager = CallbackManager.Factory.create();
         loginButton = findViewById(R.id.fb_loginBtn);
         loginButton.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -154,8 +153,6 @@ public class LoginActivity extends AppCompatActivity{
             Toast.makeText(this, "You must provide an email", Toast.LENGTH_SHORT).show();
             return;
         }
-
-
 
         /*Creating an empty char array with the length of the password*/
         char[] passChars = new char[password.getText().length()];
@@ -431,11 +428,19 @@ public class LoginActivity extends AppCompatActivity{
         super.onResume();
     }
 
+    /**
+     * onClick launches the PrivacyPolicyActivity
+     * @param view
+     */
     public void privacyOnClick(View view) {
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@ Privacy Clicked!");
         startActivity(new Intent(getApplicationContext(), PrivacyPolicyActivity.class));
     }
 
+    /**
+     * onClick launches the TermsOfServiceActivity
+     * @param view
+     */
     public void termsofserviceOnClick(View view) {
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@ Terms Clicked!");
         startActivity(new Intent(getApplicationContext(), TermsOfServiceActivity.class));

@@ -96,6 +96,10 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
         return v;
     }
 
+    /**
+     * Getting the address from the geocoder.
+     * @return
+     */
     private Address getAddress()
     {
         String bandName = location.getText().toString();
@@ -122,6 +126,10 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /**
+     * Creating a band based of the information provided by the user
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId())
@@ -256,6 +264,11 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /**
+     * Checking the locatlity isn't null
+     * @param bandAddress
+     * @return
+     */
     private String checkLocality(Address bandAddress)
     {
         if(bandAddress.getLocality() != null)
@@ -272,6 +285,9 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /**
+     * Launching the GenereSelectoActivity
+     */
     public void selectGenres()
     {
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@ HERE");
@@ -281,6 +297,12 @@ public class CreateBandFragment extends Fragment implements View.OnClickListener
         startActivityForResult(intent, 99);
     }
 
+    /**
+     * From the request code setting the text to the genres that where selected.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 99 && resultCode == Activity.RESULT_OK)

@@ -107,6 +107,10 @@ public class CredentialFragment extends Fragment implements View.OnClickListener
         super.onStart();
     }
 
+    /**
+     * Creating the initial authentication account for the user with the base information provided.
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -383,6 +387,12 @@ public class CredentialFragment extends Fragment implements View.OnClickListener
         return true;
     }
 
+    /**
+     * Checking the SDK level of the device.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

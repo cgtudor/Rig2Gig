@@ -56,6 +56,10 @@ public class TabbedBandActivity extends AppCompatActivity {
     private int[] fragments = {R.layout.activity_create_band,
             R.layout.fragment_band_image};
 
+    /**
+     * Text watcher on all of the inputs so that all fields need to be filled in before continuing
+     * and disabling the button until done so.
+     */
     private TextWatcher loginTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -94,6 +98,11 @@ public class TabbedBandActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Instantiating Firebase, as well as teh BandPagerAdapter so that the fragments for the tabbed
+     * views can be loaded.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,6 +164,9 @@ public class TabbedBandActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initialising the text views
+     */
     private void initialiseTextViews() {
         name = findViewById(R.id.BandName);
         name.addTextChangedListener(loginTextWatcher);
@@ -170,6 +182,11 @@ public class TabbedBandActivity extends AppCompatActivity {
         number.addTextChangedListener(loginTextWatcher);
     }
 
+    /**
+     * Checking that all inputs are not null if so providing an error to the user so that they need
+     * filling in before proceeding.
+     * @param view
+     */
     public void confirmOnClick(View view)
     {
         name = findViewById(R.id.BandName);
@@ -220,6 +237,11 @@ public class TabbedBandActivity extends AppCompatActivity {
         System.out.println("clicked");
     }
 
+    /**
+     * Finishing the Activity if back is pressed.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
@@ -230,12 +252,22 @@ public class TabbedBandActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Calling the fader for the background.
+     * @param view
+     */
     public void fakeFaderOnClick(View view) {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(TabbedBandActivity.this,R.color.darkerMain));
         fader.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Making the fader invisible when not selected.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

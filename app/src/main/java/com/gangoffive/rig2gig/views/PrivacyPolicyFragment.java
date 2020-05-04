@@ -26,6 +26,10 @@ public class PrivacyPolicyFragment extends Fragment {
     }
 
 
+    /**
+     * Loads the webview for PrivacyPolicy
+     * @param savedInstanceState
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

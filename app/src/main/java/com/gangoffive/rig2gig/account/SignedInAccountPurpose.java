@@ -18,14 +18,21 @@ public class SignedInAccountPurpose extends AppCompatActivity {
     public static String userType;
     FirebaseAuth fAuth;
 
+    /**
+     * Loads the xml and gets an instance of Firebase.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_purpose);
-
         fAuth = FirebaseAuth.getInstance();
     }
 
+    /**
+     * Sets the user type to a Musician and loads the TabbedMusicianActivity
+     * @param view
+     */
     public void musicianBtnOnClick(View view) {
         AccountPurposeActivity.userType = "Musician";
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " +  userType);
@@ -33,12 +40,19 @@ public class SignedInAccountPurpose extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), SignedInTabbedMusicianActivity.class));
     }
 
+    /**
+     * Sets the user type to a Venue and loads the TabbedVenueActivity
+     * @param view
+     */
     public void venueBtnOnClick(View view) {
         AccountPurposeActivity.userType = "Venue";
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " +  userType);
         startActivity(new Intent(getApplicationContext(), SignedInTabbedVenueActivity.class));
     }
 
+    /**
+     * Denys the back button to be pressed.
+     */
     @Override
     public void onBackPressed() {
     // super.onBackPressed();

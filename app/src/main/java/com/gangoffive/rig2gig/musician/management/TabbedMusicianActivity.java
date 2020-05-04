@@ -59,6 +59,10 @@ public class TabbedMusicianActivity extends AppCompatActivity {
     private int[] fragments = {R.layout.fragment_credential,
             R.layout.fragment_create_musician};
 
+    /**
+     * Text watcher on all of the inputs so that all fields need to be filled in before continuing
+     * and disabling the button until done so.
+     */
      public TextWatcher loginTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -108,6 +112,11 @@ public class TabbedMusicianActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Instantiating Firebase, as well as teh BandPagerAdapter so that the fragments for the tabbed
+     * views can be loaded.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,6 +167,9 @@ public class TabbedMusicianActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initialising the text views
+     */
     private void initialiseTextViews() {
         rEmailAddress = findViewById(R.id.emailReset);
         rEmailAddress.addTextChangedListener(loginTextWatcher);
@@ -185,6 +197,11 @@ public class TabbedMusicianActivity extends AppCompatActivity {
         musicianGenre.addTextChangedListener(loginTextWatcher);
     }
 
+    /**
+     * Checking that all inputs are not null if so providing an error to the user so that they need
+     * filling in before proceeding.
+     * @param view
+     */
     public void confirmOnClick(View view)
     {
         rEmailAddress = findViewById(R.id.emailReset);
@@ -403,17 +420,29 @@ public class TabbedMusicianActivity extends AppCompatActivity {
         System.out.println("clicked");
     }
 
+    /**
+     * Going back when cancel is pressed.
+     * @param view
+     */
     public void cancelOnClick(View view)
     {
         onBackPressed();
     }
 
+    /**
+     * Going to the LoginActivity when back is pressed.
+     */
     public void onBackPressed() {
         Intent backToMain = new Intent(this,
                 LoginActivity.class);
         startActivity(backToMain);
     }
 
+    /**
+     * Finishing the activity when home is selected.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
@@ -425,6 +454,10 @@ public class TabbedMusicianActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Calling the fader for the background.
+     * @param view
+     */
     public void faderOnclick(View view) {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(TabbedMusicianActivity.this,R.color.darkerMain));
@@ -432,6 +465,12 @@ public class TabbedMusicianActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Making the fader invisible when not selected.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
