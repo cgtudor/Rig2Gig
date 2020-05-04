@@ -392,15 +392,22 @@ public class MusicianDetailsEditorTest {
     }
 
     @Test
-    public void testButtonColourChangeOnValidData()
-    {
+    public void testButtonColourChangeOnValidData() throws InterruptedException {
+        Thread.sleep(2000);
         testRule.getActivity().setViewReferences();
+        Thread.sleep(2000);
         testRule.getActivity().setMusician(musicianData);
+        Thread.sleep(2000);
         testRule.getActivity().onSuccessFromDatabase(musicianData);
+        Thread.sleep(2000);
         testRule.getActivity().saveTabs();
+        Thread.sleep(2000);
         testRule.getActivity().setViewReferences();
+        Thread.sleep(2000);
         testRule.getActivity().populateInitialFields();
+        Thread.sleep(2000);
         testRule.getActivity().reinitialiseTabs();
+        Thread.sleep(2000);
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         enterTestData();
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);

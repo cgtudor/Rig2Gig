@@ -361,7 +361,7 @@ public class VenueListingDetailsTest {
 
     @Test
     public void testStarIfFavourited() throws InterruptedException {
-        Thread.sleep(2000);
+        Thread.sleep(4000);
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -394,7 +394,7 @@ public class VenueListingDetailsTest {
         testRule.getActivity().onSuccessMapAd(adTask);
         testRule.getActivity().onSuccessMapVenue(venueTask);
         testRule.getActivity().onSuccessFavouriteVenues(starTask);
-        Thread.sleep(2000);
+        Thread.sleep(4000);
 
         assertEquals(testRule.getActivity().getDrawable(R.drawable.ic_empty_star).getConstantState(), testRule.getActivity().getActivityMenu().findItem(R.id.saveButton).getIcon().getConstantState());
     }

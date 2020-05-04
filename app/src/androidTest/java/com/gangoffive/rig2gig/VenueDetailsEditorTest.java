@@ -446,12 +446,14 @@ public class VenueDetailsEditorTest {
     }
 
     @Test
-    public void testButtonColourChangeOnValidData()
-    {
+    public void testButtonColourChangeOnValidData() throws InterruptedException {
+        Thread.sleep(2000);
         testRule.getActivity().onSuccessFromDatabase(venueData);
+        Thread.sleep(2000);
         testRule.getActivity().onSuccessfulImageDownload();
         onView(withId(R.id.view_pager)).perform(swipeLeft());
         enterTestData();
+        Thread.sleep(2000);
         Button confirm = testRule.getActivity().findViewById(R.id.createListing);
         ColorDrawable colour = (ColorDrawable) confirm.getBackground();
         int intColour = colour.getColor();
@@ -460,6 +462,7 @@ public class VenueDetailsEditorTest {
         intColour = textcolour.getDefaultColor();
         assertEquals(-1, intColour);
         onView(withId(R.id.createListing)).perform(click());
+        Thread.sleep(2000);
         verify(manager,times(1)).getImage(testRule.getActivity());
     }
 

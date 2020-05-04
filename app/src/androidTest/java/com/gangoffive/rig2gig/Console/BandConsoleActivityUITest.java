@@ -45,10 +45,10 @@ public class BandConsoleActivityUITest
 
         testRule.getActivity().getPerformerSuccessListener().onSuccess(snapshot);
 
-        onView(withId(R.id.performer_advert)).check(matches(isDisplayed()));
-        onView(withId(R.id.card_view_view_performer_advert)).check(matches(isDisplayed()));
-        onView(withId(R.id.card_view_edit_performer_advert)).check(matches(isDisplayed()));
-        onView(withId(R.id.card_view_delete_performer_advert)).check(matches(isDisplayed()));
+        onView(withId(R.id.performer_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.card_view_view_performer_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.card_view_edit_performer_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.card_view_delete_performer_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test
@@ -70,8 +70,8 @@ public class BandConsoleActivityUITest
 
         testRule.getActivity().getPerformerSuccessListener().onSuccess(snapshot);
 
-        onView(withId(R.id.performer_advert)).check(matches(isDisplayed()));
-        onView(withId(R.id.card_view_create_performer_advert)).check(matches(isDisplayed()));
+        onView(withId(R.id.performer_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.card_view_create_performer_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
     @Test
@@ -93,9 +93,9 @@ public class BandConsoleActivityUITest
 
         testRule.getActivity().getBandSuccessListener().onSuccess(snapshot);
 
-        onView(withId(R.id.band_advert)).check(matches(isDisplayed()));
-        onView(withId(R.id.card_view_view_band_advert)).check(matches(isDisplayed()));
-        onView(withId(R.id.card_view_edit_band_band_advert)).check(matches(isDisplayed()));
+        onView(withId(R.id.band_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.card_view_view_band_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.card_view_edit_band_band_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.card_view_delete_band_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 
@@ -118,7 +118,7 @@ public class BandConsoleActivityUITest
 
         testRule.getActivity().getBandSuccessListener().onSuccess(snapshot);
 
-        onView(withId(R.id.band_advert)).check(matches(isDisplayed()));
-        onView(withId(R.id.card_view_create_band_advert)).check(matches(isDisplayed()));
+        onView(withId(R.id.band_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.card_view_create_band_advert)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
 }
