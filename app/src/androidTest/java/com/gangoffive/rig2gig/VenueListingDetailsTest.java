@@ -38,6 +38,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -579,6 +580,53 @@ public class VenueListingDetailsTest {
         intending(hasComponent(PaymentActivity.class.getName())).respondWith(result);
         onView(withId(R.id.publish)).perform(click());   //however you trigger the intent in your code
         intended(hasComponent(PaymentActivity.class.getName()));
+        Intents.release();
+    }
+
+    @Test
+    public void testPublishClickSuccessful() throws InterruptedException {
+        Thread.sleep(2000);
+        Task<DocumentSnapshot> adTask = mock(Task.class);
+        DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR,-1);
+        when(adDoc.exists()).thenReturn(true);
+        when(adDoc.get("expiry-date")).thenReturn(new Timestamp(calendar.getTime()));
+        when(adDoc.get("venue-ref")).thenReturn("test");
+        when(adDoc.get("description")).thenReturn("test");
+        when(adTask.getResult()).thenReturn(adDoc);
+        testRule.getActivity().onSuccessAdData(adTask);
+        Task<DocumentSnapshot> venueTask = mock(Task.class);
+        DocumentSnapshot venueDoc = mock(DocumentSnapshot.class);
+        when(venueDoc.exists()).thenReturn(true);
+        when(venueDoc.get("name")).thenReturn("test");
+        when(venueDoc.get("location")).thenReturn("test");
+        when(venueDoc.get("latitude")).thenReturn("50");
+        when(venueDoc.get("longitude")).thenReturn("50");
+        when(venueDoc.get("user-ref")).thenReturn("test");
+        when(venueDoc.get("venue-rating")).thenReturn("N/A");
+        when(adTask.isSuccessful()).thenReturn(true);
+        when(venueTask.isSuccessful()).thenReturn(true);
+        when(venueTask.getResult()).thenReturn(venueDoc);
+        testRule.getActivity().onSuccessItemsAd(adTask);
+        testRule.getActivity().onSuccessItemsVenue(venueTask);
+        testRule.getActivity().onSuccessMapAd(adTask);
+        testRule.getActivity().onSuccessMapVenue(venueTask);
+        testRule.getActivity().onSuccessVenueData(venueTask, new Timestamp(calendar.getTime()));
+
+        PayPalPayment payment = new PayPalPayment(new BigDecimal("5"), "GBP", "30-days Advert",
+                PayPalPayment.PAYMENT_INTENT_SALE);
+
+        Intent resultData = new Intent();
+        Instrumentation.ActivityResult result =
+                new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
+        Intents.init();
+        intending(hasComponent(PaymentActivity.class.getName())).respondWith(result);
+        onView(withId(R.id.publish)).perform(click());
+        testRule.getActivity().paymentConfirmed();
+        assertTrue(testRule.getActivity().isFinishing());
+        intended(hasComponent(PaymentActivity.class.getName()));
+
         Intents.release();
     }
 }

@@ -59,7 +59,7 @@ public class TabbedMusicianActivity extends AppCompatActivity {
     private int[] fragments = {R.layout.fragment_credential,
             R.layout.fragment_create_musician};
 
-    private TextWatcher loginTextWatcher = new TextWatcher() {
+     public TextWatcher loginTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 

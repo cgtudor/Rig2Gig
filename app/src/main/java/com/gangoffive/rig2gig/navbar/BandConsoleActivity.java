@@ -93,6 +93,10 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
 
                 runOnUiThread(new Runnable()
                 {
+                    /**
+                     * New thread used here to set Card Views visible. Used for testing purposes.
+                     * @since #0.3b
+                     */
                     @Override
                     public void run()
                     {
@@ -164,6 +168,10 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
 
                 runOnUiThread(new Runnable()
                 {
+                    /**
+                     * New thread used here to set Card Views visible. Used for testing purposes.
+                     * @since #0.3b
+                     */
                     @Override
                     public void run()
                     {
