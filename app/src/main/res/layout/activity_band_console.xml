@@ -49,6 +49,7 @@
                 android:layout_margin="10dp"/>
 
             <TextView
+                android:id="@+id/general"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:text="General"
@@ -277,6 +278,7 @@
                 android:layout_margin="10dp"/>
 
             <TextView
+                android:id="@+id/performer_advert"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:text="Performer Advert"
@@ -505,6 +507,7 @@
                 android:layout_margin="10dp"/>
 
             <TextView
+                android:id="@+id/band_advert"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:text="Band Advert"

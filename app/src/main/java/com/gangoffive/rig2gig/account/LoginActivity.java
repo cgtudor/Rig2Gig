@@ -277,7 +277,7 @@ public class LoginActivity extends AppCompatActivity{
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
                                             Log.d(TAG, "Document exists!");
-                                            AccountPurposeActivity.userType = document.get("User Type").toString();
+                                            AccountPurposeActivity.userType = document.get("user-type").toString();
                                             /*Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
                                             startService(serviceIntent);*/
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
@@ -289,15 +289,16 @@ public class LoginActivity extends AppCompatActivity{
                                             System.out.println("================================== " + userId);
                                             System.out.println("================================== " + userEmail);
                                             Map<String, Object> test = new HashMap<>();
-                                            test.put("Email Address", userEmail);
+                                            test.put("email-address", userEmail);
+                                            test.put("index-email-address", userEmail.toLowerCase());
+                                            Toast.makeText(LoginActivity.this, "Account is being created please sit tight!", Toast.LENGTH_SHORT).show();
                                             documentReference.set(test).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    Toast.makeText(LoginActivity.this, "Account has been created!", Toast.LENGTH_SHORT).show();
                                                     Log.d(TAG, "onSuccess: user Profile is created for "+ userId);
                                                     /*Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
                                                     startService(serviceIntent);*/
-                                                    startActivity(new Intent(getApplicationContext(),CredentialActivity.class));
+                                                    startActivity(new Intent(getApplicationContext(),SignedInAccountPurpose.class));
                                                 }
                                             });
                                         }
@@ -332,9 +333,10 @@ public class LoginActivity extends AppCompatActivity{
                             Log.d(TAG, "signInWithFacebook:success");
                             FirebaseUser user = fAuth.getCurrentUser();
                             final String userEmail = user.getEmail();
+                            final String getUserId = fAuth.getUid();
                             System.out.println("================================= " + userEmail);
 
-                            DocumentReference docIdRef = fStore.collection("users").document(userId);
+                            DocumentReference docIdRef = fStore.collection("users").document(getUserId);
                             docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -342,7 +344,7 @@ public class LoginActivity extends AppCompatActivity{
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
                                             Log.d(TAG, "Document exists!");
-                                            AccountPurposeActivity.userType = document.get("User Type").toString();
+                                            AccountPurposeActivity.userType = document.get("user-type").toString();
                                             /*Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
                                             startService(serviceIntent);*/
                                             startActivity(new Intent(getApplicationContext(), NavBarActivity.class));
@@ -350,19 +352,20 @@ public class LoginActivity extends AppCompatActivity{
                                         } else {
                                             Log.d(TAG, "Document does not exist!");
                                             System.out.println("================================== Doc dont exist");
-                                            DocumentReference documentReference = fStore.collection("users").document(userId);
+                                            DocumentReference documentReference = fStore.collection("users").document(getUserId);
                                             System.out.println("================================== " + userId);
                                             System.out.println("================================== " + userEmail);
                                             Map<String, Object> test = new HashMap<>();
-                                            test.put("Email Address", userEmail);
+                                            test.put("email-address", userEmail);
+                                            test.put("index-email-address", userEmail.toLowerCase());
+                                            Toast.makeText(LoginActivity.this, "Account is being created please sit tight!", Toast.LENGTH_SHORT).show();
                                             documentReference.set(test).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    Toast.makeText(LoginActivity.this, "Account has been created!", Toast.LENGTH_SHORT).show();
                                                     Log.d(TAG, "onSuccess: user Profile is created for "+ userId);
                                                     /*Intent serviceIntent = new Intent(LoginActivity.this, NotificationService.class);
                                                     startService(serviceIntent);*/
-                                                    startActivity(new Intent(getApplicationContext(),CredentialActivity.class));
+                                                    startActivity(new Intent(getApplicationContext(),SignedInAccountPurpose.class));
                                                 }
                                             });
                                         }

@@ -22,7 +22,6 @@ public class NavBarFactory
     NavBarFactory()
     {
         fragmentMap = new HashMap<>();
-        fragmentMap.put("My Profile", new MyProfileFragment());
         fragmentMap.put("Notifications", new ViewCommsFragment());
         fragmentMap.put("Settings", new SettingsFragment());
         fragmentMap.put("Venue Console", new VenueConsoleFragment());
