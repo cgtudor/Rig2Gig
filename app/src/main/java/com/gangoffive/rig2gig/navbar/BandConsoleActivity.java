@@ -80,7 +80,12 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
             LinearLayout textView;
 
             textView = findViewById(R.id.performer_advert_title);
-            textView.setVisibility(View.VISIBLE);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textView.setVisibility(View.VISIBLE);
+                }
+            });
 
             if(!performerAdverts.isEmpty())
             {
@@ -150,7 +155,12 @@ public class BandConsoleActivity extends AppCompatActivity implements View.OnCli
             LinearLayout textView;
 
             textView = findViewById(R.id.band_advert_title);
-            textView.setVisibility(View.VISIBLE);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textView.setVisibility(View.VISIBLE);
+                }
+            });
 
             if(!bandAdverts.isEmpty())
             {

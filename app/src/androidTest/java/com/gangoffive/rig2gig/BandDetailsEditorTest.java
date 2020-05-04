@@ -328,11 +328,8 @@ public class BandDetailsEditorTest {
     public void testPopulateInitialFields() throws InterruptedException {
         Thread.sleep(2000);
         testRule.getActivity().onSuccessFromDatabase(bandData);
-        Thread.sleep(2000);
         testRule.getActivity().onSuccessfulImageDownload();
-        Thread.sleep(2000);
         onView(withId(R.id.view_pager)).perform(swipeLeft());
-        Thread.sleep(2000);
         onView(withId(R.id.name)).check(matches(withText("test name")));
         onView(withId(R.id.venue_description_final)).check(matches(withText("1")));
         onView(withId(R.id.genres)).check(matches(withText("test genre")));
