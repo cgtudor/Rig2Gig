@@ -51,8 +51,6 @@ import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
-import org.json.JSONException;
-
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
@@ -902,35 +900,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         if (resultCode == Activity.RESULT_OK) {
             PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
             if (confirm != null) {
-                try {
-                    Log.i("paymentExample", confirm.toJSONObject().toString(4));
-
-                    // TODO: send 'confirm' to your server for verification.
-
-                    /*Firestore & Cloud Storage initialization*/
-                    final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                    /*Finding the listing by its ID in the "venue-listings" subfolder*/
-                    DocumentReference venueListing = db.collection("venue-listings").document(vID);
-
-                    Calendar currentExpiry = Calendar.getInstance();
-                    Timestamp postingDate = new Timestamp(currentExpiry.getTime());
-                    venueListing.update("posting-date", postingDate);
-
-                    currentExpiry.setTime(expiry);
-                    currentExpiry.add(Calendar.MONTH, 1);
-                    currentExpiry.add(Calendar.DAY_OF_MONTH, 1);
-                    Timestamp newDate = new Timestamp(currentExpiry.getTime());
-
-                    venueListing.update("expiry-date", newDate);
-
-                    Toast.makeText(this, "Ad published!", Toast.LENGTH_SHORT);
-
-                    finish();
-
-                } catch (JSONException e) {
-                    Log.e("paymentExample", "an extremely unlikely failure occurred: ", e);
-                }
+                paymentConfirmed();
             }
         } else if (resultCode == Activity.RESULT_CANCELED) {
             Log.i("paymentExample", "The user canceled.");
@@ -940,6 +910,34 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         } else {
             Toast.makeText(this, "Payment process has been cancelled", Toast.LENGTH_SHORT);
         }
+    }
+
+    public void paymentConfirmed()
+    {
+        /*Log.i("paymentExample", confirm.toJSONObject().toString(4));*/
+
+        // TODO: send 'confirm' to your server for verification.
+
+        /*Firestore & Cloud Storage initialization*/
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        /*Finding the listing by its ID in the "venue-listings" subfolder*/
+        DocumentReference venueListing = db.collection("venue-listings").document(vID);
+
+        Calendar currentExpiry = Calendar.getInstance();
+        Timestamp postingDate = new Timestamp(currentExpiry.getTime());
+        venueListing.update("posting-date", postingDate);
+
+        currentExpiry.setTime(expiry);
+        currentExpiry.add(Calendar.MONTH, 1);
+        currentExpiry.add(Calendar.DAY_OF_MONTH, 1);
+        Timestamp newDate = new Timestamp(currentExpiry.getTime());
+
+        venueListing.update("expiry-date", newDate);
+
+        Toast.makeText(this, "Ad published!", Toast.LENGTH_SHORT);
+
+        finish();
     }
 
     @Override
