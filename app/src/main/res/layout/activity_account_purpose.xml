@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".account.AccountPurposeActivity"
-    android:background="@drawable/gradient">
+    android:background="@drawable/gradient"
+    android:id="@+id/accountPurpose">
 
 <!--    <RadioGroup-->
 <!--        android:id="@+id/userRadioGroup"-->

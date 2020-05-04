@@ -1,0 +1,17 @@
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch Jacob-Tests
+# Your branch is ahead of 'origin/Jacob-Tests' by 166 commits.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	new file:   app/src/androidTest/java/com/gangoffive/rig2gig/AccountTypeUITest.java
+#	modified:   app/src/androidTest/java/com/gangoffive/rig2gig/CreateMusicianAccountUITest.java
+#	new file:   app/src/androidTest/java/com/gangoffive/rig2gig/CreateVenueAccountUITest.java
+#	modified:   app/src/main/java/com/gangoffive/rig2gig/band/management/CreateBandFragment.java
+#	modified:   app/src/main/java/com/gangoffive/rig2gig/band/management/TabbedBandActivity.java
+#	modified:   app/src/main/res/layout/activity_account_purpose.xml
+#	modified:   app/src/main/res/layout/fragment_create_band.xml
+#

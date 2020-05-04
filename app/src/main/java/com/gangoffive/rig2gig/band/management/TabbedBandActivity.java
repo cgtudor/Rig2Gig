@@ -158,7 +158,7 @@ public class TabbedBandActivity extends AppCompatActivity {
     private void initialiseTextViews() {
         name = findViewById(R.id.BandName);
         name.addTextChangedListener(loginTextWatcher);
-        location = findViewById(R.id.location3);
+        location = findViewById(R.id.bandFragment);
         location.addTextChangedListener(loginTextWatcher);
         distance = findViewById(R.id.bandDistance);
         distance.addTextChangedListener(loginTextWatcher);
@@ -178,7 +178,7 @@ public class TabbedBandActivity extends AppCompatActivity {
             name.setError("Band name is required!");
             return;
         }
-        location = findViewById(R.id.location3);
+        location = findViewById(R.id.bandFragment);
         String bandLocation = location.getText().toString();
         if (TextUtils.isEmpty(bandLocation)) {
             location.setError("Band location is required!");
