@@ -27,8 +27,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
@@ -56,12 +57,14 @@ public class VenueListingDetailsTest {
         if (Looper.myLooper() == null)
         {
             Looper.prepare();
+            closeSoftKeyboard();
         }
     }
 
     @Test
     public void testActivityInView() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -93,6 +96,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testComponentDisplayedDefault() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -139,6 +143,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testComponentDisplayedOwnAd() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -170,6 +175,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testComponentDisplayedOwnAdNotPublished() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -201,6 +207,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testTextDefault() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -245,6 +252,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testTextOwnAd() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -280,6 +288,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testTextOwnAdNotPublished() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -315,6 +324,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testRequestContactClickedDefault() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -366,6 +376,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testRequestContactClickedMusician() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -418,6 +429,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testStarIfFavourited() throws InterruptedException {
         Thread.sleep(4000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -445,19 +457,20 @@ public class VenueListingDetailsTest {
         when(starDoc.exists()).thenReturn(true);
         when(starTask.getResult()).thenReturn(starDoc);
         testRule.getActivity().onSuccessVenueData(venueTask, new Timestamp(calendar.getTime()));
-        testRule.getActivity().onSuccessItemsAd(adTask);
-        testRule.getActivity().onSuccessItemsVenue(venueTask);
+        //testRule.getActivity().onSuccessItemsAd(adTask);
+        //testRule.getActivity().onSuccessItemsVenue(venueTask);
         testRule.getActivity().onSuccessMapAd(adTask);
         testRule.getActivity().onSuccessMapVenue(venueTask);
         testRule.getActivity().onSuccessFavouriteVenues(starTask);
         Thread.sleep(4000);
 
-        assertEquals(testRule.getActivity().getDrawable(R.drawable.ic_empty_star).getConstantState(), testRule.getActivity().getActivityMenu().findItem(R.id.saveButton).getIcon().getConstantState());
+        assertEquals(testRule.getActivity().getDrawable(R.drawable.ic_full_star).getConstantState(), testRule.getActivity().getActivityMenu().findItem(R.id.saveButton).getIcon().getConstantState());
     }
 
     @Test
     public void testStarIfNotFavourited() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -500,6 +513,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testUnfavourite() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -548,6 +562,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testFavourite() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -597,6 +612,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testPublishClickCancelled() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -641,6 +657,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testPublishClickSuccessful() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -688,6 +705,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testPressBackVenue() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -723,7 +741,7 @@ public class VenueListingDetailsTest {
         when(backTask.getResult()).thenReturn(backDoc);
 
         Intents.init();
-        pressBack();
+        pressBackUnconditionally();
         testRule.getActivity().onSuccessBackPressed(backTask);
         assertTrue(testRule.getActivity().isFinishing());
         intended(hasComponent(NavBarActivity.class.getName()));
@@ -733,6 +751,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testPressBackMusician() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -767,7 +786,7 @@ public class VenueListingDetailsTest {
         when(backDoc.get("user-type")).thenReturn("Musician");
         when(backTask.getResult()).thenReturn(backDoc);
 
-        pressBack();
+        pressBackUnconditionally();
         testRule.getActivity().onSuccessBackPressed(backTask);
         assertTrue(testRule.getActivity().isFinishing());
     }
@@ -775,6 +794,7 @@ public class VenueListingDetailsTest {
     @Test
     public void testPressSupportActionBack() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();

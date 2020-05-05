@@ -66,6 +66,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
     private final Date expiry = new Date();
     private final StringBuilder venueRef = new StringBuilder("");
     private final StringBuilder listingOwner = new StringBuilder("");
+    private String uID;
     private GoogleMap googleMap;
     private final String TAG = "@@@@@@@@@@@@@@@@@@@@@@@";
     private Menu activityMenu;
@@ -95,6 +96,8 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_listing_details);
+
+        uID = uID;
 
         venuePhoto = findViewById(R.id.venuePhoto);
         venueName = findViewById(R.id.venueName);
@@ -308,7 +311,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                 unrated.setVisibility(View.GONE);
             }
 
-            if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test") && expiryDate.compareTo(Timestamp.now()) > 0) {
+            if (listingOwner.toString().equals(uID) && expiryDate.compareTo(Timestamp.now()) > 0) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -317,7 +320,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                         contact.setVisibility(View.GONE);
                     }
                 });
-            } else if (listingOwner.toString().equals(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test") && expiryDate.compareTo(Timestamp.now()) < 0) {
+            } else if (listingOwner.toString().equals(uID) && expiryDate.compareTo(Timestamp.now()) < 0) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -338,7 +341,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             }
 
             CollectionReference sentMessages = db.collection("communications")
-                    .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                    .document(uID)
                     .collection("sent");
             sentMessages.whereEqualTo("sent-to", listingOwner.toString()).whereEqualTo("type", "contact-request").get(source)
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -371,7 +374,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             HashMap<String, Object> request = new HashMap<>();
             request.put("type", "contact-request");
             request.put("posting-date", Timestamp.now());
-            request.put("sent-from", FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test");
+            request.put("sent-from", uID);
             request.put("sent-from-type", "musicians");
             request.put("sent-from-ref", musician.getId());
             request.put("sent-to-type", "venues");
@@ -405,7 +408,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             requestSent.put("notification-title", "Someone is interested in your advert!");
             requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
             CollectionReference sent = db.collection("communications")
-                    .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                    .document(uID)
                     .collection("sent");
 
             sent.add(requestSent)
@@ -431,7 +434,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             HashMap<String, Object> request = new HashMap<>();
             request.put("type", "contact-request");
             request.put("posting-date", Timestamp.now());
-            request.put("sent-from", FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test");
+            request.put("sent-from", uID);
             request.put("sent-from-type", "bands");
             request.put("sent-from-ref", bandId);
             request.put("sent-to-type", "venues");
@@ -465,7 +468,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             requestSent.put("notification-title", "Someone is interested in your advert!");
             requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
             CollectionReference sent = db.collection("communications")
-                    .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                    .document(uID)
                     .collection("sent");
 
             sent.add(requestSent)
@@ -517,7 +520,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 
         db.collection("users")
-                .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                .document(uID)
                 .get(source)
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -632,7 +635,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         if (document.exists()) {
             Log.d("FIRESTORE", "DocumentSnapshot data: " + document.getData());
 
-            if (document.get("user-ref").toString().equals(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")) {
+            if (document.get("user-ref").toString().equals(uID)) {
                 MenuItem star = activityMenu.findItem(R.id.saveButton);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -645,7 +648,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             } else {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 CollectionReference favVenues = db.collection("favourite-ads")
-                        .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                        .document(uID)
                         .collection("venue-listings");
                 favVenues.document(vID).get(source)
                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -710,7 +713,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             listing.put("venue-ref", venueRef.toString());
 
             CollectionReference favVenues = db.collection("favourite-ads")
-                    .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                    .document(uID)
                     .collection("venue-listings");
             favVenues.document(vID).get(source)
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -730,7 +733,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
     public void onSuccessItemSelectedAd(Task<DocumentSnapshot> task, MenuItem item, HashMap<String, Object> listing)
     {
         CollectionReference favVenues = db.collection("favourite-ads")
-                .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                .document(uID)
                 .collection("venue-listings");
         DocumentSnapshot document = task.getResult();
         if (document.exists()) {
@@ -954,5 +957,9 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
 
     public void setCurrentUserType(String currentUserType) {
         this.currentUserType = currentUserType;
+    }
+
+    public void setuID(String uID) {
+        this.uID = uID;
     }
 }

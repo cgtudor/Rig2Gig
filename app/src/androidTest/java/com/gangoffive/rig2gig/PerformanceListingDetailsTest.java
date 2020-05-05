@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -55,12 +56,14 @@ public class PerformanceListingDetailsTest {
         if (Looper.myLooper() == null)
         {
             Looper.prepare();
+            closeSoftKeyboard();
         }
     }
 
     @Test
     public void testActivityInView() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -95,6 +98,7 @@ public class PerformanceListingDetailsTest {
     @Test
     public void testComponentDisplayedDefault() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -214,6 +218,7 @@ public class PerformanceListingDetailsTest {
     @Test
     public void testTextDefault() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -346,6 +351,7 @@ public class PerformanceListingDetailsTest {
     @Test
     public void testRequestContactClickedDefault() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -400,6 +406,7 @@ public class PerformanceListingDetailsTest {
     @Test
     public void testStarIfFavourited() throws InterruptedException {
         Thread.sleep(4000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -429,8 +436,8 @@ public class PerformanceListingDetailsTest {
         DocumentSnapshot starDoc = mock(DocumentSnapshot.class);
         when(starDoc.exists()).thenReturn(true);
         when(starTask.getResult()).thenReturn(starDoc);
-        testRule.getActivity().onSuccessCreateOptionsAd(adTask);
-        testRule.getActivity().onSuccessCreateOptionsPerformer(performerTask);
+        //testRule.getActivity().onSuccessCreateOptionsAd(adTask);
+        //testRule.getActivity().onSuccessCreateOptionsPerformer(performerTask);
         testRule.getActivity().onSuccessMap(adTask);
         testRule.getActivity().onSuccessMusicianLocation(performerTask);
         testRule.getActivity().onSuccessPerformerData(performerTask, new Timestamp(calendar.getTime()));
@@ -443,6 +450,7 @@ public class PerformanceListingDetailsTest {
     @Test
     public void testStarIfNotFavourited() throws InterruptedException {
         Thread.sleep(5000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -488,6 +496,7 @@ public class PerformanceListingDetailsTest {
     @Test
     public void testUnfavourite() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -539,6 +548,7 @@ public class PerformanceListingDetailsTest {
     @Test
     public void testFavourite() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -693,6 +703,7 @@ public class PerformanceListingDetailsTest {
     @Test
     public void testPressBack() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
@@ -732,6 +743,7 @@ public class PerformanceListingDetailsTest {
     @Test
     public void testPressSupportActionBack() throws InterruptedException {
         Thread.sleep(2000);
+        testRule.getActivity().setuID("test-different");
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();
