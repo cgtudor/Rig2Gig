@@ -442,7 +442,7 @@ public class PerformanceListingDetailsTest {
 
     @Test
     public void testStarIfNotFavourited() throws InterruptedException {
-        Thread.sleep(2000);
+        Thread.sleep(5000);
         Task<DocumentSnapshot> adTask = mock(Task.class);
         DocumentSnapshot adDoc = mock(DocumentSnapshot.class);
         Calendar calendar = Calendar.getInstance();

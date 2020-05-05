@@ -592,6 +592,16 @@ public class PerformanceListingDetailsActivity extends AppCompatActivity impleme
                 }
             });
         }
+        else
+        {
+            MenuItem star = menu.findItem(R.id.saveButton);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    star.setIcon(R.drawable.ic_empty_star);
+                }
+            });
+        }
     }
 
     @Override
