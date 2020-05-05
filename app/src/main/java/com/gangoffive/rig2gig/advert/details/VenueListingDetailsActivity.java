@@ -371,7 +371,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             HashMap<String, Object> request = new HashMap<>();
             request.put("type", "contact-request");
             request.put("posting-date", Timestamp.now());
-            request.put("sent-from", FirebaseAuth.getInstance().getUid());
+            request.put("sent-from", FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test");
             request.put("sent-from-type", "musicians");
             request.put("sent-from-ref", musician.getId());
             request.put("sent-to-type", "venues");
@@ -405,7 +405,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
             requestSent.put("notification-title", "Someone is interested in your advert!");
             requestSent.put("notification-message", musician.get("name").toString() + " is interested in you! Share contact details?");
             CollectionReference sent = db.collection("communications")
-                    .document(FirebaseAuth.getInstance().getUid())
+                    .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
                     .collection("sent");
 
             sent.add(requestSent)
@@ -516,25 +516,14 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
 
         Source source = isConnected ? Source.SERVER : Source.CACHE;
 
-        db.collection("users").document(FirebaseAuth.getInstance().getUid()).get(source)
+        db.collection("users")
+                .document(FirebaseAuth.getInstance().getUid() != null ? FirebaseAuth.getInstance().getUid() : "test")
+                .get(source)
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                String accType = document.get("user-type").toString();
-                                if (accType.equals("Venue")) {
-                                    Intent intent = new Intent(VenueListingDetailsActivity.this, NavBarActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    VenueListingDetailsActivity.this.genericBack();
-                                    finish();
-                                }
-                            } else {
-                                Log.d("FIRESTORE", "No such document");
-                            }
+                            onSuccessBackPressed(task);
                         } else {
                             Log.d("FIRESTORE", "get failed with ", task.getException());
                         }
@@ -542,8 +531,21 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
                 });
     }
 
-    public void genericBack() {
-        super.onBackPressed();
+    public void onSuccessBackPressed(Task<DocumentSnapshot> task)
+    {
+        DocumentSnapshot document = task.getResult();
+        if (document.exists()) {
+            String accType = document.get("user-type").toString();
+            if (accType.equals("Venue")) {
+                Intent intent = new Intent(VenueListingDetailsActivity.this, NavBarActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                finish();
+            }
+        } else {
+            Log.d("FIRESTORE", "No such document");
+        }
     }
 
     @Override
@@ -950,8 +952,7 @@ public class VenueListingDetailsActivity extends AppCompatActivity implements On
         return activityMenu;
     }
 
-    public static PayPalConfiguration getPaypalConfig() {
-        return paypalConfig;
+    public void setCurrentUserType(String currentUserType) {
+        this.currentUserType = currentUserType;
     }
-
 }
