@@ -22,6 +22,10 @@ public class MusicianAdvertIndexActivity extends AppCompatActivity {
 
     private boolean  backClicked;
 
+    /**
+     *  Creates an activity for an index of musician adverts.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +61,9 @@ public class MusicianAdvertIndexActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    /**
+     *  Terminates the activity when the phone back button is pressed.
+     */
     @Override
     public void onBackPressed()
     {
@@ -64,6 +71,11 @@ public class MusicianAdvertIndexActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     *  Terminates the activity when the toolbar back button is pressed.
+     * @param item the object that has been clicked on toolbar.
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
@@ -73,6 +85,9 @@ public class MusicianAdvertIndexActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     *  Terminates the activity, then reconstructs it with its own intent.
+     */
     public void refreshActivity()
     {
         finish();

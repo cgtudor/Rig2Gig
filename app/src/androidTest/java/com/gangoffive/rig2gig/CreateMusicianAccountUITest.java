@@ -1,11 +1,8 @@
 package com.gangoffive.rig2gig;
 
-import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
-import com.gangoffive.rig2gig.account.LoginActivity;
 import com.gangoffive.rig2gig.musician.management.TabbedMusicianActivity;
-import com.google.android.material.tabs.TabLayout;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,8 +17,6 @@ import static androidx.test.espresso.action.ViewActions.swipeRight;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
-import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public class CreateMusicianAccountUITest
@@ -38,6 +33,7 @@ public class CreateMusicianAccountUITest
         onView(withId(R.id.accountInformation)).check(matches(isDisplayed()));
     }
 
+/*
     @Test
     public void testComponentVisibility()
     {
@@ -54,6 +50,7 @@ public class CreateMusicianAccountUITest
         onView(withId(R.id.firstName3)).check(matches(isDisplayed()));
         onView(withId(R.id.firstName5)).check(matches(isDisplayed()));
     }
+*/
 
     @Test
     public void enterTestData()

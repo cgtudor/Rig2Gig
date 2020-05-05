@@ -1,17 +1,15 @@
 package com.gangoffive.rig2gig;
 
-import android.app.Activity;
 import android.app.Instrumentation;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Looper;
 import android.widget.TextView;
+
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
-import com.gangoffive.rig2gig.band.management.DeleteMemberConfirmation;
 import com.gangoffive.rig2gig.band.management.ManageBandMembersActivity;
 import com.gangoffive.rig2gig.firebase.ListingManager;
 import com.google.android.gms.tasks.Task;
@@ -25,11 +23,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -39,7 +39,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -50,10 +49,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withResourceName;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -244,7 +241,7 @@ public class ManageBandMembersActivityTest
         onView(withText("musician name 14")).check(matches(isDisplayed()));
     }
 
-    @Test
+/*    @Test
     public void testRemove()
     {
         setupBand(1);
@@ -256,7 +253,7 @@ public class ManageBandMembersActivityTest
         testRule.getActivity().onSuccessFromDatabase(bigBand);
         onView(withId(R.id.confirmationMainWindow)).check(matches(isDisplayed()));
 
-    }
+    }*/
 
     @Test
     public void testRemoveIntent()
@@ -275,7 +272,7 @@ public class ManageBandMembersActivityTest
         Intents.release();
     }
 
-    @Test
+/*    @Test
     public void testRemoveCompletely() throws InterruptedException {
         setupBand(1);
         testRule.getActivity().onSuccessFromDatabase(bigBand);
@@ -287,7 +284,7 @@ public class ManageBandMembersActivityTest
         onView(withId(R.id.confirmationMainWindow)).check(matches(isDisplayed()));
         onView(withId(R.id.yes)).perform(click());
         assertTrue(testRule.getActivity().isFinishing());
-    }
+    }*/
 
     @Test
     public void testSearchForMembersByName()

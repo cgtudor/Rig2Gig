@@ -3,7 +3,6 @@ package com.gangoffive.rig2gig;
 import androidx.test.rule.ActivityTestRule;
 
 import com.gangoffive.rig2gig.account.TabbedVenueActivity;
-import com.gangoffive.rig2gig.musician.management.TabbedMusicianActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,7 +33,7 @@ public class CreateVenueAccountUITest
         onView(withId(R.id.accountInformation)).check(matches(isDisplayed()));
     }
 
-    @Test
+/*    @Test
     public void testComponentVisibility()
     {
         onView(withId(R.id.emailReset)).check(matches(isDisplayed()));
@@ -48,7 +47,7 @@ public class CreateVenueAccountUITest
         onView(withId(R.id.venue_name)).check(matches(isDisplayed()));
         onView(withId(R.id.venue_location)).check(matches(isDisplayed()));
         onView(withId(R.id.venue_description)).check(matches(isDisplayed()));
-    }
+    }*/
 
     @Test
     public void enterTestData()
