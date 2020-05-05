@@ -27,6 +27,13 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private static final String TAG = "TAG";
 
+    /**
+     * This method determines if a user is already logged into Rig2Gig or not.
+     * If the user is new and or isn't logged int they will be prompted with the LoginActivity. If
+     * the user has previously logged in and stayed logged in when closing Rig2Gig they will automatically
+     * be logged in when launching Rig2Gig.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

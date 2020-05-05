@@ -177,6 +177,10 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
         super.onStart();
     }
 
+    /**
+     * Gets all the user inputted information and creates a Venue account based on that information.
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + type);
@@ -296,6 +300,11 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    /**
+     * Checking that locality isn't null
+     * @param venueAddress
+     * @return
+     */
     private String checkLocality(Address venueAddress)
     {
         if(venueAddress.getLocality() != null)
@@ -316,6 +325,11 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
         return true;
     }
 
+    /**
+     * Converting an image to byte array.
+     * @param image
+     * @return
+     */
     public byte[] imageToByteArray(Drawable image) {
         Bitmap bitmap = ((BitmapDrawable) image).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -358,6 +372,10 @@ public class CreateVenueFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    /**
+     * This method gets the address from the input and matches it with the geocoder.
+     * @return
+     */
     private Address getAddress()
     {
         String venueName = location.getText().toString();

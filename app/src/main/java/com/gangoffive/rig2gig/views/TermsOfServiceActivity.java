@@ -16,6 +16,10 @@ public class TermsOfServiceActivity extends AppCompatActivity {
 
     WebView mWebView;
     Toolbar toolbar;
+    /**
+     * Loads the webview for TermsOfService
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

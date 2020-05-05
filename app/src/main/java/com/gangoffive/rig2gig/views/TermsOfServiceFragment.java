@@ -24,6 +24,10 @@ public class TermsOfServiceFragment extends Fragment {
     public TermsOfServiceFragment() {
         // Required empty public constructor
     }
+    /**
+     * Loads the webview for TermsOfService
+     * @param savedInstanceState
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

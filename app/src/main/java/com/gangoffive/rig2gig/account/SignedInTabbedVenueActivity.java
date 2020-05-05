@@ -54,6 +54,10 @@ public class SignedInTabbedVenueActivity extends AppCompatActivity {
     private int[] fragments = {R.layout.fragment_signedincredential,
             R.layout.fragment_create_venue};
 
+    /**
+     * Text watched used to check for input or not from the user this is used to disable the confirm button
+     * if no information has been entered.
+     */
     private TextWatcher loginTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -97,6 +101,11 @@ public class SignedInTabbedVenueActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Gets an instance of Firebase, and calles the adapters for the tabbed views to load the needed
+     * Fragments.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,6 +155,9 @@ public class SignedInTabbedVenueActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Initialising text views
+     */
     private void initialiseTextViews() {
         username = findViewById(R.id.venue_description_final);
         username.addTextChangedListener(loginTextWatcher);
@@ -163,6 +175,11 @@ public class SignedInTabbedVenueActivity extends AppCompatActivity {
         description.addTextChangedListener(loginTextWatcher);
     }
 
+    /**
+     * Checking that all inputs are not null if so providing an error to the user so that they need
+     * filling in before proceeding.
+     * @param view
+     */
     public void confirmOnClick(View view)
     {
         username = findViewById(R.id.venue_description_final);
@@ -223,17 +240,29 @@ public class SignedInTabbedVenueActivity extends AppCompatActivity {
         //toast here for account being created
     }
 
+    /**
+     * Going back when cancel is pressed.
+     * @param view
+     */
     public void cancelOnClick(View view)
     {
         onBackPressed();
     }
 
+    /**
+     * Going to the LoginActivity when back is pressed.
+     */
     public void onBackPressed() {
         Intent backToMain = new Intent(this,
                 LoginActivity.class);
         startActivity(backToMain);
     }
 
+    /**
+     * Finishing the activity when home is selected.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here

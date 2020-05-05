@@ -51,6 +51,13 @@ public class ViewBandsFragment extends Fragment
     private final ArrayList<String> bands = new ArrayList();
     private boolean callingFirebase = false;
 
+    /**
+     * Creates an fragment for an index of band adverts.
+     * @param inflater The inflater is used to read the passed xml file.
+     * @param container The views base class.
+     * @param savedInstanceState This is the saved previous state passed from the previous fragment/activity.
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -159,6 +166,10 @@ public class ViewBandsFragment extends Fragment
         return v;
     }
 
+    /**
+     * Calls the Firebase database for more adverts, has built in pagenation.
+     * @param source
+     */
     private void firebaseCall(Source source) {
 
         callingFirebase = true;
@@ -214,6 +225,13 @@ public class ViewBandsFragment extends Fragment
                 });
     }
 
+    /**
+     * After this fragment opens the associated advert activity, when it returns it forces the activity
+     * to restart to allow the favourited adverts to updated.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

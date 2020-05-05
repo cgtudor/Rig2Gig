@@ -15,6 +15,10 @@ public class PrivacyPolicyActivity extends AppCompatActivity {
     WebView mWebView;
     Toolbar toolbar;
 
+    /**
+     * Loads the webview for PrivacyPolicy
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
